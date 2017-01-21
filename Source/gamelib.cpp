@@ -507,13 +507,6 @@ CGame::~CGame()
 {
 	for (int i = 0; i < NUM_GAME_STATES; i++)
 		delete gameStateTable[i];
-
-    for (CString key : targetwindow)
-    {
-        delete datamap[key]->message;
-        delete datamap[key]->sender;
-        delete datamap[key];
-    }
 }
 
 CGame *CGame::Instance()
@@ -705,10 +698,10 @@ void CGame::OnCopyData(TransferData *TDP)
     CString sender;
     sender.Format("%s", TDP->sender);
 
-    lstrcpy(datamap[sender]->sender, TDP->sender);
-    lstrcpy(datamap[sender]->message, TDP->message);
-    datamap[sender]->pos = TDP->pos;
-    datamap[sender]->ev = TDP->ev;
+    lstrcpy(datamap[sender].sender, TDP->sender);
+    lstrcpy(datamap[sender].message, TDP->message);
+    datamap[sender].pos = TDP->pos;
+    datamap[sender].ev = TDP->ev;
 }
 
 void CGame::BoardcastMessage(TransferData::EVENTCODE ev, CString message)
