@@ -75,6 +75,7 @@
 #define SHOW_GAME_CYCLE_TIME false		// 是否在debug mode顯示cycle time
 #define ENABLE_GAME_PAUSE	 true		// 是否允許以 Ctrl-Q 暫停遊戲
 #define ENABLE_AUDIO		 true		// 啟動音效介面
+#define WINDOW_NAME          "TEST_A"         // 視窗的名稱設定
 
 /////////////////////////////////////////////////////////////////////////////
 // 定義CGame及CGameState所使用的三個狀態常數
@@ -116,6 +117,26 @@ using namespace std;
 		}
 
 namespace game_framework {
+
+/////////////////////////////////////////////////////////////////////////////
+//  傳輸資料用的structure
+/////////////////////////////////////////////////////////////////////////////
+    struct TransferData {
+        struct SizeNPos
+        {
+            int x;
+            int y;
+            int w;
+            int h;
+        };
+
+        enum EVENTCODE { Update, Used };
+
+        EVENTCODE ev;
+        TCHAR sender[32];
+        TCHAR message[256];
+        SizeNPos pos;
+    };
 
 /////////////////////////////////////////////////////////////////////////////
 // 這個class提供時間、錯誤等控制
@@ -334,6 +355,9 @@ public:
 	void OnResume();								// 處理自「待命」還原的動作
 	void OnSetFocus();								// 處理Focus
 	void OnSuspend();								// 處理「待命」的動作
+    void OnCopyData(TransferData *TDP);             // 處理視窗間的資料傳遞
+    void OnMoving();                                // 處理視窗移動時的細節
+    void BoardcastMessage(TransferData::EVENTCODE ev,CString message); //廣播要發送給其他視窗的訊息
 	void SetGameState(int);
 	static CGame *Instance();
 private:
@@ -342,7 +366,9 @@ private:
 	const int		NUM_GAME_STATES;	// 遊戲的狀態數(3個狀態)
 	CGameState		*gameState;			// pointer指向目前的遊戲狀態
 	CGameState		*gameStateTable[3];	// 遊戲狀態物件的pointer
+    map<CString, TransferData*> datamap; //儲存廣播過來的資料用的map
 	static CGame	instance;			// 遊戲唯一的instance
+    const CString targetwindow[2] = { "TEST_A" , "TEST_B" }; //Boardcast清單
 };
 
 }

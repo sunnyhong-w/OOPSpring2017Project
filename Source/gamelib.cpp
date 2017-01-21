@@ -507,6 +507,13 @@ CGame::~CGame()
 {
 	for (int i = 0; i < NUM_GAME_STATES; i++)
 		delete gameStateTable[i];
+
+    for (CString key : targetwindow)
+    {
+        delete datamap[key]->message;
+        delete datamap[key]->sender;
+        delete datamap[key];
+    }
 }
 
 CGame *CGame::Instance()
@@ -596,6 +603,7 @@ void CGame::OnInit()	// OnInit() 只在程式一開始時執行一次
 	//
 	// Switch to the first state
 	//
+    AfxGetMainWnd()->SetWindowTextA(WINDOW_NAME);
 	gameState = gameStateTable[GAME_STATE_INIT];
 	gameState->OnBeginState();
 	CSpecialEffect::SetCurrentTime();
@@ -690,6 +698,48 @@ void CGame::OnSuspend()
 	//
 	suspended = true;
 	CAudio::Instance()->SetPowerResume();
+}
+
+void CGame::OnCopyData(TransferData *TDP)
+{
+    CString sender;
+    sender.Format("%s", TDP->sender);
+
+    lstrcpy(datamap[sender]->sender, TDP->sender);
+    lstrcpy(datamap[sender]->message, TDP->message);
+    datamap[sender]->pos = TDP->pos;
+    datamap[sender]->ev = TDP->ev;
+}
+
+void CGame::BoardcastMessage(TransferData::EVENTCODE ev, CString message)
+{
+    TransferData boardcastdata;
+    boardcastdata.ev = ev;
+    RECT rect;
+    AfxGetMainWnd()->GetWindowRect(&rect);
+    boardcastdata.pos.x = rect.left;
+    boardcastdata.pos.y = rect.top;
+    boardcastdata.pos.w = rect.right - rect.left;
+    boardcastdata.pos.h = rect.bottom - rect.top;
+    lstrcpy(boardcastdata.sender, WINDOW_NAME);
+    lstrcpy(boardcastdata.message, message);
+
+    COPYDATASTRUCT data;
+    data.cbData = sizeof(boardcastdata);
+    data.dwData = 0;
+    data.lpData = (LPVOID)&boardcastdata;
+
+    for(CString key : targetwindow)
+    { 
+        if (key == WINDOW_NAME)
+            continue;
+        else
+        {
+            CWnd *targetWin = CWnd::FindWindow(NULL, key);
+            if(targetWin)
+                SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
+        }
+    }
 }
 
 void CGame::SetGameState(int state)

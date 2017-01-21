@@ -39,6 +39,7 @@ private:
 	int  isToolBarVisible;
 	int  isStatusBarVisible;
 	CMenu *pMenu;
+
 	//CRect WindowRect;
 // Operations
 public:
@@ -72,6 +73,7 @@ protected:
 	afx_msg void OnToggleFullscreen();
 	afx_msg void OnPaint();
 	afx_msg void OnButtonFullscreen();
+    afx_msg BOOL OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

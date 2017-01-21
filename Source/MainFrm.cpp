@@ -54,6 +54,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_TOGGLE_FULLSCREEN, OnToggleFullscreen)
 	ON_WM_PAINT()
 	ON_COMMAND(ID_BUTTON_FULLSCREEN, OnButtonFullscreen)
+    ON_WM_COPYDATA()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -128,6 +129,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		SetMenu(NULL);
 	}
 	return 0;
+}
+
+BOOL CMainFrame::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
+{
+    game_framework::TransferData *TDP = (game_framework::TransferData*)(pCopyDataStruct->lpData);
+    game_framework::CGame::Instance()->OnCopyData(TDP);
+    return CFrameWnd::OnCopyData(pWnd, pCopyDataStruct);
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
