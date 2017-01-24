@@ -119,15 +119,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// 儲存Menu的pointer
 	//
 	pMenu = GetMenu();
-	//
-	// 如果是Full Screen的話，隱藏ToolBar, StatusBar, Menu
-	//
-	if (isFullScreen) {
-		m_wndToolBar.ShowWindow(SW_HIDE);
-		m_wndStatusBar.ShowWindow(SW_HIDE);
-		ModifyStyle(WS_DLGFRAME, 0);
-		SetMenu(NULL);
-	}
+
+	m_wndToolBar.ShowWindow(SW_HIDE);
+	m_wndStatusBar.ShowWindow(SW_HIDE);
+	SetMenu(NULL);
+	
 	return 0;
 }
 
@@ -147,7 +143,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	//		| WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
 
 	cs.cx = 640; cs.cy = 480;
-	cs.style = WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+	cs.style = WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX;
     cs.x = (::GetSystemMetrics(SM_CXSCREEN) - cs.cx) / 2; 
 	cs.y = (::GetSystemMetrics(SM_CYSCREEN) - cs.cy) / 2; 
 	//  Set priority level
@@ -224,7 +220,7 @@ void CMainFrame::SetFullScreen(bool isFull)
 void CMainFrame::OnToggleFullscreen() 
 {
 	// TODO: Add your command handler code here
-	SetFullScreen(!isFullScreen);
+	//SetFullScreen(!isFullScreen);
 }
 
 void CMainFrame::OnPaint() 
@@ -240,19 +236,9 @@ void CMainFrame::OnPaint()
 	CRect ClientRect;
 	game_framework::CDDraw::GetClientRect(ClientRect);
 	CalcWindowRect(&ClientRect, CWnd::adjustBorder);
-	CRect ControlRect;
-	if(m_wndToolBar.IsWindowVisible()) {
-		m_wndToolBar.GetWindowRect(ControlRect);
-		extra_height = ControlRect.bottom - ControlRect.top;
-	}
-	if(m_wndStatusBar.IsWindowVisible()) {
-		m_wndStatusBar.GetWindowRect(ControlRect);
-		extra_height += ControlRect.bottom - ControlRect.top;
-	}
-	extra_height += GetSystemMetrics(SM_CYMENU);
 	CRect WindowRect;
 	GetWindowRect(WindowRect);
-	MoveWindow(WindowRect.left, WindowRect.top, ClientRect.Width(), ClientRect.Height() + extra_height);
+	MoveWindow(WindowRect.left, WindowRect.top, ClientRect.Width(), ClientRect.Height());
 }
 
 void CMainFrame::OnButtonFullscreen() 
