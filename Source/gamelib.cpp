@@ -632,9 +632,12 @@ void CGame::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGame::OnKillFocus()
 {
-	CAudio::Instance()->Pause();
-	if (ENABLE_GAME_PAUSE)
-		running = false;
+    if(ENABLE_AUDIO_PAUSE_WHEN_KILL_FOCUS)
+        CAudio::Instance()->Pause();
+
+    if (ENABLE_GAME_PAUSE)
+        running = false;
+    
 	else if (CDDraw::IsFullScreen())
 		running = false;
 }
