@@ -1,5 +1,5 @@
 /*
- * mygame.h: ¥»ÀÉ®×Àx¹CÀ¸¥»¨­ªºclassªºinterface
+ * mygame.h: æœ¬æª”æ¡ˆå„²éŠæˆ²æœ¬èº«çš„classçš„interface
  * Copyright (C) 2002-2008 Woei-Kae Chen <wkc@csie.ntut.edu.tw>
  *
  * This file is part of game, a free game development framework for windows.
@@ -42,7 +42,7 @@
 // Constants
 /////////////////////////////////////////////////////////////////////////////
 
-enum AUDIO_ID {				// ©w¸q¦UºØ­µ®Äªº½s¸¹
+enum AUDIO_ID {				// å®šç¾©å„ç¨®éŸ³æ•ˆçš„ç·¨è™Ÿ
 	AUDIO_DING,				// 0
 	AUDIO_LAKE,				// 1
 	AUDIO_NTUT				// 2
@@ -50,152 +50,152 @@ enum AUDIO_ID {				// ©w¸q¦UºØ­µ®Äªº½s¸¹
 
 namespace game_framework {
 /////////////////////////////////////////////////////////////////////////////
-// ³o­Óclass´£¨Ñ¥i¥H¥ÎÁä½L©Î·Æ¹«±±¨îªºÀ¿¤l
-// ¬İÀ´´N¥i¥H§ï¼g¦¨¦Û¤vªºµ{¦¡¤F
+// é€™å€‹classæä¾›å¯ä»¥ç”¨éµç›¤æˆ–æ»‘é¼ æ§åˆ¶çš„æ“¦å­
+// çœ‹æ‡‚å°±å¯ä»¥æ”¹å¯«æˆè‡ªå·±çš„ç¨‹å¼äº†
 /////////////////////////////////////////////////////////////////////////////
 
 class CEraser
 {
 public:
 	CEraser();
-	int  GetX1();					// À¿¤l¥ª¤W¨¤ x ®y¼Ğ
-	int  GetY1();					// À¿¤l¥ª¤W¨¤ y ®y¼Ğ
-	int  GetX2();					// À¿¤l¥k¤U¨¤ x ®y¼Ğ
-	int  GetY2();					// À¿¤l¥k¤U¨¤ y ®y¼Ğ
-	void Initialize();				// ³]©wÀ¿¤l¬°ªì©l­È
-	void LoadBitmap();				// ¸ü¤J¹Ï§Î
-	void OnMove();					// ²¾°ÊÀ¿¤l
-	void OnShow();					// ±NÀ¿¤l¹Ï§Î¶K¨ìµe­±
-	void SetMovingDown(bool flag);	// ³]©w¬O§_¥¿¦b©¹¤U²¾°Ê
-	void SetMovingLeft(bool flag);	// ³]©w¬O§_¥¿¦b©¹¥ª²¾°Ê
-	void SetMovingRight(bool flag); // ³]©w¬O§_¥¿¦b©¹¥k²¾°Ê
-	void SetMovingUp(bool flag);	// ³]©w¬O§_¥¿¦b©¹¤W²¾°Ê
-	void SetXY(int nx, int ny);		// ³]©wÀ¿¤l¥ª¤W¨¤®y¼Ğ
+	int  GetX1();					// æ“¦å­å·¦ä¸Šè§’ x åº§æ¨™
+	int  GetY1();					// æ“¦å­å·¦ä¸Šè§’ y åº§æ¨™
+	int  GetX2();					// æ“¦å­å³ä¸‹è§’ x åº§æ¨™
+	int  GetY2();					// æ“¦å­å³ä¸‹è§’ y åº§æ¨™
+	void Initialize();				// è¨­å®šæ“¦å­ç‚ºåˆå§‹å€¼
+	void LoadBitmap();				// è¼‰å…¥åœ–å½¢
+	void OnMove();					// ç§»å‹•æ“¦å­
+	void OnShow();					// å°‡æ“¦å­åœ–å½¢è²¼åˆ°ç•«é¢
+	void SetMovingDown(bool flag);	// è¨­å®šæ˜¯å¦æ­£åœ¨å¾€ä¸‹ç§»å‹•
+	void SetMovingLeft(bool flag);	// è¨­å®šæ˜¯å¦æ­£åœ¨å¾€å·¦ç§»å‹•
+	void SetMovingRight(bool flag); // è¨­å®šæ˜¯å¦æ­£åœ¨å¾€å³ç§»å‹•
+	void SetMovingUp(bool flag);	// è¨­å®šæ˜¯å¦æ­£åœ¨å¾€ä¸Šç§»å‹•
+	void SetXY(int nx, int ny);		// è¨­å®šæ“¦å­å·¦ä¸Šè§’åº§æ¨™
 protected:
-	CAnimation animation;		// À¿¤lªº°Êµe
-	int x, y;					// À¿¤l¥ª¤W¨¤®y¼Ğ
-	bool isMovingDown;			// ¬O§_¥¿¦b©¹¤U²¾°Ê
-	bool isMovingLeft;			// ¬O§_¥¿¦b©¹¥ª²¾°Ê
-	bool isMovingRight;			// ¬O§_¥¿¦b©¹¥k²¾°Ê
-	bool isMovingUp;			// ¬O§_¥¿¦b©¹¤W²¾°Ê
+	CAnimation animation;		// æ“¦å­çš„å‹•ç•«
+	int x, y;					// æ“¦å­å·¦ä¸Šè§’åº§æ¨™
+	bool isMovingDown;			// æ˜¯å¦æ­£åœ¨å¾€ä¸‹ç§»å‹•
+	bool isMovingLeft;			// æ˜¯å¦æ­£åœ¨å¾€å·¦ç§»å‹•
+	bool isMovingRight;			// æ˜¯å¦æ­£åœ¨å¾€å³ç§»å‹•
+	bool isMovingUp;			// æ˜¯å¦æ­£åœ¨å¾€ä¸Šç§»å‹•
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// ³o­Óclass´£¨ÑÂ¶°é°éªº²y
-// ¬İÀ´´N¥i¥H§ï¼g¦¨¦Û¤vªºµ{¦¡¤F
+// é€™å€‹classæä¾›ç¹åœˆåœˆçš„çƒ
+// çœ‹æ‡‚å°±å¯ä»¥æ”¹å¯«æˆè‡ªå·±çš„ç¨‹å¼äº†
 /////////////////////////////////////////////////////////////////////////////
 
 class CBall
 {
 public:
 	CBall();
-	bool HitEraser(CEraser *eraser);						// ¬O§_¸I¨ìÀ¿¤l
-	bool IsAlive();											// ¬O§_¬¡µÛ
-	void LoadBitmap();										// ¸ü¤J¹Ï§Î
-	void OnMove();											// ²¾°Ê
-	void OnShow();											// ±N¹Ï§Î¶K¨ìµe­±
-	void SetXY(int nx, int ny);								// ³]©w¶ê¤ßªº®y¼Ğ
-	void SetIsAlive(bool alive);							// ³]©w¬O§_¬¡µÛ
-	void SetDelay(int d);									// ³]©w±ÛÂàªº³t«×
+	bool HitEraser(CEraser *eraser);						// æ˜¯å¦ç¢°åˆ°æ“¦å­
+	bool IsAlive();											// æ˜¯å¦æ´»è‘—
+	void LoadBitmap();										// è¼‰å…¥åœ–å½¢
+	void OnMove();											// ç§»å‹•
+	void OnShow();											// å°‡åœ–å½¢è²¼åˆ°ç•«é¢
+	void SetXY(int nx, int ny);								// è¨­å®šåœ“å¿ƒçš„åº§æ¨™
+	void SetIsAlive(bool alive);							// è¨­å®šæ˜¯å¦æ´»è‘—
+	void SetDelay(int d);									// è¨­å®šæ—‹è½‰çš„é€Ÿåº¦
 protected:
-	CMovingBitmap bmp;			// ²yªº¹Ï
-	CMovingBitmap bmp_center;	// ¶ê¤ßªº¹Ï			
-	int x, y;					// ¶ê¤ßªº®y¼Ğ
-	int dx, dy;					// ²y¶ZÂ÷¶ê¤ßªº¦ì²¾¶q
-	int index;					// ²yªº¡u¨¤«×¡v¡A0-17ªí¥Ü0-360«×
-	int delay_counter;			// ½Õ¾ã±ÛÂà³t«×ªº­p¼Æ¾¹
-	int delay;					// ±ÛÂàªº³t«×
-	bool is_alive;				// ¬O§_¬¡µÛ
+	CMovingBitmap bmp;			// çƒçš„åœ–
+	CMovingBitmap bmp_center;	// åœ“å¿ƒçš„åœ–			
+	int x, y;					// åœ“å¿ƒçš„åº§æ¨™
+	int dx, dy;					// çƒè·é›¢åœ“å¿ƒçš„ä½ç§»é‡
+	int index;					// çƒçš„ã€Œè§’åº¦ã€ï¼Œ0-17è¡¨ç¤º0-360åº¦
+	int delay_counter;			// èª¿æ•´æ—‹è½‰é€Ÿåº¦çš„è¨ˆæ•¸å™¨
+	int delay;					// æ—‹è½‰çš„é€Ÿåº¦
+	bool is_alive;				// æ˜¯å¦æ´»è‘—
 private:
-	bool HitRectangle(int tx1, int ty1, int tx2, int ty2);	// ¬O§_¸I¨ì°Ñ¼Æ½d³òªº¯x§Î
+	bool HitRectangle(int tx1, int ty1, int tx2, int ty2);	// æ˜¯å¦ç¢°åˆ°åƒæ•¸ç¯„åœçš„çŸ©å½¢
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// ³o­Óclass´£¨Ñ·|¤@ª½¼u¸õªº²y
-// ¬İÀ´´N¥i¥H§ï¼g¦¨¦Û¤vªºµ{¦¡¤F
+// é€™å€‹classæä¾›æœƒä¸€ç›´å½ˆè·³çš„çƒ
+// çœ‹æ‡‚å°±å¯ä»¥æ”¹å¯«æˆè‡ªå·±çš„ç¨‹å¼äº†
 /////////////////////////////////////////////////////////////////////////////
 
 class CBouncingBall
 {
 public:
 	CBouncingBall();
-	void LoadBitmap();		// ¸ü¤J¹Ï§Î
-	void OnMove();			// ²¾°Ê
-	void OnShow();			// ±N¹Ï§Î¶K¨ìµe­±
+	void LoadBitmap();		// è¼‰å…¥åœ–å½¢
+	void OnMove();			// ç§»å‹•
+	void OnShow();			// å°‡åœ–å½¢è²¼åˆ°ç•«é¢
 private:
-	int x, y;				// ¹Ï§Î®y¼Ğ
-	int floor;				// ¦aªOªºY®y¼Ğ
-	bool rising;			// trueªí¤W¤É¡Bfalseªí¤U­°
-	int initial_velocity;	// ªì©l³t«×
-	int velocity;			// ¥Ø«eªº³t«×(ÂI/¦¸)
-	CAnimation animation;	// §Q¥Î°Êµe§@¹Ï§Î
+	int x, y;				// åœ–å½¢åº§æ¨™
+	int floor;				// åœ°æ¿çš„Yåº§æ¨™
+	bool rising;			// trueè¡¨ä¸Šå‡ã€falseè¡¨ä¸‹é™
+	int initial_velocity;	// åˆå§‹é€Ÿåº¦
+	int velocity;			// ç›®å‰çš„é€Ÿåº¦(é»/æ¬¡)
+	CAnimation animation;	// åˆ©ç”¨å‹•ç•«ä½œåœ–å½¢
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸¶}ÀYµe­±ª«¥ó
-// ¨C­ÓMember functionªºImplementation³£­n§ËÀ´
+// é€™å€‹classç‚ºéŠæˆ²çš„éŠæˆ²é–‹é ­ç•«é¢ç‰©ä»¶
+// æ¯å€‹Member functionçš„Implementationéƒ½è¦å¼„æ‡‚
 /////////////////////////////////////////////////////////////////////////////
 
 class CGameStateInit : public CGameState {
 public:
 	CGameStateInit(CGame *g);
-	void OnInit();  								// ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
-	void OnBeginState();							// ³]©w¨C¦¸­«ª±©Ò»İªºÅÜ¼Æ
-	void OnKeyUp(UINT, UINT, UINT); 				// ³B²zÁä½LUpªº°Ê§@
-	void OnLButtonDown(UINT nFlags, CPoint point);  // ³B²z·Æ¹«ªº°Ê§@
+	void OnInit();  								// éŠæˆ²çš„åˆå€¼åŠåœ–å½¢è¨­å®š
+	void OnBeginState();							// è¨­å®šæ¯æ¬¡é‡ç©æ‰€éœ€çš„è®Šæ•¸
+	void OnKeyUp(UINT, UINT, UINT); 				// è™•ç†éµç›¤Upçš„å‹•ä½œ
+	void OnLButtonDown(UINT nFlags, CPoint point);  // è™•ç†æ»‘é¼ çš„å‹•ä½œ
 protected:
-	void OnShow();									// Åã¥Ü³o­Óª¬ºAªº¹CÀ¸µe­±
+	void OnShow();									// é¡¯ç¤ºé€™å€‹ç‹€æ…‹çš„éŠæˆ²ç•«é¢
 private:
-	CMovingBitmap logo;								// csieªºlogo
+	CMovingBitmap logo;								// csieçš„logo
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
-// ¨C­ÓMember functionªºImplementation³£­n§ËÀ´
+// é€™å€‹classç‚ºéŠæˆ²çš„éŠæˆ²åŸ·è¡Œç‰©ä»¶ï¼Œä¸»è¦çš„éŠæˆ²ç¨‹å¼éƒ½åœ¨é€™è£¡
+// æ¯å€‹Member functionçš„Implementationéƒ½è¦å¼„æ‡‚
 /////////////////////////////////////////////////////////////////////////////
 
 class CGameStateRun : public CGameState {
 public:
 	CGameStateRun(CGame *g);
 	~CGameStateRun();
-	void OnBeginState();							// ³]©w¨C¦¸­«ª±©Ò»İªºÅÜ¼Æ
-	void OnInit();  								// ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
+	void OnBeginState();							// è¨­å®šæ¯æ¬¡é‡ç©æ‰€éœ€çš„è®Šæ•¸
+	void OnInit();  								// éŠæˆ²çš„åˆå€¼åŠåœ–å½¢è¨­å®š
 	void OnKeyDown(UINT, UINT, UINT);
 	void OnKeyUp(UINT, UINT, UINT);
-	void OnLButtonDown(UINT nFlags, CPoint point);  // ³B²z·Æ¹«ªº°Ê§@
-	void OnLButtonUp(UINT nFlags, CPoint point);	// ³B²z·Æ¹«ªº°Ê§@
-	void OnMouseMove(UINT nFlags, CPoint point);	// ³B²z·Æ¹«ªº°Ê§@ 
-	void OnRButtonDown(UINT nFlags, CPoint point);  // ³B²z·Æ¹«ªº°Ê§@
-	void OnRButtonUp(UINT nFlags, CPoint point);	// ³B²z·Æ¹«ªº°Ê§@
+	void OnLButtonDown(UINT nFlags, CPoint point);  // è™•ç†æ»‘é¼ çš„å‹•ä½œ
+	void OnLButtonUp(UINT nFlags, CPoint point);	// è™•ç†æ»‘é¼ çš„å‹•ä½œ
+	void OnMouseMove(UINT nFlags, CPoint point);	// è™•ç†æ»‘é¼ çš„å‹•ä½œ 
+	void OnRButtonDown(UINT nFlags, CPoint point);  // è™•ç†æ»‘é¼ çš„å‹•ä½œ
+	void OnRButtonUp(UINT nFlags, CPoint point);	// è™•ç†æ»‘é¼ çš„å‹•ä½œ
 protected:
-	void OnMove();									// ²¾°Ê¹CÀ¸¤¸¯À
-	void OnShow();									// Åã¥Ü³o­Óª¬ºAªº¹CÀ¸µe­±
+	void OnMove();									// ç§»å‹•éŠæˆ²å…ƒç´ 
+	void OnShow();									// é¡¯ç¤ºé€™å€‹ç‹€æ…‹çš„éŠæˆ²ç•«é¢
 private:
-	const int		NUMBALLS;	// ²yªºÁ`¼Æ
-	CMovingBitmap	background;	// ­I´º¹Ï
-	CMovingBitmap	help;		// »¡©ú¹Ï
-	CBall			*ball;		// ²yªº°}¦C
-	CMovingBitmap	corner;		// ¨¤¸¨¹Ï
-	CEraser			eraser;		// ©ç¤l
-	CInteger		hits_left;	// ³Ñ¤Uªº¼²À»¼Æ
-	CBouncingBall   bball;		// ¤ÏÂĞ¼u¸õªº²y
+	const int		NUMBALLS;	// çƒçš„ç¸½æ•¸
+	CMovingBitmap	background;	// èƒŒæ™¯åœ–
+	CMovingBitmap	help;		// èªªæ˜åœ–
+	CBall			*ball;		// çƒçš„é™£åˆ—
+	CMovingBitmap	corner;		// è§’è½åœ–
+	CEraser			eraser;		// æ‹å­
+	CInteger		hits_left;	// å‰©ä¸‹çš„æ’æ“Šæ•¸
+	CBouncingBall   bball;		// åè¦†å½ˆè·³çš„çƒ
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// ³o­Óclass¬°¹CÀ¸ªºµ²§ôª¬ºA(Game Over)
-// ¨C­ÓMember functionªºImplementation³£­n§ËÀ´
+// é€™å€‹classç‚ºéŠæˆ²çš„çµæŸç‹€æ…‹(Game Over)
+// æ¯å€‹Member functionçš„Implementationéƒ½è¦å¼„æ‡‚
 /////////////////////////////////////////////////////////////////////////////
 
 class CGameStateOver : public CGameState {
 public:
 	CGameStateOver(CGame *g);
-	void OnBeginState();							// ³]©w¨C¦¸­«ª±©Ò»İªºÅÜ¼Æ
+	void OnBeginState();							// è¨­å®šæ¯æ¬¡é‡ç©æ‰€éœ€çš„è®Šæ•¸
 	void OnInit();
 protected:
-	void OnMove();									// ²¾°Ê¹CÀ¸¤¸¯À
-	void OnShow();									// Åã¥Ü³o­Óª¬ºAªº¹CÀ¸µe­±
+	void OnMove();									// ç§»å‹•éŠæˆ²å…ƒç´ 
+	void OnShow();									// é¡¯ç¤ºé€™å€‹ç‹€æ…‹çš„éŠæˆ²ç•«é¢
 private:
-	int counter;	// ­Ë¼Æ¤§­p¼Æ¾¹
+	int counter;	// å€’æ•¸ä¹‹è¨ˆæ•¸å™¨
 };
 
 }

@@ -109,14 +109,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//  be dockable
 
 	//
-	// ½T©wToolBarªº¦ì¸m¬°©T©wªº¡A¥H«K­pºâwindow size
+	// ç¢ºå®šToolBarçš„ä½ç½®ç‚ºå›ºå®šçš„ï¼Œä»¥ä¾¿è¨ˆç®—window size
 	//
 	// m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
 	// EnableDocking(CBRS_ALIGN_ANY);
 	// DockControlBar(&m_wndToolBar);
 
 	//
-	// Àx¦sMenuªºpointer
+	// å„²å­˜Menuçš„pointer
 	//
 	pMenu = GetMenu();
 
