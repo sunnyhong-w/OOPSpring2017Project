@@ -1,5 +1,3 @@
-#pragma once
-
 /*  gameobject.h: 本檔案儲存遊戲引擎所使用的GameObject的interface
 Copyright (C) 2017 Guo Xiang, Hong <sunnyhong.w@gmail.com>
 
@@ -9,6 +7,8 @@ Copyright (C) 2017 Guo Xiang, Hong <sunnyhong.w@gmail.com>
 HISTORY :
 2017-02-09 v0.1.0
 */
+
+#pragma once
 
 #include<map>
 #include<typeindex>

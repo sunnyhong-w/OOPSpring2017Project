@@ -1,5 +1,3 @@
-#pragma once
-
 /*  component.h: 本檔案儲存遊戲引擎所使用的component的interface和basic component
 Copyright (C) 2017 Guo Xiang, Hong <sunnyhong.w@gmail.com>
 
@@ -10,6 +8,9 @@ HISTORY :
 2017-02-09 v0.1.0
 */
 
+#pragma once
+#include"enginelib.h"
+
 namespace game_engine {
 
 class GameObject;
@@ -18,7 +19,7 @@ class Transform;
 class Component{
 public:
     Component(GameObject* gobj, bool skip = false) : skipTriverse(skip) {};
-    ~Component();
+    ~Component() {};
     virtual void Update() = 0;
     virtual void OnDestory() = 0;
     ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
@@ -29,6 +30,16 @@ protected:
 private:
     ///<summary>在Scene處理Object Component Triverse的時候，跳過這個Component</summary>
     const bool skipTriverse = false;
+};
+
+
+
+class Transform : public Component {
+public:
+    Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0);
+    ~Transform() {};
+    Vector2 position;
+    int zindex;
 };
 
 }
