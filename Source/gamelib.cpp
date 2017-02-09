@@ -917,6 +917,32 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, int x, int y, double factor)
 	CheckDDFail("Blt Bitmap to Back Failed");
 }
 
+void CDDraw::BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, float scaleX, float scaleY)
+{
+    GAME_ASSERT(lpDDSBack && (SurfaceID < lpDDS.size()) && lpDDS[SurfaceID], "Internal Error: Incorrect SurfaceID in BltBitmapToBack");
+
+    int blt_flag;
+    if (BitmapColorKey[SurfaceID] != CLR_INVALID)
+        blt_flag = DDBLT_WAIT | DDBLT_KEYSRC;
+    else
+        blt_flag = DDBLT_WAIT;
+
+    targetRect.right = targetRect.left + (int)((BitmapRect[SurfaceID].right - BitmapRect[SurfaceID].left) * scaleX);
+    targetRect.bottom = targetRect.top + (int)((BitmapRect[SurfaceID].bottom - BitmapRect[SurfaceID].top) * scaleY);
+
+    if (lpDDSBack->IsLost())
+        RestoreSurface();
+    if (lpDDS[SurfaceID]->IsLost())
+        RestoreSurface();
+
+    if(sourceRect == CRect(0, 0, 0, 0))
+        ddrval = lpDDSBack->Blt(targetRect, lpDDS[SurfaceID], NULL, blt_flag, NULL);
+    else
+        ddrval = lpDDSBack->Blt(targetRect, lpDDS[SurfaceID], sourceRect, blt_flag, NULL);
+
+    CheckDDFail("Blt Bitmap to Back Failed");
+}
+
 void CDDraw::BltBitmapToBitmap(unsigned SourceID, unsigned TargetID, int x, int y)
 {
 	GAME_ASSERT((SourceID < lpDDS.size()) && (TargetID < lpDDS.size()) && (SourceID != TargetID), "Internal Error: Incorrect SourceID in BltBitmapToBitmap");
