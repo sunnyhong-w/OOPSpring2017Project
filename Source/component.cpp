@@ -12,11 +12,17 @@ HISTORY :
 #include"gameobject.h"
 
 namespace game_engine {
-    Component::Component(GameObject* gobj)
+    Component::Component(GameObject * gobj, bool skip = false)
     {
         this->gameObject = gobj;
         this->transform = gobj->GetComponent<Transform>();
     }
+
     Component::~Component()
     {}
+
+    bool Component::Skip()
+    {
+        return this->skipTriverse;
+    }
 }
