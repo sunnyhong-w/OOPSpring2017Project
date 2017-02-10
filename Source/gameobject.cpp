@@ -8,51 +8,20 @@ HISTORY :
 2017-02-09 v0.1.0
 */
 
+#include"StdAfx.h"
 #include"gameobject.h"
 
 namespace game_engine
 {
-    template<class T>
-    T* GameObject::AddComponent()
-    {
-        T* TPointer = new T(this);
-        componentData.insert(ComponentData::value_type(typeid(T), TPointer));
-        return TPointer;
-    }
-    
-    template<class T>
-    T* GameObject::AddComponentOnce()
-    {
-        ComponentData::iterator iter = componentData.find(typeid(T));
-        if (iter == componentData.end())
-        {
-            T* TPointer = new T(this);
-            componentData.insert(ComponentData::value_type(typeid(T), TPointer));
-            return TPointer;
-        }
-        else
-            return GetComponent<T>();
-    }
 
-    template<class T>
-    T* GameObject::GetComponent()
-    {
-        ComponentData::iterator iter = componentData.find(typeid(T));
-        if (iter != componentData.end())
-            return iter->second;
-        else
-            return nullptr;
-    }
-
-    template<class T>
-    const auto GameObject::GetComponents()
-    {
-        return componentData.equal_range(typeid(T));
-    }
 
     GameObject::~GameObject()
     {
     }
 
+    void Destory(GameObject &gobj)
+    {
+        gobj.destoryFlag = true;
+    }
 }
 
