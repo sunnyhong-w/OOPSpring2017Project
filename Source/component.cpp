@@ -18,21 +18,21 @@ namespace game_engine {
 //////////////////////////////////////////////////////////////////
 // Component實作
 //////////////////////////////////////////////////////////////////
-Component::Component(GameObject* gobj, bool skip) : skipTriverse(skip)
+Component::Component(GameObject* gobj, bool isGB) : isGameBehavior(isGB)
 {
     this->gameObject = gobj;
     this->transform = gobj->GetComponent<Transform>();
 }
 
-bool Component::Skip()
+bool Component::isBehavior()
 {
-    return this->skipTriverse;
+    return this->isGameBehavior;
 }
 
 //////////////////////////////////////////////////////////////////
 // Transform實作
 //////////////////////////////////////////////////////////////////
-Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj, true)
+Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj)
 {
     this->position = v2;
     this->zindex = z;
@@ -42,7 +42,7 @@ Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj, true
 //////////////////////////////////////////////////////////////////
 // SpriteRenderer實作
 //////////////////////////////////////////////////////////////////
-SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj, true)
+SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
     srcpos = Vector2I(-1, -1);
     size = Vector2I(-1, -1);

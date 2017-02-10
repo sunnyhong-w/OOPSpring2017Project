@@ -24,15 +24,15 @@ class Component{
 public:
     Component(GameObject* gobj, bool skip = false);
     ~Component() {};
-    virtual void Update() {};
     ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
-    bool Skip();
+    bool isBehavior();
+    bool enable = false;
 protected:
     GameObject* gameObject;
     Transform* transform;
 private:
     ///<summary>在Scene處理Object Component Triverse的時候，跳過這個Component</summary>
-    const bool skipTriverse = false;
+    const bool isGameBehavior = false;
 };
 
 
@@ -80,5 +80,7 @@ private:
     Vector2I srcpos;
     bool cutSrc = false;
 };
+
+class Collision;
 
 }
