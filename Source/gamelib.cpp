@@ -124,6 +124,7 @@
 #include "audio.h"
 #include "gamelib.h"
 #include "enginelib.h"
+#include "gameobject.h"
 #include "mygame.h"
 
 namespace game_framework {
