@@ -321,7 +321,7 @@ CMovingBitmap::CMovingBitmap()
 int CMovingBitmap::Height()
 {
 	GAME_ASSERT(isBitmapLoaded,"A bitmap must be loaded before Height() is called !!!");
-	return location.bottom - location.top;
+	return CDDraw::BitmapRect[SurfaceID].bottom;
 }
 
 int CMovingBitmap::Left()
@@ -398,6 +398,14 @@ void CMovingBitmap::ShowBitmap(CMovingBitmap &bm)
 	CDDraw::BltBitmapToBitmap(SurfaceID, bm.SurfaceID, location.left,location.top);
 }
 
+void CMovingBitmap::ShowBitmap(game_engine::Vector2I pos, game_engine::Vector2 scale, game_engine::Vector2I srcpos, game_engine::Vector2I size, bool cutSrc)
+{
+    CDDraw::BltBitmapToBack(SurfaceID, 
+        CRect(CPoint(pos.x,pos.y), CSize((int)(size.x * scale.x), (int)(size.y * scale.y))), 
+        CRect(CPoint(srcpos.x, srcpos.y), CSize(size.x, size.y)),
+        cutSrc);
+}
+
 int CMovingBitmap::Top()
 {
 	GAME_ASSERT(isBitmapLoaded,"A bitmap must be loaded before Top() is called !!!");
@@ -407,7 +415,12 @@ int CMovingBitmap::Top()
 int CMovingBitmap::Width()
 {
 	GAME_ASSERT(isBitmapLoaded,"A bitmap must be loaded before Width() is called !!!");
-	return location.right - location.left;
+	return  CDDraw::BitmapRect[SurfaceID].right;
+}
+
+bool CMovingBitmap::CheckExist(unsigned SID)
+{
+    return SID < CDDraw::BitmapRect.size();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -918,7 +931,7 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, int x, int y, double factor)
 	CheckDDFail("Blt Bitmap to Back Failed");
 }
 
-void CDDraw::BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, game_engine::Vector2 scale)
+void CDDraw::BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, bool cutSrc)
 {
     GAME_ASSERT(lpDDSBack && (SurfaceID < lpDDS.size()) && lpDDS[SurfaceID], "Internal Error: Incorrect SurfaceID in BltBitmapToBack");
 
@@ -928,18 +941,15 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceR
     else
         blt_flag = DDBLT_WAIT;
 
-    targetRect.right = targetRect.left + (int)((BitmapRect[SurfaceID].right - BitmapRect[SurfaceID].left) * scale.x);
-    targetRect.bottom = targetRect.top + (int)((BitmapRect[SurfaceID].bottom - BitmapRect[SurfaceID].top) * scale.y);
-
     if (lpDDSBack->IsLost())
         RestoreSurface();
     if (lpDDS[SurfaceID]->IsLost())
         RestoreSurface();
 
-    if(sourceRect == CRect(0, 0, 0, 0))
-        ddrval = lpDDSBack->Blt(targetRect, lpDDS[SurfaceID], NULL, blt_flag, NULL);
-    else
+    if(cutSrc)
         ddrval = lpDDSBack->Blt(targetRect, lpDDS[SurfaceID], sourceRect, blt_flag, NULL);
+    else
+        ddrval = lpDDSBack->Blt(targetRect, lpDDS[SurfaceID], NULL, blt_flag, NULL);
 
     CheckDDFail("Blt Bitmap to Back Failed");
 }

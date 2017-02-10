@@ -176,7 +176,7 @@ public:
 	static bool  IsFullScreen();			// 回答是否為全螢幕模式/視窗模式
 private:
 	CDDraw();								// private constructor
-    static void  BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect = CRect(0,0,0,0), game_engine::Vector2 scale = game_engine::Vector2::one);
+    static void  BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, bool cutSrc);
 	static void  BltBitmapToBack(unsigned SurfaceID, int x, int y);
 	static void  BltBitmapToBack(unsigned SurfaceID, int x, int y, double factor);
 	static void  BltBitmapToBitmap(unsigned SourceID, unsigned TargetID, int x, int y);
@@ -227,12 +227,14 @@ public:
 	void  ShowBitmap();					// 將圖貼到螢幕
 	void  ShowBitmap(double factor);	// 將圖貼到螢幕 factor < 1時縮小，>1時放大。注意：需要VGA卡硬體的支援，否則會很慢
 	void  ShowBitmap(CMovingBitmap &);	// 將圖貼到到另一張圖上 (僅供特殊用途)
+    void  ShowBitmap(game_engine::Vector2I pos, game_engine::Vector2 scale, game_engine::Vector2I srcpos, game_engine::Vector2I size, bool cutSrc);
 	int   Top();						// 取得圖形的左上角的 y 座標
 	int   Width();						// 取得圖形的寬度
 protected:
 	CRect    location;			// location of the bitmap
 	bool     isBitmapLoaded;	// whether a bitmap has been loaded
 	unsigned SurfaceID;			// the surface id of this bitmap
+    bool  CheckExist(unsigned SID);
 };
 
 /////////////////////////////////////////////////////////////////////////////
