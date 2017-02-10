@@ -11,6 +11,7 @@ HISTORY :
 #pragma once
 
 #include<map>
+#include<vector>
 #include<typeindex>
 
 namespace game_engine {
@@ -44,7 +45,7 @@ namespace game_engine {
         //取得所有指定型別的Component，會回傳一個iterator pair，其first為start，second為end
         //要判斷已沒有就判斷first==second，有的話就是true
         //T component的泛型
-        template<class T> const auto GetComponents();
+        template<class T> const std::vector<T*> GetComponents();
 
     protected:
         bool isEnable = true;
@@ -87,9 +88,15 @@ namespace game_engine {
             return nullptr;
     }
 
-    template<class T> const auto GameObject::GetComponents()
+    template<class T> const std::vector<T*> GameObject::GetComponents()
     {
-        return componentData.equal_range(typeid(T));
+        std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(typeid(T));
+        std::vector<T*> retval;
+
+        for (ComponentData::iterator it = data.first; it != data.second; it++)
+            retval.push_back(static_cast<T*>(it->second));
+
+        return retval;
     }
 
     //一些Public的最高權限Object
