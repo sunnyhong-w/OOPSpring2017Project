@@ -69,10 +69,13 @@ public:
     ///<summary>將Size重置成最後一次Load的圖片大小</summary>
     void ResetSize();
     ///<summary>取代原本的LoadBitmap機能，注意在讀檔之後會重置Size和SrcPos的參數</summary>
+    ///<param name="filename">檔案目錄</param>
+    ///<param name="color">用來做Color Keying的顏色[RGB(r,b,g)]</param>
     void LoadBitmapData(char* filename, COLORREF color);
-    ///<summary>取得目前的SurfaceID</ summary>
+    ///<summary>取得目前的SurfaceID</summary>
     int GetSurfaceID();
     ///<summary>設定已存在的SurfaceID，注意在設定之後會重置Size和SrcPos的參數</summary>
+    ///<param name="SID">要設定的SurfaceID</param>
     void SetSurfaceID(int SID);
 
 private:
@@ -80,5 +83,9 @@ private:
     Vector2I srcpos;
     bool cutSrc = false;
 };
+
+/////////////////////////////////////////////////////////////////////////////
+// 進行圖像繪製的Component
+/////////////////////////////////////////////////////////////////////////////
 
 }
