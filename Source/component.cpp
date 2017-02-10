@@ -9,6 +9,8 @@ HISTORY :
 */
 
 #include"stdafx.h"
+#include <ddraw.h>
+#include"gamelib.h"
 #include"component.h"
 #include"gameobject.h"
 
@@ -35,6 +37,67 @@ Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj, true
 {
     this->position = v2;
     this->zindex = z;
+    this->scale = Vector2::one;
 }
+
+//////////////////////////////////////////////////////////////////
+// SpriteRenderer實作
+//////////////////////////////////////////////////////////////////
+SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj, true)
+{
+    srcpos = Vector2I(-1, -1);
+    size = Vector2I(-1, -1);
+}
+
+void SpriteRenderer::Draw()
+{
+    this->ShowBitmap(transform->position.GetV2I(), transform->scale, srcpos, size, cutSrc);
+}
+
+void SpriteRenderer::SetSourcePos(Vector2I pos)
+{
+    this->srcpos = pos;
+    this->cutSrc = true;
+}
+
+void SpriteRenderer::ResetSourcePos()
+{
+    this->srcpos = Vector2I(-1, -1);
+    this->cutSrc = false;
+}
+
+void SpriteRenderer::SetSize(Vector2I size)
+{
+    this->size = size;
+}
+
+void SpriteRenderer::ResetSize()
+{
+    this->size = Vector2I(this->Width(), this->Height());
+}
+
+void SpriteRenderer::LoadBitmapData(char * filename, COLORREF color)
+{
+    this->LoadBitmapA(filename, color);
+    this->ResetSize();
+    this->ResetSourcePos();
+}
+
+int SpriteRenderer::GetSurfaceID()
+{
+    return this->SurfaceID;
+}
+
+void SpriteRenderer::SetSurfaceID(int SID)
+{
+    GAME_ASSERT(CheckExist(SID), "SurfaceID not found. #[Engine]SpriteRenderer->SetSurfaceID");
+
+    this->SurfaceID = SID;
+    this->ResetSize();
+    this->ResetSourcePos();
+    this->isBitmapLoaded = true;
+}
+
+
 
 }
