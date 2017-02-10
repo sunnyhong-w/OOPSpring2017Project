@@ -10,8 +10,7 @@ HISTORY :
 
 #pragma once
 #include"enginelib.h"
-
-
+#include"gamelib.h"
 namespace game_engine {
 
 class GameObject;
@@ -25,7 +24,7 @@ class Component{
 public:
     Component(GameObject* gobj, bool skip = false);
     ~Component() {};
-    virtual void Update() = 0;
+    virtual void Update() {};
     ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
     bool Skip();
 protected:
@@ -44,7 +43,6 @@ class Transform : public Component {
 public:
     Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0);
     ~Transform() {};
-    void Update() override {};
     Vector2 position;
     Vector2 scale;
     int zindex;
@@ -58,7 +56,6 @@ class SpriteRenderer : public Component , private game_framework::CMovingBitmap 
 public:
     SpriteRenderer(GameObject* gobj);
     ~SpriteRenderer() {};
-    void Update() override {};
     void Draw();
     ///<summary>設定Sprite的圖源剪位置</summary>
     void SetSourcePos(Vector2I pos);
@@ -83,9 +80,5 @@ private:
     Vector2I srcpos;
     bool cutSrc = false;
 };
-
-/////////////////////////////////////////////////////////////////////////////
-// 進行圖像繪製的Component
-/////////////////////////////////////////////////////////////////////////////
 
 }

@@ -10,7 +10,6 @@ HISTORY :
 
 #include"stdafx.h"
 #include <ddraw.h>
-#include"gamelib.h"
 #include"component.h"
 #include"gameobject.h"
 
