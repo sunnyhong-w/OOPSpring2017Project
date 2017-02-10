@@ -75,9 +75,9 @@ void SpriteRenderer::ResetSize()
     this->size = Vector2I(this->Width(), this->Height());
 }
 
-void SpriteRenderer::LoadBitmapData(char * filename, COLORREF color)
+void SpriteRenderer::LoadBitmapData(char * filename, short r, short g, short b)
 {
-    this->LoadBitmapA(filename, color);
+    this->LoadBitmapA(filename, RGB(r,g,b));
     this->ResetSize();
     this->ResetSourcePos();
 }

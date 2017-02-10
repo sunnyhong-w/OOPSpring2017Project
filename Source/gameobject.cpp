@@ -23,22 +23,39 @@ namespace game_engine
     void GameObject::Start()
     {
         for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+        {
             if (it->second->isBehavior())
+            {
                 static_cast<GameBehaviour*>(it->second)->Start();
+                it->second->enable = true;
+            }
+        }
     }
 
     void GameObject::Update()
     {
         for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+        {
             if (it->second->isBehavior())
-                static_cast<GameBehaviour*>(it->second)->Update();
+            {
+                GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+                if (gb->enable)
+                    gb->Update();
+            }
+        }
     }
 
     void GameObject::LateUpdate()
     {
         for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+        {
             if (it->second->isBehavior())
-                static_cast<GameBehaviour*>(it->second)->LateUpdate();
+            {
+                GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+                if (gb->enable)
+                    gb->LateUpdate();
+            }
+        }
     }
 
     void GameObject::Draw()

@@ -46,8 +46,7 @@ namespace game_engine {
         //T component的泛型
         template<class T> const std::vector<T*> GetComponents();
 
-    protected:
-        bool isEnable = true;
+        bool enable = false;
 
     private:
         typedef std::multimap<std::type_index, Component*> ComponentData;

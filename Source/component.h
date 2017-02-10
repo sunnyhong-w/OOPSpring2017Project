@@ -67,8 +67,7 @@ public:
     void ResetSize();
     ///<summary>取代原本的LoadBitmap機能，注意在讀檔之後會重置Size和SrcPos的參數</summary>
     ///<param name="filename">檔案目錄</param>
-    ///<param name="color">用來做Color Keying的顏色[RGB(r,b,g)]</param>
-    void LoadBitmapData(char* filename, COLORREF color);
+    void LoadBitmapData(char* filename, short r, short g, short b);
     ///<summary>取得目前的SurfaceID</summary>
     int GetSurfaceID();
     ///<summary>設定已存在的SurfaceID，注意在設定之後會重置Size和SrcPos的參數</summary>
