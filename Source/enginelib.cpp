@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include"enginelib.h"
 
 namespace game_engine{
@@ -23,6 +24,17 @@ Vector2::Vector2(float x, float y)
 {
     this->x = x;
     this->y = y;
+}
+
+Vector2I Vector2::GetV2I()
+{
+    return Vector2I(this);
+}
+
+Vector2I::Vector2I(Vector2 *v2)
+{
+    this->x = (int)v2->x;
+    this->y = (int)v2->y;
 }
 
 }

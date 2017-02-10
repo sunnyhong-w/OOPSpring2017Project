@@ -15,6 +15,8 @@ namespace game_engine {
 enum RenderDepth { BACKGROUND = -1000 , MAINGROUND = 0, FOREGROUND = 1000, GUI = 2000 };
 ///////////////////////////////////
 
+struct Vector2I;
+
 struct Vector2
 {
 public:
@@ -28,6 +30,15 @@ public:
     const static Vector2 right;
     const static Vector2 one;
     const static Vector2 zero;
+    Vector2I GetV2I();
+};
+
+struct Vector2I
+{
+public:
+    Vector2I(Vector2 *v2);
+    int x;
+    int y;
 };
 
 }
