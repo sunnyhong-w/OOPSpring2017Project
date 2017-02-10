@@ -36,6 +36,8 @@ public:
 struct Vector2I
 {
 public:
+    Vector2I();
+    Vector2I(int x, int y);
     Vector2I(Vector2 *v2);
     int x;
     int y;

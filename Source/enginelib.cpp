@@ -31,6 +31,18 @@ Vector2I Vector2::GetV2I()
     return Vector2I(this);
 }
 
+Vector2I::Vector2I()
+{
+    this->x = 0;
+    this->y = 0;
+}
+
+Vector2I::Vector2I(int x, int y)
+{
+    this->x = x;
+    this->y = y;
+}
+
 Vector2I::Vector2I(Vector2 *v2)
 {
     this->x = (int)v2->x;
