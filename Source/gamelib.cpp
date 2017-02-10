@@ -123,6 +123,7 @@
 #include <string.h>
 #include "audio.h"
 #include "gamelib.h"
+#include "enginelib.h"
 #include "mygame.h"
 
 namespace game_framework {
@@ -917,7 +918,7 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, int x, int y, double factor)
 	CheckDDFail("Blt Bitmap to Back Failed");
 }
 
-void CDDraw::BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, float scaleX, float scaleY)
+void CDDraw::BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, game_engine::Vector2 scale)
 {
     GAME_ASSERT(lpDDSBack && (SurfaceID < lpDDS.size()) && lpDDS[SurfaceID], "Internal Error: Incorrect SurfaceID in BltBitmapToBack");
 
@@ -927,8 +928,8 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceR
     else
         blt_flag = DDBLT_WAIT;
 
-    targetRect.right = targetRect.left + (int)((BitmapRect[SurfaceID].right - BitmapRect[SurfaceID].left) * scaleX);
-    targetRect.bottom = targetRect.top + (int)((BitmapRect[SurfaceID].bottom - BitmapRect[SurfaceID].top) * scaleY);
+    targetRect.right = targetRect.left + (int)((BitmapRect[SurfaceID].right - BitmapRect[SurfaceID].left) * scale.x);
+    targetRect.bottom = targetRect.top + (int)((BitmapRect[SurfaceID].bottom - BitmapRect[SurfaceID].top) * scale.y);
 
     if (lpDDSBack->IsLost())
         RestoreSurface();

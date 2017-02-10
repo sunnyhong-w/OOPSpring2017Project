@@ -95,6 +95,7 @@ enum GAME_STATES {
 #include <list>
 #include <vector>
 #include <map>
+#include "enginelib.h"
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -175,7 +176,7 @@ public:
 	static bool  IsFullScreen();			// 回答是否為全螢幕模式/視窗模式
 private:
 	CDDraw();								// private constructor
-    static void  BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect = CRect(0,0,0,0), float scaleX = 1, float scaleY = 1);
+    static void  BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect = CRect(0,0,0,0), game_engine::Vector2 scale = game_engine::Vector2::one);
 	static void  BltBitmapToBack(unsigned SurfaceID, int x, int y);
 	static void  BltBitmapToBack(unsigned SurfaceID, int x, int y, double factor);
 	static void  BltBitmapToBitmap(unsigned SourceID, unsigned TargetID, int x, int y);
