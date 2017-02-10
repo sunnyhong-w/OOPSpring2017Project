@@ -8,6 +8,7 @@ HISTORY :
 2017-02-09 v0.1.0
 */
 
+#include"stdafx.h"
 #include"component.h"
 #include"gameobject.h"
 
@@ -16,7 +17,7 @@ namespace game_engine {
 //////////////////////////////////////////////////////////////////
 // Component實作
 //////////////////////////////////////////////////////////////////
-Component::Component(GameObject * gobj, bool skip = false)
+Component::Component(GameObject* gobj, bool skip) : skipTriverse(skip)
 {
     this->gameObject = gobj;
     this->transform = gobj->GetComponent<Transform>();
@@ -30,7 +31,7 @@ bool Component::Skip()
 //////////////////////////////////////////////////////////////////
 // Transform實作
 //////////////////////////////////////////////////////////////////
-Transform::Transform(GameObject* gobj, Vector2 v2 = Vector2::zero, int z = 0) : Component(gobj, true)
+Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj, true)
 {
     this->position = v2;
     this->zindex = z;

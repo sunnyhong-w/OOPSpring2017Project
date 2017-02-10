@@ -18,7 +18,7 @@ class Transform;
 
 class Component{
 public:
-    Component(GameObject* gobj, bool skip = false) : skipTriverse(skip) {};
+    Component(GameObject* gobj, bool skip = false);
     ~Component() {};
     virtual void Update() = 0;
     virtual void OnDestory() = 0;
