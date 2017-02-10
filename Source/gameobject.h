@@ -17,7 +17,6 @@ HISTORY :
 namespace game_engine {
 
     class Component;
-    class GameScript;
     class GameObject;
 
     void Destory(GameObject &gobj);
@@ -26,10 +25,10 @@ namespace game_engine {
         friend void Destory(GameObject &gobj);
     public:
         ~GameObject();
-        virtual void Start() {};
-        virtual void Update() {};
-        virtual void LateUpdate() {};
-        virtual void Draw() {};
+        void Start();
+        void Update();
+        void LateUpdate();
+        void Draw();
 
         //處理Component的Template
 

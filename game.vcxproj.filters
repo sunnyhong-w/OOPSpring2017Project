@@ -163,6 +163,9 @@
     <ClInclude Include="Source\enginelib.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
+    <ClInclude Include="Source\gamebehavior.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\game.rc">

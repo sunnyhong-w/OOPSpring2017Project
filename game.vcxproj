@@ -307,6 +307,7 @@
     <ClInclude Include="Source\component.h" />
     <ClInclude Include="Source\enginelib.h" />
     <ClInclude Include="Source\game.h" />
+    <ClInclude Include="Source\gamebehavior.h" />
     <ClInclude Include="Source\gameDoc.h" />
     <ClInclude Include="Source\gameobject.h" />
     <ClInclude Include="Source\gameView.h" />

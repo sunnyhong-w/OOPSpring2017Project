@@ -9,12 +9,42 @@ HISTORY :
 */
 
 #include"StdAfx.h"
+#include <ddraw.h>
+#include"component.h"
+#include"gamebehavior.h"
 #include"gameobject.h"
 
 namespace game_engine
 {
     GameObject::~GameObject()
     {
+    }
+
+    void GameObject::Start()
+    {
+        for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+            if (it->second->isBehavior())
+                static_cast<GameBehaviour*>(it->second)->Start();
+    }
+
+    void GameObject::Update()
+    {
+        for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+            if (it->second->isBehavior())
+                static_cast<GameBehaviour*>(it->second)->Update();
+    }
+
+    void GameObject::LateUpdate()
+    {
+        for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+            if (it->second->isBehavior())
+                static_cast<GameBehaviour*>(it->second)->LateUpdate();
+    }
+
+    void GameObject::Draw()
+    {
+        if(this->GetComponent<SpriteRenderer>() != nullptr)
+            this->GetComponent<SpriteRenderer>()->Draw();
     }
 
     void Destory(GameObject &gobj)
