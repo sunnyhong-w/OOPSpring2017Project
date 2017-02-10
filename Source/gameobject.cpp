@@ -16,6 +16,11 @@ HISTORY :
 
 namespace game_engine
 {
+    GameObject::GameObject()
+    {
+        this->AddComponentOnce<Transform>();
+    }
+
     GameObject::~GameObject()
     {
     }

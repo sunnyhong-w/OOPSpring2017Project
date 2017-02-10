@@ -24,6 +24,7 @@ namespace game_engine {
     class GameObject {
         friend void Destory(GameObject &gobj);
     public:
+        GameObject();
         ~GameObject();
         void Start();
         void Update();
