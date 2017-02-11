@@ -115,8 +115,6 @@ namespace game_engine
 
     void GameObject::UpdateRenderOrder(GameObject *gobj)
     {
-        vector<GameObject*>::iterator it;
-
         //Do an binary search so we know where could the object be, 
         //which can save a lot of time when size is large.
         //when we found the index, go front and fo backward unitl zcode is different
@@ -131,26 +129,26 @@ namespace game_engine
             else
                 break;
         }
-        int zcode = GameObject::gameObjects[mid]->transform->GetZCode();
 
+        int zcode = GameObject::gameObjects[mid]->transform->GetZCode();
         //backward
-        for (it = GameObject::gameObjects.begin() + mid; it != gameObjects.end() && (*it)->transform->GetZCode()==zcode; it++);
+        for (int i = mid; i < (int)GameObject::gameObjects.size() && GameObject::gameObjects[i]->transform->GetZCode() == zcode; i++)
         {
-            if (*it == gobj)
+            if (GameObject::gameObjects[i] == gobj)
             {
-                GameObject::gameObjects.erase(it);
-                GameObject::Insert(&(*it));
+                GameObject::gameObjects.erase(GameObject::gameObjects.begin() + i);
+                GameObject::Insert(&gobj);
                 return;
             }
         }
 
         //foward
-        for (it = GameObject::gameObjects.begin() + mid; it != gameObjects.begin() && (*it)->transform->GetZCode() == zcode; it--);
+        for (int i = mid; i >= 0 && GameObject::gameObjects[i]->transform->GetZCode() == zcode; i--)
         {
-            if (*it == gobj)
+            if (GameObject::gameObjects[i] == gobj)
             {
-                GameObject::gameObjects.erase(it);
-                GameObject::Insert(&(*it));
+                GameObject::gameObjects.erase(GameObject::gameObjects.begin() + i);
+                GameObject::Insert(&gobj);
                 return;
             }
         }

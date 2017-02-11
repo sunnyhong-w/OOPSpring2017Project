@@ -25,7 +25,7 @@ namespace game_engine {
 
     class GameObject {
         friend void Destory(GameObject &gobj);
-        friend void Instantiate(GameObject *objectPrefrabs, Vector2 posision = Vector2::null);
+        friend void Instantiate(GameObject *objectPrefrabs, Vector2 posision);
     public:
         GameObject(bool isPureScript = false);
         ~GameObject();
