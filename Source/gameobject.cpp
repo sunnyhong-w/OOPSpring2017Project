@@ -102,15 +102,58 @@ namespace game_engine
         while (low <= high)
         {
             mid = (high + low) / 2;
-            if (GameObject::gameObjects[mid]->transform > (*objptr)->transform)
+            if (GameObject::gameObjects[mid]->transform->GetZCode() > (*objptr)->transform->GetZCode())
                 high = mid - 1;
-            else if (GameObject::gameObjects[mid]->transform < (*objptr)->transform)
+            else if (GameObject::gameObjects[mid]->transform->GetZCode() < (*objptr)->transform->GetZCode())
                 low = mid + 1;
             else
                 break;
         }
 
         GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, (*objptr));
+    }
+
+    void GameObject::UpdateRenderOrder(GameObject *gobj)
+    {
+        vector<GameObject*>::iterator it;
+
+        //Do an binary search so we know where could the object be, 
+        //which can save a lot of time when size is large.
+        //when we found the index, go front and fo backward unitl zcode is different
+        int high = GameObject::gameObjects.size() - 1, low = 0, mid = 0;
+        while (low <= high)
+        {
+            mid = (high + low) / 2;
+            if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
+                high = mid - 1;
+            else if (GameObject::gameObjects[mid]->transform->GetZCode() < gobj->transform->GetZCode())
+                low = mid + 1;
+            else
+                break;
+        }
+        int zcode = GameObject::gameObjects[mid]->transform->GetZCode();
+
+        //backward
+        for (it = GameObject::gameObjects.begin() + mid; it != gameObjects.end() && (*it)->transform->GetZCode()==zcode; it++);
+        {
+            if (*it == gobj)
+            {
+                GameObject::gameObjects.erase(it);
+                GameObject::Insert(&(*it));
+                return;
+            }
+        }
+
+        //foward
+        for (it = GameObject::gameObjects.begin() + mid; it != gameObjects.begin() && (*it)->transform->GetZCode() == zcode; it--);
+        {
+            if (*it == gobj)
+            {
+                GameObject::gameObjects.erase(it);
+                GameObject::Insert(&(*it));
+                return;
+            }
+        }
     }
 }
 

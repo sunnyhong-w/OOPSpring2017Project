@@ -44,19 +44,17 @@ class Transform : public Component {
 public:
     Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0, RenderDepth rd = RenderDepth::MAINGROUND);
     ~Transform() {};
-
-    friend bool operator>(const Transform& lhs, const Transform& rhs)
-    {
-        return (lhs.zindex + lhs.depth) > (rhs.zindex + rhs.depth);
-    }
-    friend bool operator<(const Transform& lhs, const Transform& rhs) { return rhs > lhs; }
-    friend bool operator>=(const Transform& lhs, const Transform& rhs) { return !(lhs < rhs); }
-    friend bool operator<=(const Transform& lhs, const Transform& rhs) { return !(lhs > rhs); }
-
     Vector2 position;
     Vector2 scale;
+    void SetRenderDepth(int z);
+    void SetRenderDepth(RenderDepth rd);
+    void SetRenderDepth(int z, RenderDepth rd);
+    int GetZCode();
+
+private:
     int zindex;
     RenderDepth depth;
+    int zcode;
 };
 
 

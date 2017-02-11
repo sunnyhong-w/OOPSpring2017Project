@@ -50,7 +50,7 @@ namespace game_engine {
         //T component的泛型
         template<class T> const std::vector<T*> GetComponents();
 
-        
+        static void UpdateRenderOrder(GameObject* gobj);
         static vector<GameObject*> gameObjects;        
         bool enable = false;
         string name;
