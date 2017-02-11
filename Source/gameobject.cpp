@@ -16,9 +16,10 @@ HISTORY :
 
 namespace game_engine
 {
-    GameObject::GameObject()
+    GameObject::GameObject(bool isPureScript)
     {
-        this->AddComponentOnce<Transform>();
+        if(!isPureScript)
+            this->AddComponentOnce<Transform>();
     }
 
     GameObject::~GameObject()
@@ -69,9 +70,25 @@ namespace game_engine
             this->GetComponent<SpriteRenderer>()->Draw();
     }
 
+/////////////////////////////////////////////////////////////////////////
+//  Game Object Management
+/////////////////////////////////////////////////////////////////////////
+
+    vector<GameObject*> GameObject::gameObjects;
+
     void Destory(GameObject &gobj)
     {
         gobj.destoryFlag = true;
+    }
+
+    void Instantiate(GameObject *objectPrefrabs, Vector2 posision)
+    {
+        GameObject::gameObjects.push_back(new GameObject(*objectPrefrabs));
+        if (!posision.isNull())
+        {
+            GameObject::gameObjects.back()->GetComponent<Transform>()->position = posision;
+        }
+
     }
 }
 

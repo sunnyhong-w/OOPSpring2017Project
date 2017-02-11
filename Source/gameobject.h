@@ -20,11 +20,13 @@ namespace game_engine {
     class GameObject;
 
     void Destory(GameObject &gobj);
+    void Instantiate(GameObject *objectPrefrabs, Vector2 posision = Vector2::null);
 
     class GameObject {
         friend void Destory(GameObject &gobj);
+        friend void Instantiate(GameObject *objectPrefrabs, Vector2 posision);
     public:
-        GameObject();
+        GameObject(bool isPureScript = false);
         ~GameObject();
         void Start();
         void Update();
@@ -47,6 +49,7 @@ namespace game_engine {
         //T component的泛型
         template<class T> const std::vector<T*> GetComponents();
 
+        static vector<GameObject*> gameObjects;
         bool enable = false;
 
     private:
