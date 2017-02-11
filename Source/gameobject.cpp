@@ -16,7 +16,7 @@ HISTORY :
 
 namespace game_engine
 {
-    GameObject::GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript)
+    GameObject::GameObject(bool doNotDestoryOnChangeScene, bool isPureScript)
     {
         this->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
         if (!isPureScript)
