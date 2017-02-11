@@ -20,6 +20,7 @@ namespace game_engine {
     class Transform;
     class GameObject;
 
+    //一些Public的最高權限Function
     void Destory(GameObject &gobj);
     void Instantiate(GameObject *objectPrefrabs, Vector2 posision = Vector2::null);
 
@@ -27,7 +28,7 @@ namespace game_engine {
         friend void Destory(GameObject &gobj);
         friend void Instantiate(GameObject *objectPrefrabs, Vector2 posision);
     public:
-        GameObject(bool isPureScript = false);
+        GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();
         void Start();
         void Update();
@@ -63,11 +64,16 @@ namespace game_engine {
         Transform *transform;
 
     private:
+        //GameObjectManagement
+        static void Insert(GameObject** objptr);
+        static void ResetObjectPool();
+
+        //GameObject
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
         bool destoryFlag = false;
         bool isPureScript = false;
-        static void Insert(GameObject** objptr);
+        bool doNOTDestoryOnChangeScene = false;
     };
 
     //由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中
@@ -135,8 +141,5 @@ namespace game_engine {
         
         componentData.erase(typeid(T));
     }
-
-    //一些Public的最高權限Object
-    void Destory(GameObject &gobj);
 
 }

@@ -16,8 +16,9 @@ HISTORY :
 
 namespace game_engine
 {
-    GameObject::GameObject(bool isPureScript)
+    GameObject::GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript)
     {
+        this->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
         if (!isPureScript)
         {
             this->transform = this->AddComponentOnce<Transform>();
@@ -111,6 +112,21 @@ namespace game_engine
         }
 
         GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, (*objptr));
+    }
+
+    void GameObject::ResetObjectPool()
+    {
+        vector<GameObject*>::iterator it;
+        for (it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
+        {
+            if (!(*it)->doNOTDestoryOnChangeScene)
+            {
+                delete (*it);
+                it = GameObject::gameObjects.erase(it);
+            }
+            else
+                it++;
+        }
     }
 
     void GameObject::UpdateRenderOrder(GameObject *gobj)
