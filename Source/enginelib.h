@@ -9,12 +9,6 @@ HISTORY :
 
 namespace game_engine {
 
-///////////////////////////////////
-//Render Z-index position define //
-///////////////////////////////////
-enum RenderDepth { BACKGROUND = -1000 , MAINGROUND = 0, FOREGROUND = 1000, GUI = 2000 };
-///////////////////////////////////
-
 struct Vector2I;
 
 struct Vector2

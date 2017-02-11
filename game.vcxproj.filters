@@ -178,6 +178,9 @@
     <ClInclude Include="Source\easing.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
+    <ClInclude Include="Source\_setting.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\game.rc">
