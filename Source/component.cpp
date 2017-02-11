@@ -32,11 +32,12 @@ bool Component::isBehavior()
 //////////////////////////////////////////////////////////////////
 // Transform實作
 //////////////////////////////////////////////////////////////////
-Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj)
+Transform::Transform(GameObject* gobj, Vector2 v2, int z, RenderDepth rd) : Component(gobj)
 {
     this->position = v2;
-    this->zindex = z;
     this->scale = Vector2::one;
+    this->zindex = z;
+    this->depth = rd;
 }
 
 //////////////////////////////////////////////////////////////////
