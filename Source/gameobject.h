@@ -17,14 +17,18 @@ HISTORY :
 namespace game_engine {
 
     class Component;
+    class Transform;
     class GameObject;
 
+    //一些Public的最高權限Function
     void Destory(GameObject &gobj);
+    void Instantiate(GameObject *objectPrefrabs, Vector2 posision = Vector2::null);
 
     class GameObject {
         friend void Destory(GameObject &gobj);
+        friend void Instantiate(GameObject *objectPrefrabs, Vector2 posision);
     public:
-        GameObject();
+        GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();
         void Start();
         void Update();
@@ -46,26 +50,43 @@ namespace game_engine {
         //要判斷已沒有就判斷first==second，有的話就是true
         //T component的泛型
         template<class T> const std::vector<T*> GetComponents();
+        //刪除指定型別的Component物件
+        //T component的泛型
+        template<class T> void RemoveComponent(T* comp);
+        //刪除所有指定型別的Component
+        //T component的泛型
+        template<class T> void RemoveComponents();
 
+        static void UpdateRenderOrder(GameObject* gobj);
+        static vector<GameObject*> gameObjects;        
         bool enable = false;
+        string name;
+        Transform *transform;
 
     private:
+        //GameObjectManagement
+        static void Insert(GameObject** objptr);
+        static void ResetObjectPool();
+
+        //GameObject
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
         bool destoryFlag = false;
+        bool isPureScript = false;
+        bool doNOTDestoryOnChangeScene = false;
     };
 
     //由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中
     //Template Declare
 
-    template<class T> T* GameObject::AddComponent()
+    template<class T> inline T* GameObject::AddComponent()
     {
         T* TPointer = new T(this);
         componentData.insert(ComponentData::value_type(typeid(T), TPointer));
         return TPointer;
     }
 
-    template<class T> T* GameObject::AddComponentOnce()
+    template<class T> inline T* GameObject::AddComponentOnce()
     {
         ComponentData::iterator iter = componentData.find(typeid(T));
         if (iter == componentData.end())
@@ -78,7 +99,7 @@ namespace game_engine {
             return GetComponent<T>();
     }
 
-    template<class T> T* GameObject::GetComponent()
+    template<class T> inline T* GameObject::GetComponent()
     {
         ComponentData::iterator iter = componentData.find(typeid(T));
         if (iter != componentData.end())
@@ -87,7 +108,7 @@ namespace game_engine {
             return nullptr;
     }
 
-    template<class T> const std::vector<T*> GameObject::GetComponents()
+    template<class T> inline const std::vector<T*> GameObject::GetComponents()
     {
         std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(typeid(T));
         std::vector<T*> retval;
@@ -98,7 +119,27 @@ namespace game_engine {
         return retval;
     }
 
-    //一些Public的最高權限Object
-    void Destory(GameObject &gobj);
+    template<class T> inline void GameObject::RemoveComponent(T *comp)
+    {
+        std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(typeid(T));
+        for (ComponentData::iterator it = data.first; it != data.second; it++)
+        {
+            if (it->second == comp)
+            {
+                delete comp;
+                componentData.erase(it);
+                break;
+            }
+        }
+    }
+
+    template<class T> inline void GameObject::RemoveComponents()
+    {
+        auto list = GetComponents<T>();
+        for (T* tempcomp : list)
+            delete tempcomp;
+        
+        componentData.erase(typeid(T));
+    }
 
 }

@@ -11,6 +11,7 @@ HISTORY :
 #pragma once
 #include"enginelib.h"
 #include"gamelib.h"
+#include"_setting.h"
 namespace game_engine {
 
 class GameObject;
@@ -41,11 +42,19 @@ private:
 /////////////////////////////////////////////////////////////////////////////
 class Transform : public Component {
 public:
-    Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0);
+    Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0, RenderDepth rd = RenderDepth::MAINGROUND);
     ~Transform() {};
     Vector2 position;
     Vector2 scale;
+    void SetRenderDepth(int z);
+    void SetRenderDepth(RenderDepth rd);
+    void SetRenderDepth(int z, RenderDepth rd);
+    int GetZCode();
+
+private:
     int zindex;
+    RenderDepth depth;
+    int zcode;
 };
 
 
