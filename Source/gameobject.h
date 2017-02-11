@@ -14,19 +14,21 @@ HISTORY :
 #include<vector>
 #include<typeindex>
 
-namespace game_engine {
+namespace game_engine
+{
 
-    class Component;
-    class Transform;
-    class GameObject;
+class Component;
+class Transform;
+class GameObject;
 
-    //一些Public的最高權限Function
-    void Destory(GameObject &gobj);
-    void Instantiate(GameObject *objectPrefrabs, Vector2 posision = Vector2::null);
+//一些Public的最高權限Function
+void Destory(GameObject& gobj);
+void Instantiate(GameObject* objectPrefrabs, Vector2 posision = Vector2::null);
 
-    class GameObject {
-        friend void Destory(GameObject &gobj);
-        friend void Instantiate(GameObject *objectPrefrabs, Vector2 posision);
+class GameObject
+{
+        friend void Destory(GameObject& gobj);
+        friend void Instantiate(GameObject* objectPrefrabs, Vector2 posision);
     public:
         GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();
@@ -58,10 +60,10 @@ namespace game_engine {
         template<class T> void RemoveComponents();
 
         static void UpdateRenderOrder(GameObject* gobj);
-        static vector<GameObject*> gameObjects;        
+        static vector<GameObject*> gameObjects;
         bool enable = false;
         string name;
-        Transform *transform;
+        Transform* transform;
 
     private:
         //GameObjectManagement
@@ -74,72 +76,76 @@ namespace game_engine {
         bool destoryFlag = false;
         bool isPureScript = false;
         bool doNOTDestoryOnChangeScene = false;
-    };
+};
 
-    //由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中
-    //Template Declare
+//由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中
+//Template Declare
 
-    template<class T> inline T* GameObject::AddComponent()
+template<class T> inline T* GameObject::AddComponent()
+{
+    T* TPointer = new T(this);
+    componentData.insert(ComponentData::value_type(typeid(T), TPointer));
+    return TPointer;
+}
+
+template<class T> inline T* GameObject::AddComponentOnce()
+{
+    ComponentData::iterator iter = componentData.find(typeid(T));
+
+    if (iter == componentData.end())
     {
         T* TPointer = new T(this);
         componentData.insert(ComponentData::value_type(typeid(T), TPointer));
         return TPointer;
     }
+    else
+        return GetComponent<T>();
+}
 
-    template<class T> inline T* GameObject::AddComponentOnce()
+template<class T> inline T* GameObject::GetComponent()
+{
+    ComponentData::iterator iter = componentData.find(typeid(T));
+
+    if (iter != componentData.end())
+        return static_cast<T*>(iter->second);
+    else
+        return nullptr;
+}
+
+template<class T> inline const std::vector<T*> GameObject::GetComponents()
+{
+    std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(typeid(T));
+    std::vector<T*> retval;
+
+    for (ComponentData::iterator it = data.first; it != data.second; it++)
+        retval.push_back(static_cast<T*>(it->second));
+
+    return retval;
+}
+
+template<class T> inline void GameObject::RemoveComponent(T* comp)
+{
+    std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(typeid(T));
+
+    for (ComponentData::iterator it = data.first; it != data.second; it++)
     {
-        ComponentData::iterator iter = componentData.find(typeid(T));
-        if (iter == componentData.end())
+        if (it->second == comp)
         {
-            T* TPointer = new T(this);
-            componentData.insert(ComponentData::value_type(typeid(T), TPointer));
-            return TPointer;
-        }
-        else
-            return GetComponent<T>();
-    }
-
-    template<class T> inline T* GameObject::GetComponent()
-    {
-        ComponentData::iterator iter = componentData.find(typeid(T));
-        if (iter != componentData.end())
-            return static_cast<T*>(iter->second);
-        else
-            return nullptr;
-    }
-
-    template<class T> inline const std::vector<T*> GameObject::GetComponents()
-    {
-        std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(typeid(T));
-        std::vector<T*> retval;
-
-        for (ComponentData::iterator it = data.first; it != data.second; it++)
-            retval.push_back(static_cast<T*>(it->second));
-
-        return retval;
-    }
-
-    template<class T> inline void GameObject::RemoveComponent(T *comp)
-    {
-        std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(typeid(T));
-        for (ComponentData::iterator it = data.first; it != data.second; it++)
-        {
-            if (it->second == comp)
-            {
-                delete comp;
-                componentData.erase(it);
-                break;
-            }
+            delete comp;
+            componentData.erase(it);
+            break;
         }
     }
+}
 
-    template<class T> inline void GameObject::RemoveComponents()
-    {
-        auto list = GetComponents<T>();
-        for (T* tempcomp : list)
-            delete tempcomp;
-        
-        componentData.erase(typeid(T));
-    }
+template<class T> inline void GameObject::RemoveComponents()
+{
+    auto list = GetComponents<T>();
+
+    for (T* tempcomp : list)
+        delete tempcomp;
+
+    componentData.erase(typeid(T));
+}
 
 }

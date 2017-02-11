@@ -308,7 +308,6 @@
     <ClInclude Include="Source\audio.h" />
     <ClInclude Include="Source\component.h" />
     <ClInclude Include="Source\easing.h" />
-    <ClInclude Include="Source\easing.hpp" />
     <ClInclude Include="Source\enginelib.h" />
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\gamebehavior.h" />

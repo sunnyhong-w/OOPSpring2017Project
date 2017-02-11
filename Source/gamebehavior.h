@@ -12,20 +12,22 @@ HISTORY :
 #pragma once
 #include"component.h"
 
-namespace game_engine {
-class GameBehaviour : public Component{
+namespace game_engine
+{
+class GameBehaviour : public Component
+{
 
-public:
-    GameBehaviour(GameObject* gobj) : Component(gobj, true) {};
+    public:
+        GameBehaviour(GameObject* gobj) : Component(gobj, true) {};
 
-    virtual void Start() {};
-    virtual void Update() {};
-    virtual void LateUpdate() {};
+        virtual void Start() {};
+        virtual void Update() {};
+        virtual void LateUpdate() {};
 
-    virtual void OnCollisionEnter(Collision *c) {};
-    virtual void OnCollisionExit(Collision *c) {};
-    virtual void OnCollisionStay(Collision *c) {};
+        virtual void OnCollisionEnter(Collision* c) {};
+        virtual void OnCollisionExit(Collision* c) {};
+        virtual void OnCollisionStay(Collision* c) {};
 
-    virtual void OnRecivedBoardcast() {};
+        virtual void OnRecivedBoardcast() {};
 };
 }

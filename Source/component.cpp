@@ -13,7 +13,8 @@ HISTORY :
 #include"component.h"
 #include"gameobject.h"
 
-namespace game_engine {
+namespace game_engine
+{
 
 //////////////////////////////////////////////////////////////////
 // Component實作
@@ -104,9 +105,9 @@ void SpriteRenderer::ResetSize()
     this->size = Vector2I(this->Width(), this->Height());
 }
 
-void SpriteRenderer::LoadBitmapData(char * filename, short r, short g, short b)
+void SpriteRenderer::LoadBitmapData(char* filename, short r, short g, short b)
 {
-    this->LoadBitmapA(filename, RGB(r,g,b));
+    this->LoadBitmapA(filename, RGB(r, g, b));
     this->ResetSize();
     this->ResetSourcePos();
 }
@@ -119,7 +120,6 @@ int SpriteRenderer::GetSurfaceID()
 void SpriteRenderer::SetSurfaceID(int SID)
 {
     GAME_ASSERT(CheckExist(SID), "SurfaceID not found. #[Engine]SpriteRenderer->SetSurfaceID");
-
     this->SurfaceID = SID;
     this->ResetSize();
     this->ResetSourcePos();

@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include"enginelib.h"
 
-namespace game_engine{
+namespace game_engine
+{
 
 /////////////////////////////////////////////////////////////
 // Vector2
@@ -52,7 +53,7 @@ Vector2I::Vector2I(int x, int y)
     this->y = y;
 }
 
-Vector2I::Vector2I(Vector2 *v2)
+Vector2I::Vector2I(Vector2* v2)
 {
     this->x = (int)v2->x;
     this->y = (int)v2->y;

@@ -172,9 +172,6 @@
     <ClInclude Include="Source\gamebehavior.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\easing.hpp">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\easing.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
