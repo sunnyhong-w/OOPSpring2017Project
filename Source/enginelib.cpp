@@ -13,12 +13,16 @@ const Vector2 Vector2::left   = Vector2( 1,  0);
 const Vector2 Vector2::right  = Vector2(-1,  0);
 const Vector2 Vector2::one    = Vector2( 1,  1);
 const Vector2 Vector2::zero   = Vector2( 0,  0);
+const Vector2 Vector2::null   = Vector2(true);
 
 Vector2::Vector2()
 {
     this->x = 0;
     this->y = 0;
 }
+
+Vector2::Vector2(bool setNull) : nullVector(true)
+{}
 
 Vector2::Vector2(float x, float y)
 {
@@ -29,6 +33,11 @@ Vector2::Vector2(float x, float y)
 Vector2I Vector2::GetV2I()
 {
     return Vector2I(this);
+}
+
+bool Vector2::isNull()
+{
+    return nullVector;
 }
 
 Vector2I::Vector2I()
