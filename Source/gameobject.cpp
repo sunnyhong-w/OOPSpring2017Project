@@ -18,8 +18,11 @@ namespace game_engine
 {
     GameObject::GameObject(bool isPureScript)
     {
-        if(!isPureScript)
-            this->AddComponentOnce<Transform>();
+        if (!isPureScript)
+        {
+            this->transform = this->AddComponentOnce<Transform>();
+            this->isPureScript = isPureScript;
+        }
     }
 
     GameObject::~GameObject()
@@ -83,12 +86,31 @@ namespace game_engine
 
     void Instantiate(GameObject *objectPrefrabs, Vector2 posision)
     {
-        GameObject::gameObjects.push_back(new GameObject(*objectPrefrabs));
+        GameObject* gobj = new GameObject(*objectPrefrabs);
         if (!posision.isNull())
+            gobj->GetComponent<Transform>()->position = posision;
+        
+        GameObject::Insert(&gobj);
+    }
+
+    void GameObject::Insert(GameObject **objptr)
+    {
+        //Magic : Do an instertion sort with binary search
+        int high = GameObject::gameObjects.size() - 1, low = 0, mid = 0;
+
+        //Do an binary search so we know where should the object be
+        while (low <= high)
         {
-            GameObject::gameObjects.back()->GetComponent<Transform>()->position = posision;
+            mid = (high + low) / 2;
+            if (GameObject::gameObjects[mid]->transform > (*objptr)->transform)
+                high = mid - 1;
+            else if (GameObject::gameObjects[mid]->transform < (*objptr)->transform)
+                low = mid + 1;
+            else
+                break;
         }
 
+        GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, (*objptr));
     }
 }
 

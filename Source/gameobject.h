@@ -17,6 +17,7 @@ HISTORY :
 namespace game_engine {
 
     class Component;
+    class Transform;
     class GameObject;
 
     void Destory(GameObject &gobj);
@@ -24,7 +25,7 @@ namespace game_engine {
 
     class GameObject {
         friend void Destory(GameObject &gobj);
-        friend void Instantiate(GameObject *objectPrefrabs, Vector2 posision);
+        friend void Instantiate(GameObject *objectPrefrabs, Vector2 posision = Vector2::null);
     public:
         GameObject(bool isPureScript = false);
         ~GameObject();
@@ -49,13 +50,18 @@ namespace game_engine {
         //T component的泛型
         template<class T> const std::vector<T*> GetComponents();
 
-        static vector<GameObject*> gameObjects;
+        
+        static vector<GameObject*> gameObjects;        
         bool enable = false;
+        string name;
+        Transform *transform;
 
     private:
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
         bool destoryFlag = false;
+        bool isPureScript = false;
+        static void Insert(GameObject** objptr);
     };
 
     //由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中
