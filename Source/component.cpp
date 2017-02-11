@@ -50,6 +50,7 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 
 void SpriteRenderer::Draw()
 {
+    GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
     this->ShowBitmap(transform->position.GetV2I(), transform->scale, srcpos, size, cutSrc);
 }
 
