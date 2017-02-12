@@ -11,7 +11,9 @@ HISTORY :
 #pragma once
 #include"enginelib.h"
 #include"gamelib.h"
-namespace game_engine {
+#include"_setting.h"
+namespace game_engine
+{
 
 class GameObject;
 class Transform;
@@ -20,64 +22,77 @@ class Transform;
 // 所有Component的模板
 /////////////////////////////////////////////////////////////////////////////
 
-class Component{
-public:
-    Component(GameObject* gobj, bool skip = false);
-    ~Component() {};
-    ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
-    bool isBehavior();
-    bool enable = false;
-protected:
-    GameObject* gameObject;
-    Transform* transform;
-private:
-    ///<summary>在Scene處理Object Component Triverse的時候，跳過這個Component</summary>
-    const bool isGameBehavior = false;
+class Component
+{
+        friend class GameObject;
+
+    public:
+        Component(GameObject* gobj, bool skip = false);
+        ~Component() {};
+        ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
+        bool isBehavior();
+        bool enable = false;
+    protected:
+        GameObject* gameObject;
+        Transform* transform;
+    private:
+        ///<summary>在Scene處理Object Component Triverse的時候，跳過這個Component</summary>
+        const bool isGameBehavior = false;
 };
 
 
 /////////////////////////////////////////////////////////////////////////////
 // 儲存Gameobject位置用的component，沒有的話相關的東西不會運作
 /////////////////////////////////////////////////////////////////////////////
-class Transform : public Component {
-public:
-    Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0);
-    ~Transform() {};
-    Vector2 position;
-    Vector2 scale;
-    int zindex;
+class Transform : public Component
+{
+    public:
+        Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0, RenderDepth rd = RenderDepth::MAINGROUND);
+        ~Transform() {};
+        Vector2 position;
+        Vector2 scale;
+        void SetRenderDepth(int z);
+        void SetRenderDepth(RenderDepth rd);
+        void SetRenderDepth(int z, RenderDepth rd);
+        int GetZCode();
+
+    private:
+        int zindex;
+        RenderDepth depth;
+        int zcode;
 };
 
 
 /////////////////////////////////////////////////////////////////////////////
 // 進行圖像繪製的Component
 /////////////////////////////////////////////////////////////////////////////
-class SpriteRenderer : public Component , private game_framework::CMovingBitmap {
-public:
-    SpriteRenderer(GameObject* gobj);
-    ~SpriteRenderer() {};
-    void Draw();
-    ///<summary>設定Sprite的圖源剪位置</summary>
-    void SetSourcePos(Vector2I pos);
-    ///<summary>取消Sprite的圖片裁剪功能</summary>
-    void ResetSourcePos();
-    ///<summary>設定Sprite的輸出大小</summary>
-    void SetSize(Vector2I size);
-    ///<summary>將Size重置成最後一次Load的圖片大小</summary>
-    void ResetSize();
-    ///<summary>取代原本的LoadBitmap機能，注意在讀檔之後會重置Size和SrcPos的參數</summary>
-    ///<param name="filename">檔案目錄</param>
-    void LoadBitmapData(char* filename, short r, short g, short b);
-    ///<summary>取得目前的SurfaceID</summary>
-    int GetSurfaceID();
-    ///<summary>設定已存在的SurfaceID，注意在設定之後會重置Size和SrcPos的參數</summary>
-    ///<param name="SID">要設定的SurfaceID</param>
-    void SetSurfaceID(int SID);
+class SpriteRenderer : public Component, private game_framework::CMovingBitmap
+{
+    public:
+        SpriteRenderer(GameObject* gobj);
+        ~SpriteRenderer() {};
+        void Draw();
+        ///<summary>設定Sprite的圖源剪位置</summary>
+        void SetSourcePos(Vector2I pos);
+        ///<summary>取消Sprite的圖片裁剪功能</summary>
+        void ResetSourcePos();
+        ///<summary>設定Sprite的輸出大小</summary>
+        void SetSize(Vector2I size);
+        ///<summary>將Size重置成最後一次Load的圖片大小</summary>
+        void ResetSize();
+        ///<summary>取代原本的LoadBitmap機能，注意在讀檔之後會重置Size和SrcPos的參數</summary>
+        ///<param name="filename">檔案目錄</param>
+        void LoadBitmapData(char* filename, short r, short g, short b);
+        ///<summary>取得目前的SurfaceID</summary>
+        int GetSurfaceID();
+        ///<summary>設定已存在的SurfaceID，注意在設定之後會重置Size和SrcPos的參數</summary>
+        ///<param name="SID">要設定的SurfaceID</param>
+        void SetSurfaceID(int SID);
 
-private:
-    Vector2I size;
-    Vector2I srcpos;
-    bool cutSrc = false;
+    private:
+        Vector2I size;
+        Vector2I srcpos;
+        bool cutSrc = false;
 };
 
 class Collision;

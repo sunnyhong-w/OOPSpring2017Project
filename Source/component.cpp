@@ -13,7 +13,8 @@ HISTORY :
 #include"component.h"
 #include"gameobject.h"
 
-namespace game_engine {
+namespace game_engine
+{
 
 //////////////////////////////////////////////////////////////////
 // Component實作
@@ -32,11 +33,39 @@ bool Component::isBehavior()
 //////////////////////////////////////////////////////////////////
 // Transform實作
 //////////////////////////////////////////////////////////////////
-Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj)
+Transform::Transform(GameObject* gobj, Vector2 v2, int z, RenderDepth rd) : Component(gobj)
 {
     this->position = v2;
-    this->zindex = z;
     this->scale = Vector2::one;
+    this->zindex = z;
+    this->depth = rd;
+}
+
+void Transform::SetRenderDepth(int z)
+{
+    this->zindex = z;
+    this->zcode = this->zindex + this->depth;
+    GameObject::UpdateRenderOrder(this->gameObject);
+}
+
+void Transform::SetRenderDepth(RenderDepth rd)
+{
+    this->depth = rd;
+    this->zcode = this->zindex + this->depth;
+    GameObject::UpdateRenderOrder(this->gameObject);
+}
+
+void Transform::SetRenderDepth(int z, RenderDepth rd)
+{
+    this->zindex = z;
+    this->depth = rd;
+    this->zcode = this->zindex + this->depth;
+    GameObject::UpdateRenderOrder(this->gameObject);
+}
+
+int Transform::GetZCode()
+{
+    return zcode;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -50,6 +79,7 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 
 void SpriteRenderer::Draw()
 {
+    GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
     this->ShowBitmap(transform->position.GetV2I(), transform->scale, srcpos, size, cutSrc);
 }
 
@@ -75,9 +105,9 @@ void SpriteRenderer::ResetSize()
     this->size = Vector2I(this->Width(), this->Height());
 }
 
-void SpriteRenderer::LoadBitmapData(char * filename, short r, short g, short b)
+void SpriteRenderer::LoadBitmapData(char* filename, short r, short g, short b)
 {
-    this->LoadBitmapA(filename, RGB(r,g,b));
+    this->LoadBitmapA(filename, RGB(r, g, b));
     this->ResetSize();
     this->ResetSourcePos();
 }
@@ -90,7 +120,6 @@ int SpriteRenderer::GetSurfaceID()
 void SpriteRenderer::SetSurfaceID(int SID)
 {
     GAME_ASSERT(CheckExist(SID), "SurfaceID not found. #[Engine]SpriteRenderer->SetSurfaceID");
-
     this->SurfaceID = SID;
     this->ResetSize();
     this->ResetSourcePos();

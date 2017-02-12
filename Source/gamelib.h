@@ -325,6 +325,7 @@ public:
 	virtual void OnMouseMove(UINT nFlags, CPoint point) {}  // 處理滑鼠的動作 
 	virtual void OnRButtonDown(UINT nFlags, CPoint point) {}// 處理滑鼠的動作
 	virtual void OnRButtonUp(UINT nFlags, CPoint point) {}	// 處理滑鼠的動作
+    virtual void OnCopyData(TransferData *TDP) {};          // 處理視窗間的資料傳遞
 protected:
 	void GotoGameState(int state);							// 跳躍至指定的state
 	void ShowInitProgress(int percent);						// 顯示初始化的進度

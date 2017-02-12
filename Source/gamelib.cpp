@@ -720,6 +720,7 @@ void CGame::OnCopyData(TransferData *TDP)
     lstrcpy(datamap[sender].message, TDP->message);
     datamap[sender].pos = TDP->pos;
     datamap[sender].ev = TDP->ev;
+    gameState->OnCopyData(&datamap[sender]);
 }
 
 void CGame::BoardcastMessage(TransferData::EVENTCODE ev, CString message)
