@@ -24,6 +24,8 @@ class Transform;
 
 class Component
 {
+        friend class GameObject;
+
     public:
         Component(GameObject* gobj, bool skip = false);
         ~Component() {};
