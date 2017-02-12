@@ -9,6 +9,7 @@ HISTORY :
 */
 
 #include"StdAfx.h"
+#include <string>
 #include <ddraw.h>
 #include"component.h"
 #include"gamebehavior.h"
@@ -29,6 +30,9 @@ GameObject::GameObject(bool doNotDestoryOnChangeScene, bool isPureScript)
 
 GameObject::~GameObject()
 {
+    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+        delete it->second;
+    
 }
 
 void GameObject::Start()
@@ -37,8 +41,8 @@ void GameObject::Start()
     {
         if (it->second->isBehavior())
         {
-            static_cast<GameBehaviour*>(it->second)->Start();
             it->second->enable = true;
+            static_cast<GameBehaviour*>(it->second)->Start();
         }
     }
 }
@@ -77,11 +81,68 @@ void GameObject::Draw()
         this->GetComponent<SpriteRenderer>()->Draw();
 }
 
+void GameObject::OnRecivedBoardcast(int ev, string from, string text, Vector2I point, Vector2I size)
+{
+    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+    {
+        if (it->second->isBehavior())
+        {
+            GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+
+            if (gb->enable)
+                gb->OnRecivedBoardcast(ev, from, text, point, size);
+        }
+    }
+}
+
+void GameObject::SetName(string name)
+{
+    GameObject::objectsName.erase(this->name);
+    this->name = name;
+    GameObject::UpdateName(this);
+}
+
+void GameObject::SetTag(Tag tag)
+{
+    typedef multimap<Tag, GameObject*>::iterator iter;
+    std::pair<iter, iter> data = GameObject::objectsTag.equal_range(this->tag);
+    for (iter it = data.first; it != data.second; it++)
+    {
+        if (it->second == this)
+        {
+            GameObject::objectsTag.erase(it);
+            this->tag = tag;
+            GameObject::UpdateTag(this);
+            break;
+        }
+    }
+}
+
+void GameObject::SetLayer(Layer layer)
+{
+    typedef multimap<Layer, GameObject*>::iterator iter;
+    std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(this->layer);
+    for (iter it = data.first; it != data.second; it++)
+    {
+        if (it->second == this)
+        {
+            GameObject::objectsLayer.erase(it);
+            this->layer = layer;
+            GameObject::UpdateLayer(this);
+            break;
+        }
+    }
+}
+
 /////////////////////////////////////////////////////////////////////////
 //  Game Object Management
 /////////////////////////////////////////////////////////////////////////
 
 vector<GameObject*> GameObject::gameObjects;
+map<string, GameObject*> GameObject::prefrabsData;
+map<string, GameObject*> GameObject::objectsName;
+multimap<Tag, GameObject*> GameObject::objectsTag;
+multimap<Layer, GameObject*> GameObject::objectsLayer;
 
 void Destory(GameObject& gobj)
 {
@@ -95,10 +156,13 @@ void Instantiate(GameObject* objectPrefrabs, Vector2 posision)
     if (!posision.isNull())
         gobj->GetComponent<Transform>()->position = posision;
 
-    GameObject::Insert(&gobj);
+    GameObject::Insert(gobj);
+    GameObject::UpdateName(gobj);
+    GameObject::UpdateTag(gobj);
+    GameObject::UpdateLayer(gobj);
 }
 
-void GameObject::Insert(GameObject** objptr)
+void GameObject::Insert(GameObject* gobj)
 {
     //Magic : Do an instertion sort with binary search
     int high = GameObject::gameObjects.size() - 1, low = 0, mid = 0;
@@ -108,15 +172,39 @@ void GameObject::Insert(GameObject** objptr)
     {
         mid = (high + low) / 2;
 
-        if (GameObject::gameObjects[mid]->transform->GetZCode() > (*objptr)->transform->GetZCode())
+        if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
             high = mid - 1;
-        else if (GameObject::gameObjects[mid]->transform->GetZCode() < (*objptr)->transform->GetZCode())
+        else if (GameObject::gameObjects[mid]->transform->GetZCode() < gobj->transform->GetZCode())
             low = mid + 1;
         else
             break;
     }
 
-    GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, (*objptr));
+    GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, gobj);
+}
+
+void GameObject::UpdateName(GameObject *gobj)
+{
+    if (GameObject::objectsName.find(gobj->name) != GameObject::objectsName.end())
+        GameObject::objectsName[gobj->name] = gobj;
+    else
+    {
+        int i;
+        for (i = 0; GameObject::objectsName.find(gobj->name + " Clone(" + to_string(i) + ")") != GameObject::objectsName.end(); i++);
+
+        GameObject::objectsName[gobj->name + " Clone(" + to_string(i) + ")"] = gobj;
+        gobj->name = gobj->name + " Clone(" + to_string(i) + ")";
+    }
+}
+
+void GameObject::UpdateTag(GameObject * gobj)
+{
+    GameObject::objectsTag.insert(multimap<Tag, GameObject*>::value_type(gobj->tag, gobj));
+}
+
+void GameObject::UpdateLayer(GameObject * gobj)
+{
+    GameObject::objectsLayer.insert(multimap<Layer, GameObject*>::value_type(gobj->layer, gobj));
 }
 
 void GameObject::ResetObjectPool()
@@ -162,7 +250,7 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
         if (GameObject::gameObjects[i] == gobj)
         {
             GameObject::gameObjects.erase(GameObject::gameObjects.begin() + i);
-            GameObject::Insert(&gobj);
+            GameObject::Insert(gobj);
             return;
         }
     }
@@ -173,10 +261,45 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
         if (GameObject::gameObjects[i] == gobj)
         {
             GameObject::gameObjects.erase(GameObject::gameObjects.begin() + i);
-            GameObject::Insert(&gobj);
+            GameObject::Insert(gobj);
             return;
         }
     }
 }
+
+GameObject* GameObject::findGameObjectByName(string name)
+{
+    return GameObject::objectsName[name];
+}
+
+vector<GameObject*> GameObject::findGameObjectsByTag(Tag tag)
+{
+    vector<GameObject*> retdat;
+    typedef multimap<Tag, GameObject*>::iterator iter;
+    std::pair<iter, iter> data = GameObject::objectsTag.equal_range(tag);
+    for (iter it = data.first; it != data.second; it++)
+        retdat.push_back(it->second);
+    return retdat;
+}
+
+vector<GameObject*> GameObject::findGameObjectsByLayer(Layer layer)
+{
+    vector<GameObject*> retdat;
+    typedef multimap<Layer, GameObject*>::iterator iter;
+    std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(layer);
+    for (iter it = data.first; it != data.second; it++)
+        retdat.push_back(it->second);
+    return retdat;
+}
+
+GameObject* GameObject::InsertPrefrabs(string file, GameObject *gobj)
+{
+    GAME_ASSERT(GameObject::prefrabsData.find(file) != GameObject::prefrabsData.end(), 
+        ("Prefrab name repeated. #[Engine]GameObject::InsertPrefrabs (PrefrabName : " + file + ")").c_str());
+
+    GameObject::prefrabsData[file] = gobj;
+    return gobj;
+}
+
 }
 
