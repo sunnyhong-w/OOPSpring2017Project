@@ -28,6 +28,6 @@ class GameBehaviour : public Component
         virtual void OnCollisionExit(Collision* c) {};
         virtual void OnCollisionStay(Collision* c) {};
 
-        virtual void OnRecivedBoardcast() {};
+        virtual void OnRecivedBoardcast(int ev, string from, string text, Vector2I point, Vector2I size) {};
 };
 }

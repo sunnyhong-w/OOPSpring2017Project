@@ -13,6 +13,8 @@ HISTORY :
 #include<map>
 #include<vector>
 #include<typeindex>
+#include"scene.h"
+#include"_setting.h"
 
 namespace game_engine
 {
@@ -29,6 +31,8 @@ class GameObject
 {
         friend void Destory(GameObject& gobj);
         friend void Instantiate(GameObject* objectPrefrabs, Vector2 posision);
+        friend class GameScene;
+        friend class Transform;
     public:
         GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();
@@ -36,9 +40,15 @@ class GameObject
         void Update();
         void LateUpdate();
         void Draw();
+        void OnRecivedBoardcast(int ev, string from, string text, Vector2I point, Vector2I size);
+        void SetName(string name);
+        void SetTag(Tag tag);
+        void SetLayer(Layer layer);
+
+        bool enable = false;
+        Transform* transform;
 
         //處理Component的Template
-
         //加入指定型別的物件，如果成功加入，會回傳對應指標
         //T component的泛型
         template<class T> T* AddComponent();
@@ -59,23 +69,37 @@ class GameObject
         //T component的泛型
         template<class T> void RemoveComponents();
 
-        static void UpdateRenderOrder(GameObject* gobj);
+        //GameObject Object Manage
+        static GameObject* InsertPrefrabs(std::string file, GameObject* gobj);
+        static GameObject* findGameObjectByName(string name);
+        static vector<GameObject*> findGameObjectsByTag(Tag tag);
+        static vector<GameObject*> findGameObjectsByLayer(Layer layer);
+
         static vector<GameObject*> gameObjects;
-        bool enable = false;
-        string name;
-        Transform* transform;
 
     private:
         //GameObjectManagement
-        static void Insert(GameObject** objptr);
+        static void Insert(GameObject* gobj);
+        static void UpdateName(GameObject* gobj);
+        static void UpdateTag(GameObject* gobj);
+        static void UpdateLayer(GameObject* gobj);
         static void ResetObjectPool();
+        static void UpdateRenderOrder(GameObject* gobj);
+        static std::map<std::string, GameObject*> prefrabsData;
+        static std::map<std::string, GameObject*> objectsName;
+        static std::multimap<Tag, GameObject*> objectsTag;
+        static std::multimap<Layer, GameObject*> objectsLayer;
 
         //GameObject
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
+        std::string name;
+        Tag tag;
+        Layer layer;
         bool destoryFlag = false;
         bool isPureScript = false;
         bool doNOTDestoryOnChangeScene = false;
+        
 };
 
 //由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中
