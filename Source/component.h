@@ -33,6 +33,7 @@ class Component
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
         bool enable = false;
+        virtual void parseJSON(json j) = 0;
     protected:
         GameObject* gameObject;
         Transform* transform;
@@ -47,24 +48,23 @@ class Component
 /////////////////////////////////////////////////////////////////////////////
 class Transform : public Component
 {
-    friend void from_json(const json &j, Transform &t);
     public:
         Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0, RenderDepth rd = RenderDepth::MAINGROUND);
         ~Transform() {};
+        void parseJSON(json j) override;
         void SetRenderDepth(int z);
         void SetRenderDepth(RenderDepth rd);
         void SetRenderDepth(int z, RenderDepth rd);
         int GetZCode();
-
         Vector2 position;
         Vector2 scale;
+        
 
     private:
         int zindex;
         RenderDepth depth;
         int zcode;
 };
-
 
 /////////////////////////////////////////////////////////////////////////////
 // 進行圖像繪製的Component
@@ -74,6 +74,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
     public:
         SpriteRenderer(GameObject* gobj);
         ~SpriteRenderer() {};
+        void parseJSON(json j) override;
         void Draw();
         ///<summary>設定Sprite的圖源剪位置</summary>
         void SetSourcePos(Vector2I pos);

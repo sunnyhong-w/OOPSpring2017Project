@@ -70,13 +70,20 @@ int Transform::GetZCode()
     return zcode;
 }
 
-void from_json(const json &j, Transform &t)
+void Transform::parseJSON(json j)
 {
-    t.position = j["position"];
-    t.scale = j["scale"];
-    t.depth = j["depth"];
-    t.zindex = j["zindex"];
-    t.zcode = t.zindex + (int)t.depth;
+    if (j.find("position") != j.end())
+        this->position = j["position"];
+    if (j.find("scale") != j.end())
+        this->scale = j["scale"];
+    if (j.find("depth") != j.end())
+        this->depth = j["depth"];
+    if (j.find("zindex") != j.end())
+        this->zindex = j["zindex"];
+    this->zcode = this->zindex + (int)this->depth;
+
+    if(j.find("depth") != j.end() || j.find("zindex") != j.end())
+        GameObject::UpdateRenderOrder(this->gameObject);
 }
 
 //////////////////////////////////////////////////////////////////
@@ -86,6 +93,30 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
     srcpos = Vector2I(-1, -1);
     size = Vector2I(-1, -1);
+}
+
+void SpriteRenderer::parseJSON(json j)
+{
+    if (j.find("Bitmap") != j.end())
+    {
+        int r , g , b;
+        r = g = b = 0;
+
+        if (j["Bitmap"].find("colorkey") != j.end())
+        {
+            r = j["Bitmap"]["colorkey"]["r"];
+            g = j["Bitmap"]["colorkey"]["g"];
+            b = j["Bitmap"]["colorkey"]["b"];
+        }
+
+        LoadBitmapData(j["Bitmap"]["name"].get<string>().c_str, r, g, b);
+    }
+
+    if (j.find("SrcPosition") != j.end())
+        this->SetSourcePos(j["SrcPosition"]);
+
+    if(j.find("SrcSize") != j.end())
+        this->SetSize(j["SrcSize"]);
 }
 
 void SpriteRenderer::Draw()
@@ -131,6 +162,7 @@ int SpriteRenderer::GetSurfaceID()
 void SpriteRenderer::SetSurfaceID(int SID)
 {
     GAME_ASSERT(CheckExist(SID), "SurfaceID not found. #[Engine]SpriteRenderer->SetSurfaceID");
+
     this->SurfaceID = SID;
     this->ResetSize();
     this->ResetSourcePos();
