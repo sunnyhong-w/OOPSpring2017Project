@@ -37,6 +37,7 @@ class GameObject
     public:
         GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();
+        void parseJSON(json j);
         void Start();
         void Update();
         void LateUpdate();
@@ -111,18 +112,18 @@ class GameObject
 template<class T> inline T* GameObject::AddComponent()
 {
     T* TPointer = new T(this);
-    componentData.insert(ComponentData::value_type(typeid(T), TPointer));
+    componentData.insert(ComponentData::value_type(std::type_index(typeid(T)), TPointer));
     return TPointer;
 }
 
 template<class T> inline T* GameObject::AddComponentOnce()
 {
-    ComponentData::iterator iter = componentData.find(typeid(T));
+    ComponentData::iterator iter = componentData.find(std::type_index(typeid(T)));
 
     if (iter == componentData.end())
     {
         T* TPointer = new T(this);
-        componentData.insert(ComponentData::value_type(typeid(T), TPointer));
+        componentData.insert(ComponentData::value_type(std::type_index(typeid(T)), TPointer));
         return TPointer;
     }
     else
@@ -131,7 +132,7 @@ template<class T> inline T* GameObject::AddComponentOnce()
 
 template<class T> inline T* GameObject::GetComponent()
 {
-    ComponentData::iterator iter = componentData.find(typeid(T));
+    ComponentData::iterator iter = componentData.find(std::type_index(typeid(T)));
 
     if (iter != componentData.end())
         return static_cast<T*>(iter->second);
@@ -141,7 +142,7 @@ template<class T> inline T* GameObject::GetComponent()
 
 template<class T> inline const std::vector<T*> GameObject::GetComponents()
 {
-    std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(typeid(T));
+    std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(std::type_index(typeid(T)));
     std::vector<T*> retval;
 
     for (ComponentData::iterator it = data.first; it != data.second; it++)
@@ -152,7 +153,7 @@ template<class T> inline const std::vector<T*> GameObject::GetComponents()
 
 template<class T> inline void GameObject::RemoveComponent(T* comp)
 {
-    std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(typeid(T));
+    std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(std::type_index(typeid(T)));
 
     for (ComponentData::iterator it = data.first; it != data.second; it++)
     {
@@ -172,7 +173,7 @@ template<class T> inline void GameObject::RemoveComponents()
     for (T* tempcomp : list)
         delete tempcomp;
 
-    componentData.erase(typeid(T));
+    componentData.erase(std::type_index(typeid(T)));
 }
 
 }

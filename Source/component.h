@@ -30,10 +30,10 @@ class Component
     public:
         Component(GameObject* gobj, bool skip = false);
         ~Component() {};
+        virtual void parseJSON(json j) = 0;
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
         bool enable = false;
-        virtual void parseJSON(json j) = 0;
     protected:
         GameObject* gameObject;
         Transform* transform;
