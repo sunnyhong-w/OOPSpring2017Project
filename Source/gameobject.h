@@ -33,6 +33,7 @@ class GameObject
         friend void Instantiate(GameObject* objectPrefrabs, Vector2 posision);
         friend class GameScene;
         friend class Transform;
+        friend class game_framework::CGame;
     public:
         GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();
