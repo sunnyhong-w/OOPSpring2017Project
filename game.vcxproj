@@ -110,8 +110,8 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>D:\_School\105_SPRINGOOP\OOPProject\Assest;D:\_School\105_SPRINGOOP\OOPProject\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;4996;4244</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>D:\_School\105_SPRINGOOP\OOPProject\Assest;D:\_School\105_SPRINGOOP\OOPProject\Source</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -304,8 +304,10 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="_setting.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="json_include.h" />
     <ClInclude Include="Source\audio.h" />
     <ClInclude Include="Source\component.h" />
     <ClInclude Include="Source\easing.h" />
@@ -315,6 +317,7 @@
     <ClInclude Include="Source\gameDoc.h" />
     <ClInclude Include="Source\gameobject.h" />
     <ClInclude Include="Source\gameView.h" />
+    <ClInclude Include="Source\json_include.h" />
     <ClInclude Include="Source\MainFrm.h" />
     <ClInclude Include="Source\Resource.h" />
     <ClInclude Include="Source\scene.h" />
