@@ -95,6 +95,13 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         bool cutSrc = false;
 };
 
-class Collision;
+class Collider : public Component
+{
+    public:
+        Vector2I deltaPoint;
+        Vector2I size;
+        Collider(GameObject* gobj, Vector2I dP, Vector2I sz);
+        bool PointCollision(Vector2I point);
+};
 
 }

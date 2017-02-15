@@ -102,6 +102,11 @@ void GameObject::SetName(string name)
     GameObject::UpdateName(this);
 }
 
+string GameObject::GetName()
+{
+    return this->name;
+}
+
 void GameObject::SetTag(Tag tag)
 {
     typedef multimap<Tag, GameObject*>::iterator iter;

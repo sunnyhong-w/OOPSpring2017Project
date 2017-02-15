@@ -127,5 +127,22 @@ void SpriteRenderer::SetSurfaceID(int SID)
 }
 
 
+//////////////////////////////////////////////////////////////////
+// Collision實作
+//////////////////////////////////////////////////////////////////
+Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
+{
+    this->deltaPoint = dP;
+    this->size = sz;
+}
+
+bool Collider::PointCollision(Vector2I point)
+{
+    GAME_ASSERT(transform != nullptr, (string("transform not found. #[Engine]Collision::PointCollision | Object : ") + gameObject->GetName()).c_str());
+    return point.x >= (transform->position.x + deltaPoint.x)
+        && point.x <= (transform->position.x + deltaPoint.x + size.x)
+        && point.y >= (transform->position.y + deltaPoint.y)
+        && point.y <= (transform->position.y + deltaPoint.y + size.y);
+}
 
 }

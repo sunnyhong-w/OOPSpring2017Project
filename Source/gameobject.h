@@ -42,6 +42,7 @@ class GameObject
         void Draw();
         void OnRecivedBoardcast(int ev, string from, string text, Vector2I point, Vector2I size);
         void SetName(string name);
+        string GetName();
         void SetTag(Tag tag);
         void SetLayer(Layer layer);
 
