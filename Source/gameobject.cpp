@@ -297,6 +297,14 @@ vector<GameObject*> GameObject::findGameObjectsByLayer(Layer layer)
     return retdat;
 }
 
+GameObject * GameObject::GetPrefrabs(std::string file)
+{
+    if (GameObject::prefrabsData.find(file) == GameObject::prefrabsData.end())
+        return nullptr;
+    else
+        return GameObject::prefrabsData[file];
+}
+
 GameObject* GameObject::InsertPrefrabs(string file, GameObject *gobj)
 {
     GAME_ASSERT(GameObject::prefrabsData.find(file) != GameObject::prefrabsData.end(), 

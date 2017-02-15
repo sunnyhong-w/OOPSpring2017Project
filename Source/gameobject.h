@@ -72,6 +72,7 @@ class GameObject
         template<class T> void RemoveComponents();
 
         //GameObject Object Manage
+        static GameObject* GetPrefrabs(std::string file);
         static GameObject* InsertPrefrabs(std::string file, GameObject* gobj);
         static GameObject* findGameObjectByName(string name);
         static vector<GameObject*> findGameObjectsByTag(Tag tag);
