@@ -44,14 +44,14 @@ Transform::Transform(GameObject* gobj, Vector2 v2, int z, RenderDepth rd) : Comp
 void Transform::SetRenderDepth(int z)
 {
     this->zindex = z;
-    this->zcode = this->zindex + this->depth;
+    this->zcode = this->zindex + (int)this->depth;
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
 void Transform::SetRenderDepth(RenderDepth rd)
 {
     this->depth = rd;
-    this->zcode = this->zindex + this->depth;
+    this->zcode = this->zindex + (int)this->depth;
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
@@ -59,7 +59,7 @@ void Transform::SetRenderDepth(int z, RenderDepth rd)
 {
     this->zindex = z;
     this->depth = rd;
-    this->zcode = this->zindex + this->depth;
+    this->zcode = this->zindex + (int)this->depth;
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 

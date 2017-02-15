@@ -1,19 +1,19 @@
 #pragma once
-
+#include"json_include.h"
 namespace game_engine
 {
 ///////////////////////////////////
 //      Object Layer define      //
 ///////////////////////////////////
-enum Layer {};
+enum class Layer : int { Other };
 ///////////////////////////////////
 //      Object  Tag  define      //
 ///////////////////////////////////
-enum Tag {};
+enum class Tag : int { Other };
 ///////////////////////////////////
 //Render Z-index position define //
 ///////////////////////////////////
-enum RenderDepth
+enum class RenderDepth : int
 {
     BACKGROUND = -1000,
     MAINGROUND = 0,
