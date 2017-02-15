@@ -187,11 +187,11 @@
     <ClInclude Include="Source\scene.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="json_include.h">
+    <ClInclude Include="Source\json_include.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\json_include.h">
-      <Filter>MFC</Filter>
+    <ClInclude Include="Source\json.hpp">
+      <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

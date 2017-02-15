@@ -6,11 +6,13 @@ HISTORY :
 */
 
 #pragma once
+#include"_setting.h"
 #include <string>
 using namespace std;
 namespace game_engine
 {
 struct Vector2I;
+
 struct Vector2
 {
     public:
@@ -44,6 +46,8 @@ struct Vector2
         bool nullVector = false;
 };
 
+void from_json(const json &j, Vector2 &v);
+
 struct Vector2I
 {
     public:
@@ -61,4 +65,7 @@ struct Vector2I
         int x;
         int y;
 };
+
+//void from_json(const json &j, Vector2I &v);
+
 }

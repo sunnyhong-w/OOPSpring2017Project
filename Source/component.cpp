@@ -12,6 +12,7 @@ HISTORY :
 #include <ddraw.h>
 #include"component.h"
 #include"gameobject.h"
+#include"enginelib.h"
 
 namespace game_engine
 {
@@ -39,6 +40,7 @@ Transform::Transform(GameObject* gobj, Vector2 v2, int z, RenderDepth rd) : Comp
     this->scale = Vector2::one;
     this->zindex = z;
     this->depth = rd;
+    this->zcode = this->zindex + (int)this->depth;
 }
 
 void Transform::SetRenderDepth(int z)
@@ -66,6 +68,15 @@ void Transform::SetRenderDepth(int z, RenderDepth rd)
 int Transform::GetZCode()
 {
     return zcode;
+}
+
+void from_json(const json &j, Transform &t)
+{
+    t.position = j["position"];
+    t.scale = j["scale"];
+    t.depth = j["depth"];
+    t.zindex = j["zindex"];
+    t.zcode = t.zindex + (int)t.depth;
 }
 
 //////////////////////////////////////////////////////////////////

@@ -12,6 +12,7 @@ HISTORY :
 #include"enginelib.h"
 #include"gamelib.h"
 #include"_setting.h"
+
 namespace game_engine
 {
 
@@ -24,7 +25,7 @@ class Transform;
 
 class Component
 {
-        friend class GameObject;
+    friend class GameObject;
 
     public:
         Component(GameObject* gobj, bool skip = false);
@@ -46,15 +47,17 @@ class Component
 /////////////////////////////////////////////////////////////////////////////
 class Transform : public Component
 {
+    friend void from_json(const json &j, Transform &t);
     public:
         Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0, RenderDepth rd = RenderDepth::MAINGROUND);
         ~Transform() {};
-        Vector2 position;
-        Vector2 scale;
         void SetRenderDepth(int z);
         void SetRenderDepth(RenderDepth rd);
         void SetRenderDepth(int z, RenderDepth rd);
         int GetZCode();
+
+        Vector2 position;
+        Vector2 scale;
 
     private:
         int zindex;

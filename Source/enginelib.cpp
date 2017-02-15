@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include"_setting.h"
 #include"enginelib.h"
 
 namespace game_engine
@@ -86,7 +85,7 @@ bool Vector2::isNull()
     return nullVector;
 }
 
-void from_json(json &j, Vector2 &v)
+void from_json(const json &j, Vector2 &v)
 {
     v.x = j["x"];
     v.y = j["y"];
@@ -152,7 +151,7 @@ Vector2I operator/(int multiplied, Vector2I multiplier)
     return Vector2I(multiplied / multiplier.x, multiplied / multiplier.y);
 }
 
-void from_json(json &j, Vector2I &v)
+void from_json(const json &j, Vector2I &v)
 {
     v.x = j["x"];
     v.y = j["y"];

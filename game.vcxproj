@@ -307,7 +307,6 @@
     <ClCompile Include="_setting.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="json_include.h" />
     <ClInclude Include="Source\audio.h" />
     <ClInclude Include="Source\component.h" />
     <ClInclude Include="Source\easing.h" />
@@ -317,6 +316,7 @@
     <ClInclude Include="Source\gameDoc.h" />
     <ClInclude Include="Source\gameobject.h" />
     <ClInclude Include="Source\gameView.h" />
+    <ClInclude Include="Source\json.hpp" />
     <ClInclude Include="Source\json_include.h" />
     <ClInclude Include="Source\MainFrm.h" />
     <ClInclude Include="Source\Resource.h" />

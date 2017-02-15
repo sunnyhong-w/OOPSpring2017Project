@@ -20,4 +20,8 @@ enum class RenderDepth : int
     FOREGROUND = 1000,
     GUI = 10000
 };
+
+void from_json(const json &j, Layer &l);
+void from_json(const json &j, Tag &t);
+void from_json(const json &j, RenderDepth &l);
 }

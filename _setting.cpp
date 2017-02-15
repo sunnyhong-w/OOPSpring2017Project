@@ -3,28 +3,19 @@
 
 namespace game_engine {
 
-void from_json(json &j, Layer &l)
+void from_json(const json &j, Layer &l)
 {
-    l = Layer::Other;
+    l = (Layer)j.get<int>();
 }
 
-void from_json(json &j, Tag &t)
+void from_json(const json &j, Tag &t)
 {
-    t = Tag::Other;
+    t = (Tag)j.get<int>();
 }
 
-void from_json(json &j, RenderDepth &rd)
+void from_json(const json &j, RenderDepth &rd)
 {
-    if (j.get<string>() == "BACKGROUND")
-        rd = RenderDepth::BACKGROUND;
-    else if (j == "FOREGROUND")
-        rd = RenderDepth::FOREGROUND;
-    else if (j == "MAINGROUND")
-        rd = RenderDepth::MAINGROUND;
-    else if (j == "GUI")
-        rd = RenderDepth::GUI;
-    else
-        rd = RenderDepth::MAINGROUND;
+    rd = (RenderDepth)j.get<int>();
 }
 
 }
