@@ -35,6 +35,11 @@ GameObject::~GameObject()
     
 }
 
+void GameObject::parseJSON(json j)
+{
+
+}
+
 void GameObject::Start()
 {
     for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)

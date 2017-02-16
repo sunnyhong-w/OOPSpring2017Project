@@ -7,8 +7,10 @@ HISTORY :
 
 #pragma once
 #include"_setting.h"
+#include"componentFactory.h"
 #include <string>
 using namespace std;
+
 namespace game_engine
 {
 struct Vector2I;
@@ -38,7 +40,6 @@ struct Vector2
         friend Vector2 operator /(Vector2 multiplied, double multiplier);
         friend Vector2 operator /(double multiplied, Vector2 multiplier);
 
-        //Vector2I operator =(Vector2 equ);
         Vector2I GetV2I();
         string toString();
         bool isNull();
@@ -66,6 +67,6 @@ struct Vector2I
         int y;
 };
 
-//void from_json(const json &j, Vector2I &v);
+void from_json(const json &j, Vector2I &v);
 
 }

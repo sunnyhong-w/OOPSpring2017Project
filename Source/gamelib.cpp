@@ -795,12 +795,6 @@ void CSpecialEffect::DelayFromSetCurrentTime(DWORD ms)
 		Sleep(waitms);
 }
 
-void CSpecialEffect::SetCurrentTime()
-{
-	ctime = timeGetTime();
-	ctimeCount++;
-}
-
 DWORD CSpecialEffect::GetEllipseTime()
 {
 	return timeGetTime()-ctime;
