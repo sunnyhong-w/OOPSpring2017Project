@@ -2,10 +2,13 @@
 #include<ddraw.h>
 #include"gameobject.h"
 #include"scene.h"
+#include"input.h"
 
 namespace game_engine
 {
-
+GameScene::GameScene(game_framework::CGame* CG): game_framework::CGameState(CG)
+{
+}
 void GameScene::OnInit()
 {
     CreateObjectPrefrabs();
@@ -20,13 +23,52 @@ void GameScene::OnBeginState()
         gobj->Start();
 }
 
+void GameScene::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    if (Input::keyEvent.find(nChar) == Input::keyEvent.end())
+    {
+        Input::keyEvent[nChar] = game_framework::CSpecialEffect::GetEllipseTime();
+    }
+}
+
+void GameScene::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    Input::keyEvent.erase(nChar);
+}
+
+void GameScene::OnLButtonDown(UINT nFlags, CPoint point)
+{
+}
+
+void GameScene::OnLButtonUp(UINT nFlags, CPoint point)
+{
+}
+
+void GameScene::OnMouseMove(UINT nFlags, CPoint point)
+{
+}
+
+void GameScene::OnRButtonDown(UINT nFlags, CPoint point)
+{
+}
+
+void GameScene::OnRButtonUp(UINT nFlags, CPoint point)
+{
+}
+
 void GameScene::OnMove()
 {
     //INPUT WORKOUT HERE
+    Input::Update();
+
+    if (Input::GetKeyTrigger('A'))
+    {
+        AfxMessageBox("!");
+    }
 
     //Destory Dectechtion
-    for(vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
-    { 
+    for (vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
+    {
         if ((*it)->destoryFlag)
         {
             delete (*it);
@@ -50,7 +92,7 @@ void GameScene::OnMove()
     }
 
     for (GameObject* gobj : GameObject::gameObjects)
-        if(gobj->enable)
+        if (gobj->enable)
             gobj->Update();
 
     //ANIMATION UPDATE WORKOUT HERE
@@ -67,7 +109,7 @@ void GameScene::OnShow()
 }
 
 
-void GameScene::OnCopyData(game_framework::TransferData *TDP)
+void GameScene::OnCopyData(game_framework::TransferData* TDP)
 {
     TDPQueue.push_back(*TDP);
 }
