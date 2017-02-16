@@ -13,6 +13,7 @@ HISTORY :
 #include"component.h"
 #include"gameobject.h"
 #include"enginelib.h"
+#include"componentFactory.h"
 
 namespace game_engine
 {
@@ -86,7 +87,9 @@ void Transform::parseJSON(json j)
         GameObject::UpdateRenderOrder(this->gameObject);
 }
 
-REGISTER_CLASS(Transform);
+//type_index ti = ;
+//ComponentFactory::RegClass<Transform>(type_index(typeid(Transform)).name);
+//ComponentFactory::RegClass<Transform>();
 
 //////////////////////////////////////////////////////////////////
 // SpriteRenderer實作
@@ -111,7 +114,12 @@ void SpriteRenderer::parseJSON(json j)
             b = j["Bitmap"]["colorkey"]["b"];
         }
 
-        LoadBitmapData(j["Bitmap"]["name"].get<string>().c_str, r, g, b);
+        string name = j["Bitmap"]["name"].get<string>();
+        int length = strlen(name.c_str());
+        char* cname = new char[length + 1]();
+        strncpy(cname, name.c_str(), length);
+        LoadBitmapData(cname, r, g, b);
+        delete[] cname;
     }
 
     if (j.find("SrcPosition") != j.end())
