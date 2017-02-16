@@ -260,6 +260,7 @@
   <ItemGroup>
     <ClCompile Include="Source\audio.cpp" />
     <ClCompile Include="Source\component.cpp" />
+    <ClCompile Include="Source\componentFactory.cpp" />
     <ClCompile Include="Source\easing.cpp" />
     <ClCompile Include="Source\enginelib.cpp" />
     <ClCompile Include="Source\gameobject.cpp" />
@@ -304,11 +305,12 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="_setting.cpp" />
+    <ClCompile Include="Source\_setting.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h" />
     <ClInclude Include="Source\component.h" />
+    <ClInclude Include="Source\componentFactory.h" />
     <ClInclude Include="Source\easing.h" />
     <ClInclude Include="Source\enginelib.h" />
     <ClInclude Include="Source\game.h" />

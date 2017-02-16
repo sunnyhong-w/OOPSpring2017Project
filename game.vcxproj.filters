@@ -136,7 +136,10 @@
     <ClCompile Include="Source\scene.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="_setting.cpp">
+    <ClCompile Include="Source\_setting.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\componentFactory.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -191,6 +194,9 @@
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Source\json.hpp">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\componentFactory.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>
