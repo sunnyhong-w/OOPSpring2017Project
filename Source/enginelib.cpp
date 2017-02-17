@@ -16,6 +16,14 @@ const Vector2 Vector2::one    = Vector2( 1,  1);
 const Vector2 Vector2::zero   = Vector2( 0,  0);
 const Vector2 Vector2::null   = Vector2(true);
 
+const Vector2I Vector2I::up   = Vector2I(0, 1);
+const Vector2I Vector2I::down = Vector2I(0, -1);
+const Vector2I Vector2I::left = Vector2I(1, 0);
+const Vector2I Vector2I::right= Vector2I(-1, 0);
+const Vector2I Vector2I::one  = Vector2I(1, 1);
+const Vector2I Vector2I::zero = Vector2I(0, 0);
+const Vector2I Vector2I::null = Vector2I(true);
+
 Vector2::Vector2()
 {
     this->x = 0;
@@ -132,6 +140,14 @@ bool Vector2::isNull()
     return nullVector;
 }
 
+void from_json(const json &j, Vector2 &v)
+{
+    v.x = j["x"];
+    v.y = j["y"];
+}
+
+///////
+
 Vector2I::Vector2I()
 {
     this->x = 0;
@@ -151,6 +167,11 @@ Vector2I::Vector2I(Vector2* v2)
 {
     this->x = (int)v2->x;
     this->y = (int)v2->y;
+}
+
+Vector2I::Vector2I(bool setNull)
+{
+    this->nullVector = setNull;
 }
 
 Vector2I Vector2I::operator-(Vector2I subtraction)
@@ -238,6 +259,12 @@ bool operator==(Vector2I left, Vector2I right)
 bool operator!=(Vector2I left, Vector2I right)
 {
     return !(left == right);
+}
+
+void from_json(const json &j, Vector2I &v)
+{
+    v.x = j["x"];
+    v.y = j["y"];
 }
 
 

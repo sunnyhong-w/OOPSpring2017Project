@@ -6,11 +6,15 @@ HISTORY :
 */
 
 #pragma once
+#include"_setting.h"
 #include <string>
+
 using namespace std;
+
 namespace game_engine
 {
 struct Vector2I;
+
 struct Vector2
 {
     public:
@@ -35,6 +39,7 @@ struct Vector2
         friend Vector2 operator /(Vector2 multiplied, Vector2 multiplier);
         friend Vector2 operator /(Vector2 multiplied, double multiplier);
         friend Vector2 operator /(double multiplied, Vector2 multiplier);
+
         friend bool operator <(Vector2 left, Vector2 right);
         friend bool operator >(Vector2 left, Vector2 right);
         friend bool operator <=(Vector2 left, Vector2 right);
@@ -42,6 +47,7 @@ struct Vector2
         friend bool operator ==(Vector2 left, Vector2 right);
         friend bool operator !=(Vector2 left, Vector2 right);
         //Vector2I operator =(Vector2 equ);
+
         Vector2I GetV2I();
         string toString();
         bool isNull();
@@ -49,13 +55,24 @@ struct Vector2
         bool nullVector = false;
 };
 
+void from_json(const json& j, Vector2& v);
+
 struct Vector2I
 {
     public:
+        const static Vector2I up;
+        const static Vector2I down;
+        const static Vector2I left;
+        const static Vector2I right;
+        const static Vector2I one;
+        const static Vector2I zero;
+        const static Vector2I null;
         Vector2I();
         Vector2I(bool setNull);
         Vector2I(int x, int y);
         Vector2I(Vector2* v2);
+        Vector2I(bool setNull);
+        bool isNull();
         Vector2I operator -(Vector2I subtraction);
         Vector2I operator +(Vector2I adder);
         friend Vector2I operator *(Vector2I multiplied, Vector2I multiplier);
@@ -74,7 +91,11 @@ struct Vector2I
         int x;
         int y;
         bool isNull();
+
     private:
         bool nullVector = false;
 };
+
+void from_json(const json& j, Vector2I& v);
+
 }

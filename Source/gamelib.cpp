@@ -543,9 +543,6 @@ CGame::~CGame()
     for (int i = 0; i < NUM_GAME_STATES; i++)
         delete gameStateTable[i];
 
-    for (pair<string, GameObject*> mapData : GameObject::prefrabsData)
-        delete mapData.second;
-
     for (GameObject* gobj : GameObject::gameObjects)
         delete gobj;
 }
