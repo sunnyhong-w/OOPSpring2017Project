@@ -17,6 +17,9 @@
     <Filter Include="Script">
       <UniqueIdentifier>{26333611-377d-4b1b-9808-01061b7763b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameScript">
+      <UniqueIdentifier>{390b231f-112b-4a81-8a41-f051626fce1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\ball.bmp">
