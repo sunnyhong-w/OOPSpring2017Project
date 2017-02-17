@@ -139,9 +139,6 @@
     <ClCompile Include="Source\_setting.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\componentFactory.cpp">
-      <Filter>GameEngine</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\mygame.h" />
@@ -196,7 +193,7 @@
     <ClInclude Include="Source\json.hpp">
       <Filter>GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\componentFactory.h">
+    <ClInclude Include="Source\_GameScripts.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>
