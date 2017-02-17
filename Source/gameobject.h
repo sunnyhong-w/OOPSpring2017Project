@@ -50,7 +50,7 @@ class GameObject
         void SetTag(Tag tag);
         void SetLayer(Layer layer);
 
-        bool enable = false;
+        bool enable = true;
         Transform* transform;
 
         //處理Component的Template

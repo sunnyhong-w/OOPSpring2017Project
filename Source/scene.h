@@ -27,7 +27,6 @@ class GameScene : public game_framework::CGameState
         vector<game_framework::TransferData> TDPQueue;
         string filename;
         string loadname = "Main";
-
 };
 }
 

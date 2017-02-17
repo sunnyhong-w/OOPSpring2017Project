@@ -21,6 +21,11 @@ struct Vector2
         Vector2();
         Vector2(bool setNull);
         Vector2(float x, float y);
+        Vector2I GetV2I();
+        string toString();
+        bool isNull();
+        Vector2 abs();
+
         float x;
         float y;
 
@@ -33,6 +38,8 @@ struct Vector2
         const static Vector2 null;
         Vector2 operator -(Vector2 subtraction);
         Vector2 operator +(Vector2 adder);
+        Vector2 operator -(Vector2I subtraction);
+        Vector2 operator +(Vector2I adder);
         friend Vector2 operator *(Vector2 multiplied, Vector2 multiplier);
         friend Vector2 operator *(Vector2 multiplied, double multiplier);
         friend Vector2 operator *(double multiplied, Vector2 multiplier);
@@ -48,9 +55,7 @@ struct Vector2
         friend bool operator !=(Vector2 left, Vector2 right);
         //Vector2I operator =(Vector2 equ);
 
-        Vector2I GetV2I();
-        string toString();
-        bool isNull();
+
     private:
         bool nullVector = false;
 };
@@ -71,8 +76,9 @@ struct Vector2I
         Vector2I(bool setNull);
         Vector2I(int x, int y);
         Vector2I(Vector2* v2);
-        Vector2I(bool setNull);
         bool isNull();
+        Vector2I abs();
+        Vector2 GetV2();
         Vector2I operator -(Vector2I subtraction);
         Vector2I operator +(Vector2I adder);
         friend Vector2I operator *(Vector2I multiplied, Vector2I multiplier);
@@ -87,10 +93,9 @@ struct Vector2I
         friend bool operator >=(Vector2I left, Vector2I right);
         friend bool operator ==(Vector2I left, Vector2I right);
         friend bool operator !=(Vector2I left, Vector2I right);
-        Vector2I abs();
+        
         int x;
         int y;
-        bool isNull();
 
     private:
         bool nullVector = false;

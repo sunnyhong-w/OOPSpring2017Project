@@ -90,7 +90,7 @@ Vector2 operator/(double multiplied, Vector2 multiplier)
 
 bool operator<(Vector2 left, Vector2 right)
 {
-    bool hasNull = left.isNull || right.isNull;
+    bool hasNull = left.isNull() || right.isNull();
     return (!hasNull) && left.x < right.x && left.y < right.y;
 }
 
@@ -111,8 +111,8 @@ bool operator>=(Vector2 left, Vector2 right)
 
 bool operator==(Vector2 left, Vector2 right)
 {
-    bool hasNull = left.isNull || right.isNull;
-    return (left.isNull && right.isNull) || (!hasNull && left.x == right.x && left.y == left.y);
+    bool hasNull = left.isNull() || right.isNull();
+    return (left.isNull() && right.isNull()) || (!hasNull && left.x == right.x && left.y == left.y);
 }
 
 bool operator!=(Vector2 left, Vector2 right)
@@ -167,11 +167,6 @@ Vector2I::Vector2I(Vector2* v2)
 {
     this->x = (int)v2->x;
     this->y = (int)v2->y;
-}
-
-Vector2I::Vector2I(bool setNull)
-{
-    this->nullVector = setNull;
 }
 
 Vector2I Vector2I::operator-(Vector2I subtraction)
@@ -253,7 +248,7 @@ bool operator>=(Vector2I left, Vector2I right)
 bool operator==(Vector2I left, Vector2I right)
 {
     bool hasNull = left.isNull() || right.isNull();
-    return (left.isNull && right.isNull) || (!hasNull && left.x == right.x && left.y == left.y);
+    return (left.isNull() && right.isNull()) || (!hasNull && left.x == right.x && left.y == left.y);
 }
 
 bool operator!=(Vector2I left, Vector2I right)

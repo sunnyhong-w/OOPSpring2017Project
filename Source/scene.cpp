@@ -81,6 +81,7 @@ void GameScene::OnMove()
     else
     {
         //INPUT WORKOUT HERE
+        Input::Update();
 
         //Destory Dectechtion
         for (vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )

@@ -104,13 +104,11 @@ class Collider : public Component
     public:     
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
         bool PointCollision(Vector2I point);
-
+        bool BoxCollision(Collider* box);
         void ParseJSON(json j) override;
         Vector2I deltaPoint;
         Vector2I size;
-        Collider(GameObject* gobj, Vector2I dP, Vector2I sz);
-        bool PointCollision(Vector2I point);
-        bool BoxCollision(Collider* box);
+
 };
 
 }
