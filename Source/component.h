@@ -102,6 +102,7 @@ class Collider : public Component
         Vector2I size;
         Collider(GameObject* gobj, Vector2I dP, Vector2I sz);
         bool PointCollision(Vector2I point);
+        bool BoxCollision(Collider* box);
 };
 
 }

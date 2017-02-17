@@ -139,10 +139,14 @@ Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
 bool Collider::PointCollision(Vector2I point)
 {
     GAME_ASSERT(transform != nullptr, (string("transform not found. #[Engine]Collision::PointCollision | Object : ") + gameObject->GetName()).c_str());
-    return point.x >= (transform->position.x + deltaPoint.x)
-        && point.x <= (transform->position.x + deltaPoint.x + size.x)
-        && point.y >= (transform->position.y + deltaPoint.y)
-        && point.y <= (transform->position.y + deltaPoint.y + size.y);
+    return point >= (transform->position.GetV2I() + deltaPoint) && point <= (transform->position.GetV2I() + deltaPoint + size);
+}
+
+bool Collider::BoxCollision(Collider* box)
+{
+    Vector2 aw = size.GetV2() / 2, bw = box->size.GetV2() / 2;
+    Vector2 l = ((transform->position + deltaPoint.GetV2() + aw) - (box->transform->position + box->deltaPoint.GetV2() + bw)).abs();
+    return	(l == (aw + bw)) || (l < (aw + bw));
 }
 
 }

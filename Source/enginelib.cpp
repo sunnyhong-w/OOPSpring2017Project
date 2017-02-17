@@ -41,6 +41,16 @@ Vector2 Vector2::operator+(Vector2 adder)
     return Vector2(this->x + adder.x, this->y + adder.y);
 }
 
+Vector2 Vector2::operator-(Vector2I subtraction)
+{
+    return Vector2(this->x - subtraction.x, this->y - subtraction.y);
+}
+
+Vector2 Vector2::operator+(Vector2I adder)
+{
+    return Vector2(this->x - adder.x, this->y - adder.y);
+}
+
 Vector2 operator*(Vector2 multiplied, Vector2 multiplier)
 {
     return Vector2(multiplied.x * multiplier.x, multiplied.y * multiplier.y);
@@ -102,6 +112,11 @@ bool operator!=(Vector2 left, Vector2 right)
     return !(left == right);
 }
 
+Vector2 Vector2::abs()
+{
+    return Vector2(std::abs(this->x), std::abs(this->y));
+}
+
 Vector2I Vector2::GetV2I()
 {
     return Vector2I(this);
@@ -143,9 +158,19 @@ Vector2I Vector2I::operator-(Vector2I subtraction)
     return Vector2I(this->x - subtraction.x, this->y - subtraction.y);
 }
 
-Vector2I Vector2I::operator+(Vector2 adder)
+Vector2I Vector2I::operator+(Vector2I adder)
 {
     return Vector2I(this->x + adder.x, this->y + adder.y);
+}
+
+Vector2 Vector2I::GetV2()
+{
+    return Vector2(this->x, this->y);
+}
+
+Vector2I Vector2I::abs()
+{
+    return Vector2I(std::abs(this->x), std::abs(this->y));
 }
 
 bool Vector2I::isNull()

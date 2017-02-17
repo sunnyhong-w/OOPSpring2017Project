@@ -57,7 +57,7 @@ struct Vector2I
         Vector2I(int x, int y);
         Vector2I(Vector2* v2);
         Vector2I operator -(Vector2I subtraction);
-        Vector2I operator +(Vector2 adder);
+        Vector2I operator +(Vector2I adder);
         friend Vector2I operator *(Vector2I multiplied, Vector2I multiplier);
         friend Vector2I operator *(Vector2I multiplied, int multiplier);
         friend Vector2I operator *(int multiplied, Vector2I multiplier);
@@ -70,6 +70,7 @@ struct Vector2I
         friend bool operator >=(Vector2I left, Vector2I right);
         friend bool operator ==(Vector2I left, Vector2I right);
         friend bool operator !=(Vector2I left, Vector2I right);
+        Vector2I abs();
         int x;
         int y;
         bool isNull();
