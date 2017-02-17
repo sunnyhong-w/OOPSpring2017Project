@@ -25,12 +25,12 @@ class GameObject;
 
 //一些Public的最高權限Function
 void Destory(GameObject& gobj);
-void Instantiate(GameObject* objectPrefrabs, Vector2 posision = Vector2::null);
+GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision = Vector2::null);
 
 class GameObject
 {
         friend void Destory(GameObject& gobj);
-        friend void Instantiate(GameObject* objectPrefrabs, Vector2 posision);
+        friend GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision);
         friend class GameScene;
         friend class Transform;
         friend class game_framework::CGame;
@@ -103,6 +103,7 @@ class GameObject
         Layer layer;
         bool destoryFlag = false;
         bool isPureScript = false;
+        bool isStarted = false;
         bool doNOTDestoryOnChangeScene = false;
         
 };

@@ -19,11 +19,13 @@ class GameScene : public game_framework::CGameState
         void OnCopyData(game_framework::TransferData *TDP) override;          // 處理視窗間的資料傳遞
         void OnMove() override;
         void OnShow() override;
-    protected:
-        virtual void CreateObjectPrefrabs() {};
-        virtual void InstantiateGameObject() {};
+        void ParseJSON(json j);
+        void LoadScene(string filename);
     private:
+        void LoadSceneData();
         vector<game_framework::TransferData> TDPQueue;
+        string filename;
+        string loadname = "Main";
 
 };
 }

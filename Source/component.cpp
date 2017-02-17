@@ -114,11 +114,7 @@ void SpriteRenderer::ParseJSON(json j)
         }
 
         string name = j["Bitmap"]["name"].get<string>();
-        int length = strlen(name.c_str());
-        char* cname = new char[length + 1]();
-        strncpy(cname, name.c_str(), length);
-        LoadBitmapData(cname, r, g, b);
-        delete[] cname;
+        LoadBitmapData(name, r, g, b);
     }
 
     if (j.find("SrcPosition") != j.end())
@@ -156,11 +152,19 @@ void SpriteRenderer::ResetSize()
     this->size = Vector2I(this->Width(), this->Height());
 }
 
-void SpriteRenderer::LoadBitmapData(char* filename, short r, short g, short b)
+void SpriteRenderer::LoadBitmapData(string filename, short r, short g, short b)
 {
-    this->LoadBitmapA(filename, RGB(r, g, b));
+    string PATH = R"(.\Assest\Bitmap\)";
+    string name = PATH + filename;
+    int length = strlen(name.c_str());
+    char* cname = new char[length + 1]();
+    strncpy(cname, name.c_str(), length);
+
+    this->LoadBitmapA(cname, RGB(r, g, b));
     this->ResetSize();
     this->ResetSourcePos();
+
+    delete[] cname;
 }
 
 int SpriteRenderer::GetSurfaceID()

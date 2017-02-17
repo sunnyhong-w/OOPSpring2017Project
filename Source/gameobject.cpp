@@ -96,6 +96,8 @@ void GameObject::Start()
             static_cast<GameBehaviour*>(it->second)->Start();
         }
     }
+
+    isStarted = true;
 }
 
 void GameObject::Update()
@@ -207,7 +209,7 @@ void Destory(GameObject& gobj)
     gobj.destoryFlag = true;
 }
 
-void Instantiate(GameObject* objectPrefrabs, Vector2 posision)
+GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision)
 {
     GameObject* gobj = new GameObject(*objectPrefrabs);
 
@@ -218,6 +220,8 @@ void Instantiate(GameObject* objectPrefrabs, Vector2 posision)
     GameObject::UpdateName(gobj);
     GameObject::UpdateTag(gobj);
     GameObject::UpdateLayer(gobj);
+
+    return gobj;
 }
 
 void GameObject::Insert(GameObject* gobj)
