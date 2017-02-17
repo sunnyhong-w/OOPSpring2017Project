@@ -35,7 +35,7 @@ GameObject::~GameObject()
     
 }
 
-void GameObject::parseJSON(json j)
+void GameObject::ParseJSON(json j)
 {
 
 }

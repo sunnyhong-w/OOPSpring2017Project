@@ -47,14 +47,23 @@ struct Vector2
         bool nullVector = false;
 };
 
-void from_json(const json &j, Vector2 &v);
+void from_json(const json& j, Vector2& v);
 
 struct Vector2I
 {
     public:
+        const static Vector2I up;
+        const static Vector2I down;
+        const static Vector2I left;
+        const static Vector2I right;
+        const static Vector2I one;
+        const static Vector2I zero;
+        const static Vector2I null;
         Vector2I();
         Vector2I(int x, int y);
         Vector2I(Vector2* v2);
+        Vector2I(bool setNull);
+        bool isNull();
         Vector2I operator -(Vector2I subtraction);
         Vector2I operator +(Vector2 adder);
         friend Vector2I operator *(Vector2I multiplied, Vector2I multiplier);
@@ -65,8 +74,11 @@ struct Vector2I
         friend Vector2I operator /(int multiplied, Vector2I multiplier);
         int x;
         int y;
+        
+    private:
+        bool nullVector = false;
 };
 
-void from_json(const json &j, Vector2I &v);
+void from_json(const json& j, Vector2I& v);
 
 }

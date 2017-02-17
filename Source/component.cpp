@@ -71,7 +71,7 @@ int Transform::GetZCode()
     return zcode;
 }
 
-void Transform::parseJSON(json j)
+void Transform::ParseJSON(json j)
 {
     if (j.find("position") != j.end())
         this->position = j["position"];
@@ -100,7 +100,7 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
     size = Vector2I(-1, -1);
 }
 
-void SpriteRenderer::parseJSON(json j)
+void SpriteRenderer::ParseJSON(json j)
 {
     if (j.find("Bitmap") != j.end())
     {
@@ -180,6 +180,8 @@ void SpriteRenderer::SetSurfaceID(int SID)
 }
 
 
+
+
 //////////////////////////////////////////////////////////////////
 // Collision實作
 //////////////////////////////////////////////////////////////////
@@ -197,5 +199,8 @@ bool Collider::PointCollision(Vector2I point)
         && point.y >= (transform->position.y + deltaPoint.y)
         && point.y <= (transform->position.y + deltaPoint.y + size.y);
 }
+
+void Collider::ParseJSON(json j)
+{}
 
 }

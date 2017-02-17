@@ -16,6 +16,14 @@ const Vector2 Vector2::one    = Vector2( 1,  1);
 const Vector2 Vector2::zero   = Vector2( 0,  0);
 const Vector2 Vector2::null   = Vector2(true);
 
+const Vector2I Vector2I::up   = Vector2I(0, 1);
+const Vector2I Vector2I::down = Vector2I(0, -1);
+const Vector2I Vector2I::left = Vector2I(1, 0);
+const Vector2I Vector2I::right= Vector2I(-1, 0);
+const Vector2I Vector2I::one  = Vector2I(1, 1);
+const Vector2I Vector2I::zero = Vector2I(0, 0);
+const Vector2I Vector2I::null = Vector2I(true);
+
 Vector2::Vector2()
 {
     this->x = 0;
@@ -111,6 +119,11 @@ Vector2I::Vector2I(Vector2* v2)
     this->y = (int)v2->y;
 }
 
+Vector2I::Vector2I(bool setNull)
+{
+    this->nullVector = setNull;
+}
+
 Vector2I Vector2I::operator-(Vector2I subtraction)
 {
     return Vector2I(this->x - subtraction.x, this->y - subtraction.y);
@@ -119,6 +132,11 @@ Vector2I Vector2I::operator-(Vector2I subtraction)
 Vector2I Vector2I::operator+(Vector2 adder)
 {
     return Vector2I(this->x + adder.x, this->y + adder.y);
+}
+
+bool Vector2I::isNull()
+{
+    return nullVector;
 }
 
 Vector2I operator*(Vector2I multiplied, Vector2I multiplier)

@@ -37,7 +37,7 @@ class GameObject
     public:
         GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();
-        void parseJSON(json j);
+        void ParseJSON(json j);
         void Start();
         void Update();
         void LateUpdate();

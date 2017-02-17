@@ -30,7 +30,7 @@ class Component
     public:
         Component(GameObject* gobj, bool skip = false);
         ~Component() {};
-        virtual void parseJSON(json j) = 0;
+        virtual void ParseJSON(json j) {};
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
         bool enable = false;
@@ -51,7 +51,7 @@ class Transform : public Component
     public:
         Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0, RenderDepth rd = RenderDepth::MAINGROUND);
         ~Transform() {};
-        void parseJSON(json j) override;
+        void ParseJSON(json j) override;
         void SetRenderDepth(int z);
         void SetRenderDepth(RenderDepth rd);
         void SetRenderDepth(int z, RenderDepth rd);
@@ -74,7 +74,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
     public:
         SpriteRenderer(GameObject* gobj);
         ~SpriteRenderer() {};
-        void parseJSON(json j) override;
+        void ParseJSON(json j) override;
         void Draw();
         ///<summary>設定Sprite的圖源剪位置</summary>
         void SetSourcePos(Vector2I pos);
@@ -101,11 +101,13 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
 
 class Collider : public Component
 {
-    public:
+    public:     
+        Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
+        bool PointCollision(Vector2I point);
+
+        void ParseJSON(json j) override;
         Vector2I deltaPoint;
         Vector2I size;
-        Collider(GameObject* gobj, Vector2I dP, Vector2I sz);
-        bool PointCollision(Vector2I point);
 };
 
 }
