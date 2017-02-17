@@ -21,9 +21,9 @@ namespace game_engine
 ///// Add Component String Parser
 
 //Use define to make sure class won't have spelling mistake
-#define RegisterComponent(v) else if (ComponentName == #v) return this->AddComponent<v>();
+#define RegisterComponent(v) else if (ComponentName == #v) return this->AddComponentOnce<v>();
 
-Component* GameObject::AddComponent(string ComponentName)
+Component* GameObject::AddComponentOnce(string ComponentName)
 {
     if (ComponentName == "Component") return nullptr;
 
@@ -62,7 +62,7 @@ void GameObject::ParseJSON(json j)
     {
         for (json::iterator it = j["Component"].begin(); it != j["Component"].end(); ++it)
         {
-            Component* comp = this->AddComponent(it.key());
+            Component* comp = this->AddComponentOnce(it.key());
             comp->ParseJSON(it.value());
         }
     }
@@ -78,12 +78,6 @@ void GameObject::ParseJSON(json j)
 
     if (FindJSON("layer"))
         this->layer = j["layer"];
-
-    if (FindJSON("isPureScript"))
-        this->isPureScript = j["isPureScript"];
-
-    if (FindJSON("doNOTDestoryOnChangeScene"))
-        this->doNOTDestoryOnChangeScene = j["doNOTDestoryOnChangeScene"];
 }
 
 void GameObject::Start()

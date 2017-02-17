@@ -54,7 +54,7 @@ class GameObject
         //處理Component的Template
         //加入指定型別的物件，如果成功加入，會回傳對應指標
         //T component的泛型
-        Component* AddComponent(string ComponentName);
+        Component* AddComponentOnce(string ComponentName);
         template<class T> T* AddComponent();
         //加入限定一個的指定型別的物件，如果成功加入，會回傳對應指標，如果已經存在，則會回傳該指標
         //T component的泛型
@@ -120,16 +120,16 @@ template<class T> inline T* GameObject::AddComponent()
 
 template<class T> inline T* GameObject::AddComponentOnce()
 {
-    ComponentData::iterator iter = componentData.find(std::type_index(typeid(T)));
+    T* ptr = GetComponent<T>();
 
-    if (iter == componentData.end())
+    if (ptr == nullptr)
     {
         T* TPointer = new T(this);
         componentData.insert(ComponentData::value_type(std::type_index(typeid(T)), TPointer));
         return TPointer;
     }
     else
-        return GetComponent<T>();
+        return ptr;
 }
 
 template<class T> inline T* GameObject::GetComponent()

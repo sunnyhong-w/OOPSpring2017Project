@@ -96,23 +96,26 @@ void GameScene::ParseJSON(json j)
         for (json::iterator it = j["IncludePrefrab"].begin(); it != j["IncludePrefrab"].end(); ++it)
         {
             ifstream file;
-            file.open(PATH+it.key()+".prefrab");
+            file.open(PATH + (*it).get<string>() + ".prefrab");
             if (file.good())
             {
                 stringstream buffer;
                 buffer << file.rdbuf();
                 json jsonobj = json::parse(buffer);
-                GameObject* prefrab = new GameObject();
+                bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
+                bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
+
+                GameObject* prefrab = new GameObject(doNOTDestoryOnChangeScene,isPureScript);
                 prefrab->ParseJSON(jsonobj);
                 //Insert會記錄這個prefrab指標的內容，所以不能delete
                 //CGmae的Destructor會自動把所有這裡的東西刪掉，不用擔心Memory Leak.
-                GameObject::InsertPrefrabs(it.key(), prefrab);
+                GameObject::InsertPrefrabs((*it).get<string>(), prefrab);
             }
             else
             {
                 string str = "ERROR : Prefrab NOT FOUND when parse Scene JSON :\n";
                 str += "Scene : " + filename + "\n";
-                str += "Prefrab : " + it.key() + "NOT FOUND";
+                str += "Prefrab : " + (*it).get<string>() + "NOT FOUND";
 
                 GAME_ASSERT(false, str.c_str());
             }
@@ -124,7 +127,9 @@ void GameScene::ParseJSON(json j)
     {
         for (json::iterator it = j["GameObject"].begin(); it != j["GameObject"].end(); ++it)
         {
-            GameObject* prefrab = GameObject::GetPrefrabs(it.key());
+            json objJSON = (*it);
+
+            GameObject* prefrab = GameObject::GetPrefrabs(objJSON.begin().key());
             if (prefrab != nullptr)
             {
                 GameObject *gobj = Instantiate(prefrab);
@@ -132,8 +137,11 @@ void GameScene::ParseJSON(json j)
             }
             else
             {
-                GameObject *gobj = Instantiate(new GameObject());
-                gobj->ParseJSON(it.value());
+                json jsonobj = objJSON.begin().value();
+                bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
+                bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
+                GameObject *gobj = Instantiate(new GameObject(doNOTDestoryOnChangeScene, isPureScript));
+                gobj->ParseJSON(jsonobj);
             }  
         }
     }

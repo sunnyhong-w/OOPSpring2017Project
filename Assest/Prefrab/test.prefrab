@@ -1,0 +1,11 @@
+{
+	"name" : "TestObject",
+
+	"Component" : 
+	{ 
+		"Transform" : 
+		{
+			"position" : { "x" : 320, "y" : 240 }
+		}
+	}
+}
