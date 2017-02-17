@@ -2,10 +2,13 @@
 #include<ddraw.h>
 #include"gameobject.h"
 #include"scene.h"
-
+#include"input.h"
+#include<ctime>
 namespace game_engine
 {
-
+GameScene::GameScene(game_framework::CGame* CG): game_framework::CGameState(CG)
+{
+}
 void GameScene::OnInit()
 {
     CreateObjectPrefrabs();
@@ -20,13 +23,58 @@ void GameScene::OnBeginState()
         gobj->Start();
 }
 
+void GameScene::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    if (Input::keyEvent.find(nChar) == Input::keyEvent.end())
+    {
+        Input::keyEvent[nChar] = clock();
+    }
+}
+
+void GameScene::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    Input::keyEvent.erase(nChar);
+}
+
+void GameScene::OnLButtonDown(UINT nFlags, CPoint point)
+{
+    if (Input::keyEvent.find(VK_LBUTTON) == Input::keyEvent.end())
+    {
+        Input::keyEvent[VK_LBUTTON] = clock();
+    }
+}
+
+void GameScene::OnLButtonUp(UINT nFlags, CPoint point)
+{
+    Input::keyEvent.erase(VK_LBUTTON);
+}
+
+void GameScene::OnMouseMove(UINT nFlags, CPoint point)
+{
+    Input::mousePos = Vector2I(point.x, point.y);
+}
+
+void GameScene::OnRButtonDown(UINT nFlags, CPoint point)
+{
+    if (Input::keyEvent.find(VK_RBUTTON) == Input::keyEvent.end())
+    {
+        Input::keyEvent[VK_RBUTTON] = clock();
+    }
+}
+
+void GameScene::OnRButtonUp(UINT nFlags, CPoint point)
+{
+    Input::keyEvent.erase(VK_RBUTTON);
+}
+
 void GameScene::OnMove()
 {
     //INPUT WORKOUT HERE
+    Input::Update();
 
     //Destory Dectechtion
-    for(vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
-    { 
+    for (vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
+    {
         if ((*it)->destoryFlag)
         {
             delete (*it);
@@ -50,7 +98,7 @@ void GameScene::OnMove()
     }
 
     for (GameObject* gobj : GameObject::gameObjects)
-        if(gobj->enable)
+        if (gobj->enable)
             gobj->Update();
 
     //ANIMATION UPDATE WORKOUT HERE
@@ -67,7 +115,7 @@ void GameScene::OnShow()
 }
 
 
-void GameScene::OnCopyData(game_framework::TransferData *TDP)
+void GameScene::OnCopyData(game_framework::TransferData* TDP)
 {
     TDPQueue.push_back(*TDP);
 }
