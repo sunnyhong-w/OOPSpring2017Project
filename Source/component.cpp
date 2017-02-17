@@ -12,6 +12,7 @@ HISTORY :
 #include <ddraw.h>
 #include"component.h"
 #include"gameobject.h"
+#include"enginelib.h"
 
 namespace game_engine
 {
@@ -39,19 +40,20 @@ Transform::Transform(GameObject* gobj, Vector2 v2, int z, RenderDepth rd) : Comp
     this->scale = Vector2::one;
     this->zindex = z;
     this->depth = rd;
+    this->zcode = this->zindex + (int)this->depth;
 }
 
 void Transform::SetRenderDepth(int z)
 {
     this->zindex = z;
-    this->zcode = this->zindex + this->depth;
+    this->zcode = this->zindex + (int)this->depth;
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
 void Transform::SetRenderDepth(RenderDepth rd)
 {
     this->depth = rd;
-    this->zcode = this->zindex + this->depth;
+    this->zcode = this->zindex + (int)this->depth;
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
@@ -59,7 +61,7 @@ void Transform::SetRenderDepth(int z, RenderDepth rd)
 {
     this->zindex = z;
     this->depth = rd;
-    this->zcode = this->zindex + this->depth;
+    this->zcode = this->zindex + (int)this->depth;
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
@@ -68,6 +70,26 @@ int Transform::GetZCode()
     return zcode;
 }
 
+void Transform::ParseJSON(json j)
+{
+    if (j.find("position") != j.end())
+        this->position = j["position"];
+    if (j.find("scale") != j.end())
+        this->scale = j["scale"];
+    if (j.find("depth") != j.end())
+        this->depth = j["depth"];
+    if (j.find("zindex") != j.end())
+        this->zindex = j["zindex"];
+    this->zcode = this->zindex + (int)this->depth;
+
+    if(j.find("depth") != j.end() || j.find("zindex") != j.end())
+        GameObject::UpdateRenderOrder(this->gameObject);
+}
+
+//type_index ti = ;
+//ComponentFactory::RegClass<Transform>(type_index(typeid(Transform)).name);
+//ComponentFactory::RegClass<Transform>();
+
 //////////////////////////////////////////////////////////////////
 // SpriteRenderer實作
 //////////////////////////////////////////////////////////////////
@@ -75,6 +97,31 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
     srcpos = Vector2I(-1, -1);
     size = Vector2I(-1, -1);
+}
+
+void SpriteRenderer::ParseJSON(json j)
+{
+    if (j.find("Bitmap") != j.end())
+    {
+        int r , g , b;
+        r = g = b = 0;
+
+        if (j["Bitmap"].find("colorkey") != j["Bitmap"].end())
+        {
+            r = j["Bitmap"]["colorkey"]["r"];
+            g = j["Bitmap"]["colorkey"]["g"];
+            b = j["Bitmap"]["colorkey"]["b"];
+        }
+
+        string name = j["Bitmap"]["name"].get<string>();
+        LoadBitmapData(name, r, g, b);
+    }
+
+    if (j.find("SrcPosition") != j.end())
+        this->SetSourcePos(j["SrcPosition"]);
+
+    if(j.find("SrcSize") != j.end())
+        this->SetSize(j["SrcSize"]);
 }
 
 void SpriteRenderer::Draw()
@@ -105,11 +152,19 @@ void SpriteRenderer::ResetSize()
     this->size = Vector2I(this->Width(), this->Height());
 }
 
-void SpriteRenderer::LoadBitmapData(char* filename, short r, short g, short b)
+void SpriteRenderer::LoadBitmapData(string filename, short r, short g, short b)
 {
-    this->LoadBitmapA(filename, RGB(r, g, b));
+    string PATH = R"(.\Assest\Bitmap\)";
+    string name = PATH + filename;
+    int length = strlen(name.c_str());
+    char* cname = new char[length + 1]();
+    strncpy(cname, name.c_str(), length);
+
+    this->LoadBitmapA(cname, RGB(r, g, b));
     this->ResetSize();
     this->ResetSourcePos();
+
+    delete[] cname;
 }
 
 int SpriteRenderer::GetSurfaceID()
@@ -120,6 +175,7 @@ int SpriteRenderer::GetSurfaceID()
 void SpriteRenderer::SetSurfaceID(int SID)
 {
     GAME_ASSERT(CheckExist(SID), "SurfaceID not found. #[Engine]SpriteRenderer->SetSurfaceID");
+
     this->SurfaceID = SID;
     this->ResetSize();
     this->ResetSourcePos();
@@ -127,5 +183,31 @@ void SpriteRenderer::SetSurfaceID(int SID)
 }
 
 
+
+
+//////////////////////////////////////////////////////////////////
+// Collision實作
+//////////////////////////////////////////////////////////////////
+Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
+{
+    this->deltaPoint = dP;
+    this->size = sz;
+}
+
+bool Collider::PointCollision(Vector2I point)
+{
+    GAME_ASSERT(transform != nullptr, (string("transform not found. #[Engine]Collision::PointCollision | Object : ") + gameObject->GetName()).c_str());
+    return point >= (transform->position.GetV2I() + deltaPoint) && point <= (transform->position.GetV2I() + deltaPoint + size);
+}
+
+bool Collider::BoxCollision(Collider* box)
+{
+    Vector2 aw = size.GetV2() / 2, bw = box->size.GetV2() / 2;
+    Vector2 l = ((transform->position + deltaPoint.GetV2() + aw) - (box->transform->position + box->deltaPoint.GetV2() + bw)).abs();
+    return	(l == (aw + bw)) || (l < (aw + bw));
+}
+
+void Collider::ParseJSON(json j)
+{}
 
 }

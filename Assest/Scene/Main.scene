@@ -1,0 +1,17 @@
+{
+	"IncludePrefrab" : ["test"],
+	"GameObject" : [
+		{
+			"test" : 
+			{
+				"Component" : 
+				{
+					"Transform" : 
+					{
+						"position" : { "x" : 320, "y" : 240 }
+					}
+				}
+			}
+		}
+	]
+}

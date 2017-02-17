@@ -58,6 +58,7 @@
 #include "audio.h"
 #include "gamelib.h"
 #include "gameobject.h"
+#include "json_include.h"
 #include "mygame.h"
 
 namespace game_framework {

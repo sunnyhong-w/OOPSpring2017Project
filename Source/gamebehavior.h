@@ -24,9 +24,9 @@ class GameBehaviour : public Component
         virtual void Update() {};
         virtual void LateUpdate() {};
 
-        virtual void OnCollisionEnter(Collision* c) {};
-        virtual void OnCollisionExit(Collision* c) {};
-        virtual void OnCollisionStay(Collision* c) {};
+        virtual void OnCollisionEnter(Collider* c) {};
+        virtual void OnCollisionExit(Collider* c) {};
+        virtual void OnCollisionStay(Collider* c) {};
 
         virtual void OnRecivedBoardcast(int ev, string from, string text, Vector2I point, Vector2I size) {};
 };
