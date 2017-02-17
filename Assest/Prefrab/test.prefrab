@@ -6,6 +6,12 @@
 		"Transform" : 
 		{
 			"position" : { "x" : 320, "y" : 240 }
+		},
+		"SpriteRenderer" : 
+		{
+			"Bitmap" : {
+				"name" : "ball1.bmp"
+			}
 		}
 	}
 }
