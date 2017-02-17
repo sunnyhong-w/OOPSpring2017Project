@@ -7,8 +7,8 @@ HISTORY :
 
 #pragma once
 #include"_setting.h"
-#include"componentFactory.h"
 #include <string>
+
 using namespace std;
 
 namespace game_engine
@@ -74,7 +74,7 @@ struct Vector2I
         friend Vector2I operator /(int multiplied, Vector2I multiplier);
         int x;
         int y;
-        
+
     private:
         bool nullVector = false;
 };

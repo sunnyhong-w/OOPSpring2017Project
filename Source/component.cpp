@@ -13,7 +13,6 @@ HISTORY :
 #include"component.h"
 #include"gameobject.h"
 #include"enginelib.h"
-#include"componentFactory.h"
 
 namespace game_engine
 {

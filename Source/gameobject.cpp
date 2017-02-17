@@ -7,16 +7,38 @@ Copyright (C) 2017 Guo Xiang, Hong <sunnyhong.w@gmail.com>
 HISTORY :
 2017-02-09 v0.1.0
 */
-
-#include"StdAfx.h"
+#include "StdAfx.h"
 #include <string>
 #include <ddraw.h>
-#include"component.h"
-#include"gamebehavior.h"
-#include"gameobject.h"
+#include "component.h"
+#include "gamebehavior.h"
+#include "gameobject.h"
+#include "_GameScripts.h"
 
 namespace game_engine
 {
+
+///// Add Component String Parser
+
+//Use define to make sure class won't have spelling mistake
+#define RegisterComponent(v) else if (ComponentName == #v) return this->AddComponent<v>();
+
+Component* GameObject::AddComponent(string ComponentName)
+{
+    if (ComponentName == "Component") return nullptr;
+
+    //Register Basic Component
+    RegisterComponent(Transform)
+    RegisterComponent(SpriteRenderer)
+    RegisterComponent(Collider)
+    //Register Script
+    else return nullptr;
+}
+ 
+/////
+
+#define FindJSON(str) j.find(str) != j.end()
+
 GameObject::GameObject(bool doNotDestoryOnChangeScene, bool isPureScript)
 {
     this->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
@@ -32,12 +54,36 @@ GameObject::~GameObject()
 {
     for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
         delete it->second;
-    
 }
 
 void GameObject::ParseJSON(json j)
 {
+    if (FindJSON("Component"))
+    {
+        for (json::iterator it = j["Component"].begin(); it != j["Component"].end(); ++it)
+        {
+            Component* comp = this->AddComponent(it.key());
+            comp->ParseJSON(it.value());
+        }
+    }
 
+    if (FindJSON("enable"))
+        this->enable = j["enable"];
+
+    if (FindJSON("name"))
+        this->name = j["name"].get<string>();
+
+    if (FindJSON("tag"))
+        this->tag = j["tag"];
+
+    if (FindJSON("layer"))
+        this->layer = j["layer"];
+
+    if (FindJSON("isPureScript"))
+        this->isPureScript = j["isPureScript"];
+
+    if (FindJSON("doNOTDestoryOnChangeScene"))
+        this->doNOTDestoryOnChangeScene = j["doNOTDestoryOnChangeScene"];
 }
 
 void GameObject::Start()
@@ -116,6 +162,7 @@ void GameObject::SetTag(Tag tag)
 {
     typedef multimap<Tag, GameObject*>::iterator iter;
     std::pair<iter, iter> data = GameObject::objectsTag.equal_range(this->tag);
+
     for (iter it = data.first; it != data.second; it++)
     {
         if (it->second == this)
@@ -132,6 +179,7 @@ void GameObject::SetLayer(Layer layer)
 {
     typedef multimap<Layer, GameObject*>::iterator iter;
     std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(this->layer);
+
     for (iter it = data.first; it != data.second; it++)
     {
         if (it->second == this)
@@ -193,13 +241,14 @@ void GameObject::Insert(GameObject* gobj)
     GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, gobj);
 }
 
-void GameObject::UpdateName(GameObject *gobj)
+void GameObject::UpdateName(GameObject* gobj)
 {
     if (GameObject::objectsName.find(gobj->name) != GameObject::objectsName.end())
         GameObject::objectsName[gobj->name] = gobj;
     else
     {
         int i;
+
         for (i = 0; GameObject::objectsName.find(gobj->name + " Clone(" + to_string(i) + ")") != GameObject::objectsName.end(); i++);
 
         GameObject::objectsName[gobj->name + " Clone(" + to_string(i) + ")"] = gobj;
@@ -207,12 +256,12 @@ void GameObject::UpdateName(GameObject *gobj)
     }
 }
 
-void GameObject::UpdateTag(GameObject * gobj)
+void GameObject::UpdateTag(GameObject* gobj)
 {
     GameObject::objectsTag.insert(multimap<Tag, GameObject*>::value_type(gobj->tag, gobj));
 }
 
-void GameObject::UpdateLayer(GameObject * gobj)
+void GameObject::UpdateLayer(GameObject* gobj)
 {
     GameObject::objectsLayer.insert(multimap<Layer, GameObject*>::value_type(gobj->layer, gobj));
 }
@@ -287,8 +336,10 @@ vector<GameObject*> GameObject::findGameObjectsByTag(Tag tag)
     vector<GameObject*> retdat;
     typedef multimap<Tag, GameObject*>::iterator iter;
     std::pair<iter, iter> data = GameObject::objectsTag.equal_range(tag);
+
     for (iter it = data.first; it != data.second; it++)
         retdat.push_back(it->second);
+
     return retdat;
 }
 
@@ -297,12 +348,14 @@ vector<GameObject*> GameObject::findGameObjectsByLayer(Layer layer)
     vector<GameObject*> retdat;
     typedef multimap<Layer, GameObject*>::iterator iter;
     std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(layer);
+
     for (iter it = data.first; it != data.second; it++)
         retdat.push_back(it->second);
+
     return retdat;
 }
 
-GameObject * GameObject::GetPrefrabs(std::string file)
+GameObject* GameObject::GetPrefrabs(std::string file)
 {
     if (GameObject::prefrabsData.find(file) == GameObject::prefrabsData.end())
         return nullptr;
@@ -310,11 +363,10 @@ GameObject * GameObject::GetPrefrabs(std::string file)
         return GameObject::prefrabsData[file];
 }
 
-GameObject* GameObject::InsertPrefrabs(string file, GameObject *gobj)
+GameObject* GameObject::InsertPrefrabs(string file, GameObject* gobj)
 {
-    GAME_ASSERT(GameObject::prefrabsData.find(file) != GameObject::prefrabsData.end(), 
-        ("Prefrab name repeated. #[Engine]GameObject::InsertPrefrabs (PrefrabName : " + file + ")").c_str());
-
+    GAME_ASSERT(GameObject::prefrabsData.find(file) != GameObject::prefrabsData.end(),
+                ("Prefrab name repeated. #[Engine]GameObject::InsertPrefrabs (PrefrabName : " + file + ")").c_str());
     GameObject::prefrabsData[file] = gobj;
     return gobj;
 }

@@ -54,6 +54,7 @@ class GameObject
         //處理Component的Template
         //加入指定型別的物件，如果成功加入，會回傳對應指標
         //T component的泛型
+        Component* AddComponent(string ComponentName);
         template<class T> T* AddComponent();
         //加入限定一個的指定型別的物件，如果成功加入，會回傳對應指標，如果已經存在，則會回傳該指標
         //T component的泛型
