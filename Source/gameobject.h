@@ -26,11 +26,13 @@ class GameObject;
 //一些Public的最高權限Function
 void Destory(GameObject& gobj);
 GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision = Vector2::null);
+GameObject* Instantiate(json prefrabJSON, Vector2 posision = Vector2::null);
 
 class GameObject
 {
         friend void Destory(GameObject& gobj);
         friend GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision);
+        friend GameObject* Instantiate(json jsonobj, Vector2 posision);
         friend class GameScene;
         friend class Transform;
         friend class game_framework::CGame;
@@ -74,8 +76,8 @@ class GameObject
         template<class T> void RemoveComponents();
 
         //GameObject Object Manage
-        static GameObject* GetPrefrabs(std::string file);
-        static GameObject* InsertPrefrabs(std::string file, GameObject* gobj);
+        static json GetPrefrabs(std::string file);
+        static json InsertPrefrabs(string file, json prefrabJSON);
         static GameObject* findGameObjectByName(string name);
         static vector<GameObject*> findGameObjectsByTag(Tag tag);
         static vector<GameObject*> findGameObjectsByLayer(Layer layer);
@@ -90,7 +92,7 @@ class GameObject
         static void UpdateLayer(GameObject* gobj);
         static void ResetObjectPool();
         static void UpdateRenderOrder(GameObject* gobj);
-        static std::map<std::string, GameObject*> prefrabsData;
+        static std::map<std::string, json> prefrabsData;
         static std::map<std::string, GameObject*> objectsName;
         static std::multimap<Tag, GameObject*> objectsTag;
         static std::multimap<Layer, GameObject*> objectsLayer;

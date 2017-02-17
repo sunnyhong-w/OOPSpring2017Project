@@ -105,11 +105,7 @@ void GameScene::ParseJSON(json j)
                 bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
                 bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
 
-                GameObject* prefrab = new GameObject(doNOTDestoryOnChangeScene,isPureScript);
-                prefrab->ParseJSON(jsonobj);
-                //Insert會記錄這個prefrab指標的內容，所以不能delete
-                //CGmae的Destructor會自動把所有這裡的東西刪掉，不用擔心Memory Leak.
-                GameObject::InsertPrefrabs((*it).get<string>(), prefrab);
+                GameObject::InsertPrefrabs((*it).get<string>(), jsonobj);
             }
             else
             {
@@ -129,11 +125,11 @@ void GameScene::ParseJSON(json j)
         {
             json objJSON = (*it);
 
-            GameObject* prefrab = GameObject::GetPrefrabs(objJSON.begin().key());
+            json prefrab = GameObject::GetPrefrabs(objJSON.begin().key());
             if (prefrab != nullptr)
             {
                 GameObject *gobj = Instantiate(prefrab);
-                gobj->ParseJSON(it.value());
+                gobj->ParseJSON(objJSON.begin().value());
             }
             else
             {

@@ -52,8 +52,8 @@ GameObject::GameObject(bool doNotDestoryOnChangeScene, bool isPureScript)
 
 GameObject::~GameObject()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
-        delete it->second;
+    for (auto it : componentData)
+        delete it.second;
 }
 
 void GameObject::ParseJSON(json j)
@@ -193,7 +193,7 @@ void GameObject::SetLayer(Layer layer)
 /////////////////////////////////////////////////////////////////////////
 
 vector<GameObject*> GameObject::gameObjects;
-map<string, GameObject*> GameObject::prefrabsData;
+map<string, json> GameObject::prefrabsData;
 map<string, GameObject*> GameObject::objectsName;
 multimap<Tag, GameObject*> GameObject::objectsTag;
 multimap<Layer, GameObject*> GameObject::objectsLayer;
@@ -203,9 +203,26 @@ void Destory(GameObject& gobj)
     gobj.destoryFlag = true;
 }
 
-GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision)
+GameObject* Instantiate(GameObject* gobj, Vector2 posision)
 {
-    GameObject* gobj = new GameObject(*objectPrefrabs);
+    if (!posision.isNull())
+        gobj->GetComponent<Transform>()->position = posision;
+
+    GameObject::Insert(gobj);
+    GameObject::UpdateName(gobj);
+    GameObject::UpdateTag(gobj);
+    GameObject::UpdateLayer(gobj);
+
+    return gobj;
+}
+
+GameObject* Instantiate(json jsonobj, Vector2 posision)
+{
+    bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
+    bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
+
+    GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene, isPureScript);
+    gobj->ParseJSON(jsonobj);
 
     if (!posision.isNull())
         gobj->GetComponent<Transform>()->position = posision;
@@ -353,7 +370,7 @@ vector<GameObject*> GameObject::findGameObjectsByLayer(Layer layer)
     return retdat;
 }
 
-GameObject* GameObject::GetPrefrabs(std::string file)
+json GameObject::GetPrefrabs(std::string file)
 {
     if (GameObject::prefrabsData.find(file) == GameObject::prefrabsData.end())
         return nullptr;
@@ -361,12 +378,12 @@ GameObject* GameObject::GetPrefrabs(std::string file)
         return GameObject::prefrabsData[file];
 }
 
-GameObject* GameObject::InsertPrefrabs(string file, GameObject* gobj)
+json GameObject::InsertPrefrabs(string file, json prefrabsJSON)
 {
-    GAME_ASSERT(GameObject::prefrabsData.find(file) != GameObject::prefrabsData.end(),
+    GAME_ASSERT(GameObject::prefrabsData.find(file) == GameObject::prefrabsData.end(),
                 ("Prefrab name repeated. #[Engine]GameObject::InsertPrefrabs (PrefrabName : " + file + ")").c_str());
-    GameObject::prefrabsData[file] = gobj;
-    return gobj;
+    GameObject::prefrabsData[file] = prefrabsJSON;
+    return prefrabsJSON;
 }
 
 }
