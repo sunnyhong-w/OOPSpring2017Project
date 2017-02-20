@@ -123,26 +123,6 @@ using namespace std;
 namespace game_framework {
 
 /////////////////////////////////////////////////////////////////////////////
-//  傳輸資料用的structure
-/////////////////////////////////////////////////////////////////////////////
-    struct TransferData {
-        struct SizeNPos
-        {
-            int x;
-            int y;
-            int w;
-            int h;
-        };
-
-        enum EVENTCODE { Update, Used };
-
-        EVENTCODE ev;
-        TCHAR sender[32];
-        TCHAR message[256];
-        SizeNPos pos;
-    };
-
-/////////////////////////////////////////////////////////////////////////////
 // 這個class提供時間、錯誤等控制
 // 一般的遊戲並不需直接操作這個物件，因此可以不管這個class的使用方法
 /////////////////////////////////////////////////////////////////////////////
@@ -325,7 +305,7 @@ public:
 	virtual void OnMouseMove(UINT nFlags, CPoint point) {}  // 處理滑鼠的動作 
 	virtual void OnRButtonDown(UINT nFlags, CPoint point) {}// 處理滑鼠的動作
 	virtual void OnRButtonUp(UINT nFlags, CPoint point) {}	// 處理滑鼠的動作
-    virtual void OnCopyData(TransferData *TDP) {};          // 處理視窗間的資料傳遞
+    virtual void OnCopyData(json j) {};          // 處理視窗間的資料傳遞
 protected:
 	void GotoGameState(int state);							// 跳躍至指定的state
 	void ShowInitProgress(int percent);						// 顯示初始化的進度
@@ -363,9 +343,9 @@ public:
 	void OnResume();								// 處理自「待命」還原的動作
 	void OnSetFocus();								// 處理Focus
 	void OnSuspend();								// 處理「待命」的動作
-    void OnCopyData(TransferData *TDP);             // 處理視窗間的資料傳遞
+    void OnCopyData(json reciveddata);             // 處理視窗間的資料傳遞
+    void BoardcastMessage(json boardcastdata);      //廣播要發送給其他視窗的訊息
     void OnMoving();                                // 處理視窗移動時的細節
-    void BoardcastMessage(TransferData::EVENTCODE ev,CString message); //廣播要發送給其他視窗的訊息
 	void SetGameState(int);
 	static CGame *Instance();
 private:
@@ -374,7 +354,6 @@ private:
 	const int		NUM_GAME_STATES;	// 遊戲的狀態數(3個狀態)
 	CGameState		*gameState;			// pointer指向目前的遊戲狀態
 	CGameState		*gameStateTable[3];	// 遊戲狀態物件的pointer
-    map<CString, TransferData> datamap; //儲存廣播過來的資料用的map
 	static CGame	instance;			// 遊戲唯一的instance
     const CString targetwindow[2] = { "TEST_A" , "TEST_B" }; //Boardcast清單
 };

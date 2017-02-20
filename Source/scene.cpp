@@ -97,15 +97,23 @@ void GameScene::OnMove()
 
         //COLLISION DECTECTION WORK OUT HERE
 
-        if (TDPQueue.size() != 0)
+        while (TDPQueue.size() != 0)
         {
             for (GameObject* gobj : GameObject::gameObjects)
                 if (gobj->enable)
-                    gobj->OnRecivedBoardcast(TDPQueue[0].ev, TDPQueue[0].sender, TDPQueue[0].message,
-                        Vector2I(TDPQueue[0].pos.x, TDPQueue[0].pos.y),
-                        Vector2I(TDPQueue[0].pos.w, TDPQueue[0].pos.h));
+                    gobj->OnRecivedBoardcast(TDPQueue[0]);
+
+            string str = "Recived JSON : \n" + TDPQueue[0].dump(4);
+
+            AfxMessageBox(str.c_str());
 
             TDPQueue.erase(TDPQueue.begin());
+        }
+
+        if (Input::GetKeyClick(VK_LBUTTON))
+        {
+            json j;
+            game_framework::CGame::Instance()->BoardcastMessage(j);
         }
 
         for (GameObject* gobj : GameObject::gameObjects)
@@ -216,9 +224,9 @@ void GameScene::LoadSceneData()
     this->loadname = "";
 }
 
-void GameScene::OnCopyData(game_framework::TransferData* TDP)
+void GameScene::OnCopyData(json j)
 {
-    TDPQueue.push_back(*TDP);
+    TDPQueue.push_back(j);
 }
 
 }
