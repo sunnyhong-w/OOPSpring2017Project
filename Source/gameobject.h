@@ -100,7 +100,7 @@ class GameObject
         //GameObject
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
-        std::string name;
+        std::string name = "GameObject";
         Tag tag;
         Layer layer;
         bool destoryFlag = false;
