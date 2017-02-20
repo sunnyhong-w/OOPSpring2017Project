@@ -30,50 +30,6 @@ void GameScene::OnBeginState()
             gobj->Start();
 }
 
-void GameScene::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
-    if (Input::keyEvent.find(nChar) == Input::keyEvent.end())
-    {
-        Input::keyEvent[nChar] = clock();
-    }
-}
-
-void GameScene::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
-    Input::keyEvent.erase(nChar);
-}
-
-void GameScene::OnLButtonDown(UINT nFlags, CPoint point)
-{
-    if (Input::keyEvent.find(VK_LBUTTON) == Input::keyEvent.end())
-    {
-        Input::keyEvent[VK_LBUTTON] = clock();
-    }
-}
-
-void GameScene::OnLButtonUp(UINT nFlags, CPoint point)
-{
-    Input::keyEvent.erase(VK_LBUTTON);
-}
-
-void GameScene::OnMouseMove(UINT nFlags, CPoint point)
-{
-    Input::mousePos = Vector2I(point.x, point.y);
-}
-
-void GameScene::OnRButtonDown(UINT nFlags, CPoint point)
-{
-    if (Input::keyEvent.find(VK_RBUTTON) == Input::keyEvent.end())
-    {
-        Input::keyEvent[VK_RBUTTON] = clock();
-    }
-}
-
-void GameScene::OnRButtonUp(UINT nFlags, CPoint point)
-{
-    Input::keyEvent.erase(VK_RBUTTON);
-}
-
 void GameScene::OnMove()
 {
     if (loadname != "")
@@ -222,6 +178,50 @@ void GameScene::LoadSceneData()
     }
     file.close();
     this->loadname = "";
+}
+
+void GameScene::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    if (Input::keyEvent.find(nChar) == Input::keyEvent.end())
+    {
+        Input::keyEvent[nChar] = clock();
+    }
+}
+
+void GameScene::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    Input::keyEvent.erase(nChar);
+}
+
+void GameScene::OnLButtonDown(UINT nFlags, CPoint point)
+{
+    if (Input::keyEvent.find(VK_LBUTTON) == Input::keyEvent.end())
+    {
+        Input::keyEvent[VK_LBUTTON] = clock();
+    }
+}
+
+void GameScene::OnLButtonUp(UINT nFlags, CPoint point)
+{
+    Input::keyEvent.erase(VK_LBUTTON);
+}
+
+void GameScene::OnMouseMove(UINT nFlags, CPoint point)
+{
+    Input::mousePos = Vector2I(point.x, point.y);
+}
+
+void GameScene::OnRButtonDown(UINT nFlags, CPoint point)
+{
+    if (Input::keyEvent.find(VK_RBUTTON) == Input::keyEvent.end())
+    {
+        Input::keyEvent[VK_RBUTTON] = clock();
+    }
+}
+
+void GameScene::OnRButtonUp(UINT nFlags, CPoint point)
+{
+    Input::keyEvent.erase(VK_RBUTTON);
 }
 
 void GameScene::OnCopyData(json j)
