@@ -14,15 +14,16 @@ void GameScene::OnBeginState()
 {
     GameObject::ResetObjectPool();
 
+    //Before Loading Easing(Ex : Darken the whoile windows)
+
     thread th(&GameScene::LoadSceneData, this);
-
-    //Darken the whole window
-
     //Render Loading Animation(force it OnDraw)
     while (!th.joinable())
         OnDraw();
-
     th.join();
+
+    //After Loading Easing(Ex : Brighten the whole window)
+
     game_framework::CSpecialEffect::SetCurrentTime();
 
     for (GameObject* gobj : GameObject::gameObjects)

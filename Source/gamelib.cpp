@@ -126,7 +126,7 @@
 #include "enginelib.h"
 #include "gameobject.h"
 #include "scene.h"
-#include "mygame.h"
+using namespace game_engine;
 
 namespace game_framework
 {
@@ -456,11 +456,6 @@ CGameState::CGameState(CGame* g)
     game = g; 	// 設定game的pointer
 }
 
-void CGameState::GotoGameState(int state)
-{
-    game->SetGameState(state);
-}
-
 void CGameState::ShowInitProgress(int percent)
 {
     if (!SHOW_LOAD_PROGRESS)
@@ -527,21 +522,17 @@ void CGameState::OnCycle() // Template Method
 CGame CGame::instance;
 
 CGame::CGame()
-    : NUM_GAME_STATES(3)
 {
     running = true;
     suspended = false;
-    //gameStateTable[GAME_STATE_INIT] = new CGameStateInit(this);
-    gameStateTable[GAME_STATE_INIT] = new GameScene(this);
-    gameStateTable[GAME_STATE_RUN]  = new CGameStateRun(this);
-    gameStateTable[GAME_STATE_OVER] = new CGameStateOver(this);
+    SceneStack.push_back(new GameScene(this));
     gameState = NULL;
 }
 
 CGame::~CGame()
 {
-    for (int i = 0; i < NUM_GAME_STATES; i++)
-        delete gameStateTable[i];
+    for (auto s : SceneStack)
+        delete s;
 
     for (GameObject* gobj : GameObject::gameObjects)
         delete gobj;
@@ -608,6 +599,46 @@ bool CGame::OnIdle()  // 修改功能不要修改OnIdle()，而應修改OnMove()
     if (!running)
         return false;
 
+
+    if (popStack)
+    {
+        if (SceneStack.size() == 0)
+        {
+            AfxMessageBox("Something went wrong?");
+            PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);
+        }
+        else
+        {
+            if (!dynamic_cast<GameScene *>(gameState)->lock)
+                delete gameState;
+
+            SceneStack.pop_back();
+            gameState = SceneStack.back();
+        }
+        
+        popStack = false;
+    }
+
+
+    if (waitForStack != nullptr)
+    {
+        SceneStack.push_back(waitForStack);
+        gameState = waitForStack;
+        if(dynamic_cast<GameScene *>(gameState)->loadname != "")
+            gameState->OnBeginState();
+        OnDraw();
+        CSpecialEffect::SetCurrentTime();
+        running = true;
+
+        waitForStack = nullptr;
+    }
+
+    if(SceneStack.size() == 0)
+    {
+        AfxMessageBox("Something went wrong?");
+        PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);
+    }
+
     //
     // 以下是遊戲的主迴圈
     //
@@ -649,7 +680,8 @@ void CGame::OnInit()	// OnInit() 只在程式一開始時執行一次
     // Switch to the first state
     //
     AfxGetMainWnd()->SetWindowTextA(WINDOW_NAME);
-    gameState = gameStateTable[GAME_STATE_INIT];
+    //gameState = gameStateTable[GAME_STATE_INIT];
+    gameState = SceneStack.back();
     gameState->OnBeginState();
     CSpecialEffect::SetCurrentTime();
     running = true;
@@ -660,8 +692,8 @@ void CGame::OnInitStates()
     //
     // 呼叫每個狀態的OnInitialUpdate
     //
-    for (int i = 0; i < NUM_GAME_STATES; i++)
-        gameStateTable[i]->OnInit();
+    //for (int i = 0; i < NUM_GAME_STATES; i++)
+    //    gameStateTable[i]->OnInit();
 }
 
 void CGame::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -785,14 +817,14 @@ void CGame::BoardcastMessage(json boardcastdata)
     }
 }
 
-void CGame::SetGameState(int state)
+void CGame::EnterScene(CGameState *gs)
 {
-    ASSERT(state >= 0 && state < NUM_GAME_STATES);
-    gameState = gameStateTable[state];
-    gameState->OnBeginState();
-    OnDraw();
-    CSpecialEffect::SetCurrentTime();
-    running = true;
+    waitForStack = gs;
+}
+
+void CGame::ExitScene()
+{
+    popStack = true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
