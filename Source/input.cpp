@@ -6,12 +6,13 @@
 using namespace std;
 namespace game_engine
 {
+
 map<UINT, DWORD> Input::keyEvent;
 map<UINT, DWORD> Input::nowState;
 map<UINT, DWORD> Input::lastState;
 Vector2I Input::mousePos;
 Vector2I Input::nowPos;
-const DWORD Input::trigger_ms = 1000;
+const DWORD Input::trigger_ms = 200;
 void Input::Update()
 {
     Input::lastState = Input::nowState;
@@ -43,6 +44,6 @@ bool Input::GetKeyUp(UINT nChar)
 Vector2I Input::GetMousePos()
 {
     return Input::nowPos;
-    ;
 }
+
 }

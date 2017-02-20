@@ -17,14 +17,14 @@ class GameScene : public game_framework::CGameState
         void OnMouseMove(UINT nFlags, CPoint point) override;  // 處理滑鼠的動作
         void OnRButtonDown(UINT nFlags, CPoint point) override;// 處理滑鼠的動作
         void OnRButtonUp(UINT nFlags, CPoint point) override;	// 處理滑鼠的動作
-        void OnCopyData(game_framework::TransferData* TDP) override;          // 處理視窗間的資料傳遞
+        void OnCopyData(json j) override;          // 處理視窗間的資料傳遞
         void OnMove() override;
         void OnShow() override;
         void ParseJSON(json j);
         void LoadScene(string filename);
     private:
         void LoadSceneData();
-        vector<game_framework::TransferData> TDPQueue;
+        vector<json> TDPQueue;
         string filename;
         string loadname = "Main";
 };

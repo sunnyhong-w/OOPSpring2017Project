@@ -751,34 +751,26 @@ void CGame::OnSuspend()
     CAudio::Instance()->SetPowerResume();
 }
 
-void CGame::OnCopyData(TransferData* TDP)
+void CGame::OnCopyData(json reciveddata)
 {
-    CString sender;
-    sender.Format("%s", TDP->sender);
-    lstrcpy(datamap[sender].sender, TDP->sender);
-    lstrcpy(datamap[sender].message, TDP->message);
-    datamap[sender].pos = TDP->pos;
-    datamap[sender].ev = TDP->ev;
-    gameState->OnCopyData(&datamap[sender]);
+    gameState->OnCopyData(reciveddata);
 }
 
-void CGame::BoardcastMessage(TransferData::EVENTCODE ev, CString message)
+void CGame::BoardcastMessage(json boardcastdata)
 {
-    TransferData boardcastdata;
-    boardcastdata.ev = ev;
     RECT rect;
     AfxGetMainWnd()->GetWindowRect(&rect);
-    boardcastdata.pos.x = rect.left;
-    boardcastdata.pos.y = rect.top;
-    boardcastdata.pos.w = rect.right - rect.left;
-    boardcastdata.pos.h = rect.bottom - rect.top;
-    lstrcpy(boardcastdata.sender, WINDOW_NAME);
-    lstrcpy(boardcastdata.message, message);
-    COPYDATASTRUCT data;
-    data.cbData = sizeof(boardcastdata);
-    data.dwData = 0;
-    data.lpData = (LPVOID)&boardcastdata;
+    boardcastdata["posision"] = { { "x" , rect.left } ,{ "y" , rect.top } };
+    boardcastdata["size"] = { { "w" , rect.right - rect.left } ,{ "h" , rect.bottom - rect.top } };
+    boardcastdata["sender"] = WINDOW_NAME;
 
+    string strdata = boardcastdata.dump();
+
+    COPYDATASTRUCT data;
+    data.cbData = sizeof(char) * strlen(strdata.c_str());
+    data.dwData = 0;
+    data.lpData = (LPVOID)strdata.c_str();
+    
     for (CString key : targetwindow)
     {
         if (key == WINDOW_NAME)
@@ -786,7 +778,7 @@ void CGame::BoardcastMessage(TransferData::EVENTCODE ev, CString message)
         else
         {
             CWnd* targetWin = CWnd::FindWindow(NULL, key);
-
+    
             if (targetWin)
                 SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
         }

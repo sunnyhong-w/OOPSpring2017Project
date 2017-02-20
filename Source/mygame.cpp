@@ -333,7 +333,7 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 {
-    CGame::Instance()->BoardcastMessage(TransferData::EVENTCODE::Update, "TEST MESSAGE");
+    //CGame::Instance()->BoardcastMessage(TransferData::EVENTCODE::Update, "TEST MESSAGE");
 
 	//GotoGameState(GAME_STATE_RUN);		// 切換至GAME_STATE_RUN
 }
