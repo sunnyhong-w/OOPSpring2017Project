@@ -44,7 +44,7 @@ class GameObject
         void Update();
         void LateUpdate();
         void Draw();
-        void OnRecivedBoardcast(int ev, string from, string text, Vector2I point, Vector2I size);
+        void OnRecivedBoardcast(json j);
         void SetName(string name);
         string GetName();
         void SetTag(Tag tag);
@@ -100,7 +100,7 @@ class GameObject
         //GameObject
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
-        std::string name;
+        std::string name = "GameObject";
         Tag tag;
         Layer layer;
         bool destoryFlag = false;

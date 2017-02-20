@@ -71,13 +71,13 @@ void GameObject::ParseJSON(json j)
         this->enable = j["enable"];
 
     if (FindJSON("name"))
-        this->name = j["name"].get<string>();
+        this->SetName(j["name"].get<string>());
 
     if (FindJSON("tag"))
-        this->tag = j["tag"];
+        this->SetTag(j["tag"]);
 
     if (FindJSON("layer"))
-        this->layer = j["layer"];
+        this->SetLayer(j["layer"]);
 }
 
 void GameObject::Start()
@@ -128,7 +128,7 @@ void GameObject::Draw()
         this->GetComponent<SpriteRenderer>()->Draw();
 }
 
-void GameObject::OnRecivedBoardcast(int ev, string from, string text, Vector2I point, Vector2I size)
+void GameObject::OnRecivedBoardcast(json j)
 {
     for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
     {
@@ -137,7 +137,7 @@ void GameObject::OnRecivedBoardcast(int ev, string from, string text, Vector2I p
             GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
 
             if (gb->enable)
-                gb->OnRecivedBoardcast(ev, from, text, point, size);
+                gb->OnRecivedBoardcast(j);
         }
     }
 }
@@ -228,9 +228,12 @@ GameObject* Instantiate(json jsonobj, Vector2 posision)
         gobj->GetComponent<Transform>()->position = posision;
 
     GameObject::Insert(gobj);
-    GameObject::UpdateName(gobj);
-    GameObject::UpdateTag(gobj);
-    GameObject::UpdateLayer(gobj);
+    if (jsonobj.find("name") == jsonobj.end())
+        GameObject::UpdateName(gobj);
+    if (jsonobj.find("tag") == jsonobj.end())
+        GameObject::UpdateTag(gobj);
+    if (jsonobj.find("layer") == jsonobj.end())
+        GameObject::UpdateLayer(gobj);
 
     return gobj;
 }
@@ -258,7 +261,7 @@ void GameObject::Insert(GameObject* gobj)
 
 void GameObject::UpdateName(GameObject* gobj)
 {
-    if (GameObject::objectsName.find(gobj->name) != GameObject::objectsName.end())
+    if (GameObject::objectsName.find(gobj->name) == GameObject::objectsName.end())
         GameObject::objectsName[gobj->name] = gobj;
     else
     {
