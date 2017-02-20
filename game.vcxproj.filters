@@ -102,7 +102,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\mygame.cpp" />
     <ClCompile Include="Source\audio.cpp">
       <Filter>GameLibrary</Filter>
     </ClCompile>
@@ -147,7 +146,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\mygame.h" />
     <ClInclude Include="Source\audio.h">
       <Filter>GameLibrary</Filter>
     </ClInclude>

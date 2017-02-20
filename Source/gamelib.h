@@ -307,7 +307,7 @@ public:
 	virtual void OnRButtonUp(UINT nFlags, CPoint point) {}	// 處理滑鼠的動作
     virtual void OnCopyData(json j) {};          // 處理視窗間的資料傳遞
 protected:
-	void GotoGameState(int state);							// 跳躍至指定的state
+	//void GotoGameState(int state);							// 跳躍至指定的state
 	void ShowInitProgress(int percent);						// 顯示初始化的進度
 	//
 	// virtual functions, 由繼承者提供implementation
@@ -346,14 +346,16 @@ public:
     void OnCopyData(json reciveddata);             // 處理視窗間的資料傳遞
     void BoardcastMessage(json boardcastdata);      //廣播要發送給其他視窗的訊息
     void OnMoving();                                // 處理視窗移動時的細節
-	void SetGameState(int);
+    void EnterScene(CGameState *gs);
+    void ExitScene();
 	static CGame *Instance();
 private:
 	bool			running;			// 遊戲是否正在進行中(未被Pause)
 	bool            suspended;			// 遊戲是否被suspended
-	const int		NUM_GAME_STATES;	// 遊戲的狀態數(3個狀態)
 	CGameState		*gameState;			// pointer指向目前的遊戲狀態
-	CGameState		*gameStateTable[3];	// 遊戲狀態物件的pointer
+    CGameState      *waitForStack;
+    bool            popStack = false;
+    vector<CGameState*> SceneStack;
 	static CGame	instance;			// 遊戲唯一的instance
     const CString targetwindow[2] = { "TEST_A" , "TEST_B" }; //Boardcast清單
 };

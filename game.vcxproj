@@ -303,11 +303,6 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">UnitTest/</ObjectFileName>
       <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">UnitTest/</ProgramDataBaseFileName>
     </ClCompile>
-    <ClCompile Include="Source\mygame.cpp">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
     <ClCompile Include="Source\_setting.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -328,7 +323,6 @@
     <ClInclude Include="Source\scene.h" />
     <ClInclude Include="Source\StdAfx.h" />
     <ClInclude Include="Source\gamelib.h" />
-    <ClInclude Include="Source\mygame.h" />
     <ClInclude Include="Source\_GameScripts.h" />
     <ClInclude Include="Source\_setting.h" />
   </ItemGroup>
