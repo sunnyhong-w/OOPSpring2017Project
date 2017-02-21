@@ -8,7 +8,11 @@
 				{
 					"Transform" : 
 					{
-						"position" : { "x" : 320, "y" : 240 }
+						"position" : { "x" : 120, "y" : 240 }
+					},
+					"Tutorial":
+					{
+						"speed" : 5
 					}
 				}
 			}

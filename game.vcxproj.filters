@@ -144,6 +144,9 @@
     <ClCompile Include="Source\_setting.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\tutorial.cpp">
+      <Filter>GameScript</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -201,6 +204,12 @@
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Source\_GameScripts.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\tutorial.h">
+      <Filter>GameScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>

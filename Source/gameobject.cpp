@@ -32,6 +32,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(SpriteRenderer)
     RegisterComponent(Collider)
     //Register Script
+	RegisterComponent(Tutorial)
     else return nullptr;
 }
  
