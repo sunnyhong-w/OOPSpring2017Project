@@ -74,15 +74,19 @@ void Transform::ParseJSON(json j)
 {
     if (j.find("position") != j.end())
         this->position = j["position"];
+
     if (j.find("scale") != j.end())
         this->scale = j["scale"];
+
     if (j.find("depth") != j.end())
         this->depth = j["depth"];
+
     if (j.find("zindex") != j.end())
         this->zindex = j["zindex"];
+
     this->zcode = this->zindex + (int)this->depth;
 
-    if(j.find("depth") != j.end() || j.find("zindex") != j.end())
+    if (j.find("depth") != j.end() || j.find("zindex") != j.end())
         GameObject::UpdateRenderOrder(this->gameObject);
 }
 
@@ -103,14 +107,19 @@ void SpriteRenderer::ParseJSON(json j)
 {
     if (j.find("Bitmap") != j.end())
     {
-        int r , g , b;
+        int r, g, b;
         r = g = b = 0;
 
         if (j["Bitmap"].find("colorkey") != j["Bitmap"].end())
         {
-            r = j["Bitmap"]["colorkey"]["r"];
-            g = j["Bitmap"]["colorkey"]["g"];
-            b = j["Bitmap"]["colorkey"]["b"];
+            if (j["Bitmap"]["colorkey"].find("r") != j["Bitmap"]["colorkey"].end())
+                r = j["Bitmap"]["colorkey"]["r"];
+
+            if (j["Bitmap"]["colorkey"].find("g") != j["Bitmap"]["colorkey"].end())
+                g = j["Bitmap"]["colorkey"]["g"];
+
+            if (j["Bitmap"]["colorkey"].find("b") != j["Bitmap"]["colorkey"].end())
+                b = j["Bitmap"]["colorkey"]["b"];
         }
 
         string name = j["Bitmap"]["name"].get<string>();
@@ -120,7 +129,7 @@ void SpriteRenderer::ParseJSON(json j)
     if (j.find("SrcPosition") != j.end())
         this->SetSourcePos(j["SrcPosition"]);
 
-    if(j.find("SrcSize") != j.end())
+    if (j.find("SrcSize") != j.end())
         this->SetSize(j["SrcSize"]);
 }
 
@@ -159,11 +168,9 @@ void SpriteRenderer::LoadBitmapData(string filename, short r, short g, short b)
     int length = strlen(name.c_str());
     char* cname = new char[length + 1]();
     strncpy(cname, name.c_str(), length);
-
     this->LoadBitmapA(cname, RGB(r, g, b));
     this->ResetSize();
     this->ResetSourcePos();
-
     delete[] cname;
 }
 
@@ -175,7 +182,6 @@ int SpriteRenderer::GetSurfaceID()
 void SpriteRenderer::SetSurfaceID(int SID)
 {
     GAME_ASSERT(CheckExist(SID), "SurfaceID not found. #[Engine]SpriteRenderer->SetSurfaceID");
-
     this->SurfaceID = SID;
     this->ResetSize();
     this->ResetSourcePos();
@@ -208,6 +214,16 @@ bool Collider::BoxCollision(Collider* box)
 }
 
 void Collider::ParseJSON(json j)
-{}
+{
+    if (j.find("deltaPoint") != j.end())
+    {
+        deltaPoint = j["deltaPoint"];
+    }
+
+    if (j.find("size") != j.end())
+    {
+        size = j["size"];
+    }
+}
 
 }

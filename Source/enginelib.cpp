@@ -19,7 +19,7 @@ const Vector2 Vector2::null   = Vector2(true);
 const Vector2I Vector2I::up   = Vector2I(0, 1);
 const Vector2I Vector2I::down = Vector2I(0, -1);
 const Vector2I Vector2I::left = Vector2I(-1, 0);
-const Vector2I Vector2I::right= Vector2I( 1, 0);
+const Vector2I Vector2I::right = Vector2I( 1, 0);
 const Vector2I Vector2I::one  = Vector2I(1, 1);
 const Vector2I Vector2I::zero = Vector2I(0, 0);
 const Vector2I Vector2I::null = Vector2I(true);
@@ -140,10 +140,13 @@ bool Vector2::isNull()
     return nullVector;
 }
 
-void from_json(const json &j, Vector2 &v)
+void from_json(const json& j, Vector2& v)
 {
-    v.x = j["x"];
-    v.y = j["y"];
+    if (j.find("x") != j.end())
+        v.x = j["x"];
+
+    if (j.find("y") != j.end())
+        v.y = j["y"];
 }
 
 ///////
@@ -256,10 +259,13 @@ bool operator!=(Vector2I left, Vector2I right)
     return !(left == right);
 }
 
-void from_json(const json &j, Vector2I &v)
+void from_json(const json& j, Vector2I& v)
 {
-    v.x = j["x"];
-    v.y = j["y"];
+    if (j.find("x") != j.end())
+        v.x = j["x"];
+
+    if (j.find("y") != j.end())
+        v.y = j["y"];
 }
 
 
