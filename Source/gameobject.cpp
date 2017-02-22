@@ -32,10 +32,10 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(SpriteRenderer)
     RegisterComponent(Collider)
     //Register Script
-	RegisterComponent(Tutorial)
+    RegisterComponent(Tutorial)
     else return nullptr;
 }
- 
+
 /////
 
 #define FindJSON(str) j.find(str) != j.end()
@@ -123,10 +123,19 @@ void GameObject::LateUpdate()
     }
 }
 
-void GameObject::Draw()
+void GameObject::Draw(Vector2I cameraPos)
 {
     if (this->GetComponent<SpriteRenderer>() != nullptr)
-        this->GetComponent<SpriteRenderer>()->Draw();
+    {
+        if (this->isGUI)
+        {
+            this->GetComponent<SpriteRenderer>()->Draw();
+        }
+        else
+        {
+            this->GetComponent<SpriteRenderer>()->Draw(cameraPos);
+        }
+    }
 }
 
 void GameObject::OnRecivedBoardcast(json j)
@@ -213,7 +222,6 @@ GameObject* Instantiate(GameObject* gobj, Vector2 posision)
     GameObject::UpdateName(gobj);
     GameObject::UpdateTag(gobj);
     GameObject::UpdateLayer(gobj);
-
     return gobj;
 }
 
@@ -221,7 +229,6 @@ GameObject* Instantiate(json jsonobj, Vector2 posision)
 {
     bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
     bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
-
     GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene, isPureScript);
     gobj->ParseJSON(jsonobj);
 
@@ -229,10 +236,13 @@ GameObject* Instantiate(json jsonobj, Vector2 posision)
         gobj->GetComponent<Transform>()->position = posision;
 
     GameObject::Insert(gobj);
+
     if (jsonobj.find("name") == jsonobj.end())
         GameObject::UpdateName(gobj);
+
     if (jsonobj.find("tag") == jsonobj.end())
         GameObject::UpdateTag(gobj);
+
     if (jsonobj.find("layer") == jsonobj.end())
         GameObject::UpdateLayer(gobj);
 

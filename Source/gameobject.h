@@ -43,13 +43,14 @@ class GameObject
         void Start();
         void Update();
         void LateUpdate();
-        void Draw();
+        void Draw(Vector2I cameraPos);
         void OnRecivedBoardcast(json j);
         void SetName(string name);
         string GetName();
         void SetTag(Tag tag);
         void SetLayer(Layer layer);
 
+        bool isGUI = false;
         bool enable = true;
         Transform* transform;
 
@@ -107,7 +108,7 @@ class GameObject
         bool isPureScript = false;
         bool isStarted = false;
         bool doNOTDestoryOnChangeScene = false;
-        
+
 };
 
 //由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中

@@ -25,7 +25,7 @@ class Transform;
 
 class Component
 {
-    friend class GameObject;
+        friend class GameObject;
 
     public:
         Component(GameObject* gobj, bool skip = false);
@@ -58,7 +58,7 @@ class Transform : public Component
         int GetZCode();
         Vector2 position;
         Vector2 scale;
-        
+
 
     private:
         int zindex;
@@ -75,7 +75,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         SpriteRenderer(GameObject* gobj);
         ~SpriteRenderer() {};
         void ParseJSON(json j) override;
-        void Draw();
+        void Draw(Vector2I cameraPos = Vector2I::zero);
         ///<summary>設定Sprite的圖源剪位置</summary>
         void SetSourcePos(Vector2I pos);
         ///<summary>取消Sprite的圖片裁剪功能</summary>
@@ -101,7 +101,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
 
 class Collider : public Component
 {
-    public:     
+    public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
         bool PointCollision(Vector2I point);
         bool BoxCollision(Collider* box);

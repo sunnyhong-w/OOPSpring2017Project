@@ -6,10 +6,10 @@ namespace game_engine
 {
 class GameScene : public game_framework::CGameState
 {
-    friend class game_framework::CGame;
+        friend class game_framework::CGame;
     public:
-        GameScene(game_framework::CGame* CG, string loadname = "Main", bool lock = false) : game_framework::CGameState(CG) 
-        { 
+        GameScene(game_framework::CGame* CG, string loadname = "Main", bool lock = false) : game_framework::CGameState(CG)
+        {
             this->loadname = loadname;
             this->lock = lock;
         };
@@ -34,6 +34,7 @@ class GameScene : public game_framework::CGameState
         vector<json> TDPQueue;
         string filename;
         string loadname;
+        map<string, Vector2I> cameraPosOfWindows;
 };
 }
 

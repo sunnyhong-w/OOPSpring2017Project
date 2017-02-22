@@ -123,29 +123,29 @@
     <ClCompile Include="Source\StdAfx.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
-    <ClCompile Include="Source\gameobject.cpp">
+    <ClCompile Include="Assest\Script\tutorial.cpp">
+      <Filter>GameScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\_setting.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
     <ClCompile Include="Source\component.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\enginelib.cpp">
-      <Filter>GameEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\easing.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\scene.cpp">
+    <ClCompile Include="Source\enginelib.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gameobject.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
     <ClCompile Include="Source\input.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\_setting.cpp">
+    <ClCompile Include="Source\scene.cpp">
       <Filter>GameEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Assest\Script\tutorial.cpp">
-      <Filter>GameScript</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,10 +173,25 @@
     <ClInclude Include="Source\StdAfx.h">
       <Filter>MFC</Filter>
     </ClInclude>
+    <ClInclude Include="Assest\Script\tutorial.h">
+      <Filter>GameScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\scene.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\_GameScripts.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\_setting.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
     <ClInclude Include="Source\component.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\gameobject.h">
+    <ClInclude Include="Source\easing.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Source\enginelib.h">
@@ -185,31 +200,16 @@
     <ClInclude Include="Source\gamebehavior.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\easing.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\_setting.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\scene.h">
+    <ClInclude Include="Source\gameobject.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Source\input.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\json_include.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\json.hpp">
       <Filter>GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\_GameScripts.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Assest\Script\tutorial.h">
-      <Filter>GameScript</Filter>
-    </ClInclude>
-    <ClInclude Include="Assest\Script\Engine.h">
+    <ClInclude Include="Source\json_include.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>

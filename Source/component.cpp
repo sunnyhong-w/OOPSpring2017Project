@@ -133,10 +133,10 @@ void SpriteRenderer::ParseJSON(json j)
         this->SetSize(j["SrcSize"]);
 }
 
-void SpriteRenderer::Draw()
+void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(transform->position.GetV2I(), transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(transform->position.GetV2I() - cameraPos, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
