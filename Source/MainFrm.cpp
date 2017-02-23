@@ -129,7 +129,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 BOOL CMainFrame::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
 {
-    string str = string((const char *)(pCopyDataStruct->lpData));
+	char *dt = new char[pCopyDataStruct->cbData + 1]();
+	strncpy(dt, (const char *)(pCopyDataStruct->lpData), pCopyDataStruct->cbData);
+	dt[pCopyDataStruct->cbData] = (char)'\0';
+	string str = string(dt);
+	delete dt;
     json j = json::parse(str.c_str());
     game_framework::CGame::Instance()->OnCopyData(j);
     
