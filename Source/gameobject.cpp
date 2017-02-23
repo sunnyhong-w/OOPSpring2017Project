@@ -79,6 +79,12 @@ void GameObject::ParseJSON(json j)
 
     if (FindJSON("layer"))
         this->SetLayer(j["layer"]);
+
+	if (FindJSON("isGUI"))
+		this->isGUI = j["isGUI"];
+
+	if (FindJSON("renderByBehavior"))
+		this->renderByBehavior = j["renderByBehavior"];
 }
 
 void GameObject::Start()
@@ -125,17 +131,41 @@ void GameObject::LateUpdate()
 
 void GameObject::Draw(Vector2I cameraPos)
 {
-    if (this->GetComponent<SpriteRenderer>() != nullptr)
-    {
-        if (this->isGUI)
-        {
-            this->GetComponent<SpriteRenderer>()->Draw();
-        }
-        else
-        {
-            this->GetComponent<SpriteRenderer>()->Draw(cameraPos);
-        }
-    }
+	if (!this->renderByBehavior)
+	{
+		if (this->GetComponent<SpriteRenderer>() != nullptr)
+		{
+			if (this->isGUI)
+			{
+				this->GetComponent<SpriteRenderer>()->Draw();
+			}
+			else
+			{
+				this->GetComponent<SpriteRenderer>()->Draw(cameraPos);
+			}
+		}
+	}
+	else
+	{
+		for (auto comp : componentData)
+		{
+			if (comp.second->isBehavior())
+			{
+				GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
+
+				if (gb->enable)
+				{
+					if (this->isGUI)
+						gb->Draw();
+					else
+						gb->Draw(cameraPos);
+				}
+					
+			}
+		}
+	}
+
+
 }
 
 void GameObject::OnRecivedBoardcast(json j)

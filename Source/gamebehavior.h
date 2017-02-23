@@ -25,6 +25,8 @@ class GameBehaviour : public Component
         virtual void Update() {};
         virtual void LateUpdate() {};
 
+		virtual void Draw(Vector2I v2 = Vector2I::zero) {};
+
         virtual void OnCollisionEnter(Collider* c) {};
         virtual void OnCollisionExit(Collider* c) {};
         virtual void OnCollisionStay(Collider* c) {};

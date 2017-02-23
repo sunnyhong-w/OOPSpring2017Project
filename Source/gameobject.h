@@ -107,6 +107,7 @@ class GameObject
         bool destoryFlag = false;
         bool isPureScript = false;
         bool isStarted = false;
+		bool renderByBehavior = false;
         bool doNOTDestoryOnChangeScene = false;
 
 };
