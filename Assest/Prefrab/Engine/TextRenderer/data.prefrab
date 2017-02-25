@@ -1,12 +1,12 @@
 {
-	"name":"TextRenderer",
+	"name":"TextStamp",
 	"isGUI" : true,
 	"renderByBehavior" : true,
 	"Component":
 	{
 		"Transform" : {},
 		"SpriteRenderer" : {},
-		"TextRenderer" :
+		"TextStamp" :
 		{
 			"fontsetting" : 
 			{
