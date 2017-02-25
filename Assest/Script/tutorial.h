@@ -15,4 +15,5 @@ class Tutorial : public GameBehaviour
         int speed;
     private:
         double time;
+        Vector2I textPos = Vector2I::zero;
 };

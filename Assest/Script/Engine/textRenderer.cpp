@@ -23,20 +23,18 @@ void TextRenderer::OnRecivedBoardcast(json j)
 void TextRenderer::Draw(Vector2I cameraPos)
 {
     Vector2I stampPos = this->transform->position.GetV2I();
-    GameObject* goj = GameObject::findGameObjectByName("TextStamp");
+    TextStamp* tStamp = GameObject::findGameObjectByName("TextStamp")->GetComponent<TextStamp>();
 
-    if (goj != nullptr)
-        for (vector<wstring>::iterator it = line.begin(); it != line.end(); it++)
+    if (tStamp != nullptr && line.size() != 0)
+    {
+        wstring it = line[lineIndex];
+
+        for (auto c : it)
         {
-            for (wstring::iterator c = it->begin(); c != it->end(); c++)
-            {
-                goj->GetComponent<TextStamp>()->Stamp(*c, stampPos - cameraPos);
-                stampPos.x += 20;
-            }
-
-            stampPos.x = 0;
-            stampPos.y += 20;
+            tStamp->Stamp(c, stampPos - cameraPos);
+            stampPos.x += tStamp->size.x;
         }
+    }
 }
 
 void TextRenderer::SetPosition(Vector2I pos)
@@ -60,4 +58,15 @@ void TextRenderer::LoadText(string fileName)
     }
 
     file.close();
+}
+
+void TextRenderer::NextLine()
+{
+    if (lineIndex + 1 < (int)line.size())
+        lineIndex++;
+    else
+    {
+        line.clear();
+        lineIndex = 0;
+    }
 }

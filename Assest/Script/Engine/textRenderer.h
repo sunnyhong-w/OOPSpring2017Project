@@ -14,6 +14,8 @@ class TextRenderer : public GameBehaviour
         void Draw(Vector2I cameraPos) override;
         void SetPosition(Vector2I pos = Vector2I::zero);
         void LoadText(string fileName);
+        void NextLine();
     private:
         vector<wstring> line;
+        int lineIndex = 0;
 };

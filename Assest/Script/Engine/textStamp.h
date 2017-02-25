@@ -3,6 +3,7 @@
 using namespace game_engine;
 class TextStamp: public GameBehaviour
 {
+        friend class TextRenderer;
     public:
         TextStamp(GameObject* gobj) : GameBehaviour(gobj) {}
         ~TextStamp() {}
