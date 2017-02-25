@@ -135,16 +135,14 @@ void GameObject::Draw(Vector2I cameraPos)
 {
     if (!this->renderByBehavior)
     {
-        if (this->GetComponent<SpriteRenderer>() != nullptr)
+        SpriteRenderer* SR = this->GetComponent<SpriteRenderer>();
+
+        if (SR != nullptr && SR->enable)
         {
             if (this->isGUI)
-            {
-                this->GetComponent<SpriteRenderer>()->Draw();
-            }
+                SR->Draw();
             else
-            {
-                this->GetComponent<SpriteRenderer>()->Draw(cameraPos);
-            }
+                SR->Draw(cameraPos);
         }
     }
     else
