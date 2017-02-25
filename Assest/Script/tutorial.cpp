@@ -21,7 +21,7 @@ void Tutorial::Update()
     int l = 60;
     //transform->position.x = Easing::easeFT(Easing::easeInOutSine, 60 - abs(time - 60), 240, 480, 60);
     transform->position = Easing::easeFT(Easing::easeInBounce, l - abs(time - l), Vector2(240, 320), Vector2(480, 120), l);
-    GameObject::findGameObjectByName("TextRenderer")->GetComponent<TextRenderer>()->Stamp(L'是', Vector2I(0, 0));
+    GameObject::findGameObjectByName("TextRenderer")->GetComponent<TextRenderer>()->Stamp(L'乾', Vector2I(0, 0));
     time++;
 
     if (time > l * 2)

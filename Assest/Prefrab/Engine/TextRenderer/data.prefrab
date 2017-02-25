@@ -2,17 +2,16 @@
 	"name":"TextRenderer",
 	"isGUI" : true,
 	"renderByBehavior" : true,
-	"Conponent":
+	"Component":
 	{
-		"Transform":{},
-		"SpritRenderer": {},
-		"TextRenderer":
+		"Transform" : {},
+		"SpriteRenderer" : {},
+		"TextRenderer" :
 		{
 			"fontsetting" : 
 			{
-
-					"font_sample" : {"x":16,"y":16},
-					"font_sample2" : {"x":12,"y":24}
+				"font_sample" : {"x":16,"y":16},
+				"font_sample2" : {"x":12,"y":24}
 			}
 		}
 	}

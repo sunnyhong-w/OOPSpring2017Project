@@ -4,6 +4,7 @@
 #include<fstream>
 #include <codecvt>
 using namespace std;
+
 void TextRenderer::ParseJSON(json j)
 {
     SR = this->gameObject->AddComponentOnce<SpriteRenderer>();
@@ -13,7 +14,7 @@ void TextRenderer::ParseJSON(json j)
         for (json::iterator it = j["fontsetting"].begin(); it != j["fontsetting"].end(); it++)
         {
             fontInfo[it.key()] = it.value();
-            SR->LoadBitmapData(it.key());
+            SR->LoadBitmapData(R"(Font\)" + it.key());
             fontInfo[it.key()]["SurfaceID"] = SR->GetSurfaceID();
         }
     }
@@ -45,6 +46,8 @@ void TextRenderer::Start()
     }
 
     data.close();
+
+    Setfont("font_sample");
 }
 
 void TextRenderer::Update()
@@ -59,6 +62,7 @@ void TextRenderer::Stamp(wchar_t character, Vector2I pos)
 {
     this->transform->position = pos.GetV2();
     SR->SetSourcePos(charPos[character] * size);
+    SR->Draw();
 }
 
 void TextRenderer::Setfont(string fontName)
@@ -67,5 +71,6 @@ void TextRenderer::Setfont(string fontName)
     {
         SR->SetSurfaceID(fontInfo[fontName]["SurfaceID"]);
         SR->SetSize(fontInfo[fontName]);
+        size = fontInfo[fontName];
     }
 }

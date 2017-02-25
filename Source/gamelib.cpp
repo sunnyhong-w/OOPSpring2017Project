@@ -371,7 +371,7 @@ void CMovingBitmap::LoadBitmap(char* filename, COLORREF color)
 {
     const int nx = 0;
     const int ny = 0;
-    GAME_ASSERT(!isBitmapLoaded, "A bitmap has been loaded. You can not load another bitmap !!!");
+    //GAME_ASSERT(!isBitmapLoaded, "A bitmap has been loaded. You can not load another bitmap !!!");
     HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
     if (hbitmap == NULL)

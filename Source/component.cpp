@@ -164,7 +164,7 @@ void SpriteRenderer::ResetSize()
 void SpriteRenderer::LoadBitmapData(string filename, short r, short g, short b)
 {
     string PATH = R"(.\Assest\Bitmap\)";
-    string name = PATH + filename;
+    string name = PATH + filename + ".bmp";
     int length = strlen(name.c_str());
     char* cname = new char[length + 1]();
     strncpy(cname, name.c_str(), length);
