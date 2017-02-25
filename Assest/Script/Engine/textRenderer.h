@@ -11,8 +11,8 @@ class TextRenderer : public GameBehaviour
         void Start() override;
         void Update() override;
         void OnRecivedBoardcast(json j) override;
-        void Draw();
-        void SetPosition(Vector2I pos);
+        void Draw(Vector2I cameraPos) override;
+        void SetPosition(Vector2I pos = Vector2I::zero);
         void LoadText(string fileName);
     private:
         vector<wstring> line;
