@@ -55,6 +55,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_PAINT()
 	ON_COMMAND(ID_BUTTON_FULLSCREEN, OnButtonFullscreen)
     ON_WM_COPYDATA()
+    ON_WM_ENTERSIZEMOVE()
+    ON_WM_EXITSIZEMOVE()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -140,6 +142,26 @@ BOOL CMainFrame::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
     return CFrameWnd::OnCopyData(pWnd, pCopyDataStruct);
 }
 
+void CMainFrame::OnMoving()
+{
+    while(waitThread)
+        if (game_framework::CGame::Instance()->GetState() != nullptr)
+            game_framework::CGame::Instance()->OnIdle();
+}
+
+void CMainFrame::OnEnterSizeMove()
+{
+    waitThread = true;
+    subthread = std::thread(&CMainFrame::OnMoving, this);
+
+}
+
+void CMainFrame::OnExitSizeMove()
+{
+    waitThread = false;
+    subthread.join();
+}
+
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying
@@ -175,6 +197,7 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame message handlers
+
 
 void CMainFrame::SetFullScreen(bool isFull)
 {

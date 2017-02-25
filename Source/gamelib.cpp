@@ -526,7 +526,7 @@ CGame::CGame()
     running = true;
     suspended = false;
     SceneStack.push_back(new GameScene(this));
-    gameState = NULL;
+    gameState = nullptr;
 }
 
 CGame::~CGame()
@@ -815,6 +815,11 @@ void CGame::BoardcastMessage(json boardcastdata)
                 SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
         }
     }
+}
+
+CGameState* CGame::GetState()
+{
+    return gameState;
 }
 
 void CGame::EnterScene(CGameState *gs)
