@@ -29,7 +29,7 @@ class Component
 
     public:
         Component(GameObject* gobj, bool skip = false);
-        ~Component() {};
+        virtual ~Component() {};
         virtual void ParseJSON(json j) {};
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
