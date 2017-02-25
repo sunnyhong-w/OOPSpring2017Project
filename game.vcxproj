@@ -261,6 +261,7 @@
     <None Include="res\Toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Assest\Script\Engine\textRenderer.cpp" />
     <ClCompile Include="Assest\Script\tutorial.cpp" />
     <ClCompile Include="Source\audio.cpp" />
     <ClCompile Include="Source\component.cpp" />
@@ -307,11 +308,12 @@
     <ClCompile Include="Source\_setting.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Assest\Script\Engine.h" />
+    <ClInclude Include="Assest\Script\Engine\textRenderer.h" />
     <ClInclude Include="Assest\Script\tutorial.h" />
     <ClInclude Include="Source\audio.h" />
     <ClInclude Include="Source\component.h" />
     <ClInclude Include="Source\easing.h" />
+    <ClInclude Include="Source\Engine.h" />
     <ClInclude Include="Source\enginelib.h" />
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\gamebehavior.h" />

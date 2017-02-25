@@ -1,5 +1,5 @@
 {
-	"IncludePrefrab" : ["test"],
+	"IncludePrefrab" : ["test","Engine\TextRenderer\data"],
 	"GameObject" : [
 		{
 			"test" : 
@@ -14,8 +14,12 @@
 					{
 						"speed" : 5
 					}
+					
 				}
 			}
+		},
+		{
+			"Engine\TextRenderer\data":{}
 		}
 	]
 }

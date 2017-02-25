@@ -33,6 +33,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(Collider)
     //Register Script
     RegisterComponent(Tutorial)
+    RegisterComponent(TextRenderer)
     else return nullptr;
 }
 
@@ -243,10 +244,10 @@ void Destory(GameObject& gobj)
     gobj.destoryFlag = true;
 }
 
-GameObject* Instantiate(GameObject* gobj, Vector2 posision)
+GameObject* Instantiate(GameObject* gobj, Vector2 position)
 {
-    if (!posision.isNull())
-        gobj->GetComponent<Transform>()->position = posision;
+    if (!position.isNull())
+        gobj->GetComponent<Transform>()->position = position;
 
     GameObject::Insert(gobj);
     GameObject::UpdateName(gobj);
@@ -255,15 +256,15 @@ GameObject* Instantiate(GameObject* gobj, Vector2 posision)
     return gobj;
 }
 
-GameObject* Instantiate(json jsonobj, Vector2 posision)
+GameObject* Instantiate(json jsonobj, Vector2 position)
 {
     bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
     bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
     GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene, isPureScript);
     gobj->ParseJSON(jsonobj);
 
-    if (!posision.isNull())
-        gobj->GetComponent<Transform>()->position = posision;
+    if (!position.isNull())
+        gobj->GetComponent<Transform>()->position = position;
 
     GameObject::Insert(gobj);
 
