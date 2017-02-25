@@ -1,5 +1,5 @@
 {
-	"IncludePrefrab" : ["test","Engine\\TextRenderer\\data","Engine\\TextRenderer\\textRenderer"],
+	"IncludePrefrab" : ["test","Engine\\TextRenderer\\TextStamp","Engine\\TextRenderer\\TextRenderer"],
 	"GameObject" : [
 		{
 			"test" : 
@@ -19,10 +19,10 @@
 			}
 		},
 		{
-			"Engine\\TextRenderer\\data":{}
+			"Engine\\TextRenderer\\TextStamp":{}
 		},
 		{
-			"Engine\\TextRenderer\\textRenderer":{}
+			"Engine\\TextRenderer\\TextRenderer":{}
 		}
 	]
 }
