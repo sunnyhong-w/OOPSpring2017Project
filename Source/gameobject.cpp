@@ -33,6 +33,8 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(Collider)
     //Register Script
     RegisterComponent(Tutorial)
+    RegisterComponent(TextStamp)
+    RegisterComponent(TextRenderer)
     else return nullptr;
 }
 
@@ -80,11 +82,11 @@ void GameObject::ParseJSON(json j)
     if (FindJSON("layer"))
         this->SetLayer(j["layer"]);
 
-	if (FindJSON("isGUI"))
-		this->isGUI = j["isGUI"];
+    if (FindJSON("isGUI"))
+        this->isGUI = j["isGUI"];
 
-	if (FindJSON("renderByBehavior"))
-		this->renderByBehavior = j["renderByBehavior"];
+    if (FindJSON("renderByBehavior"))
+        this->renderByBehavior = j["renderByBehavior"];
 }
 
 void GameObject::Start()
@@ -131,41 +133,36 @@ void GameObject::LateUpdate()
 
 void GameObject::Draw(Vector2I cameraPos)
 {
-	if (!this->renderByBehavior)
-	{
-		if (this->GetComponent<SpriteRenderer>() != nullptr)
-		{
-			if (this->isGUI)
-			{
-				this->GetComponent<SpriteRenderer>()->Draw();
-			}
-			else
-			{
-				this->GetComponent<SpriteRenderer>()->Draw(cameraPos);
-			}
-		}
-	}
-	else
-	{
-		for (auto comp : componentData)
-		{
-			if (comp.second->isBehavior())
-			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
+    if (!this->renderByBehavior)
+    {
+        SpriteRenderer* SR = this->GetComponent<SpriteRenderer>();
 
-				if (gb->enable)
-				{
-					if (this->isGUI)
-						gb->Draw();
-					else
-						gb->Draw(cameraPos);
-				}
-					
-			}
-		}
-	}
+        if (SR != nullptr && SR->enable)
+        {
+            if (this->isGUI)
+                SR->Draw();
+            else
+                SR->Draw(cameraPos);
+        }
+    }
+    else
+    {
+        for (auto comp : componentData)
+        {
+            if (comp.second->isBehavior())
+            {
+                GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
 
-
+                if (gb->enable)
+                {
+                    if (this->isGUI)
+                        gb->Draw();
+                    else
+                        gb->Draw(cameraPos);
+                }
+            }
+        }
+    }
 }
 
 void GameObject::OnRecivedBoardcast(json j)
@@ -243,10 +240,10 @@ void Destory(GameObject& gobj)
     gobj.destoryFlag = true;
 }
 
-GameObject* Instantiate(GameObject* gobj, Vector2 posision)
+GameObject* Instantiate(GameObject* gobj, Vector2 position)
 {
-    if (!posision.isNull())
-        gobj->GetComponent<Transform>()->position = posision;
+    if (!position.isNull())
+        gobj->GetComponent<Transform>()->position = position;
 
     GameObject::Insert(gobj);
     GameObject::UpdateName(gobj);
@@ -255,15 +252,15 @@ GameObject* Instantiate(GameObject* gobj, Vector2 posision)
     return gobj;
 }
 
-GameObject* Instantiate(json jsonobj, Vector2 posision)
+GameObject* Instantiate(json jsonobj, Vector2 position)
 {
     bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
     bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
     GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene, isPureScript);
     gobj->ParseJSON(jsonobj);
 
-    if (!posision.isNull())
-        gobj->GetComponent<Transform>()->position = posision;
+    if (!position.isNull())
+        gobj->GetComponent<Transform>()->position = position;
 
     GameObject::Insert(gobj);
 

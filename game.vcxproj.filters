@@ -144,6 +144,12 @@
     <ClCompile Include="Source\scene.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Engine\textStamp.cpp">
+      <Filter>GameScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Engine\textRenderer.cpp">
+      <Filter>GameScript</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -188,9 +194,6 @@
     <ClInclude Include="Source\easing.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Assest\Script\Engine.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\enginelib.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
@@ -208,6 +211,15 @@
     </ClInclude>
     <ClInclude Include="Source\json_include.h">
       <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine\textStamp.h">
+      <Filter>GameScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine\textRenderer.h">
+      <Filter>GameScript</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

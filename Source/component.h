@@ -29,7 +29,7 @@ class Component
 
     public:
         Component(GameObject* gobj, bool skip = false);
-        ~Component() {};
+        virtual ~Component() {};
         virtual void ParseJSON(json j) {};
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
@@ -86,7 +86,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void ResetSize();
         ///<summary>取代原本的LoadBitmap機能，注意在讀檔之後會重置Size和SrcPos的參數</summary>
         ///<param name="filename">檔案目錄</param>
-        void LoadBitmapData(string filename, short r, short g, short b);
+        void LoadBitmapData(string filename, short r = 255, short g = 0, short b = 255);
         ///<summary>取得目前的SurfaceID</summary>
         int GetSurfaceID();
         ///<summary>設定已存在的SurfaceID，注意在設定之後會重置Size和SrcPos的參數</summary>

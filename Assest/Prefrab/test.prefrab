@@ -10,7 +10,7 @@
 		"SpriteRenderer" : 
 		{
 			"Bitmap" : {
-				"name" : "ball1.bmp"
+				"name" : "ball1"
 			}
 		}
 	}
