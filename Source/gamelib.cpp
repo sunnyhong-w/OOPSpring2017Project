@@ -371,7 +371,7 @@ void CMovingBitmap::LoadBitmap(char* filename, COLORREF color)
 {
     const int nx = 0;
     const int ny = 0;
-    GAME_ASSERT(!isBitmapLoaded, "A bitmap has been loaded. You can not load another bitmap !!!");
+    //GAME_ASSERT(!isBitmapLoaded, "A bitmap has been loaded. You can not load another bitmap !!!");
     HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
     if (hbitmap == NULL)
@@ -526,7 +526,7 @@ CGame::CGame()
     running = true;
     suspended = false;
     SceneStack.push_back(new GameScene(this));
-    gameState = NULL;
+    gameState = nullptr;
 }
 
 CGame::~CGame()
@@ -815,6 +815,11 @@ void CGame::BoardcastMessage(json boardcastdata)
                 SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
         }
     }
+}
+
+CGameState* CGame::GetState()
+{
+    return gameState;
 }
 
 void CGame::EnterScene(CGameState *gs)

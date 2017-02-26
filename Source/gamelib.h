@@ -345,7 +345,7 @@ public:
 	void OnSuspend();								// 處理「待命」的動作
     void OnCopyData(json reciveddata);             // 處理視窗間的資料傳遞
     void BoardcastMessage(json boardcastdata);      //廣播要發送給其他視窗的訊息
-    void OnMoving();                                // 處理視窗移動時的細節
+    CGameState* GetState();
     void EnterScene(CGameState *gs);
     void ExitScene();
 	static CGame *Instance();

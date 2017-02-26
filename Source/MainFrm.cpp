@@ -55,6 +55,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_PAINT()
 	ON_COMMAND(ID_BUTTON_FULLSCREEN, OnButtonFullscreen)
     ON_WM_COPYDATA()
+    ON_WM_ENTERSIZEMOVE()
+    ON_WM_EXITSIZEMOVE()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -129,11 +131,35 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 BOOL CMainFrame::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
 {
-    string str = string((const char *)(pCopyDataStruct->lpData));
+	char *dt = new char[pCopyDataStruct->cbData + 1]();
+	strncpy(dt, (const char *)(pCopyDataStruct->lpData), pCopyDataStruct->cbData);
+	dt[pCopyDataStruct->cbData] = (char)'\0';
+	string str = string(dt);
+	delete dt;
     json j = json::parse(str.c_str());
     game_framework::CGame::Instance()->OnCopyData(j);
     
     return CFrameWnd::OnCopyData(pWnd, pCopyDataStruct);
+}
+
+void CMainFrame::OnMoving()
+{
+    while(waitThread)
+        if (game_framework::CGame::Instance()->GetState() != nullptr)
+            game_framework::CGame::Instance()->OnIdle();
+}
+
+void CMainFrame::OnEnterSizeMove()
+{
+    waitThread = true;
+    subthread = std::thread(&CMainFrame::OnMoving, this);
+
+}
+
+void CMainFrame::OnExitSizeMove()
+{
+    waitThread = false;
+    subthread.join();
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
@@ -171,6 +197,7 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame message handlers
+
 
 void CMainFrame::SetFullScreen(bool isFull)
 {

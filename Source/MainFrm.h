@@ -25,7 +25,7 @@
 #if _MSC_VER >= 1000
 #pragma once
 #endif // _MSC_VER >= 1000
-
+#include<thread>
 class CMainFrame : public CFrameWnd
 {
 protected: // create from serialization only
@@ -39,7 +39,9 @@ private:
 	int  isToolBarVisible;
 	int  isStatusBarVisible;
 	CMenu *pMenu;
-
+    bool waitThread;
+    std::thread subthread;
+    void OnMoving();
 	//CRect WindowRect;
 // Operations
 public:
@@ -74,6 +76,8 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg void OnButtonFullscreen();
     afx_msg BOOL OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct);
+    afx_msg void OnEnterSizeMove();
+    afx_msg void OnExitSizeMove();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

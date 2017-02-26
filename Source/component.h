@@ -25,11 +25,11 @@ class Transform;
 
 class Component
 {
-    friend class GameObject;
+        friend class GameObject;
 
     public:
         Component(GameObject* gobj, bool skip = false);
-        ~Component() {};
+        virtual ~Component() {};
         virtual void ParseJSON(json j) {};
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
@@ -58,7 +58,7 @@ class Transform : public Component
         int GetZCode();
         Vector2 position;
         Vector2 scale;
-        
+
 
     private:
         int zindex;
@@ -75,7 +75,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         SpriteRenderer(GameObject* gobj);
         ~SpriteRenderer() {};
         void ParseJSON(json j) override;
-        void Draw();
+        void Draw(Vector2I cameraPos = Vector2I::zero);
         ///<summary>設定Sprite的圖源剪位置</summary>
         void SetSourcePos(Vector2I pos);
         ///<summary>取消Sprite的圖片裁剪功能</summary>
@@ -86,7 +86,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void ResetSize();
         ///<summary>取代原本的LoadBitmap機能，注意在讀檔之後會重置Size和SrcPos的參數</summary>
         ///<param name="filename">檔案目錄</param>
-        void LoadBitmapData(string filename, short r, short g, short b);
+        void LoadBitmapData(string filename, short r = 255, short g = 0, short b = 255);
         ///<summary>取得目前的SurfaceID</summary>
         int GetSurfaceID();
         ///<summary>設定已存在的SurfaceID，注意在設定之後會重置Size和SrcPos的參數</summary>
@@ -101,7 +101,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
 
 class Collider : public Component
 {
-    public:     
+    public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
         bool PointCollision(Vector2I point);
         bool BoxCollision(Collider* box);
