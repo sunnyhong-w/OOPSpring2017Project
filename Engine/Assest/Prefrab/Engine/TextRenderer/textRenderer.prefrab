@@ -1,0 +1,11 @@
+{
+	"name":"TextRenderer",
+	"isGUI" : true,
+	"renderByBehavior" : true,
+	"Component":
+	{
+		"Transform" : {},
+		"SpriteRenderer" : {},
+		"TextRenderer" :{}
+	}
+}
