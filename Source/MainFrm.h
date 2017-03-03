@@ -39,9 +39,10 @@ private:
 	int  isToolBarVisible;
 	int  isStatusBarVisible;
 	CMenu *pMenu;
-    bool waitThread;
+	bool waitThread = false;
     std::thread subthread;
     void OnMoving();
+	void SetPosition(int x, int y);
 	//CRect WindowRect;
 // Operations
 public:

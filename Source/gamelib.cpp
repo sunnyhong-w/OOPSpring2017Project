@@ -817,6 +817,34 @@ void CGame::BoardcastMessage(json boardcastdata)
     }
 }
 
+void CGame::BoardcastMessage(json boardcastdata, string windowName)
+{
+	RECT rect;
+
+	if (!game_framework::CGame::Instance()->stopGettingPos)
+	{
+		AfxGetMainWnd()->GetWindowRect(&rect);
+		boardcastdata["position"] = { { "x" , rect.left } ,{ "y" , rect.top } };
+	}
+	else
+		boardcastdata["position"] = { { "x" , -1 } ,{ "y" , -1 } };
+	
+	boardcastdata["size"] = { { "w" , SIZE_X } ,{ "h" , SIZE_Y } };
+	boardcastdata["sender"] = WINDOW_NAME;
+
+	string strdata = boardcastdata.dump();
+
+	COPYDATASTRUCT data;
+	data.cbData = sizeof(char) * strlen(strdata.c_str());
+	data.dwData = 0;
+	data.lpData = (LPVOID)strdata.c_str();
+
+	CWnd* targetWin = CWnd::FindWindow(NULL, windowName.c_str());
+
+	if (targetWin)
+		SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
+}
+
 CGameState* CGame::GetState()
 {
     return gameState;

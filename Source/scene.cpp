@@ -59,7 +59,7 @@ void GameScene::OnMove()
                     gobj->OnRecivedBoardcast(TDPQueue[0]);
 
             string str = "Recived JSON : \n" + TDPQueue[0].dump(4);
-            AfxMessageBox(str.c_str());
+            //AfxMessageBox(str.c_str());
             TDPQueue.erase(TDPQueue.begin());
         }
 

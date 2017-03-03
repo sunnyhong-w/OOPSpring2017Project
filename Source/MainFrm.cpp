@@ -137,6 +137,14 @@ BOOL CMainFrame::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
 	string str = string(dt);
 	delete dt;
     json j = json::parse(str.c_str());
+
+	if (j.find("MoveWindow") != j.end() && !waitThread)
+	{
+		SetPosition(j["MoveWindow"]["x"], j["MoveWindow"]["y"]);
+		j["position"]["x"] = j["MoveWindow"]["x"];
+		j["position"]["y"] = j["MoveWindow"]["y"];
+	}
+
     game_framework::CGame::Instance()->OnCopyData(j);
     
     return CFrameWnd::OnCopyData(pWnd, pCopyDataStruct);
@@ -149,16 +157,25 @@ void CMainFrame::OnMoving()
             game_framework::CGame::Instance()->OnIdle();
 }
 
+void CMainFrame::SetPosition(int x, int y)
+{
+	CRect ClientRect;
+	game_framework::CDDraw::GetClientRect(ClientRect);
+	CalcWindowRect(&ClientRect, CWnd::adjustBorder);
+	MoveWindow(x, y, ClientRect.Width(), ClientRect.Height());
+}
+
 void CMainFrame::OnEnterSizeMove()
 {
     waitThread = true;
     subthread = std::thread(&CMainFrame::OnMoving, this);
-
+	game_framework::CGame::Instance()->stopGettingPos = true;
 }
 
 void CMainFrame::OnExitSizeMove()
 {
     waitThread = false;
+	game_framework::CGame::Instance()->stopGettingPos = false;
     subthread.join();
 }
 
