@@ -339,7 +339,7 @@ CMovingBitmap::CMovingBitmap()
 
 int CMovingBitmap::Height()
 {
-    GAME_ASSERT(isBitmapLoaded, "A bitmap must be loaded before Height() is called !!!");
+    //    GAME_ASSERT(isBitmapLoaded, "A bitmap must be loaded before Height() is called !!!");
     return CDDraw::BitmapRect[SurfaceID].bottom;
 }
 
@@ -438,7 +438,7 @@ int CMovingBitmap::Top()
 
 int CMovingBitmap::Width()
 {
-    GAME_ASSERT(isBitmapLoaded, "A bitmap must be loaded before Width() is called !!!");
+    //    GAME_ASSERT(isBitmapLoaded, "A bitmap must be loaded before Width() is called !!!");
     return  CDDraw::BitmapRect[SurfaceID].right;
 }
 
@@ -599,7 +599,6 @@ bool CGame::OnIdle()  // 修改功能不要修改OnIdle()，而應修改OnMove()
     if (!running)
         return false;
 
-
     if (popStack)
     {
         if (SceneStack.size() == 0)
@@ -609,31 +608,31 @@ bool CGame::OnIdle()  // 修改功能不要修改OnIdle()，而應修改OnMove()
         }
         else
         {
-            if (!dynamic_cast<GameScene *>(gameState)->lock)
+            if (!dynamic_cast<GameScene*>(gameState)->lock)
                 delete gameState;
 
             SceneStack.pop_back();
             gameState = SceneStack.back();
         }
-        
+
         popStack = false;
     }
-
 
     if (waitForStack != nullptr)
     {
         SceneStack.push_back(waitForStack);
         gameState = waitForStack;
-        if(dynamic_cast<GameScene *>(gameState)->loadname != "")
+
+        if (dynamic_cast<GameScene*>(gameState)->loadname != "")
             gameState->OnBeginState();
+
         OnDraw();
         CSpecialEffect::SetCurrentTime();
         running = true;
-
         waitForStack = nullptr;
     }
 
-    if(SceneStack.size() == 0)
+    if (SceneStack.size() == 0)
     {
         AfxMessageBox("Something went wrong?");
         PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);
@@ -792,17 +791,15 @@ void CGame::BoardcastMessage(json boardcastdata)
 {
     RECT rect;
     AfxGetMainWnd()->GetWindowRect(&rect);
-    boardcastdata["posision"] = { { "x" , rect.left } ,{ "y" , rect.top } };
-    boardcastdata["size"] = { { "w" , rect.right - rect.left } ,{ "h" , rect.bottom - rect.top } };
+    boardcastdata["posision"] = { { "x", rect.left }, { "y", rect.top } };
+    boardcastdata["size"] = { { "w", rect.right - rect.left }, { "h", rect.bottom - rect.top } };
     boardcastdata["sender"] = WINDOW_NAME;
-
     string strdata = boardcastdata.dump();
-
     COPYDATASTRUCT data;
     data.cbData = sizeof(char) * strlen(strdata.c_str());
     data.dwData = 0;
     data.lpData = (LPVOID)strdata.c_str();
-    
+
     for (CString key : targetwindow)
     {
         if (key == WINDOW_NAME)
@@ -810,7 +807,7 @@ void CGame::BoardcastMessage(json boardcastdata)
         else
         {
             CWnd* targetWin = CWnd::FindWindow(NULL, key);
-    
+
             if (targetWin)
                 SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
         }
@@ -819,30 +816,34 @@ void CGame::BoardcastMessage(json boardcastdata)
 
 void CGame::BoardcastMessage(json boardcastdata, string windowName)
 {
-	RECT rect;
+    RECT rect;
 
-	if (!game_framework::CGame::Instance()->stopGettingPos)
-	{
-		AfxGetMainWnd()->GetWindowRect(&rect);
-		boardcastdata["position"] = { { "x" , rect.left } ,{ "y" , rect.top } };
-	}
-	else
-		boardcastdata["position"] = { { "x" , -1 } ,{ "y" , -1 } };
-	
-	boardcastdata["size"] = { { "w" , SIZE_X } ,{ "h" , SIZE_Y } };
-	boardcastdata["sender"] = WINDOW_NAME;
+    if (!game_framework::CGame::Instance()->stopGettingPos)
+    {
+        AfxGetMainWnd()->GetWindowRect(&rect);
+        boardcastdata["position"] = { { "x", rect.left }, { "y", rect.top } };
+    }
+    else
+        boardcastdata["position"] = { { "x", -1 }, { "y", -1 } };
 
-	string strdata = boardcastdata.dump();
+    boardcastdata["size"] = { { "w", SIZE_X }, { "h", SIZE_Y } };
 
-	COPYDATASTRUCT data;
-	data.cbData = sizeof(char) * strlen(strdata.c_str());
-	data.dwData = 0;
-	data.lpData = (LPVOID)strdata.c_str();
+    boardcastdata["sender"] = WINDOW_NAME;
 
-	CWnd* targetWin = CWnd::FindWindow(NULL, windowName.c_str());
+    string strdata = boardcastdata.dump();
 
-	if (targetWin)
-		SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
+    COPYDATASTRUCT data;
+
+    data.cbData = sizeof(char) * strlen(strdata.c_str());
+
+    data.dwData = 0;
+
+    data.lpData = (LPVOID)strdata.c_str();
+
+    CWnd* targetWin = CWnd::FindWindow(NULL, windowName.c_str());
+
+    if (targetWin)
+        SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
 }
 
 CGameState* CGame::GetState()
@@ -850,7 +851,7 @@ CGameState* CGame::GetState()
     return gameState;
 }
 
-void CGame::EnterScene(CGameState *gs)
+void CGame::EnterScene(CGameState* gs)
 {
     waitForStack = gs;
 }

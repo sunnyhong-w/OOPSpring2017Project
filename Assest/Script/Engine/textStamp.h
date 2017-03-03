@@ -12,7 +12,8 @@ class TextStamp: public GameBehaviour
         void Update() override;
         void OnRecivedBoardcast(json j) override;
         void Stamp(wchar_t character, Vector2I pos);
-        void Setfont(string fontName);
+        void Setfont(UINT surfaceID, Vector2I size);
+
     private:
         SpriteRenderer* SR = nullptr;
         Vector2I size;
