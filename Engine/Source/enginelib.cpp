@@ -149,6 +149,10 @@ void from_json(const json& j, Vector2& v)
         v.y = j["y"];
 }
 
+void to_json(json& j, const Vector2& v) {
+    j = json{ { "x", v.x },{ "y", v.y }};
+}
+
 ///////
 
 Vector2I::Vector2I()
@@ -267,6 +271,11 @@ void from_json(const json& j, Vector2I& v)
     if (j.find("y") != j.end())
         v.y = j["y"];
 }
+
+void to_json(json& j, const Vector2I& v) {
+    j = json{ { "x", v.x },{ "y", v.y } };
+}
+
 
 
 }

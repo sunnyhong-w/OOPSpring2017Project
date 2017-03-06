@@ -61,6 +61,7 @@ struct Vector2
 };
 
 void from_json(const json& j, Vector2& v);
+void to_json(json& j, const Vector2& v);
 
 struct Vector2I
 {
@@ -102,5 +103,6 @@ struct Vector2I
 };
 
 void from_json(const json& j, Vector2I& v);
+void to_json(json& j, const Vector2I& v);
 
 }
