@@ -199,9 +199,9 @@ void SpriteRenderer::SetSurfaceID(int SID)
 {
     GAME_ASSERT(CheckExist(SID), "SurfaceID not found. #[Engine]SpriteRenderer->SetSurfaceID");
     this->SurfaceID = SID;
+    this->isBitmapLoaded = true;
     this->ResetSize();
     this->ResetSourcePos();
-    this->isBitmapLoaded = true;
 }
 
 void SpriteRenderer::UnsafeSetSurfaceID(int SID)
