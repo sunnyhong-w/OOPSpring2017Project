@@ -23,6 +23,23 @@
 		},
 		{
 			"Engine\\TextRenderer\\TextRenderer":{}
+		},
+		{
+			"temp" :
+			{
+				"name" : "Animationtest",
+				"Component" : 
+					{
+					"Transform" : 
+					{
+						"position" : { "x" : 120, "y" : 240 }
+					},
+					"Animation" : 
+					{
+						"SetAnimation" : "MCv3_Move"
+					}
+				}
+			}
 		}
 	]
 }

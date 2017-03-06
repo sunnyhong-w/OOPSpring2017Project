@@ -10,7 +10,8 @@
 		"SpriteRenderer" : 
 		{
 			"Bitmap" : {
-				"name" : "ball1"
+				"name" : "ball1",
+				"colorkey" : { "r" : 0, "g" : 0, "b" : 0 }
 			}
 		}
 	}
