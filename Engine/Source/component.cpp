@@ -100,8 +100,10 @@ void Transform::ParseJSON(json j)
 //////////////////////////////////////////////////////////////////
 SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
-    srcpos = Vector2I(-1, -1);
-    size = Vector2I(-1, -1);
+    srcpos = Vector2I::null;
+    size = Vector2I::null;
+    delta = Vector2I::zero;
+    anchorRaito = Vector2::zero;
 }
 
 void SpriteRenderer::ParseJSON(json j)
@@ -124,7 +126,7 @@ void SpriteRenderer::ParseJSON(json j)
         }
 
         string name = j["Bitmap"]["name"].get<string>();
-        LoadBitmapData(name, r, g, b);
+        LoadBitmapData(name, false, r, g, b);
     }
 
     if (j.find("SrcPosition") != j.end())
@@ -137,7 +139,7 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(transform->position.GetV2I() - cameraPos, transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(transform->position.GetV2I() - cameraPos - GetAnchorPoint() - delta, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -162,17 +164,29 @@ void SpriteRenderer::ResetSize()
     this->size = Vector2I(this->Width(), this->Height());
 }
 
-void SpriteRenderer::LoadBitmapData(string filename, short r, short g, short b)
+void SpriteRenderer::LoadBitmapData(string filename, bool unsafe, short r, short g, short b)
 {
-    string PATH = R"(.\Assest\Bitmap\)";
-    string name = PATH + filename + ".bmp";
-    int length = strlen(name.c_str());
-    char* cname = new char[length + 1]();
-    strncpy(cname, name.c_str(), length);
-    this->LoadBitmapA(cname, RGB(r, g, b));
-    this->ResetSize();
-    this->ResetSourcePos();
-    delete[] cname;
+    string name = R"(.\Assest\Bitmap\)" + filename + ".bmp";
+
+    if (fileInfo.find(name) == fileInfo.end())
+    { 
+        int length = strlen(name.c_str());
+        char* cname = new char[length + 1]();
+        strncpy(cname, name.c_str(), length);
+        this->LoadBitmapA(cname, RGB(r, g, b));
+        this->ResetSize();
+        this->ResetSourcePos();
+        delete[] cname;
+
+        fileInfo[name] = this->SurfaceID;
+    }
+    else
+    {
+        if(unsafe)
+            this->UnsafeSetSurfaceID(fileInfo[name]);
+        else
+            this->SetSurfaceID(fileInfo[name]);
+    }
 }
 
 int SpriteRenderer::GetSurfaceID()
@@ -187,6 +201,33 @@ void SpriteRenderer::SetSurfaceID(int SID)
     this->ResetSize();
     this->ResetSourcePos();
     this->isBitmapLoaded = true;
+}
+
+void SpriteRenderer::UnsafeSetSurfaceID(int SID)
+{
+    this->isBitmapLoaded = true;
+    this->SurfaceID = SID;
+}
+
+void SpriteRenderer::Reset()
+{
+    ResetSize();
+    ResetSourcePos();
+}
+
+void SpriteRenderer::SetAnchorRaito(Vector2 pos)
+{
+    this->anchorRaito = pos;
+}
+
+void SpriteRenderer::SetDeltaPixel(Vector2I dp)
+{
+    this->delta = dp;
+}
+
+Vector2I SpriteRenderer::GetAnchorPoint()
+{
+    return (this->size.GetV2() * this->anchorRaito).GetV2I();
 }
 
 
