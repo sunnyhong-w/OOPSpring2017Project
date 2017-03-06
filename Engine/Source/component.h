@@ -120,4 +120,20 @@ class Collider : public Component
 
 };
 
+class Animation : public Component
+{
+public:
+    Animation(GameObject* gobj) : Component(gobj) {};
+    void LoadAnimation(json jsonobj);
+    void ParseJSON(json j) override;
+    void Update();
+    void ResetAnimation();
+private:
+    int animateCount;
+    int duration;
+    DWORD timeStamp;
+    json animationInfo;
+    SpriteRenderer *SR;
+};
+
 }

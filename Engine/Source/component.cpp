@@ -13,6 +13,7 @@ HISTORY :
 #include"component.h"
 #include"gameobject.h"
 #include"enginelib.h"
+#include<fstream>
 
 namespace game_engine
 {
@@ -266,6 +267,87 @@ void Collider::ParseJSON(json j)
     {
         size = j["size"];
     }
+}
+
+
+
+void Animation::LoadAnimation(json jsonobj)
+{
+    this->animationInfo = json();
+
+    Vector2 gAnchor = Vector2::one * -1;
+    int gDuration = -1;
+
+    AnimationSetting global;
+
+    if (jsonobj.find("setting") != jsonobj.end())
+        global = jsonobj["setting"];
+    
+
+    for (AnimationSetting data : jsonobj["data"])
+    {
+        AnimationSetting setting(global);
+        bool safe = setting.Build(data);
+        GAME_ASSERT(!safe, ("Animation Building ERROR : \n Animation : " + jsonobj["filename"].get<string>()).c_str());
+        
+        json j = setting;
+        this->animationInfo.push_back(j);
+
+        SR->LoadBitmapData(setting.filename);
+    }
+}
+
+void Animation::ParseJSON(json j)
+{
+    this->SR = gameObject->AddComponentOnce<SpriteRenderer>();
+
+    if (j.find("SetAnimation") != j.end())
+    {        
+        string name = R"(.\Assest\Animation\)" + j["SetAnimation"].get<string>() + ".anim";
+
+        ifstream file;
+        file.open(name);
+        if (file.good())
+        {
+            stringstream buffer;
+            buffer << file.rdbuf();
+            json jsonobj = json::parse(buffer);
+            jsonobj["filename"] = name;
+            LoadAnimation(jsonobj);
+            ResetAnimation();
+            file.close();
+        }
+        else
+        {
+            file.close();
+            string str = "ERROR : Animation NOT FOUND when parse Animation JSON :\n";
+            str += "GameObject : " + gameObject->GetName() + "\n";
+            str += "Animation : " + name + " => NOT FOUND";
+            GAME_ASSERT(false, str.c_str());
+        }
+    }    
+}
+
+void Animation::Update()
+{
+    if (this->animateCount != -1 && clock() - this->timeStamp >= (DWORD)this->duration)
+    {
+        this->animateCount = (this->animateCount + 1) % this->animationInfo.size();
+        AnimationSetting data = this->animationInfo[this->animateCount];
+        SR->LoadBitmapData(data.filename, true);
+        SR->SetSize(data.size);
+        SR->SetSourcePos(data.position);
+        SR->SetAnchorRaito(data.anchor);
+        this->duration = data.duration;
+        this->timeStamp = clock();
+    }
+}
+
+void Animation::ResetAnimation()
+{
+    this->animateCount = this->animationInfo.size() - 1;
+    this->timeStamp = clock();
+    this->duration = 0;
 }
 
 }

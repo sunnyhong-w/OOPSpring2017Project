@@ -31,6 +31,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(Transform)
     RegisterComponent(SpriteRenderer)
     RegisterComponent(Collider)
+    RegisterComponent(Animation)
     //Register Script
     RegisterComponent(Tutorial)
     RegisterComponent(TextStamp)
