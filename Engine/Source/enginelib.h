@@ -61,6 +61,7 @@ struct Vector2
 };
 
 void from_json(const json& j, Vector2& v);
+void to_json(json& j, const Vector2& v);
 
 struct Vector2I
 {
@@ -102,5 +103,21 @@ struct Vector2I
 };
 
 void from_json(const json& j, Vector2I& v);
+void to_json(json& j, const Vector2I& v);
+
+struct AnimationSetting
+{
+public:
+    AnimationSetting();
+    bool Build(AnimationSetting newSetting);
+    string filename;
+    Vector2I position;
+    Vector2I size;
+    Vector2 anchor;
+    int duration;
+};
+
+void from_json(const json& j, AnimationSetting& v);
+void to_json(json& j, const AnimationSetting& v);
 
 }

@@ -369,9 +369,6 @@ void CMovingBitmap::LoadBitmap(int IDB_BITMAP, COLORREF color)
 
 void CMovingBitmap::LoadBitmap(char* filename, COLORREF color)
 {
-    const int nx = 0;
-    const int ny = 0;
-    //GAME_ASSERT(!isBitmapLoaded, "A bitmap has been loaded. You can not load another bitmap !!!");
     HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
     if (hbitmap == NULL)
@@ -380,14 +377,6 @@ void CMovingBitmap::LoadBitmap(char* filename, COLORREF color)
         sprintf(error_msg, "Loading bitmap from file \"%s\" failed !!!", filename);
         GAME_ASSERT(false, error_msg);
     }
-
-    CBitmap* bmp = CBitmap::FromHandle(hbitmap ); // memory will be deleted automatically
-    BITMAP bitmapSize;
-    bmp->GetBitmap(&bitmapSize);
-    location.left = nx;
-    location.top = ny;
-    location.right = nx + bitmapSize.bmWidth;
-    location.bottom = ny + bitmapSize.bmHeight;
     SurfaceID = CDDraw::RegisterBitmap(filename, color);
     isBitmapLoaded = true;
 }

@@ -2,6 +2,7 @@
 #include<ddraw.h>
 #include"gameobject.h"
 #include"scene.h"
+#include"component.h"
 #include"input.h"
 #include<ctime>
 #include<fstream>
@@ -50,31 +51,34 @@ void GameScene::OnMove()
                 it++;
         }
 
-        //COLLISION DECTECTION WORK OUT HERE
+        //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
 
+        //Windows File Transmission
         while (TDPQueue.size() != 0)
         {
             for (GameObject* gobj : GameObject::gameObjects)
                 if (gobj->enable)
                     gobj->OnRecivedBoardcast(TDPQueue[0]);
 
-            string str = "Recived JSON : \n" + TDPQueue[0].dump(4);
-            AfxMessageBox(str.c_str());
             TDPQueue.erase(TDPQueue.begin());
         }
 
-        if (Input::GetKeyClick(VK_LBUTTON))
-        {
-            json j;
-            game_framework::CGame::Instance()->BoardcastMessage(j);
-        }
-
+        //GameBehavior Update Cycle
         for (GameObject* gobj : GameObject::gameObjects)
             if (gobj->enable)
                 gobj->Update();
 
-        //ANIMATION UPDATE WORKOUT HERE
+        //Animation Update
+        for (GameObject* gobj : GameObject::gameObjects)
+        {
+            Animation* ani = gobj->GetComponent<Animation>();
+            if (ani != nullptr)
+                ani->Update();
+        }
 
+        //Animator Update Workout Here
+
+        //GameBehavior LateUpdate Cycle
         for (GameObject* gobj : GameObject::gameObjects)
             if (gobj->enable)
                 gobj->LateUpdate();

@@ -13,6 +13,7 @@ HISTORY :
 #include"component.h"
 #include"gameobject.h"
 #include"enginelib.h"
+#include<fstream>
 
 namespace game_engine
 {
@@ -23,6 +24,7 @@ namespace game_engine
 Component::Component(GameObject* gobj, bool isGB) : isGameBehavior(isGB)
 {
     this->gameObject = gobj;
+    this->enable = true;
     this->transform = gobj->GetComponent<Transform>();
 }
 
@@ -99,8 +101,10 @@ void Transform::ParseJSON(json j)
 //////////////////////////////////////////////////////////////////
 SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
-    srcpos = Vector2I(-1, -1);
-    size = Vector2I(-1, -1);
+    srcpos = Vector2I::null;
+    size = Vector2I::null;
+    delta = Vector2I::zero;
+    anchorRaito = Vector2::zero;
 }
 
 void SpriteRenderer::ParseJSON(json j)
@@ -123,7 +127,7 @@ void SpriteRenderer::ParseJSON(json j)
         }
 
         string name = j["Bitmap"]["name"].get<string>();
-        LoadBitmapData(name, r, g, b);
+        LoadBitmapData(name, false, r, g, b);
     }
 
     if (j.find("SrcPosition") != j.end())
@@ -136,7 +140,7 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(transform->position.GetV2I() - cameraPos, transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(transform->position.GetV2I() - cameraPos - GetAnchorPoint() - delta, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -161,17 +165,29 @@ void SpriteRenderer::ResetSize()
     this->size = Vector2I(this->Width(), this->Height());
 }
 
-void SpriteRenderer::LoadBitmapData(string filename, short r, short g, short b)
+void SpriteRenderer::LoadBitmapData(string filename, bool unsafe, short r, short g, short b)
 {
-    string PATH = R"(.\Assest\Bitmap\)";
-    string name = PATH + filename + ".bmp";
-    int length = strlen(name.c_str());
-    char* cname = new char[length + 1]();
-    strncpy(cname, name.c_str(), length);
-    this->LoadBitmapA(cname, RGB(r, g, b));
-    this->ResetSize();
-    this->ResetSourcePos();
-    delete[] cname;
+    string name = R"(.\Assest\Bitmap\)" + filename + ".bmp";
+
+    if (fileInfo.find(name) == fileInfo.end())
+    { 
+        int length = strlen(name.c_str());
+        char* cname = new char[length + 1]();
+        strncpy(cname, name.c_str(), length);
+        this->LoadBitmapA(cname, RGB(r, g, b));
+        this->ResetSize();
+        this->ResetSourcePos();
+        delete[] cname;
+
+        fileInfo[name] = this->SurfaceID;
+    }
+    else
+    {
+        if(unsafe)
+            this->UnsafeSetSurfaceID(fileInfo[name]);
+        else
+            this->SetSurfaceID(fileInfo[name]);
+    }
 }
 
 int SpriteRenderer::GetSurfaceID()
@@ -186,6 +202,33 @@ void SpriteRenderer::SetSurfaceID(int SID)
     this->ResetSize();
     this->ResetSourcePos();
     this->isBitmapLoaded = true;
+}
+
+void SpriteRenderer::UnsafeSetSurfaceID(int SID)
+{
+    this->isBitmapLoaded = true;
+    this->SurfaceID = SID;
+}
+
+void SpriteRenderer::Reset()
+{
+    ResetSize();
+    ResetSourcePos();
+}
+
+void SpriteRenderer::SetAnchorRaito(Vector2 pos)
+{
+    this->anchorRaito = pos;
+}
+
+void SpriteRenderer::SetDeltaPixel(Vector2I dp)
+{
+    this->delta = dp;
+}
+
+Vector2I SpriteRenderer::GetAnchorPoint()
+{
+    return (this->size.GetV2() * this->anchorRaito).GetV2I();
 }
 
 
@@ -224,6 +267,87 @@ void Collider::ParseJSON(json j)
     {
         size = j["size"];
     }
+}
+
+
+
+void Animation::LoadAnimation(json jsonobj)
+{
+    this->animationInfo = json();
+
+    Vector2 gAnchor = Vector2::one * -1;
+    int gDuration = -1;
+
+    AnimationSetting global;
+
+    if (jsonobj.find("setting") != jsonobj.end())
+        global = jsonobj["setting"];
+    
+
+    for (AnimationSetting data : jsonobj["data"])
+    {
+        AnimationSetting setting(global);
+        bool safe = setting.Build(data);
+        GAME_ASSERT(!safe, ("Animation Building ERROR : \n Animation : " + jsonobj["filename"].get<string>()).c_str());
+        
+        json j = setting;
+        this->animationInfo.push_back(j);
+
+        SR->LoadBitmapData(setting.filename);
+    }
+}
+
+void Animation::ParseJSON(json j)
+{
+    this->SR = gameObject->AddComponentOnce<SpriteRenderer>();
+
+    if (j.find("SetAnimation") != j.end())
+    {        
+        string name = R"(.\Assest\Animation\)" + j["SetAnimation"].get<string>() + ".anim";
+
+        ifstream file;
+        file.open(name);
+        if (file.good())
+        {
+            stringstream buffer;
+            buffer << file.rdbuf();
+            json jsonobj = json::parse(buffer);
+            jsonobj["filename"] = name;
+            LoadAnimation(jsonobj);
+            ResetAnimation();
+            file.close();
+        }
+        else
+        {
+            file.close();
+            string str = "ERROR : Animation NOT FOUND when parse Animation JSON :\n";
+            str += "GameObject : " + gameObject->GetName() + "\n";
+            str += "Animation : " + name + " => NOT FOUND";
+            GAME_ASSERT(false, str.c_str());
+        }
+    }    
+}
+
+void Animation::Update()
+{
+    if (this->animateCount != -1 && clock() - this->timeStamp >= (DWORD)this->duration)
+    {
+        this->animateCount = (this->animateCount + 1) % this->animationInfo.size();
+        AnimationSetting data = this->animationInfo[this->animateCount];
+        SR->LoadBitmapData(data.filename, true);
+        SR->SetSize(data.size);
+        SR->SetSourcePos(data.position);
+        SR->SetAnchorRaito(data.anchor);
+        this->duration = data.duration;
+        this->timeStamp = clock();
+    }
+}
+
+void Animation::ResetAnimation()
+{
+    this->animateCount = this->animationInfo.size() - 1;
+    this->timeStamp = clock();
+    this->duration = 0;
 }
 
 }

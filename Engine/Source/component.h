@@ -33,7 +33,7 @@ class Component
         virtual void ParseJSON(json j) {};
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
-        bool enable = false;
+        bool enable;
     protected:
         GameObject* gameObject;
         Transform* transform;
@@ -86,17 +86,26 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void ResetSize();
         ///<summary>取代原本的LoadBitmap機能，注意在讀檔之後會重置Size和SrcPos的參數</summary>
         ///<param name="filename">檔案目錄</param>
-        void LoadBitmapData(string filename, short r = 255, short g = 0, short b = 255);
+        void LoadBitmapData(string filename, bool unsafe = false, short r = 255, short g = 0, short b = 255);
         ///<summary>取得目前的SurfaceID</summary>
         int GetSurfaceID();
         ///<summary>設定已存在的SurfaceID，注意在設定之後會重置Size和SrcPos的參數</summary>
         ///<param name="SID">要設定的SurfaceID</param>
         void SetSurfaceID(int SID);
+        void UnsafeSetSurfaceID(int SID);
+        void Reset();
+        void SetAnchorRaito(Vector2 pos);
+        void SetDeltaPixel(Vector2I dp);
+        Vector2I GetAnchorPoint();
 
     private:
         Vector2I size;
         Vector2I srcpos;
+        Vector2I delta;
+        Vector2 anchorRaito;
+
         bool cutSrc = false;
+        map<string, unsigned int> fileInfo;
 };
 
 class Collider : public Component
@@ -109,6 +118,22 @@ class Collider : public Component
         Vector2I deltaPoint;
         Vector2I size;
 
+};
+
+class Animation : public Component
+{
+public:
+    Animation(GameObject* gobj) : Component(gobj) {};
+    void LoadAnimation(json jsonobj);
+    void ParseJSON(json j) override;
+    void Update();
+    void ResetAnimation();
+private:
+    int animateCount;
+    int duration;
+    DWORD timeStamp;
+    json animationInfo;
+    SpriteRenderer *SR;
 };
 
 }

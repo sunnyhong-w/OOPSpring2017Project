@@ -149,6 +149,10 @@ void from_json(const json& j, Vector2& v)
         v.y = j["y"];
 }
 
+void to_json(json& j, const Vector2& v) {
+    j = json{ { "x", v.x },{ "y", v.y }};
+}
+
 ///////
 
 Vector2I::Vector2I()
@@ -268,5 +272,68 @@ void from_json(const json& j, Vector2I& v)
         v.y = j["y"];
 }
 
+void to_json(json& j, const Vector2I& v) {
+    j = json{ { "x", v.x },{ "y", v.y } };
+}
+
+
+
+AnimationSetting::AnimationSetting()
+{
+    this->anchor = Vector2::null;
+    this->size = Vector2I::null;
+    this->position = Vector2I::null;
+    this->filename = "";
+    this->duration = -1;
+}
+
+bool AnimationSetting::Build(AnimationSetting newSetting)
+{
+    //Build Data With newSetting
+    if (newSetting.anchor != Vector2::null)
+        this->anchor = newSetting.anchor;
+    if(newSetting.duration != -1)
+        this->duration = newSetting.duration;
+    if (newSetting.filename != "")
+        this->filename = newSetting.filename;
+    if (newSetting.position != Vector2I::null)
+        this->position = newSetting.position;
+    if (newSetting.size != Vector2I::null)
+        this->size = newSetting.size;
+
+    //Fix Data without setting
+    bool safe = this->anchor == Vector2::null
+        || this->duration == -1
+        || this->position == Vector2I::null
+        || this->size == Vector2I::null
+        || this->filename == "";
+
+    return safe;
+}
+
+void from_json(const json & j, AnimationSetting & as)
+{
+    if (j.find("anchor") != j.end())
+        as.anchor = j["anchor"];
+    if (j.find("size") != j.end())
+        as.size = j["size"];
+    if (j.find("position") != j.end())
+        as.position = j["position"];
+    if (j.find("filename") != j.end())
+        as.filename = j["filename"].get<string>();
+    if (j.find("duration") != j.end())
+        as.duration = j["duration"];
+}
+
+void to_json(json & j, const AnimationSetting & as)
+{
+    j = json{
+        { "anchor"   ,as.anchor   },
+        { "size"     ,as.size     },
+        { "position" ,as.position },
+        { "filename" ,as.filename },
+        { "duration" ,as.duration }
+    };
+}
 
 }
