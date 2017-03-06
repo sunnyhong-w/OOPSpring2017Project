@@ -23,6 +23,7 @@ namespace game_engine
 Component::Component(GameObject* gobj, bool isGB) : isGameBehavior(isGB)
 {
     this->gameObject = gobj;
+    this->enable = true;
     this->transform = gobj->GetComponent<Transform>();
 }
 
