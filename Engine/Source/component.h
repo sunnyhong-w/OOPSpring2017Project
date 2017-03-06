@@ -136,4 +136,13 @@ private:
     SpriteRenderer *SR;
 };
 
+class AnimationController : public Component
+{
+public:
+    AnimationController(GameObject* gobj) : Component(gobj) {};
+    void ParseJSON(json j) override;
+    void Update();
+    json varibleMap;
+};
+
 }
