@@ -350,4 +350,21 @@ void Animation::ResetAnimation()
     this->duration = 0;
 }
 
+void AnimationController::Update()
+{
+	if (jumpState != "")
+	{
+		for (json::iterator it : data)
+		{
+			if(CheckCondition(it.value()))
+			{
+				JumpState(it.key());
+				break;
+			}
+		}
+	}
+	
+	jumpState = "";
+}
+
 }

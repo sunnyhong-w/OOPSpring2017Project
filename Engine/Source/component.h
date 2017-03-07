@@ -142,7 +142,12 @@ public:
     AnimationController(GameObject* gobj) : Component(gobj) {};
     void ParseJSON(json j) override;
     void Update();
+	void JumpState(string state);
     json varibleMap;
+private:
+	bool CheckCondition(json j);
+	string jumpState = "";
+	json data;
 };
 
 }
