@@ -16,4 +16,5 @@ class Tutorial : public GameBehaviour
     private:
         double time;
         Vector2I textPos = Vector2I::zero;
+		Vector2I winpos = Vector2I::zero;
 };

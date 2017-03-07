@@ -16,6 +16,8 @@ class TextRenderer : public GameBehaviour
         void LoadText(string fileName);
         void NextLine();
     private:
+        SpriteRenderer* SR = nullptr;
         vector<wstring> line;
         int lineIndex = 0;
+        json fontInfo;
 };
