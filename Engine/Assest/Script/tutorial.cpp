@@ -29,9 +29,7 @@ void Tutorial::Update()
     //transform->position = Easing::easeFT(Easing::easeInBounce, l - abs(time - l), Vector2(240, 320), Vector2(480, 120), l);
     GameObject* goj = GameObject::findGameObjectByName("TextRenderer");
     goj->GetComponent<TextRenderer>()->SetPosition(textPos);
-    winpos = Easing::easeFT(Easing::easeInBounce, l - abs(time - l), Vector2(240, 320), Vector2(480, 120), l).GetV2I();
-
-    //winpos.x = Easing::easeFT(Easing::easeInBounce, l - abs(time - l), 0,800, l);
+    textPos = Easing::easeFT(Easing::easeInBounce, l - abs(time - l), Vector2(240, 320), Vector2(480, 120), l).GetV2I();
 
     if (Input::GetKeyClick(VK_LBUTTON))
         goj->GetComponent<TextRenderer>()->NextLine();
@@ -40,11 +38,6 @@ void Tutorial::Update()
 
     if (time > l * 2)
         time = 0;
-
-    json j;
-    j["MoveWindow"]["x"] = winpos.x;
-    j["MoveWindow"]["y"] = winpos.y;
-    //game_framework::CGame::Instance()->BoardcastMessage(j, "TEST_A");
 }
 
 void Tutorial::OnRecivedBoardcast(json j)
