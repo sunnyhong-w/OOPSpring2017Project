@@ -99,6 +99,8 @@ void Transform::ParseJSON(json j)
 //////////////////////////////////////////////////////////////////
 // SpriteRenderer實作
 //////////////////////////////////////////////////////////////////
+
+map<string, unsigned int> SpriteRenderer::fileInfo;
 SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
     srcpos = Vector2I::null;

@@ -105,7 +105,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         Vector2 anchorRaito;
 
         bool cutSrc = false;
-        map<string, unsigned int> fileInfo;
+        static map<string, unsigned int> fileInfo;
 };
 
 class Collider : public Component
