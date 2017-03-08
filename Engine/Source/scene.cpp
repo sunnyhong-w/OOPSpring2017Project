@@ -68,6 +68,14 @@ void GameScene::OnMove()
             if (gobj->enable)
                 gobj->Update();
 
+		//Animator Update Workout Here
+		for (GameObject* gobj : GameObject::gameObjects)
+		{
+			AnimationController* anic = gobj->GetComponent<AnimationController>();
+			if (anic != nullptr)
+				anic->Update();
+		}
+
         //Animation Update
         for (GameObject* gobj : GameObject::gameObjects)
         {
@@ -75,8 +83,6 @@ void GameScene::OnMove()
             if (ani != nullptr)
                 ani->Update();
         }
-
-        //Animator Update Workout Here
 
         //GameBehavior LateUpdate Cycle
         for (GameObject* gobj : GameObject::gameObjects)
