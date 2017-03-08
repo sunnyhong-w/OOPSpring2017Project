@@ -148,6 +148,7 @@ private:
 	bool CheckCondition(json j);
 	string jumpState = "";
 	json data;
+	Animation* animation;
 };
 
 }

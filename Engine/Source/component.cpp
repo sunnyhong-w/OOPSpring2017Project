@@ -275,7 +275,7 @@ void Collider::ParseJSON(json j)
 
 void Animation::LoadAnimation(json jsonobj)
 {
-    this->animationInfo = json();
+    this->animationInfo.clear();
 
     Vector2 gAnchor = Vector2::one * -1;
     int gDuration = -1;
@@ -301,34 +301,10 @@ void Animation::LoadAnimation(json jsonobj)
 
 void Animation::ParseJSON(json j)
 {
-    this->SR = gameObject->AddComponentOnce<SpriteRenderer>();
-
-    if (j.find("SetAnimation") != j.end())
-    {        
-        string name = R"(.\Assest\Animation\)" + j["SetAnimation"].get<string>() + ".anim";
-
-        ifstream file;
-        file.open(name);
-        if (file.good())
-        {
-            stringstream buffer;
-            buffer << file.rdbuf();
-            json jsonobj = json::parse(buffer);
-            jsonobj["filename"] = name;
-            LoadAnimation(jsonobj);
-            ResetAnimation();
-            file.close();
-        }
-        else
-        {
-            file.close();
-            string str = "ERROR : Animation NOT FOUND when parse Animation JSON :\n";
-            str += "GameObject : " + gameObject->GetName() + "\n";
-            str += "Animation : " + name + " => NOT FOUND";
-            GAME_ASSERT(false, str.c_str());
-        }
-    }    
-}
+    this->SR = gameObject->AddComponentOnce<SpriteRenderer>(); //Sprite Renderer Require
+	json empty;
+	SR->ParseJSON(empty);
+} 
 
 void Animation::Update()
 {
@@ -352,21 +328,63 @@ void Animation::ResetAnimation()
     this->duration = 0;
 }
 
+void AnimationController::ParseJSON(json j)
+{
+	animation = this->gameObject->AddComponentOnce<Animation>(); //Animation require
+	json empty;
+	animation->ParseJSON(empty);
+
+	GAME_ASSERT(j.find("init") != j.end(), ("Animation State Init Not Found! | \nGameObject : " + gameObject->GetName()).c_str());
+	JumpState(j["init"]);
+
+	GAME_ASSERT(j.find("state") != j.end(), ("Animation State Data Not Found! | \nGameObject : " + gameObject->GetName()).c_str());
+
+	for (auto &jdat : j["state"])
+	{
+		string name = R"(.\Assest\Animation\)" + jdat.get<string>() + ".anim";
+
+		ifstream file;
+		file.open(name);
+		if (file.good())
+		{
+			stringstream buffer;
+			buffer << file.rdbuf();
+			json jsonobj = json::parse(buffer);
+			jsonobj["filename"] = name;
+			animation->LoadAnimation(jsonobj);
+			jdat = jsonobj;
+			file.close();
+		}
+		else
+		{
+			file.close();
+			string str = "ERROR : Animation NOT FOUND when parse Animation JSON :\n";
+			str += "GameObject : " + gameObject->GetName() + "\n";
+			str += "Animation : " + name + " => NOT FOUND";
+			GAME_ASSERT(false, str.c_str());
+		}
+	}
+
+	data = j;
+
+	Update();
+}
+
 void AnimationController::Update()
 {
 	if (jumpState != "")
 	{
-		for (json::iterator it : data)
-		{
-			if(CheckCondition(it.value()))
-			{
-				JumpState(it.key());
-				break;
-			}
-		}
+		GAME_ASSERT(data["state"].find(jumpState) != data["state"].end(), ("Animation State Define Not Found! | \nGameObject : " 
+																			+ gameObject->GetName() + "\nAnimationState : " + jumpState).c_str());
+		animation->LoadAnimation(data["state"][jumpState]);
+		animation->ResetAnimation();
+		jumpState = "";
 	}
-	
-	jumpState = "";
+}
+
+void AnimationController::JumpState(string state)
+{
+	jumpState = state;
 }
 
 }
