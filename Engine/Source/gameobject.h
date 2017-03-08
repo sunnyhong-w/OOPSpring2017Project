@@ -39,7 +39,7 @@ class GameObject
     public:
         GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();
-        void ParseJSON(json j);
+        void ParseJSON(json j, bool noUpdateObjectPool = false);
         void Start();
         void Update();
         void LateUpdate();
@@ -107,9 +107,9 @@ class GameObject
         bool destoryFlag = false;
         bool isPureScript = false;
         bool isStarted = false;
-		bool renderByBehavior = false;
+        bool renderByBehavior = false;
         bool doNOTDestoryOnChangeScene = false;
-
+        bool doNOTUpdateObjectPool = false;
 };
 
 //由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中

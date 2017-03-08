@@ -60,8 +60,10 @@ GameObject::~GameObject()
         delete it.second;
 }
 
-void GameObject::ParseJSON(json j)
+void GameObject::ParseJSON(json j, bool noUpdateObjectPool)
 {
+    this->doNOTUpdateObjectPool = noUpdateObjectPool;
+
     if (FindJSON("Component"))
     {
         for (json::iterator it = j["Component"].begin(); it != j["Component"].end(); ++it)
@@ -182,9 +184,14 @@ void GameObject::OnRecivedBoardcast(json j)
 
 void GameObject::SetName(string name)
 {
-    GameObject::objectsName.erase(this->name);
-    this->name = name;
-    GameObject::UpdateName(this);
+    if (!this->doNOTUpdateObjectPool)
+    {
+        GameObject::objectsName.erase(this->name);
+        this->name = name;
+        GameObject::UpdateName(this);
+    }
+    else
+        this->name = name;
 }
 
 string GameObject::GetName()
@@ -194,36 +201,46 @@ string GameObject::GetName()
 
 void GameObject::SetTag(Tag tag)
 {
-    typedef multimap<Tag, GameObject*>::iterator iter;
-    std::pair<iter, iter> data = GameObject::objectsTag.equal_range(this->tag);
-
-    for (iter it = data.first; it != data.second; it++)
+    if (!this->doNOTUpdateObjectPool)
     {
-        if (it->second == this)
+        typedef multimap<Tag, GameObject*>::iterator iter;
+        std::pair<iter, iter> data = GameObject::objectsTag.equal_range(this->tag);
+
+        for (iter it = data.first; it != data.second; it++)
         {
-            GameObject::objectsTag.erase(it);
-            this->tag = tag;
-            GameObject::UpdateTag(this);
-            break;
+            if (it->second == this)
+            {
+                GameObject::objectsTag.erase(it);
+                this->tag = tag;
+                GameObject::UpdateTag(this);
+                break;
+            }
         }
     }
+    else
+        this->tag = tag;
 }
 
 void GameObject::SetLayer(Layer layer)
 {
-    typedef multimap<Layer, GameObject*>::iterator iter;
-    std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(this->layer);
-
-    for (iter it = data.first; it != data.second; it++)
+    if (!this->doNOTUpdateObjectPool)
     {
-        if (it->second == this)
+        typedef multimap<Layer, GameObject*>::iterator iter;
+        std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(this->layer);
+
+        for (iter it = data.first; it != data.second; it++)
         {
-            GameObject::objectsLayer.erase(it);
-            this->layer = layer;
-            GameObject::UpdateLayer(this);
-            break;
+            if (it->second == this)
+            {
+                GameObject::objectsLayer.erase(it);
+                this->layer = layer;
+                GameObject::UpdateLayer(this);
+                break;
+            }
         }
     }
+    else
+        this->layer = layer;
 }
 
 /////////////////////////////////////////////////////////////////////////
