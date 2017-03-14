@@ -32,6 +32,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(SpriteRenderer)
     RegisterComponent(Collider)
     RegisterComponent(Animation)
+	RegisterComponent(AnimationController)
     //Register Script
     RegisterComponent(Tutorial)
     RegisterComponent(TextStamp)
@@ -69,6 +70,7 @@ void GameObject::ParseJSON(json j, bool noUpdateObjectPool)
         for (json::iterator it = j["Component"].begin(); it != j["Component"].end(); ++it)
         {
             Component* comp = this->AddComponentOnce(it.key());
+			GAME_ASSERT(comp != nullptr, ("Component : " + it.key() + " NOT Found\n\nCheck \"GameObject -> Component Register\" If You Forget To Regsiter.\nOr Maybe You Have A Simple Spelling Mistake.").c_str());
             comp->ParseJSON(it.value());
         }
     }

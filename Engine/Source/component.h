@@ -105,7 +105,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         Vector2 anchorRaito;
 
         bool cutSrc = false;
-        map<string, unsigned int> fileInfo;
+        static map<string, unsigned int> fileInfo;
 };
 
 class Collider : public Component
@@ -134,6 +134,21 @@ private:
     DWORD timeStamp;
     json animationInfo;
     SpriteRenderer *SR;
+};
+
+class AnimationController : public Component
+{
+public:
+    AnimationController(GameObject* gobj) : Component(gobj) {};
+    void ParseJSON(json j) override;
+    void Update();
+	void JumpState(string state);
+    json varibleMap;
+private:
+	bool CheckCondition(json j);
+	string jumpState = "";
+	json data;
+	Animation* animation;
 };
 
 }
