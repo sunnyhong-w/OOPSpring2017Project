@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include"enginelib.h"
+#include"easing.h"
 
 namespace game_engine
 {
@@ -59,6 +60,24 @@ Vector2 Vector2::operator+(Vector2I adder)
     return Vector2(this->x - adder.x, this->y - adder.y);
 }
 
+Vector2 Vector2::SmoothDamp(Vector2 current, Vector2 target, Vector2 &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
+{
+	return Vector2::SmoothDampPt(current, target, currentVelocity, 0.003f, 4, smoothTime, maxSpeed, deltaTime);
+}
+
+Vector2 Vector2::SmoothDampPt(Vector2 current, Vector2 target, Vector2 & currentVelocity, float pd, float f, float smoothTime, float maxSpeed, float deltaTime)
+{
+	float dt = deltaTime != 0 ? deltaTime : Time::deltaTime;
+
+	Damp(current.x, currentVelocity.x, target.x, smoothTime, pd, f, dt);
+	Damp(current.y, currentVelocity.y, target.y, smoothTime, pd, f, dt);
+	if (currentVelocity.x > maxSpeed && maxSpeed != 0)
+		currentVelocity.x = maxSpeed;
+	if (currentVelocity.y > maxSpeed && maxSpeed != 0)
+		currentVelocity.y = maxSpeed;
+	return current;
+}
+
 Vector2 operator*(Vector2 multiplied, Vector2 multiplier)
 {
     return Vector2(multiplied.x * multiplier.x, multiplied.y * multiplier.y);
@@ -115,13 +134,13 @@ bool operator>=(Vector2 left, Vector2 right)
 bool operator==(Vector2 left, Vector2 right)
 {
     bool hasNull = left.isNull() || right.isNull();
-	return hasNull ? left.isNull() && right.isNull() : left.x == right.x && left.y == left.y;
+	return hasNull ? left.isNull() && right.isNull() : left.x == right.x && left.y == right.y;
 }
 
 bool operator!=(Vector2 left, Vector2 right)
 {
 	bool hasNull = left.isNull() || right.isNull();
-	return hasNull ? left.isNull() && right.isNull() : left.x != right.x && left.y != left.y;
+	return hasNull ? left.isNull() != right.isNull() : left.x != right.x && left.y != right.y;
 }
 
 Vector2 Vector2::abs()
@@ -268,7 +287,7 @@ bool operator==(Vector2I left, Vector2I right)
 bool operator!=(Vector2I left, Vector2I right)
 {
 	bool hasNull = left.isNull() || right.isNull();
-	return hasNull ? left.isNull() && right.isNull() : left.x != right.x && left.y != left.y;
+	return hasNull ? left.isNull() != right.isNull() : left.x != right.x && left.y != left.y;
 }
 
 void from_json(const json& j, Vector2I& v)
@@ -342,6 +361,16 @@ void to_json(json & j, const AnimationSetting & as)
         { "filename" ,as.filename },
         { "duration" ,as.duration }
     };
+}
+
+float Time::deltaTime = 0;
+DWORD Time::timeStamp = 0;
+
+void Time::Update()
+{
+	DWORD ts = clock();
+	Time::deltaTime = (double)(ts - Time::timeStamp) / 1000;
+	Time::timeStamp = ts;
 }
 
 }

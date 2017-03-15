@@ -55,6 +55,11 @@ struct Vector2
         friend bool operator !=(Vector2 left, Vector2 right);
         //Vector2I operator =(Vector2 equ);
 
+		static Vector2 SmoothDamp(Vector2 current,Vector2 target, Vector2 &currentVelocity,
+								  float smoothTime, float maxSpeed = 0, float deltaTime = 0);
+
+		static Vector2 SmoothDampPt(Vector2 current, Vector2 target, Vector2 &currentVelocity,
+						            float pd, float f, float smoothTime, float maxSpeed = 0, float deltaTime = 0);
 
     private:
         bool nullVector = false;
@@ -119,5 +124,14 @@ public:
 
 void from_json(const json& j, AnimationSetting& v);
 void to_json(json& j, const AnimationSetting& v);
+
+class Time
+{
+public:
+	static float deltaTime;
+	static void Update();
+private:
+	static DWORD timeStamp;
+};
 
 }

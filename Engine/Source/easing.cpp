@@ -377,4 +377,25 @@ Vector2 Easing::easeFTBasic(easeMode mode, double t, Vector2 from, Vector2 to, d
             return Vector2::zero;
     }
 }
+
+void Spring(float & x, float & v, float xt, float zeta, float omega, float h)
+{
+	const float f = 1.0f + 2.0f * h * zeta * omega;
+	const float oo = omega * omega;
+	const float hoo = h * oo;
+	const float hhoo = h * hoo;
+	const float detInv = 1.0f / (f + hhoo);
+	const float detX = f * x + h * v + hhoo * xt;
+	const float detV = v + hoo * (xt - x);
+	x = detX * detInv;
+	v = detV * detInv;
+}
+
+void Damp(float & x, float & v, float xt, float td, float pd, float f, float h)
+{
+	const float omega = 2 * M_PI * f;
+	const float zeta = log(pd) / (-1 * omega * td);
+	Spring(x, v, xt, zeta, omega, h);
+}
+
 }

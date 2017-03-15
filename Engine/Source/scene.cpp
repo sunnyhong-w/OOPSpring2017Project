@@ -36,6 +36,8 @@ void GameScene::OnMove()
         OnBeginState();
     else
     {
+		Time::Update();
+
         //INPUT WORKOUT HERE
         Input::Update();
 
