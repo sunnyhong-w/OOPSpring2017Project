@@ -5,30 +5,26 @@
 			"include" : "test"
 		},
 		{
-			"temp" :
+			"name" : "Animationtest",
+			"Component" : 
 			{
-				"name" : "Animationtest",
-				"Component" : 
+				"Transform" : 
+				{
+					"position" : { "x" : 120, "y" : 240 }
+				},
+				"AnimationController" : 
+				{
+					"init" : "Jump",
+					"state" : 
 					{
-						"Transform" : 
-						{
-							"position" : { "x" : 120, "y" : 240 }
-						},
-						"AnimationController" : 
-						{
-							"init" : "Jump",
-							"state" : 
-							{
-								"Move" : "MCv3_Move",
-								"Jump" : "MCv3_Jump"
-							}
-						},
-						"Tutorial" : 
-						{
-
-						}
+						"Move" : "MCv3_Move",
+						"Jump" : "MCv3_Jump"
 					}
-				
+				},
+				"Tutorial" : 
+				{
+
+				}
 			}
 		}
 	]

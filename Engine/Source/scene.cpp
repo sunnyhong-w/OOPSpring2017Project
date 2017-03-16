@@ -139,23 +139,20 @@ void GameScene::ParseJSON(json j)
 
     if (FindJSON("GameObject"))
     {
-        for (json j : j["GameObject"])
+        for (json jsonobj : j["GameObject"])
         {
-            json objJSON = j;
-
             json prefrab = nullptr;
 
-            if(objJSON.find("include") != objJSON.end())
-                prefrab = GameObject::GetPrefrabs(objJSON["include"]);
+            if(jsonobj.find("include") != jsonobj.end())
+                prefrab = GameObject::GetPrefrabs(jsonobj["include"]);
 
             if (prefrab != nullptr)
             {
                 GameObject* gobj = Instantiate(prefrab);
-                gobj->ParseJSON(objJSON.begin().value());
+                gobj->ParseJSON(jsonobj);
             }
             else
             {
-                json jsonobj = objJSON.begin().value();
                 bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
                 bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
                 GameObject* gobj = Instantiate(new GameObject(doNOTDestoryOnChangeScene, isPureScript));
