@@ -44,7 +44,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 
 #define FindJSON(str) j.find(str) != j.end()
 
-GameObject::GameObject(bool doNotDestoryOnChangeScene, bool isPureScript)
+GameObject::GameObject(bool doNotDestoryOnChangeScene, bool isPureScript) : enable(true)
 {
     this->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
 

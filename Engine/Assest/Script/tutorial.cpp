@@ -14,7 +14,7 @@ void Tutorial::ParseJSON(json j)
 void Tutorial::Start()
 {
     time = 0;
-    this->gameObject->GetComponent<SpriteRenderer>()->enable = false;
+    //this->gameObject->GetComponent<SpriteRenderer>()->enable = false;
     GameObject* goj = GameObject::findGameObjectByName("TextRenderer");
 
     if (goj != nullptr)

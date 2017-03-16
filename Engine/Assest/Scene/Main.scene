@@ -9,6 +9,9 @@
 			"include" : "TextRenderer"
 		},
 		{
+			"include" : "testabc"
+		},
+		{
 			"name" : "Animationtest",
 			"Component" : 
 			{

@@ -21,10 +21,9 @@ namespace game_engine
 //////////////////////////////////////////////////////////////////
 // Component實作
 //////////////////////////////////////////////////////////////////
-Component::Component(GameObject* gobj, bool isGB) : isGameBehavior(isGB)
+Component::Component(GameObject* gobj, bool isGB) : isGameBehavior(isGB) , enable(true)
 {
     this->gameObject = gobj;
-    this->enable = true;
     this->transform = gobj->GetComponent<Transform>();
 }
 
