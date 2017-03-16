@@ -6,6 +6,12 @@
 	{
 		"Transform" : {},
 		"SpriteRenderer" : {},
-		"TextRenderer" :{}
+		"TextRenderer" :{
+			"fontsetting" : 
+			{
+				"font_sample" : {"x":16,"y":16},
+				"font_sample2" : {"x":12,"y":24}
+			}
+		}
 	}
 }

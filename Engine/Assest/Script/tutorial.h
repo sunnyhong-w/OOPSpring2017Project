@@ -17,4 +17,5 @@ class Tutorial : public GameBehaviour
 		bool tmp = true;
         double time;
         Vector2I textPos = Vector2I::zero;
+		Vector2I winpos = Vector2I::zero;
 };

@@ -11,11 +11,19 @@ class TextStamp: public GameBehaviour
         void Start() override;
         void Update() override;
         void OnRecivedBoardcast(json j) override;
-        void Stamp(wchar_t character, Vector2I pos);
-        void Setfont(string fontName);
+        void Stamp();
+        void Setfont(UINT surfaceID, Vector2I size, Vector2I bitmapPos);
+        void shake();
+        void randomShake();
+        void setPosition(Vector2 stampPos);
     private:
+
         SpriteRenderer* SR = nullptr;
         Vector2I size;
+        Vector2I stampPos;
+        Vector2I bitmapPos;
         map<wchar_t, Vector2I> charPos;
         json fontInfo;
+        wchar_t character;
+        int dp = 0;
 };

@@ -49,6 +49,8 @@ class Easing
         static double easeOutBounce(double t, double b, double c, double d);
         static double easeInBounce(double t, double b, double c, double d);
         static double easeInOutBounce(double t, double b, double c, double d);
+        static double backForth(double& t, double d, double dt = 0);
+        static int backForth(int& t, int d, int dt = 1);
         /// <summary>
         /// 正規的Easing Function
         /// </summary>

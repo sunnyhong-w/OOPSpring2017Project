@@ -318,6 +318,24 @@ double Easing::easeInOutBounce(
     return Easing::easeOutBounce(t * 2 - d, 0, c, d) * .5 + c * .5 + b;
 }
 
+double Easing::backForth(double& t, double d, double dt)
+{
+    double ret = d - abs(d - t);
+    t = (t + dt);
+
+    if (t >= (d * 2))
+        t = t - (d * 2);
+
+    return ret;
+}
+
+int Easing::backForth(int& t, int d, int dt)
+{
+    int ret = d - abs(d - t);
+    t = (t + dt) % (d * 2);
+    return ret;
+}
+
 float Easing::easer(double func(double, double, double, double), double t, double b, double c, double d)
 {
     t = t > d ? d : t;
