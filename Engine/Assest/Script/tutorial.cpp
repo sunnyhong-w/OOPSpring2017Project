@@ -27,14 +27,15 @@ void Tutorial::Update()
 {
     int l = 60;
     //transform->position = Easing::easeFT(Easing::easeInBounce, l - abs(time - l), Vector2(240, 320), Vector2(480, 120), l);
-    GameObject* goj = GameObject::findGameObjectByName("TextRenderer");
-    goj->GetComponent<TextRenderer>()->SetPosition(textPos);
+    GameObject* gobj = GameObject::findGameObjectByName("TextRenderer");
+	if(gobj != nullptr)
+		gobj->GetComponent<TextRenderer>()->SetPosition(textPos);
     winpos = Easing::easeFT(Easing::easeInBounce, l - abs(time - l), Vector2(240, 320), Vector2(480, 120), l).GetV2I();
 
     //winpos.x = Easing::easeFT(Easing::easeInBounce, l - abs(time - l), 0,800, l);
 
     if (Input::GetKeyClick(VK_LBUTTON))
-        goj->GetComponent<TextRenderer>()->NextLine();
+        gobj->GetComponent<TextRenderer>()->NextLine();
 
     time++;
 

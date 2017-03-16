@@ -15,14 +15,14 @@ void TextStamp::Start()
 
 void TextStamp::Update()
 {
-    randomShake();
+    shake();
 }
 
 void TextStamp::OnRecivedBoardcast(json j)
 {
 }
 
-void TextStamp::Stamp ()
+void TextStamp::Stamp()
 {
     SR->SetSourcePos(this->bitmapPos * size);
     SR->Draw();

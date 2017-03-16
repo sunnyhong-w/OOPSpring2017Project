@@ -144,11 +144,11 @@
     <ClCompile Include="Source\scene.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Assest\Script\Engine\textStamp.cpp">
-      <Filter>GameScript</Filter>
-    </ClCompile>
     <ClCompile Include="Assest\Script\Engine\textRenderer.cpp">
-      <Filter>GameScript</Filter>
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Engine\textStamp.cpp">
+      <Filter>GameEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -216,10 +216,10 @@
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Engine\textStamp.h">
-      <Filter>GameScript</Filter>
+      <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Engine\textRenderer.h">
-      <Filter>GameScript</Filter>
+      <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

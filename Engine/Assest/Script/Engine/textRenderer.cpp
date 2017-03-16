@@ -4,8 +4,15 @@
 #include <fstream>
 #include <codecvt>
 using namespace std;
+TextRenderer::~TextRenderer()
+{
+    for (TextStamp* tSObj : textStampObj)
+        delete tSObj->gameObject;
+}
+
 void TextRenderer::ParseJSON(json j)
 {
+    this->setFont();
     SR = this->gameObject->AddComponentOnce<SpriteRenderer>();
 
     if (j.find("fontsetting") != j.end())
@@ -17,14 +24,77 @@ void TextRenderer::ParseJSON(json j)
             fontInfo[it.key()]["SurfaceID"] = SR->GetSurfaceID();
         }
     }
+
+    wifstream data;
+    data.imbue(locale(locale::empty(), new std::codecvt_utf8<wchar_t>));
+    data.open(R"(.\Assest\Prefrab\Engine\TextRenderer\font_sample_data.txt)");
+    wstring str;
+    Vector2I pos = Vector2I::zero;
+
+    while (!data.eof())
+    {
+        data >> str;
+
+        for (wstring::iterator it = str.begin(); it != str.end(); it++)
+        {
+            if (*it != '\n')
+            {
+                charPos[*it] = pos;
+                pos.x++;
+            }
+        }
+
+        pos.y++;
+        pos.x = 0;
+    }
+
+    data.close();
 }
 
 void TextRenderer::Start()
 {
+	frapsPerWord = 100;
 }
 
 void TextRenderer::Update()
 {
+	Vector2 pos = this->transform->position;
+
+	for (wchar_t word : line)
+	{
+		json tStampJson = GameObject::GetPrefrabs(R"(Engine\TextRenderer\TextStamp)");
+		GameObject* gobj = new GameObject();
+		gobj->ParseJSON(tStampJson, true);
+		if (gobj != nullptr && paragraph.size() != 0)
+		{
+			TextStamp* tsObj = gobj->GetComponent<TextStamp>();
+			tsObj->Setfont(fontInfo["font_sample"]["SurfaceID"], fontInfo["font_sample"], charPos[word]);
+			tsObj->setPosition(pos);
+			textStampObj.push_back(tsObj);
+			pos.x += 16;
+		}
+	}
+	line.clear();
+    if ((unsigned)textStampIndex < textStampObj.size())
+    {
+        textStampIndex++;
+    }
+	
+    for (TextStamp* tobj : textStampObj)
+    {
+        tobj->Update();
+    }
+	
+    Vector2I stampPos = this->transform->position.GetV2I();
+   
+	remainFraps--;
+    if (remainFraps <= 0)
+    {
+        if ((unsigned)(drawIndex) < textStampObj.size())
+            drawIndex++;
+
+        remainFraps = frapsPerWord;
+    }
 }
 
 void TextRenderer::OnRecivedBoardcast(json j)
@@ -33,35 +103,15 @@ void TextRenderer::OnRecivedBoardcast(json j)
 
 void TextRenderer::Draw(Vector2I cameraPos)
 {
-    Vector2I stampPos = this->transform->position.GetV2I();
-    //TextStamp* tStamp = GameObject::findGameObjectByName("TextStamp")->GetComponent<TextStamp>();
-    json tStampJson = GameObject::GetPrefrabs(R"(Engine\TextRenderer\TextStamp)");
-    bool doNOTDestoryOnChangeScene = tStampJson.find("doNOTDestoryOnChangeScene") != tStampJson.end() ? tStampJson["doNOTDestoryOnChangeScene"] : false;
-    bool isPureScript = tStampJson.find("isPureScript") != tStampJson.end() ? tStampJson["isPureScript"] : false;
-    GameObject* tStampObj = new GameObject(doNOTDestoryOnChangeScene, isPureScript);
-    tStampObj->ParseJSON(tStampJson);
-
-    /*if (tStamp != nullptr && line.size() != 0)
+    for (int i = 0; i < drawIndex; i++)
     {
-        wstring it = line[lineIndex];
-
-        for (auto c : it)
-        {
-            tStamp->Stamp(c, stampPos - cameraPos);
-            stampPos.x += tStamp->size.x;
-        }
-    }*/
-    if (tStampObj != nullptr && line.size() != 0)
-    {
-        wstring it = line[lineIndex];
-        tStampObj->GetComponent<TextStamp>()->Setfont(fontInfo["font_sample"]["SurfaceID"], fontInfo["font_sample"]);
-        tStampObj->GetComponent<TextStamp>()->Stamp(it[0], stampPos - cameraPos);
+        textStampObj[i]->Stamp();
     }
 }
 
 void TextRenderer::SetPosition(Vector2I pos)
 {
-    this->transform->position = pos.GetV2();
+    //this->transform->position = pos.GetV2();
 }
 
 void TextRenderer::LoadText(string fileName)
@@ -70,25 +120,56 @@ void TextRenderer::LoadText(string fileName)
     file.imbue(locale(locale::empty(), new std::codecvt_utf8<wchar_t>));
     string filePath = R"(.\Assest\Scenario\)" + fileName + ".story";
     file.open(filePath);
-    GAME_ASSERT(file, ("can't find " + fileName + ".story. \n#[Engine]TextRenderer::LoadText").c_str());
+    GAME_ASSERT(file, ("can't find" + fileName + ".story. \n#[Engine]TextRenderer::LoadText").c_str());
     wstring str;
-    line.clear();
+    paragraph.clear();
+    textStampObj.clear();
+    //
+   
 
     while (getline(file, str))
     {
-        line.push_back(str);
+        paragraph.push_back(str);
     }
 
     file.close();
+	remainFraps = frapsPerWord;
+	line = paragraph[0];
 }
 
 void TextRenderer::NextLine()
 {
-    if (lineIndex + 1 < (int)line.size())
-        lineIndex++;
-    else
-    {
-        line.clear();
-        lineIndex = 0;
-    }
+	
+	if ((unsigned)(drawIndex) < textStampObj.size()) 
+	{
+		frapsPerWord = 1;
+		remainFraps = frapsPerWord;
+	}
+	else if(paragraphIndex + 1 < (int)paragraph.size())
+	{
+		paragraphIndex++;
+		line = paragraph[paragraphIndex];
+		frapsPerWord = 100;
+		remainFraps = 0;
+		for (TextStamp* tSObj : textStampObj)
+			delete tSObj->gameObject;
+		textStampObj.clear();
+		drawIndex = 0;
+	}
+	else
+	{
+		paragraph.clear();
+		paragraphIndex = 0;
+		for (TextStamp* tSObj : textStampObj)
+			delete tSObj->gameObject;
+		textStampObj.clear();
+		frapsPerWord = 100;
+		remainFraps = 0;
+		drawIndex = 0;
+	}
+}
+
+void TextRenderer::setFont()
+{
+
 }
