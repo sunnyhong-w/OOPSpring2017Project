@@ -34,7 +34,7 @@ class GameScene : public game_framework::CGameState
         vector<json> TDPQueue;
         string filename;
         string loadname;
-        map<string, Vector2I> cameraPosOfWindows;
+        Vector2I cameraPosition;
 };
 }
 

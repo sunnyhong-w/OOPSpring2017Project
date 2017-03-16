@@ -98,7 +98,7 @@ void GameScene::OnShow()
 {
     for (GameObject* gobj : GameObject::gameObjects)
         if (gobj->enable)
-            gobj->Draw(cameraPosOfWindows[WINDOW_NAME]);
+            gobj->Draw(cameraPosition);
 
     //Draw Superve GUI thing after gameobject drawn
 }
