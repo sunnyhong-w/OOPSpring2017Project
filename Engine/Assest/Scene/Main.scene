@@ -2,6 +2,9 @@
 	"IncludePrefrab" : ["test","Engine\\TextRenderer\\TextStamp","Engine\\TextRenderer\\TextRenderer"],
 	"GameObject" : [
 		{
+			"include" : "test"
+		},
+		{
 			"temp" :
 			{
 				"name" : "Animationtest",

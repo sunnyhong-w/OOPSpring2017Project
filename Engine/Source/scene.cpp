@@ -139,10 +139,14 @@ void GameScene::ParseJSON(json j)
 
     if (FindJSON("GameObject"))
     {
-        for (json::iterator it = j["GameObject"].begin(); it != j["GameObject"].end(); ++it)
+        for (json j : j["GameObject"])
         {
-            json objJSON = (*it);
-            json prefrab = GameObject::GetPrefrabs(objJSON.begin().key());
+            json objJSON = j;
+
+            json prefrab = nullptr;
+
+            if(objJSON.find("include") != objJSON.end())
+                prefrab = GameObject::GetPrefrabs(objJSON["include"]);
 
             if (prefrab != nullptr)
             {
