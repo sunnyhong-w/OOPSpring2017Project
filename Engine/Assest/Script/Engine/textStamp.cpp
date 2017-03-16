@@ -15,47 +15,38 @@ void TextStamp::Start()
 
 void TextStamp::Update()
 {
+    randomShake();
 }
 
 void TextStamp::OnRecivedBoardcast(json j)
 {
 }
 
-void TextStamp::Stamp(wchar_t character, Vector2I pos)
+void TextStamp::Stamp ()
 {
-    this->transform->position = pos.GetV2();
-    SR->SetSourcePos(charPos[character] * size);
+    SR->SetSourcePos(this->bitmapPos * size);
     SR->Draw();
 }
 
-void TextStamp::Setfont(UINT surfaceID, Vector2I size)
+void TextStamp::Setfont(UINT surfaceID, Vector2I size, Vector2I bitmapPos)
 {
-    wifstream data;
-    data.imbue(locale(locale::empty(), new std::codecvt_utf8<wchar_t>));
-    data.open(R"(.\Assest\Prefrab\Engine\TextRenderer\font_sample_data.txt)");
-    wstring str;
-    Vector2I pos = Vector2I::zero;
-
-    while (!data.eof())
-    {
-        data >> str;
-
-        for (wstring::iterator it = str.begin(); it != str.end(); it++)
-        {
-            if (*it != '\n')
-            {
-                charPos[*it] = pos;
-                pos.x++;
-            }
-        }
-
-        pos.y++;
-        pos.x = 0;
-    }
-
-    data.close();
     SR = this->gameObject->AddComponentOnce<SpriteRenderer>();
-    SR->SetSurfaceID(surfaceID);
+    SR->UnsafeSetSurfaceID(surfaceID);
     SR->SetSize(size);
     this->size = size;
+    this->bitmapPos = bitmapPos;
+}
+
+void TextStamp::shake()
+{
+    int temp = Easing::backForth(dp, 3);
+    SR->SetDeltaPixel(Vector2I(0, Easing::easeFT(Easing::easeInOutSine, temp, -2, 2, 3)));
+    //this->transform->position = this->transform->position + dp.GetV2();
+}
+
+void TextStamp::randomShake()
+{
+    SR->SetDeltaPixel(Vector2I(rand() % 5 - 2, rand() % 5 - 2));
+}
+
 }
