@@ -49,4 +49,7 @@ void TextStamp::randomShake()
     SR->SetDeltaPixel(Vector2I(rand() % 5 - 2, rand() % 5 - 2));
 }
 
+void TextStamp::setPosition(Vector2 stampPos)
+{
+    this->transform->position = stampPos;
 }

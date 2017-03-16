@@ -15,6 +15,7 @@ class TextStamp: public GameBehaviour
         void Setfont(UINT surfaceID, Vector2I size, Vector2I bitmapPos);
         void shake();
         void randomShake();
+        void setPosition(Vector2 stampPos);
     private:
 
         SpriteRenderer* SR = nullptr;
