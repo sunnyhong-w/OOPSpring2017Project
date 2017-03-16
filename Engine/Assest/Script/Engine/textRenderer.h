@@ -6,7 +6,7 @@ using namespace game_engine;
 class TextRenderer : public GameBehaviour
 {
     public:
-        TextRenderer(GameObject* gobj) : GameBehaviour(gobj), paragraphIndex(0), textStampIndex(0) {}
+        TextRenderer(GameObject* gobj) : GameBehaviour(gobj), paragraphIndex(0), textStampIndex(0),defaultFraps(5) {}
         ~TextRenderer();
         void ParseJSON(json j) override;
         void Start() override;
@@ -18,6 +18,7 @@ class TextRenderer : public GameBehaviour
         void NextLine();
         void setFont();
     private:
+		const int defaultFraps;
         SpriteRenderer* SR = nullptr;
         vector<wstring> paragraph;
         vector<TextStamp*> textStampObj;
@@ -25,7 +26,7 @@ class TextRenderer : public GameBehaviour
 		wstring line;
         int paragraphIndex = 0;
         int textStampIndex = 0;
-        int frapsPerWord = 100;
+        int frapsPerWord;
         int remainFraps;
         int drawIndex = 0;
         json fontInfo;

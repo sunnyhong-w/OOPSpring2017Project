@@ -53,7 +53,7 @@ void TextRenderer::ParseJSON(json j)
 
 void TextRenderer::Start()
 {
-	frapsPerWord = 100;
+	frapsPerWord = defaultFraps;
 }
 
 void TextRenderer::Update()
@@ -133,7 +133,7 @@ void TextRenderer::LoadText(string fileName)
     }
 
     file.close();
-	remainFraps = frapsPerWord;
+	remainFraps = 0;
 	line = paragraph[0];
 }
 
@@ -149,7 +149,7 @@ void TextRenderer::NextLine()
 	{
 		paragraphIndex++;
 		line = paragraph[paragraphIndex];
-		frapsPerWord = 100;
+		frapsPerWord = defaultFraps;
 		remainFraps = 0;
 		for (TextStamp* tSObj : textStampObj)
 			delete tSObj->gameObject;
@@ -163,7 +163,7 @@ void TextRenderer::NextLine()
 		for (TextStamp* tSObj : textStampObj)
 			delete tSObj->gameObject;
 		textStampObj.clear();
-		frapsPerWord = 100;
+		frapsPerWord = defaultFraps;
 		remainFraps = 0;
 		drawIndex = 0;
 	}
