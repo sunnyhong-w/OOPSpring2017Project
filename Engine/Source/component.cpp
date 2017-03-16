@@ -142,7 +142,7 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(transform->position.GetV2I() - cameraPos - GetAnchorPoint() - delta, transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(transform->position.round().GetV2I() - cameraPos - GetAnchorPoint() - delta, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)

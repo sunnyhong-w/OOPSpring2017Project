@@ -62,10 +62,10 @@ Vector2 Vector2::operator+(Vector2I adder)
 
 Vector2 Vector2::SmoothDamp(Vector2 current, Vector2 target, Vector2 &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
 {
-	return Vector2::SmoothDampPt(current, target, currentVelocity, 0.003f, 4, smoothTime, maxSpeed, deltaTime);
+	return Vector2::SmoothDampEX(current, target, currentVelocity, 0.003f, 4, smoothTime, maxSpeed, deltaTime);
 }
 
-Vector2 Vector2::SmoothDampPt(Vector2 current, Vector2 target, Vector2 & currentVelocity, float pd, float f, float smoothTime, float maxSpeed, float deltaTime)
+Vector2 Vector2::SmoothDampEX(Vector2 current, Vector2 target, Vector2 & currentVelocity, float pd, float f, float smoothTime, float maxSpeed, float deltaTime)
 {
 	float dt = deltaTime != 0 ? deltaTime : Time::deltaTime;
 
@@ -146,6 +146,11 @@ bool operator!=(Vector2 left, Vector2 right)
 Vector2 Vector2::abs()
 {
     return Vector2(std::abs(this->x), std::abs(this->y));
+}
+
+Vector2 Vector2::round()
+{
+	return Vector2(roundf(x), roundf(y));
 }
 
 Vector2I Vector2::GetV2I()

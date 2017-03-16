@@ -25,6 +25,7 @@ struct Vector2
         string toString();
         bool isNull();
         Vector2 abs();
+		Vector2 round();
 
         float x;
         float y;
@@ -58,7 +59,7 @@ struct Vector2
 		static Vector2 SmoothDamp(Vector2 current,Vector2 target, Vector2 &currentVelocity,
 								  float smoothTime, float maxSpeed = 0, float deltaTime = 0);
 
-		static Vector2 SmoothDampPt(Vector2 current, Vector2 target, Vector2 &currentVelocity,
+		static Vector2 SmoothDampEX(Vector2 current, Vector2 target, Vector2 &currentVelocity,
 						            float pd, float f, float smoothTime, float maxSpeed = 0, float deltaTime = 0);
 
     private:
