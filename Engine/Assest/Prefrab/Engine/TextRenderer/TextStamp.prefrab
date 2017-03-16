@@ -1,0 +1,10 @@
+{
+	"name":"TextStamp",
+	"isGUI" : true,
+	"Component":
+	{
+		"Transform" : {},
+		"SpriteRenderer" : {},
+		"TextStamp" : {}
+	}
+}
