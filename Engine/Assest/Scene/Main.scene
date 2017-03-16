@@ -1,8 +1,12 @@
 {
-	"IncludePrefrab" : ["test","Engine\\TextRenderer\\TextStamp","Engine\\TextRenderer\\TextRenderer"],
+	"IncludePrefrab" : {
+		"testabc" : "test",
+		"TextStamp" : "Engine\\TextRenderer\\TextStamp",
+		"TextRenderer" :"Engine\\TextRenderer\\TextRenderer"
+	},
 	"GameObject" : [
 		{
-			"include" : "test"
+			"include" : "testabc"
 		},
 		{
 			"name" : "Animationtest",

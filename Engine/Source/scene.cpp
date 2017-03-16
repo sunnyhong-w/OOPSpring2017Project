@@ -107,14 +107,20 @@ void GameScene::OnShow()
 
 void GameScene::ParseJSON(json j)
 {
+    map<string, string> prefrabmap;
+
     if (FindJSON("IncludePrefrab"))
     {
         string PATH = R"(.\Assest\Prefrab\)";
+        json jdat = j["IncludePrefrab"];
 
-        for (json::iterator it = j["IncludePrefrab"].begin(); it != j["IncludePrefrab"].end(); ++it)
+        for (json::iterator it = j["IncludePrefrab"].begin(); it != j["IncludePrefrab"].end(); it++)
         {
+            prefrabmap[it.key()] = it.value().get<string>();
+            string pfname = it.value();
+            
             ifstream file;
-            file.open(PATH + (*it).get<string>() + ".prefrab");
+            file.open(PATH + it.value().get<string>() + ".prefrab");
 
             if (file.good())
             {
@@ -123,13 +129,13 @@ void GameScene::ParseJSON(json j)
                 json jsonobj = json::parse(buffer);
                 bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
                 bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
-                GameObject::InsertPrefrabs((*it).get<string>(), jsonobj);
+                GameObject::InsertPrefrabs(pfname, jsonobj);
             }
             else
             {
                 string str = "ERROR : Prefrab NOT FOUND when parse Scene JSON :\n";
                 str += "Scene : " + filename + "\n";
-                str += "Prefrab : " + (*it).get<string>() + "NOT FOUND";
+                str += "Prefrab : " + pfname + "NOT FOUND";
                 GAME_ASSERT(false, str.c_str());
             }
 
@@ -143,8 +149,8 @@ void GameScene::ParseJSON(json j)
         {
             json prefrab = nullptr;
 
-            if(jsonobj.find("include") != jsonobj.end())
-                prefrab = GameObject::GetPrefrabs(jsonobj["include"]);
+            if(jsonobj.find("include") != jsonobj.end() && prefrabmap.find(jsonobj["include"]) != prefrabmap.end())
+                prefrab = GameObject::GetPrefrabs(prefrabmap[jsonobj["include"]]);
 
             if (prefrab != nullptr)
             {
