@@ -21,6 +21,20 @@ void MapReader::ParseJSON(json j)
 
 void MapReader::LoadMap(string fname)
 {
+	for (auto v : tileList)
+	{
+		for (GameObject* gobj : v)
+		{
+			delete gobj;
+		}
+
+		v.clear();
+	}
+
+	tileList.clear();
+
+	//-----
+
 	string path = R"(.\Assest\Map\)" + fname + ".json";
 
 	fstream file(path);
