@@ -1,0 +1,7 @@
+{
+    "name": "MapReader",
+    "isPureScript": true,
+    "Component": {
+        "MapReader": {}
+    }
+}
