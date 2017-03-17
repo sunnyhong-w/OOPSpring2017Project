@@ -650,6 +650,10 @@ bool CGame::OnIdle()  // 修改功能不要修改OnIdle()，而應修改OnMove()
 
 void CGame::OnInit()	// OnInit() 只在程式一開始時執行一次
 {
+	RECT rect;
+	AfxGetMainWnd()->GetWindowRect(&rect);
+	game_framework::CGame::Instance()->windowPosition = game_engine::Vector2I(rect.left, rect.top);
+
     //
     // 啟動亂數
     //

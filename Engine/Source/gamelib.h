@@ -349,6 +349,8 @@ public:
     void EnterScene(CGameState *gs);
     void ExitScene();
 	static CGame *Instance();
+	game_engine::Vector2I windowPosition;
+
 private:
 	bool			running;			// 遊戲是否正在進行中(未被Pause)
 	bool            suspended;			// 遊戲是否被suspended
