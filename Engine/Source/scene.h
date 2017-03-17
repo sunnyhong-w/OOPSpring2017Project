@@ -29,6 +29,8 @@ class GameScene : public game_framework::CGameState
         void LoadScene(string filename);
 
         bool lock = false;
+
+		static void ReadPrefrab(string filename,string includename);
     private:
         void LoadSceneData();
         vector<json> TDPQueue;
