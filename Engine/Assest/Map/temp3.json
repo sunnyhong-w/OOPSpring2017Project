@@ -1,7 +1,7 @@
 { "height":10,
  "layers":[
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 12, 0, 0, 0, 1, 2, 3, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 7, 0, 39, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 10, 11, 0, 0, 39, 0, 0, 16, 0, 13, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 1, 2, 3, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 10, 11, 0, 0, 0, 0, 0, 16, 0, 13, 14, 15, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
          "height":10,
          "name":"BackGround",
          "opacity":1,
@@ -10,40 +10,8 @@
          "width":15,
          "x":0,
          "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "height":10,
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "gid":33,
-                 "height":20,
-                 "id":1,
-                 "name":"",
-                 "properties":
-                    {
-                     "123safsaf":123
-                    },
-                 "propertytypes":
-                    {
-                     "123safsaf":"int"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":312,
-                 "y":88
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "width":15,
-         "x":0,
-         "y":0
         }],
- "nextobjectid":2,
+ "nextobjectid":1,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -98,14 +66,6 @@
                              "y":0
                             }],
                      "opacity":1,
-                     "properties":
-                        {
-                         "custum":"123"
-                        },
-                     "propertytypes":
-                        {
-                         "custum":"string"
-                        },
                      "type":"objectgroup",
                      "visible":true,
                      "width":0,
@@ -775,136 +735,6 @@
                 }
             },
          "tilewidth":32
-        }, 
-        {
-         "columns":4,
-         "firstgid":17,
-         "image":"..\/Bitmap\/test.png",
-         "imageheight":128,
-         "imagewidth":128,
-         "margin":0,
-         "name":"Tile 2",
-         "spacing":0,
-         "tilecount":16,
-         "tileheight":32,
-         "tiles":
-            {
-             "0":
-                {
-                 "objectgroup":
-                    {
-                     "draworder":"index",
-                     "height":0,
-                     "name":"",
-                     "objects":[
-                            {
-                             "height":0,
-                             "id":3,
-                             "name":"",
-                             "polygon":[
-                                    {
-                                     "x":0,
-                                     "y":0
-                                    }, 
-                                    {
-                                     "x":0,
-                                     "y":32
-                                    }, 
-                                    {
-                                     "x":32,
-                                     "y":32
-                                    }, 
-                                    {
-                                     "x":32,
-                                     "y":0
-                                    }],
-                             "rotation":0,
-                             "type":"",
-                             "visible":true,
-                             "width":0,
-                             "x":0,
-                             "y":0
-                            }],
-                     "opacity":1,
-                     "type":"objectgroup",
-                     "visible":true,
-                     "width":0,
-                     "x":0,
-                     "y":0
-                    }
-                },
-             "1":
-                {
-                 "objectgroup":
-                    {
-                     "draworder":"index",
-                     "height":0,
-                     "name":"",
-                     "objects":[],
-                     "opacity":1,
-                     "properties":
-                        {
-                         "123":"123",
-                         "12354":8988
-                        },
-                     "propertytypes":
-                        {
-                         "123":"string",
-                         "12354":"int"
-                        },
-                     "type":"objectgroup",
-                     "visible":true,
-                     "width":0,
-                     "x":0,
-                     "y":0
-                    }
-                }
-            },
-         "tilewidth":32
-        }, 
-        {
-         "columns":0,
-         "firstgid":33,
-         "margin":0,
-         "name":"as1f23afs",
-         "spacing":0,
-         "tilecount":1,
-         "tileheight":20,
-         "tileproperties":
-            {
-             "0":
-                {
-                 "123":123
-                }
-            },
-         "tilepropertytypes":
-            {
-             "0":
-                {
-                 "123":"int"
-                }
-            },
-         "tiles":
-            {
-             "0":
-                {
-                 "image":"..\/Bitmap\/ball1.bmp"
-                }
-            },
-         "tilewidth":20
-        }, 
-        {
-         "columns":4,
-         "firstgid":34,
-         "image":"..\/Bitmap\/test2.png",
-         "imageheight":64,
-         "imagewidth":64,
-         "margin":0,
-         "name":"test2",
-         "spacing":0,
-         "tilecount":16,
-         "tileheight":16,
-         "tilewidth":16
         }],
  "tilewidth":32,
  "version":1,

@@ -7,6 +7,21 @@ using namespace std;
 
 using namespace game_engine;
 
+MapReader::~MapReader()
+{
+	for (auto v : tileList)
+	{
+		for (GameObject* gobj : v)
+		{
+			delete gobj;
+		}
+
+		v.clear();
+	}
+
+	tileList.clear();
+}
+
 void MapReader::ParseJSON(json j)
 {
 	json emptyjson;
@@ -63,7 +78,7 @@ void MapReader::LoadMap(string fname)
 					{
 						for (TileSet tmp : tileMap.tileSetList)
 						{
-							if (tindex < tmp.firstgid || tindex > tmp.firstgid + tmp.tilecount)
+							if (tmp.firstgid == -1 || tindex < tmp.firstgid || tindex > tmp.firstgid + tmp.tilecount)
 								continue;
 
 							GameObject *gobj = new GameObject();
@@ -113,6 +128,8 @@ void MapReader::LoadMap(string fname)
 		str += "File : " + path;
 		GAME_ASSERT(false, str.c_str());
 	}
+
+	file.close();
 }
 
 void MapReader::Draw(Vector2I campos)
@@ -123,6 +140,14 @@ void MapReader::Draw(Vector2I campos)
 		{
 			gobj->Draw(campos);
 		}
+	}
+}
+
+void MapReader::Update()
+{
+	if (Input::GetKeyClick(VK_F8))
+	{
+		LoadMap("temp3");
 	}
 }
 
@@ -146,16 +171,35 @@ void from_json(const json& j, TileMap& tm)
 
 void from_json(const json& j, TileSet& ts)
 {
-	string imgname = j["image"].get<string>();
-	imgname = imgname.substr(10);
-	imgname = imgname.substr(0,imgname.find_last_of("."));
-	ts.image = imgname;
-	ts.tileSize = Vector2I(j["tilewidth"], j["tileheight"]);
-	ts.firstgid = j["firstgid"];
-	ts.tilecount = j["tilecount"];
 	ts.columns = j["columns"];
-	for (int i = 0; i < ts.tilecount; i++)
-		ts.tiles.push_back(j["tiles"][to_string(i)]["objectgroup"]);
+
+	if (ts.columns != 0) // Tileset
+	{
+		string imgname = j["image"].get<string>();
+		imgname = imgname.substr(10);
+		imgname = imgname.substr(0, imgname.find_last_of("."));
+		ts.image = imgname;
+		ts.tileSize = Vector2I(j["tilewidth"], j["tileheight"]);
+		ts.firstgid = j["firstgid"];
+		ts.tilecount = j["tilecount"];
+
+		if (j.find("tiles") != j.end())
+		{
+			for (int i = 0; i < ts.tilecount; i++)
+				if (j["tiles"].find(to_string(i)) != j["tiles"].end())
+					ts.tiles.push_back(j["tiles"][to_string(i)]["objectgroup"]);
+		}
+		else
+		{
+			GAME_ASSERT(false, ("collider not found in tile map,image : "+imgname).c_str());
+		}
+	}
+	else //Collection of image
+	{
+
+	}
+
+
 }
 
 void from_json(const json& j, Tile& to)
