@@ -141,14 +141,17 @@
    <image width="20" height="20" source="../Bitmap/ball1.bmp"/>
   </tile>
  </tileset>
+ <tileset firstgid="34" name="test2" tilewidth="16" tileheight="16" tilecount="16" columns="4">
+  <image source="../Bitmap/test2.png" width="64" height="64"/>
+ </tileset>
  <layer name="BackGround" width="15" height="10">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,12,0,0,0,1,2,3,0,0,0,
-0,0,0,0,0,0,0,0,0,5,6,7,0,0,0,
-0,0,0,0,0,0,0,0,0,9,10,11,0,0,0,
+0,0,0,0,0,4,0,0,0,0,0,0,0,0,39,
+0,0,0,0,0,8,0,0,0,0,0,0,0,0,39,
+0,0,0,0,0,12,0,0,0,1,2,3,0,0,39,
+0,0,0,0,0,0,0,0,0,5,6,7,0,39,39,
+0,0,0,0,0,0,0,0,0,9,10,11,0,0,39,
 0,0,16,0,13,14,15,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -156,6 +159,10 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="1" gid="33" x="312" y="88" width="20" height="20"/>
+  <object id="1" gid="33" x="312" y="88" width="20" height="20">
+   <properties>
+    <property name="123safsaf" type="int" value="123"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

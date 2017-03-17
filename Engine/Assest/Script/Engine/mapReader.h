@@ -3,21 +3,34 @@
 #include "gamebehavior.h"
 
 using namespace game_engine;
-struct TileObject;
-struct TileMapStruct;
+struct Tile;
+struct TileSet;
+struct TileMap;
 
-struct TileMapStruct
+struct TileSet
 {
-	TileMapStruct();
+	TileSet();
 	string image;
 	Vector2I tileSize;
 	int firstgid;
-	vector<TileObject> tiles;
+	int tilecount;
+	vector<Tile> tiles;
 };
 
-struct TileObject
+struct TileMap
 {
+	int width;
+	int height;
+	vector<TileSet> tileSetList;
+};
+
+void from_json(const json& j, TileSet& ts);
+
+struct Tile
+{
+	Tile() {};
 	json properties;
+	vector<CollisionInfo> object;
 };
 
 class MapReader : public GameBehaviour
