@@ -135,4 +135,10 @@ private:
 	static DWORD timeStamp;
 };
 
+struct CollisionInfo
+{
+	Vector2I size = Vector2I::zero;
+	Vector2I offset = Vector2I::zero;
+};
+
 }
