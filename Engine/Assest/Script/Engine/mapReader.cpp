@@ -15,23 +15,99 @@ void MapReader::ParseJSON(json j)
 
 	if (j.find("load") != j.end())
 	{
-		string path = R"(.\Assest\Map\)" + j["load"].get<string>()+ ".json";
+		LoadMap(j["load"].get<string>());
+	}
+}
 
-		fstream file(path);
+void MapReader::LoadMap(string fname)
+{
+	string path = R"(.\Assest\Map\)" + fname + ".json";
 
-		if (file.good())
+	fstream file(path);
+
+	if (file.good())
+	{
+		stringstream buffer;
+		buffer << file.rdbuf();
+		json jsondat = json::parse(buffer);
+		tileMap = jsondat;
+
+		for (json j : tileMap.layers)
 		{
-			stringstream buffer;
-			buffer << file.rdbuf();
-			json jsondat = json::parse(buffer);
-			TileMap tileMap = jsondat;
-			
+			vector<GameObject*> vec;
+
+			if (j["type"].get<string>() == "tilelayer")
+			{
+				Vector2I pos = Vector2I::zero;
+				int count = 0;
+
+				for (int i = 0; i < tileMap.width * tileMap.height; i++)
+				{
+					int tindex = j["data"][i];
+
+					if (tindex != 0)
+					{
+						for (TileSet tmp : tileMap.tileSetList)
+						{
+							if (tindex < tmp.firstgid || tindex > tmp.firstgid + tmp.tilecount)
+								continue;
+
+							GameObject *gobj = new GameObject();
+							gobj->ParseJSON(GameObject::GetPrefrabs("Engine\\TileRenderer"));
+							SpriteRenderer* SR = gobj->GetComponent<SpriteRenderer>();
+							SR->LoadBitmapData(tmp.image);
+							int tileindex = tindex - tmp.firstgid;
+
+							Vector2I srcpos(tileindex% tmp.columns, tileindex / tmp.columns);
+							SR->SetSourcePos(srcpos * tmp.tileSize);
+							SR->SetSize(tmp.tileSize);
+
+							if (tmp.tiles[tileindex].object.size() != 0)
+							{
+								Collider* cr = gobj->AddComponentOnce<Collider>();
+								cr->collisionInfo = tmp.tiles[tileindex].object[0]; //先當他只會有一個collider
+							}
+
+							gobj->transform->position = pos.GetV2();
+
+							vec.push_back(gobj);
+
+							break;
+						}
+					}
+
+					pos.x += tileMap.tileWidth;
+
+					if (i % tileMap.width == tileMap.width - 1)
+					{
+						pos.x = 0;
+						pos.y += tileMap.tileHeight;
+					}
+
+					count++;
+				}
+
+			}
+
+			tileList.push_back(vec);
+
 		}
-		else
+	}
+	else
+	{
+		string str = "ERROR : Map NOT FOUND when parse JSON :\n";
+		str += "File : " + path;
+		GAME_ASSERT(false, str.c_str());
+	}
+}
+
+void MapReader::Draw(Vector2I campos)
+{
+	for (auto v : tileList)
+	{
+		for (GameObject* gobj : v)
 		{
-			string str = "ERROR : Map NOT FOUND when parse JSON :\n";
-			str += "File : " + path;
-			GAME_ASSERT(false, str.c_str());
+			gobj->Draw(campos);
 		}
 	}
 }
@@ -47,7 +123,9 @@ void from_json(const json& j, TileMap& tm)
 {
 	tm.width = j["width"];
 	tm.height = j["height"];
-
+	tm.tileWidth = j["tilewidth"];
+	tm.tileHeight = j["tileheight"];
+	tm.layers = j["layers"];
 	for (TileSet ts : j["tilesets"])
 		tm.tileSetList.push_back(ts);
 }
@@ -56,10 +134,12 @@ void from_json(const json& j, TileSet& ts)
 {
 	string imgname = j["image"].get<string>();
 	imgname = imgname.substr(10);
+	imgname = imgname.substr(0,imgname.find_last_of("."));
 	ts.image = imgname;
 	ts.tileSize = Vector2I(j["tilewidth"], j["tileheight"]);
 	ts.firstgid = j["firstgid"];
 	ts.tilecount = j["tilecount"];
+	ts.columns = j["columns"];
 	for (int i = 0; i < ts.tilecount; i++)
 		ts.tiles.push_back(j["tiles"][to_string(i)]["objectgroup"]);
 }

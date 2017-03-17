@@ -14,6 +14,7 @@ struct TileSet
 	Vector2I tileSize;
 	int firstgid;
 	int tilecount;
+	int columns;
 	vector<Tile> tiles;
 };
 
@@ -21,7 +22,10 @@ struct TileMap
 {
 	int width;
 	int height;
+	int tileHeight;
+	int tileWidth;
 	vector<TileSet> tileSetList;
+	json layers;
 };
 
 void from_json(const json& j, TileSet& ts);
@@ -38,9 +42,11 @@ class MapReader : public GameBehaviour
 public:
 	MapReader(GameObject* gobj) : GameBehaviour(gobj) {}
 	void ParseJSON(json j) override;
+	void LoadMap(string str);
+	void Draw(Vector2I campos) override;
 
 private:
-	vector<GameObject*> tileList;
-	vector<json> tilePrefrabs;
+	vector<vector<GameObject*>> tileList;
+	TileMap tileMap;
 	
 };
