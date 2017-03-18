@@ -10,7 +10,8 @@
         "SpriteRenderer": {
             "Bitmap": {
                 "name": "player"
-            }
+            },
+            "zindex" : 100
         },
         "Collider": {
             "size": {
@@ -21,7 +22,14 @@
                 "x": 0,
                 "y": 0
             },
-            "collisionLayer": [1]
-        }
+            "collisionLayer": [
+                {
+                    "Block": true,
+                    "Layer": 1
+                }
+            ]
+        },
+        "Rigidbody": {},
+        "Tutorial": {}
     }
 }
