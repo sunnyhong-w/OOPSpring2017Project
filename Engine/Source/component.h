@@ -168,7 +168,8 @@ public:
 	void ParseJSON(json j) override;
 	void Update();
 private:
-
+    void OnCollision(Collider *tgcollider);
+    bool DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block);
 };
 
 }

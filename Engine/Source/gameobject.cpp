@@ -276,7 +276,6 @@ GameObject* Instantiate(GameObject* gobj, Vector2 position)
         gobj->GetComponent<Transform>()->position = position;
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
-    GameObject::UpdateName(gobj);
     GameObject::UpdateTag(gobj);
     GameObject::UpdateLayer(gobj);
     return gobj;

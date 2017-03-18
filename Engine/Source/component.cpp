@@ -420,6 +420,38 @@ void Rigidbody::ParseJSON(json j)
 
 }
 
+void Rigidbody::OnCollision(Collider *tgcollider)
+{
+    for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
+    {
+        if (it->second->isBehavior())
+        {
+            GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+
+            if (gb->enable)
+                gb->OnCollisionEnter(tgcollider);
+        }
+    }
+}
+
+bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block)
+{
+    bool ret = false;
+    for (auto gobj : gobjvec)
+    {
+        Collider* tgcollider = gobj->GetComponent<Collider>();
+        if (tgcollider != nullptr)
+        {
+            if (collider->BoxCollision(tgcollider, tempVelocity, block))
+            {
+                OnCollision(tgcollider);
+                ret = true;
+            }
+        }
+    }
+    return ret;
+}
+
 void Rigidbody::Update()
 {
 	Collider* collider = this->gameObject->GetComponent<Collider>();
@@ -429,28 +461,20 @@ void Rigidbody::Update()
 		{
 			auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
 
-			for (auto gobj : gobjvec)
-			{
-				Collider* tgcollider = gobj->GetComponent<Collider>();
-				if (tgcollider != nullptr)
-				{
-					if (collider->BoxCollision(tgcollider, velocity, cl.block))
-					{
-						for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
-						{
-							if (it->second->isBehavior())
-							{
-								GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+            if (cl.block)
+            {
+                //Horizontal Collision
+                Vector2 vHorizontal(velocity.x, 0);
+                if (DoCollision(collider, gobjvec, vHorizontal, cl.block))
+                    velocity.x = vHorizontal.x;
 
-								if (gb->enable)
-									gb->OnCollisionEnter(tgcollider);
-
-
-							}
-						}
-					}
-				}
-			}
+                //Vertical Collision
+                Vector2 vVertical(velocity.x, velocity.y);
+                if (DoCollision(collider, gobjvec, vVertical, cl.block))
+                    velocity.y = vVertical.y;
+            }
+            else
+                DoCollision(collider, gobjvec, velocity, cl.block);
 		}
 	}
 

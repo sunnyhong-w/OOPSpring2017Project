@@ -46,12 +46,39 @@ void GameScene::OnMove()
         {
             if ((*it)->destoryFlag)
             {
+				typedef multimap<Tag, GameObject*>::iterator iter_tag;
+				std::pair<iter_tag, iter_tag> data_t = GameObject::objectsTag.equal_range((*it)->tag);
+
+				for (iter_tag tit = data_t.first; tit != data_t.second; tit++)
+				{
+					if (tit->second == (*it))
+					{
+						GameObject::objectsTag.erase(tit);
+						break;
+					}
+				}
+
+				typedef multimap<Layer, GameObject*>::iterator iter_layer;
+				std::pair<iter_layer, iter_layer> data_l = GameObject::objectsLayer.equal_range((*it)->layer);
+
+				for (iter_layer tit = data_l.first; tit != data_l.second; tit++)
+				{
+					if (tit->second == (*it))
+					{
+						GameObject::objectsLayer.erase(tit);
+						break;
+					}
+				}
+
+				GameObject::objectsName.erase((*it)->name);
+
                 delete (*it);
 				it = GameObject::gameObjects.erase(it);
             }
             else
                 it++;
         }
+
 
 		for (auto ptr : GameObject::gameObjectsWaitingPools)
 		{
