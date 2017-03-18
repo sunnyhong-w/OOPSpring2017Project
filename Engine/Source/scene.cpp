@@ -47,7 +47,7 @@ void GameScene::OnMove()
             if ((*it)->destoryFlag)
             {
                 delete (*it);
-                GameObject::gameObjects.erase(it);
+				it = GameObject::gameObjects.erase(it);
             }
             else
                 it++;
