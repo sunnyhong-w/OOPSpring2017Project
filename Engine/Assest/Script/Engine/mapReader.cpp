@@ -82,6 +82,7 @@ void MapReader::LoadMap(string fname)
 
 							Instantiate(gobj, pos.GetV2());
 							gobj->transform->SetRenderDepth(zindex);
+							gobj->SetLayer(Layer::Tile);
 							
 							break;
 						}

@@ -240,7 +240,7 @@ Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
     this->collisionInfo.size = sz;
 }
 
-void Collider::Update()
+void Collider::OnDrawGismos()
 {
 	Vector2I w = collisionInfo.size;
 	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
@@ -281,6 +281,13 @@ void Collider::ParseJSON(json j)
     {
 		collisionInfo.size = j["size"];
     }
+
+	if (j.find("collisionLayer") != j.end())
+	{
+		for (int i : j["collisionLayer"])
+			collisionLayer.push_back((Layer)i);
+	}
+		
 }
 
 

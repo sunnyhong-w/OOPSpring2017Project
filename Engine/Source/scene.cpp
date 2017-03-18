@@ -107,6 +107,13 @@ void GameScene::OnShow()
             gobj->Draw(cameraPosition);
 
     //Draw Superve GUI thing after gameobject drawn
+
+	for (GameObject* gobj : GameObject::gameObjects)
+	{
+		Collider* collider = gobj->GetComponent<Collider>();
+		if (collider != nullptr)
+			collider->OnDrawGismos();
+	}
 }
 
 #define FindJSON(str) j.find(str) != j.end()

@@ -112,11 +112,12 @@ class Collider : public Component
 {
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
-		void Update();
+		void OnDrawGismos();
         bool PointCollision(Vector2I point);
         bool BoxCollision(Collider* box, Vector2I velocityOffset=Vector2I::zero);
         void ParseJSON(json j) override;
 		CollisionInfo collisionInfo;
+		vector<Layer> collisionLayer;
 };
 
 class Animation : public Component
