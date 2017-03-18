@@ -3,7 +3,8 @@
 		"testabc" : "test",
 		"TextStamp" : "Engine\\TextRenderer\\TextStamp",
 		"TextRenderer" :"Engine\\TextRenderer\\TextRenderer",
-        "MapReader" : "Engine\\MapReader"
+        "MapReader" : "Engine\\MapReader",
+        "Player" : "player"
 	},
 	"GameObject" : [
 		{
@@ -15,6 +16,9 @@
                     "load" : "temp"
                 }
             }
-		}
+		},
+        {
+            "include" : "Player"
+        }
 	]
 }

@@ -54,6 +54,9 @@ GameObject::GameObject(bool doNotDestoryOnChangeScene, bool isPureScript) : enab
         this->transform = this->AddComponentOnce<Transform>();
         this->isPureScript = isPureScript;
     }
+
+	this->SetTag(Tag::Untagged);
+	this->SetLayer(Layer::Default);
 }
 
 GameObject::~GameObject()
@@ -219,6 +222,8 @@ void GameObject::SetTag(Tag tag)
                 break;
             }
         }
+
+		this->tag = tag;
     }
     else
         this->tag = tag;
@@ -241,6 +246,8 @@ void GameObject::SetLayer(Layer layer)
                 break;
             }
         }
+
+		this->layer = layer;
     }
     else
         this->layer = layer;
