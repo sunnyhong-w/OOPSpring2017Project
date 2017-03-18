@@ -1,0 +1,29 @@
+{
+    "name": "Player",
+    "Component": {
+        "Transform": {
+            "position": {
+                "x": 224,
+                "y": 192
+            }
+        },
+        "SpriteRenderer": {
+            "Bitmap": {
+                "name": "player"
+            }
+        },
+        "Collider": {
+            "size": {
+                "x": 32,
+                "y": 64
+            },
+            "offset": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        "Tutorial": {
+        	
+        }
+    }
+}
