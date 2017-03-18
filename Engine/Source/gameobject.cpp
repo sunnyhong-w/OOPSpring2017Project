@@ -273,7 +273,7 @@ GameObject* Instantiate(GameObject* gobj, Vector2 position)
     return gobj;
 }
 
-GameObject* Instantiate(json jsonobj, Vector2 position)
+GameObject* InstantiateJSON(json jsonobj, Vector2 position)
 {
     bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
     bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
