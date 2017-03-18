@@ -41,6 +41,13 @@ bool Input::GetKeyUp(UINT nChar)
 {
     return (Input::lastState.find(nChar) != Input::lastState.end() && Input::nowState.find(nChar) == Input::nowState.end());
 }
+bool Input::GetKeyPressing(UINT nChar)
+{
+	if (Input::nowState.find(nChar) != Input::nowState.end())
+		return (clock() - Input::lastState[nChar]) > 0;
+	else
+		return false;
+}
 Vector2I Input::GetMousePos()
 {
     return Input::nowPos;
