@@ -91,10 +91,6 @@ void Transform::ParseJSON(json j)
         GameObject::UpdateRenderOrder(this->gameObject);
 }
 
-//type_index ti = ;
-//ComponentFactory::RegClass<Transform>(type_index(typeid(Transform)).name);
-//ComponentFactory::RegClass<Transform>();
-
 //////////////////////////////////////////////////////////////////
 // SpriteRenderer實作
 //////////////////////////////////////////////////////////////////
@@ -244,17 +240,34 @@ Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
     this->collisionInfo.size = sz;
 }
 
+void Collider::Update()
+{
+	Vector2I w = collisionInfo.size;
+	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
+	Vector2 SpriteOffset = SR != nullptr ? SR->GetAnchorPoint().GetV2() : Vector2::zero;
+	Vector2 pos = transform->position + collisionInfo.offset.GetV2()- SpriteOffset;
+	game_framework::CDDraw::DrawRect(pos.GetV2I(), w, RGB(0, 255, 0));
+}
+
 bool Collider::PointCollision(Vector2I point)
 {
     GAME_ASSERT(transform != nullptr, (string("transform not found. #[Engine]Collision::PointCollision | Object : ") + gameObject->GetName()).c_str());
     return point >= (transform->position.GetV2I() + collisionInfo.offset) && point <= (transform->position.GetV2I() + collisionInfo.offset + collisionInfo.size);
 }
 
-bool Collider::BoxCollision(Collider* box)
+bool Collider::BoxCollision(Collider* box, Vector2I velocityOffset)
 {
     Vector2 aw = collisionInfo.size.GetV2() / 2, bw = box->collisionInfo.size.GetV2() / 2;
-    Vector2 l = ((transform->position + collisionInfo.offset.GetV2() + aw) - (box->transform->position + box->collisionInfo.offset.GetV2() + bw)).abs();
-    return	(l == (aw + bw)) || (l < (aw + bw));
+	SpriteRenderer *aSR = gameObject->GetComponent<SpriteRenderer>(), *bSR = box->gameObject->GetComponent<SpriteRenderer>();
+	Vector2 aSpriteOffset = aSR != nullptr ? aSR->GetAnchorPoint().GetV2() : Vector2::zero;
+	Vector2 bSpriteOffset = bSR != nullptr ? bSR->GetAnchorPoint().GetV2() : Vector2::zero;
+	Vector2 apos = transform->position + collisionInfo.offset.GetV2() + velocityOffset.GetV2() - aSpriteOffset;
+	Vector2 bpos = box->transform->position + box->collisionInfo.offset.GetV2() - bSpriteOffset;
+	Vector2 amid = apos + aw;
+	Vector2 bmid = bpos + bw;
+	Vector2 w = aw + bw;
+    Vector2 l = (amid - bmid).abs();
+    return	l <= w;
 }
 
 void Collider::ParseJSON(json j)
@@ -384,6 +397,19 @@ void AnimationController::Update()
 void AnimationController::JumpState(string state)
 {
 	jumpState = state;
+}
+
+void Rigidbody::ParseJSON(json j)
+{
+
+}
+
+void Rigidbody::Update()
+{
+
+
+
+	this->transform->position = this->transform->position + velocity * Time::deltaTime;
 }
 
 }

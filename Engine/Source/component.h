@@ -112,11 +112,11 @@ class Collider : public Component
 {
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
+		void Update();
         bool PointCollision(Vector2I point);
-        bool BoxCollision(Collider* box);
+        bool BoxCollision(Collider* box, Vector2I velocityOffset=Vector2I::zero);
         void ParseJSON(json j) override;
 		CollisionInfo collisionInfo;
-
 };
 
 class Animation : public Component
@@ -148,6 +148,16 @@ private:
 	string jumpState = "";
 	json data;
 	Animation* animation;
+};
+
+class Rigidbody : public Component
+{
+public:
+	Vector2 velocity;
+	void ParseJSON(json j) override;
+	void Update();
+private:
+
 };
 
 }
