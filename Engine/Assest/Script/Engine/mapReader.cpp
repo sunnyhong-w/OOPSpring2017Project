@@ -9,17 +9,7 @@ using namespace game_engine;
 
 MapReader::~MapReader()
 {
-	for (auto v : tileList)
-	{
-		for (GameObject* gobj : v)
-		{
-			delete gobj;
-		}
 
-		v.clear();
-	}
-
-	tileList.clear();
 }
 
 void MapReader::ParseJSON(json j)
@@ -36,17 +26,11 @@ void MapReader::ParseJSON(json j)
 
 void MapReader::LoadMap(string fname)
 {
-	for (auto v : tileList)
+	auto objlist = GameObject::findGameObjectsByTag(Tag::Tile);
+	for (GameObject* gobj : objlist)
 	{
-		for (GameObject* gobj : v)
-		{
-			delete gobj;
-		}
-
-		v.clear();
+		Destory(*gobj);
 	}
-
-	tileList.clear();
 
 	//-----
 
@@ -61,10 +45,9 @@ void MapReader::LoadMap(string fname)
 		json jsondat = json::parse(buffer);
 		tileMap = jsondat;
 
+		int zindex = 0;
 		for (json j : tileMap.layers)
 		{
-			vector<GameObject*> vec;
-
 			if (j["type"].get<string>() == "tilelayer")
 			{
 				Vector2I pos = Vector2I::zero;
@@ -97,10 +80,10 @@ void MapReader::LoadMap(string fname)
 								cr->collisionInfo = tmp.tiles[tileindex].object[0]; //先當他只會有一個collider
 							}
 
-							gobj->transform->position = pos.GetV2();
-
-							vec.push_back(gobj);
-
+							Instantiate(gobj, pos.GetV2());
+							gobj->transform->SetRenderDepth(zindex);
+							gobj->SetLayer(Layer::Tile);
+							
 							break;
 						}
 					}
@@ -118,8 +101,7 @@ void MapReader::LoadMap(string fname)
 
 			}
 
-			tileList.push_back(vec);
-
+			zindex++;
 		}
 	}
 	else
@@ -134,13 +116,7 @@ void MapReader::LoadMap(string fname)
 
 void MapReader::Draw(Vector2I campos)
 {
-	for (auto v : tileList)
-	{
-		for (GameObject* gobj : v)
-		{
-			gobj->Draw(campos);
-		}
-	}
+	
 }
 
 void MapReader::Update()

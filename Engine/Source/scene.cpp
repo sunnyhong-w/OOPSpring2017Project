@@ -47,13 +47,26 @@ void GameScene::OnMove()
             if ((*it)->destoryFlag)
             {
                 delete (*it);
-                GameObject::gameObjects.erase(it);
+				it = GameObject::gameObjects.erase(it);
             }
             else
                 it++;
         }
 
+		for (auto ptr : GameObject::gameObjectsWaitingPools)
+		{
+			GameObject::Insert(ptr);
+		}
+		GameObject::gameObjectsWaitingPools.clear();
+
         //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
+
+		for (GameObject* gobj : GameObject::gameObjects)
+		{
+			Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
+			if (rigidbody != nullptr)
+				rigidbody->Update();
+		}
 
         //Windows File Transmission
         while (TDPQueue.size() != 0)
@@ -101,6 +114,13 @@ void GameScene::OnShow()
             gobj->Draw(cameraPosition);
 
     //Draw Superve GUI thing after gameobject drawn
+
+	for (GameObject* gobj : GameObject::gameObjects)
+	{
+		Collider* collider = gobj->GetComponent<Collider>();
+		if (collider != nullptr)
+			collider->OnDrawGismos();
+	}
 }
 
 #define FindJSON(str) j.find(str) != j.end()
@@ -131,7 +151,13 @@ void GameScene::ParseJSON(json j)
 
             if (prefrab != nullptr)
             {
-                GameObject* gobj = Instantiate(prefrab);
+				bool doNOTDestoryOnChangeScene = prefrab.find("doNOTDestoryOnChangeScene") != prefrab.end() ? prefrab["doNOTDestoryOnChangeScene"] : false;
+				bool isPureScript = prefrab.find("isPureScript") != prefrab.end() ? prefrab["isPureScript"] : false;
+                GameObject* gobj = InstantiateJSON(prefrab);
+
+				gobj->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
+				gobj->isPureScript = isPureScript;
+
                 gobj->ParseJSON(jsonobj);
             }
             else
@@ -161,8 +187,6 @@ void GameScene::ReadPrefrab(string filename, string includename)
 		stringstream buffer;
 		buffer << file.rdbuf();
 		json jsonobj = json::parse(buffer);
-		bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
-		bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
 		GameObject::InsertPrefrabs(includename, jsonobj);
 
 		if (jsonobj.find("IncludePrefrab") != jsonobj.end())

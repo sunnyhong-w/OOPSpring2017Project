@@ -1,20 +1,22 @@
 {
-	"IncludePrefrab" : {
-		"testabc" : "test",
-		"TextStamp" : "Engine\\TextRenderer\\TextStamp",
-		"TextRenderer" :"Engine\\TextRenderer\\TextRenderer",
-        "MapReader" : "Engine\\MapReader"
-	},
-	"GameObject" : [
-		{
-			"include" : "MapReader",
-            "Component" : 
-            {
-                "MapReader" : 
-                {
-                    "load" : "temp"
+    "IncludePrefrab": {
+        "testabc": "test",
+        "TextStamp": "Engine\\TextRenderer\\TextStamp",
+        "TextRenderer": "Engine\\TextRenderer\\TextRenderer",
+        "MapReader": "Engine\\MapReader",
+        "Player": "player"
+    },
+    "GameObject": [
+        {
+            "include": "MapReader",
+            "Component": {
+                "MapReader": {
+                    "load": "temp"
                 }
             }
-		}
-	]
+        },
+        {
+            "include": "Player"
+        }
+    ]
 }

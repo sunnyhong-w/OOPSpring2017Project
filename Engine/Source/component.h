@@ -108,15 +108,25 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         static map<string, unsigned int> fileInfo;
 };
 
+struct CollisionLayer
+{
+	CollisionLayer();
+	Layer layer;
+	bool block;
+};
+
+void from_json(const json &j, CollisionLayer &cl);
+
 class Collider : public Component
 {
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
+		void OnDrawGismos();
         bool PointCollision(Vector2I point);
-        bool BoxCollision(Collider* box);
+		bool BoxCollision(Collider* box, Vector2 &velocityOffse, bool block = false);
         void ParseJSON(json j) override;
 		CollisionInfo collisionInfo;
-
+		vector<CollisionLayer> collisionLayer;
 };
 
 class Animation : public Component
@@ -148,6 +158,17 @@ private:
 	string jumpState = "";
 	json data;
 	Animation* animation;
+};
+
+class Rigidbody : public Component
+{
+public:
+	Rigidbody(GameObject* gobj) : Component(gobj) {};
+	Vector2 velocity;
+	void ParseJSON(json j) override;
+	void Update();
+private:
+
 };
 
 }
