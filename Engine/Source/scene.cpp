@@ -70,6 +70,8 @@ void GameScene::OnMove()
 					}
 				}
 
+				GameObject::objectsName.erase((*it)->name);
+
                 delete (*it);
 				it = GameObject::gameObjects.erase(it);
             }
