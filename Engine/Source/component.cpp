@@ -423,18 +423,18 @@ void Rigidbody::ParseJSON(json j)
 void Rigidbody::Update()
 {
 	Collider* collider = this->gameObject->GetComponent<Collider>();
-	if (collider == nullptr)
+	if (collider != nullptr)
 	{
-		for (Layer l : collider->collisionLayer)
+		for (CollisionLayer cl : collider->collisionLayer)
 		{
-			auto gobjvec = GameObject::findGameObjectsByLayer(l);
+			auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
 
 			for (auto gobj : gobjvec)
 			{
 				Collider* tgcollider = gobj->GetComponent<Collider>();
 				if (tgcollider != nullptr)
 				{
-					if (collider->BoxCollision(tgcollider, velocity))
+					if (collider->BoxCollision(tgcollider, velocity, cl.block))
 					{
 						for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
 						{

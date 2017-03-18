@@ -61,6 +61,13 @@ void GameScene::OnMove()
 
         //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
 
+		for (GameObject* gobj : GameObject::gameObjects)
+		{
+			Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
+			if (rigidbody != nullptr)
+				rigidbody->Update();
+		}
+
         //Windows File Transmission
         while (TDPQueue.size() != 0)
         {
