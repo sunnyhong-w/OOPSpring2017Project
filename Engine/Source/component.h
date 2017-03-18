@@ -95,29 +95,38 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void UnsafeSetSurfaceID(int SID);
         void Reset();
         void SetAnchorRaito(Vector2 pos);
-        void SetDeltaPixel(Vector2I dp);
+        void SetOffset(Vector2I offset);
         Vector2I GetAnchorPoint();
 
     private:
         Vector2I size;
         Vector2I srcpos;
-        Vector2I delta;
+        Vector2I offset;
         Vector2 anchorRaito;
 
         bool cutSrc = false;
         static map<string, unsigned int> fileInfo;
 };
 
+struct CollisionLayer
+{
+	CollisionLayer();
+	Layer layer;
+	bool block;
+};
+
+void from_json(const json &j, CollisionLayer &cl);
+
 class Collider : public Component
 {
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
+		void OnDrawGismos();
         bool PointCollision(Vector2I point);
-        bool BoxCollision(Collider* box);
+		bool BoxCollision(Collider* box, Vector2 &velocityOffse, bool block = false);
         void ParseJSON(json j) override;
-        Vector2I deltaPoint;
-        Vector2I size;
-
+		CollisionInfo collisionInfo;
+		vector<CollisionLayer> collisionLayer;
 };
 
 class Animation : public Component
@@ -149,6 +158,17 @@ private:
 	string jumpState = "";
 	json data;
 	Animation* animation;
+};
+
+class Rigidbody : public Component
+{
+public:
+	Rigidbody(GameObject* gobj) : Component(gobj) {};
+	Vector2 velocity;
+	void ParseJSON(json j) override;
+	void Update();
+private:
+
 };
 
 }

@@ -650,6 +650,10 @@ bool CGame::OnIdle()  // 修改功能不要修改OnIdle()，而應修改OnMove()
 
 void CGame::OnInit()	// OnInit() 只在程式一開始時執行一次
 {
+	RECT rect;
+	AfxGetMainWnd()->GetWindowRect(&rect);
+	game_framework::CGame::Instance()->windowPosition = game_engine::Vector2I(rect.left, rect.top);
+
     //
     // 啟動亂數
     //
@@ -1199,6 +1203,25 @@ bool CDDraw::CreateSurfaceWindowed()
     lpClipperBack->Release();
     BltBackColor(RGB(0, 0, 0));
     return true;
+}
+
+void CDDraw::DrawLine(game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color)
+{
+	CDC *pDC = game_framework::CDDraw::GetBackCDC();
+	CPen pen;
+	pen.CreatePen(0, 1, color);
+	pDC->SelectObject(pen);
+	pDC->MoveTo(from.x, from.y);
+	pDC->LineTo(to.x, to.y);
+	game_framework::CDDraw::ReleaseBackCDC();
+}
+
+void CDDraw::DrawRect(game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color)
+{
+	CDDraw::DrawLine(pos, pos + Vector2I::right * size, color);
+	CDDraw::DrawLine(pos, pos + Vector2I::up * size, color);
+	CDDraw::DrawLine(pos + Vector2I::right * size + Vector2I::left, pos + size + Vector2I::left, color);
+	CDDraw::DrawLine(pos + Vector2I::up * size + Vector2I::down, pos + size + Vector2I::down, color);
 }
 
 void CDDraw::GetClientRect(CRect& r)

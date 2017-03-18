@@ -26,16 +26,17 @@ class GameObject;
 //一些Public的最高權限Function
 void Destory(GameObject& gobj);
 GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision = Vector2::null);
-GameObject* Instantiate(json prefrabJSON, Vector2 posision = Vector2::null);
+GameObject* InstantiateJSON(json prefrabJSON, Vector2 posision = Vector2::null);
 
 class GameObject
 {
         friend void Destory(GameObject& gobj);
         friend GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision);
-        friend GameObject* Instantiate(json jsonobj, Vector2 posision);
+        friend GameObject* InstantiateJSON(json jsonobj, Vector2 posision);
         friend class GameScene;
         friend class Transform;
         friend class game_framework::CGame;
+		friend class Rigidbody;
     public:
         GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();
@@ -97,6 +98,7 @@ class GameObject
         static std::map<std::string, GameObject*> objectsName;
         static std::multimap<Tag, GameObject*> objectsTag;
         static std::multimap<Layer, GameObject*> objectsLayer;
+		static std::vector<GameObject*> gameObjectsWaitingPools;
 
         //GameObject
         typedef std::multimap<std::type_index, Component*> ComponentData;

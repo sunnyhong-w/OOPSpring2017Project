@@ -1,0 +1,9 @@
+{
+	"IncludePrefrab" : "Engine\\TileRenderer",
+    "name": "MapReader",
+    "isPureScript": true,
+    "renderByBehavior" : true,
+    "Component": {
+        "MapReader": {}
+    }
+}

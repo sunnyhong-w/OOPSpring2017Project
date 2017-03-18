@@ -31,12 +31,14 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(Transform)
     RegisterComponent(SpriteRenderer)
     RegisterComponent(Collider)
+	RegisterComponent(Rigidbody)
     RegisterComponent(Animation)
 	RegisterComponent(AnimationController)
     //Register Script
     RegisterComponent(Tutorial)
     RegisterComponent(TextStamp)
     RegisterComponent(TextRenderer)
+	RegisterComponent(MapReader)
     else return nullptr;
 }
 
@@ -53,6 +55,9 @@ GameObject::GameObject(bool doNotDestoryOnChangeScene, bool isPureScript) : enab
         this->transform = this->AddComponentOnce<Transform>();
         this->isPureScript = isPureScript;
     }
+
+	this->SetTag(Tag::Untagged);
+	this->SetLayer(Layer::Default);
 }
 
 GameObject::~GameObject()
@@ -218,6 +223,8 @@ void GameObject::SetTag(Tag tag)
                 break;
             }
         }
+
+		this->tag = tag;
     }
     else
         this->tag = tag;
@@ -240,6 +247,8 @@ void GameObject::SetLayer(Layer layer)
                 break;
             }
         }
+
+		this->layer = layer;
     }
     else
         this->layer = layer;
@@ -250,6 +259,7 @@ void GameObject::SetLayer(Layer layer)
 /////////////////////////////////////////////////////////////////////////
 
 vector<GameObject*> GameObject::gameObjects;
+vector<GameObject*> GameObject::gameObjectsWaitingPools;
 map<string, json> GameObject::prefrabsData;
 map<string, GameObject*> GameObject::objectsName;
 multimap<Tag, GameObject*> GameObject::objectsTag;
@@ -265,14 +275,14 @@ GameObject* Instantiate(GameObject* gobj, Vector2 position)
     if (!position.isNull())
         gobj->GetComponent<Transform>()->position = position;
 
-    GameObject::Insert(gobj);
+	GameObject::gameObjectsWaitingPools.push_back(gobj);
     GameObject::UpdateName(gobj);
     GameObject::UpdateTag(gobj);
     GameObject::UpdateLayer(gobj);
     return gobj;
 }
 
-GameObject* Instantiate(json jsonobj, Vector2 position)
+GameObject* InstantiateJSON(json jsonobj, Vector2 position)
 {
     bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
     bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
@@ -282,30 +292,33 @@ GameObject* Instantiate(json jsonobj, Vector2 position)
     if (!position.isNull())
         gobj->GetComponent<Transform>()->position = position;
 
-    GameObject::Insert(gobj);
-
-    if (jsonobj.find("name") == jsonobj.end())
-        GameObject::UpdateName(gobj);
-
-    if (jsonobj.find("tag") == jsonobj.end())
-        GameObject::UpdateTag(gobj);
-
-    if (jsonobj.find("layer") == jsonobj.end())
-        GameObject::UpdateLayer(gobj);
-
+	GameObject::gameObjectsWaitingPools.push_back(gobj);
     return gobj;
 }
 
 void GameObject::Insert(GameObject* gobj)
 {
     //Magic : Do an instertion sort with binary search
-    int high = GameObject::gameObjects.size() - 1, low = 0, mid = 0;
+	int size = GameObject::gameObjects.size();
+	int high = size - 1, low = 0, mid = 0;
+
+	if (gobj->isPureScript || size == 0)
+	{
+		GameObject::gameObjects.insert(GameObject::gameObjects.begin(), gobj);
+		return;
+	}
 
     //Do an binary search so we know where should the object be
     while (low <= high)
     {
         mid = (high + low) / 2;
 
+		while (mid < size && GameObject::gameObjects[mid]->isPureScript)
+			mid += 1;
+
+		if (mid == size)
+			break;
+			
         if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
             high = mid - 1;
         else if (GameObject::gameObjects[mid]->transform->GetZCode() < gobj->transform->GetZCode())
@@ -363,11 +376,25 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
     //Do an binary search so we know where could the object be,
     //which can save a lot of time when size is large.
     //when we found the index, go front and fo backward unitl zcode is different
-    int high = GameObject::gameObjects.size() - 1, low = 0, mid = 0;
+	if (gobj->isPureScript || GameObject::gameObjects.size() == 0)
+		return;
+	
+	int size = GameObject::gameObjects.size();
+    int high = size - 1, low = 0, mid = 0;
 
     while (low <= high)
     {
         mid = (high + low) / 2;
+
+		while (mid < size && GameObject::gameObjects[mid]->isPureScript)
+			mid += 1;
+
+		if (mid == size)
+		{
+			mid = -1;
+			break;
+		}
+
 
         if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
             high = mid - 1;
@@ -377,28 +404,39 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
             break;
     }
 
-    int zcode = GameObject::gameObjects[mid]->transform->GetZCode();
+	int zcode = 0;
+
+	if (mid != -1)
+		zcode = GameObject::gameObjects[mid]->transform->GetZCode();
+	else
+		return;
 
     //backward
-    for (int i = mid; i < (int)GameObject::gameObjects.size() && GameObject::gameObjects[i]->transform->GetZCode() == zcode; i++)
-    {
-        if (GameObject::gameObjects[i] == gobj)
-        {
-            GameObject::gameObjects.erase(GameObject::gameObjects.begin() + i);
-            GameObject::Insert(gobj);
-            return;
-        }
-    }
+	for (int i = mid; i < size; i++)
+	{
+		if (!GameObject::gameObjects[i]->isPureScript && GameObject::gameObjects[i]->transform->GetZCode() == zcode)
+		{
+			if (GameObject::gameObjects[i] == gobj)
+			{
+				GameObject::gameObjects.erase(GameObject::gameObjects.begin() + i);
+				GameObject::Insert(gobj);
+				return;
+			}
+		}
+	}
 
     //foward
-    for (int i = mid; i >= 0 && GameObject::gameObjects[i]->transform->GetZCode() == zcode; i--)
+    for (int i = mid; i >= 0; i--)
     {
-        if (GameObject::gameObjects[i] == gobj)
-        {
-            GameObject::gameObjects.erase(GameObject::gameObjects.begin() + i);
-            GameObject::Insert(gobj);
-            return;
-        }
+		if (!GameObject::gameObjects[i]->isPureScript && GameObject::gameObjects[i]->transform->GetZCode() == zcode)
+		{
+			if (GameObject::gameObjects[i] == gobj)
+			{
+				GameObject::gameObjects.erase(GameObject::gameObjects.begin() + i);
+				GameObject::Insert(gobj);
+				return;
+			}
+		}
     }
 }
 

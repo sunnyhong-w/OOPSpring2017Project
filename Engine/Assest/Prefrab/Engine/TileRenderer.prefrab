@@ -1,0 +1,7 @@
+{
+    "name": "TileRenderer",
+    "tag": 1,
+    "Component": {
+        "SpriteRenderer": {}
+    }
+}

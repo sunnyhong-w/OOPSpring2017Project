@@ -41,7 +41,7 @@ private:
 	CMenu *pMenu;
     bool waitThread;
     std::thread subthread;
-    void OnMoving();
+    void OnMovingReflesh();
 	//CRect WindowRect;
 // Operations
 public:
@@ -78,6 +78,7 @@ protected:
     afx_msg BOOL OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct);
     afx_msg void OnEnterSizeMove();
     afx_msg void OnExitSizeMove();
+	afx_msg void OnMoving(UINT, LPRECT);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

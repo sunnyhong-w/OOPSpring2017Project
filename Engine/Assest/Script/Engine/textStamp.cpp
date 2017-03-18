@@ -40,13 +40,13 @@ void TextStamp::Setfont(UINT surfaceID, Vector2I size, Vector2I bitmapPos)
 void TextStamp::shake()
 {
     int temp = Easing::backForth(dp, 3);
-    SR->SetDeltaPixel(Vector2I(0, Easing::easeFT(Easing::easeInOutSine, temp, -2, 2, 3)));
+    SR->SetOffset(Vector2I(0, Easing::easeFT(Easing::easeInOutSine, temp, -2, 2, 3)));
     //this->transform->position = this->transform->position + dp.GetV2();
 }
 
 void TextStamp::randomShake()
 {
-    SR->SetDeltaPixel(Vector2I(rand() % 5 - 2, rand() % 5 - 2));
+    SR->SetOffset(Vector2I(rand() % 5 - 2, rand() % 5 - 2));
 }
 
 void TextStamp::setPosition(Vector2 stampPos)

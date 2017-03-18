@@ -47,13 +47,26 @@ void GameScene::OnMove()
             if ((*it)->destoryFlag)
             {
                 delete (*it);
-                GameObject::gameObjects.erase(it);
+				it = GameObject::gameObjects.erase(it);
             }
             else
                 it++;
         }
 
+		for (auto ptr : GameObject::gameObjectsWaitingPools)
+		{
+			GameObject::Insert(ptr);
+		}
+		GameObject::gameObjectsWaitingPools.clear();
+
         //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
+
+		for (GameObject* gobj : GameObject::gameObjects)
+		{
+			Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
+			if (rigidbody != nullptr)
+				rigidbody->Update();
+		}
 
         //Windows File Transmission
         while (TDPQueue.size() != 0)
@@ -101,6 +114,13 @@ void GameScene::OnShow()
             gobj->Draw(cameraPosition);
 
     //Draw Superve GUI thing after gameobject drawn
+
+	for (GameObject* gobj : GameObject::gameObjects)
+	{
+		Collider* collider = gobj->GetComponent<Collider>();
+		if (collider != nullptr)
+			collider->OnDrawGismos();
+	}
 }
 
 #define FindJSON(str) j.find(str) != j.end()
@@ -111,35 +131,12 @@ void GameScene::ParseJSON(json j)
 
     if (FindJSON("IncludePrefrab"))
     {
-        string PATH = R"(.\Assest\Prefrab\)";
         json jdat = j["IncludePrefrab"];
 
         for (json::iterator it = j["IncludePrefrab"].begin(); it != j["IncludePrefrab"].end(); it++)
         {
-            prefrabmap[it.key()] = it.value().get<string>();
-            string pfname = it.value();
-            
-            ifstream file;
-            file.open(PATH + it.value().get<string>() + ".prefrab");
-
-            if (file.good())
-            {
-                stringstream buffer;
-                buffer << file.rdbuf();
-                json jsonobj = json::parse(buffer);
-                bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
-                bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
-                GameObject::InsertPrefrabs(pfname, jsonobj);
-            }
-            else
-            {
-                string str = "ERROR : Prefrab NOT FOUND when parse Scene JSON :\n";
-                str += "Scene : " + filename + "\n";
-                str += "Prefrab : " + pfname + "NOT FOUND";
-                GAME_ASSERT(false, str.c_str());
-            }
-
-            file.close();
+            prefrabmap[it.key()] = it.value().get<string>();            
+			GameScene::ReadPrefrab(filename ,it.value());
         }
     }
 
@@ -154,7 +151,13 @@ void GameScene::ParseJSON(json j)
 
             if (prefrab != nullptr)
             {
-                GameObject* gobj = Instantiate(prefrab);
+				bool doNOTDestoryOnChangeScene = prefrab.find("doNOTDestoryOnChangeScene") != prefrab.end() ? prefrab["doNOTDestoryOnChangeScene"] : false;
+				bool isPureScript = prefrab.find("isPureScript") != prefrab.end() ? prefrab["isPureScript"] : false;
+                GameObject* gobj = InstantiateJSON(prefrab);
+
+				gobj->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
+				gobj->isPureScript = isPureScript;
+
                 gobj->ParseJSON(jsonobj);
             }
             else
@@ -171,6 +174,38 @@ void GameScene::ParseJSON(json j)
 void GameScene::LoadScene(string filename)
 {
     this->loadname = filename;
+}
+
+void GameScene::ReadPrefrab(string filename, string includename)
+{
+	string PATH = R"(.\Assest\Prefrab\)";
+	ifstream file;
+	file.open(PATH + includename + ".prefrab");
+
+	if (file.good())
+	{
+		stringstream buffer;
+		buffer << file.rdbuf();
+		json jsonobj = json::parse(buffer);
+		GameObject::InsertPrefrabs(includename, jsonobj);
+
+		if (jsonobj.find("IncludePrefrab") != jsonobj.end())
+		{
+			for (json j : jsonobj["IncludePrefrab"])
+			{
+				ReadPrefrab(includename, j.get<string>());
+			}
+		}
+	}
+	else
+	{
+		string str = "ERROR : Prefrab NOT FOUND when parse JSON :\n";
+		str += "File : " + filename + "\n";
+		str += "Prefrab : " + includename + "NOT FOUND";
+		GAME_ASSERT(false, str.c_str());
+	}
+
+	file.close();
 }
 
 void GameScene::LoadSceneData()

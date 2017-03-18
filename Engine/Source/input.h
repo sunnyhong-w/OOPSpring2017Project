@@ -16,6 +16,7 @@ class Input
         static bool GetKeyClick(UINT nChar);
         static bool GetKeyDown(UINT nChar);
         static bool GetKeyUp(UINT nChar);
+		static bool GetKeyPressing(UINT nChar);
         static Vector2I GetMousePos();
 
     private:

@@ -57,6 +57,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_WM_COPYDATA()
     ON_WM_ENTERSIZEMOVE()
     ON_WM_EXITSIZEMOVE()
+	ON_WM_MOVING()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -142,7 +143,7 @@ BOOL CMainFrame::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
     return CFrameWnd::OnCopyData(pWnd, pCopyDataStruct);
 }
 
-void CMainFrame::OnMoving()
+void CMainFrame::OnMovingReflesh()
 {
     while(waitThread)
         if (game_framework::CGame::Instance()->GetState() != nullptr)
@@ -152,7 +153,7 @@ void CMainFrame::OnMoving()
 void CMainFrame::OnEnterSizeMove()
 {
     waitThread = true;
-    subthread = std::thread(&CMainFrame::OnMoving, this);
+    subthread = std::thread(&CMainFrame::OnMovingReflesh, this);
 
 }
 
@@ -160,6 +161,11 @@ void CMainFrame::OnExitSizeMove()
 {
     waitThread = false;
     subthread.join();
+}
+
+void CMainFrame::OnMoving(UINT nSide, LPRECT lpRect)
+{
+	game_framework::CGame::Instance()->windowPosition = game_engine::Vector2I(lpRect->left, lpRect->top);
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)

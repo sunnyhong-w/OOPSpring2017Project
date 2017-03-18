@@ -13,6 +13,7 @@ HISTORY :
 #include"component.h"
 #include"gameobject.h"
 #include"enginelib.h"
+#include "gamebehavior.h"
 #include<fstream>
 
 namespace game_engine
@@ -91,10 +92,6 @@ void Transform::ParseJSON(json j)
         GameObject::UpdateRenderOrder(this->gameObject);
 }
 
-//type_index ti = ;
-//ComponentFactory::RegClass<Transform>(type_index(typeid(Transform)).name);
-//ComponentFactory::RegClass<Transform>();
-
 //////////////////////////////////////////////////////////////////
 // SpriteRenderer實作
 //////////////////////////////////////////////////////////////////
@@ -104,7 +101,7 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
     srcpos = Vector2I::null;
     size = Vector2I::null;
-    delta = Vector2I::zero;
+    offset = Vector2I::zero;
     anchorRaito = Vector2::zero;
 }
 
@@ -141,7 +138,7 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(transform->position.round().GetV2I() - cameraPos - GetAnchorPoint() + delta, transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(transform->position.round().GetV2I() - cameraPos - GetAnchorPoint() + offset, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -222,9 +219,9 @@ void SpriteRenderer::SetAnchorRaito(Vector2 pos)
     this->anchorRaito = pos;
 }
 
-void SpriteRenderer::SetDeltaPixel(Vector2I dp)
+void SpriteRenderer::SetOffset(Vector2I dp)
 {
-    this->delta = dp;
+    this->offset = offset;
 }
 
 Vector2I SpriteRenderer::GetAnchorPoint()
@@ -240,34 +237,66 @@ Vector2I SpriteRenderer::GetAnchorPoint()
 //////////////////////////////////////////////////////////////////
 Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
 {
-    this->deltaPoint = dP;
-    this->size = sz;
+    this->collisionInfo.offset = dP;
+    this->collisionInfo.size = sz;
+}
+
+void Collider::OnDrawGismos()
+{
+	Vector2I w = collisionInfo.size;
+	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
+	Vector2 SpriteOffset = SR != nullptr ? SR->GetAnchorPoint().GetV2() : Vector2::zero;
+	Vector2 pos = transform->position + collisionInfo.offset.GetV2()- SpriteOffset;
+	game_framework::CDDraw::DrawRect(pos.GetV2I(), w, RGB(0, 255, 0));
 }
 
 bool Collider::PointCollision(Vector2I point)
 {
     GAME_ASSERT(transform != nullptr, (string("transform not found. #[Engine]Collision::PointCollision | Object : ") + gameObject->GetName()).c_str());
-    return point >= (transform->position.GetV2I() + deltaPoint) && point <= (transform->position.GetV2I() + deltaPoint + size);
+    return point >= (transform->position.GetV2I() + collisionInfo.offset) && point <= (transform->position.GetV2I() + collisionInfo.offset + collisionInfo.size);
 }
 
-bool Collider::BoxCollision(Collider* box)
+bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
 {
-    Vector2 aw = size.GetV2() / 2, bw = box->size.GetV2() / 2;
-    Vector2 l = ((transform->position + deltaPoint.GetV2() + aw) - (box->transform->position + box->deltaPoint.GetV2() + bw)).abs();
-    return	(l == (aw + bw)) || (l < (aw + bw));
+    Vector2 aw = (collisionInfo.size.GetV2() - Vector2::one) / 2, bw = (box->collisionInfo.size.GetV2() - Vector2::one) / 2;
+	SpriteRenderer *aSR = gameObject->GetComponent<SpriteRenderer>(), *bSR = box->gameObject->GetComponent<SpriteRenderer>();
+	Vector2 aSpriteOffset = aSR != nullptr ? aSR->GetAnchorPoint().GetV2() : Vector2::zero;
+	Vector2 bSpriteOffset = bSR != nullptr ? bSR->GetAnchorPoint().GetV2() : Vector2::zero;
+	Vector2 apos = transform->position + collisionInfo.offset.GetV2() + velocityOffset - aSpriteOffset;
+	Vector2 bpos = box->transform->position + box->collisionInfo.offset.GetV2() - bSpriteOffset;
+	Vector2 amid = apos + aw;
+	Vector2 bmid = bpos + bw;
+	Vector2 w = aw + bw;
+    Vector2 l = (amid - bmid).abs();
+	bool ret = l <= w;
+
+	if (ret && block)
+	{
+		Vector2 collideLength = w - l +Vector2::one;
+		velocityOffset = velocityOffset - collideLength * velocityOffset.side();
+	}
+
+	return ret;
 }
 
 void Collider::ParseJSON(json j)
 {
-    if (j.find("deltaPoint") != j.end())
+    if (j.find("offset") != j.end())
     {
-        deltaPoint = j["deltaPoint"];
+		collisionInfo.offset = j["offset"];
     }
 
     if (j.find("size") != j.end())
     {
-        size = j["size"];
+		collisionInfo.size = j["size"];
     }
+
+	if (j.find("collisionLayer") != j.end())
+	{
+		for (CollisionLayer cl : j["collisionLayer"])
+			collisionLayer.push_back(cl);
+	}
+		
 }
 
 
@@ -384,6 +413,63 @@ void AnimationController::Update()
 void AnimationController::JumpState(string state)
 {
 	jumpState = state;
+}
+
+void Rigidbody::ParseJSON(json j)
+{
+
+}
+
+void Rigidbody::Update()
+{
+	Collider* collider = this->gameObject->GetComponent<Collider>();
+	if (collider != nullptr)
+	{
+		for (CollisionLayer cl : collider->collisionLayer)
+		{
+			auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
+
+			for (auto gobj : gobjvec)
+			{
+				Collider* tgcollider = gobj->GetComponent<Collider>();
+				if (tgcollider != nullptr)
+				{
+					if (collider->BoxCollision(tgcollider, velocity, cl.block))
+					{
+						for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
+						{
+							if (it->second->isBehavior())
+							{
+								GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+
+								if (gb->enable)
+									gb->OnCollisionEnter(tgcollider);
+
+
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	this->transform->position = this->transform->position + velocity;
+}
+
+CollisionLayer::CollisionLayer()
+{
+	layer = Layer::Default;
+	block = false;
+}
+
+void from_json(const json & j, CollisionLayer & cl)
+{
+	if (j.find("Block") != j.end())
+		cl.block = j["Block"];
+
+	if (j.find("Layer") != j.end())
+		cl.layer = (Layer)j["Layer"];
 }
 
 }

@@ -153,6 +153,23 @@ Vector2 Vector2::round()
 	return Vector2(roundf(x), roundf(y));
 }
 
+Vector2 Vector2::side()
+{
+	Vector2 ret = Vector2::zero;
+
+	if (x > 0)
+		ret.x = 1;
+	else if(x < 0)
+		ret.x = -1;
+	
+	if (y > 0)
+		ret.y = 1;
+	else if (y < 0)
+		ret.y = -1;
+
+	return ret;
+}
+
 Vector2I Vector2::GetV2I()
 {
     return Vector2I(this);
