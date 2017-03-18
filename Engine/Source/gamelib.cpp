@@ -1220,8 +1220,8 @@ void CDDraw::DrawRect(game_engine::Vector2I pos, game_engine::Vector2I size, COL
 {
 	CDDraw::DrawLine(pos, pos + Vector2I::right * size, color);
 	CDDraw::DrawLine(pos, pos + Vector2I::up * size, color);
-	CDDraw::DrawLine(pos + Vector2I::right * size, pos + size, color);
-	CDDraw::DrawLine(pos + Vector2I::up * size, pos + size, color);
+	CDDraw::DrawLine(pos + Vector2I::right * size + Vector2I::left, pos + size + Vector2I::left, color);
+	CDDraw::DrawLine(pos + Vector2I::up * size + Vector2I::down, pos + size + Vector2I::down, color);
 }
 
 void CDDraw::GetClientRect(CRect& r)
