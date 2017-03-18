@@ -48,7 +48,6 @@ public:
 	void Update() override;
 
 private:
-	vector<vector<GameObject*>> tileList;
 	TileMap tileMap;
 	
 };
