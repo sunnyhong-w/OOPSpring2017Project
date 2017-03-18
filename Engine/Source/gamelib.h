@@ -156,6 +156,9 @@ public:
 	static void  ReleaseBackCDC();			// 放掉Back Plain的DC (device context)
 	static bool  SetFullScreen(bool);		// 設定為全螢幕模式/視窗模式
 	static bool  IsFullScreen();			// 回答是否為全螢幕模式/視窗模式
+
+	static void  DrawLine(game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color);
+	static void  DrawRect(game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color);
 private:
 	CDDraw();								// private constructor
     static void  BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, bool cutSrc);

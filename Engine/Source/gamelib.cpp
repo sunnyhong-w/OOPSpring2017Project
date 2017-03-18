@@ -1205,6 +1205,25 @@ bool CDDraw::CreateSurfaceWindowed()
     return true;
 }
 
+void CDDraw::DrawLine(game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color)
+{
+	CDC *pDC = game_framework::CDDraw::GetBackCDC();
+	CPen pen;
+	pen.CreatePen(0, 1, color);
+	pDC->SelectObject(pen);
+	pDC->MoveTo(from.x, from.y);
+	pDC->LineTo(to.x, to.y);
+	game_framework::CDDraw::ReleaseBackCDC();
+}
+
+void CDDraw::DrawRect(game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color)
+{
+	CDDraw::DrawLine(pos, pos + Vector2I::right * size, color);
+	CDDraw::DrawLine(pos, pos + Vector2I::up * size, color);
+	CDDraw::DrawLine(pos + Vector2I::right * size, pos + size, color);
+	CDDraw::DrawLine(pos + Vector2I::up * size, pos + size, color);
+}
+
 void CDDraw::GetClientRect(CRect& r)
 {
     r = CRect(0, 0, size_x, size_y);
