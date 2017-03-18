@@ -95,13 +95,13 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void UnsafeSetSurfaceID(int SID);
         void Reset();
         void SetAnchorRaito(Vector2 pos);
-        void SetDeltaPixel(Vector2I dp);
+        void SetOffset(Vector2I offset);
         Vector2I GetAnchorPoint();
 
     private:
         Vector2I size;
         Vector2I srcpos;
-        Vector2I delta;
+        Vector2I offset;
         Vector2 anchorRaito;
 
         bool cutSrc = false;
@@ -115,8 +115,7 @@ class Collider : public Component
         bool PointCollision(Vector2I point);
         bool BoxCollision(Collider* box);
         void ParseJSON(json j) override;
-        Vector2I deltaPoint;
-        Vector2I size;
+		CollisionInfo collisionInfo;
 
 };
 

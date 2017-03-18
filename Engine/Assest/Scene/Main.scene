@@ -2,37 +2,19 @@
 	"IncludePrefrab" : {
 		"testabc" : "test",
 		"TextStamp" : "Engine\\TextRenderer\\TextStamp",
-		"TextRenderer" :"Engine\\TextRenderer\\TextRenderer"
+		"TextRenderer" :"Engine\\TextRenderer\\TextRenderer",
+        "MapReader" : "Engine\\MapReader"
 	},
 	"GameObject" : [
 		{
-			"include" : "TextRenderer"
-		},
-		{
-			"include" : "testabc"
-		},
-		{
-			"name" : "Animationtest",
-			"Component" : 
-			{
-				"Transform" : 
-				{
-					"position" : { "x" : 120, "y" : 240 }
-				},
-				"AnimationController" : 
-				{
-					"init" : "Jump",
-					"state" : 
-					{
-						"Move" : "MCv3_Move",
-						"Jump" : "MCv3_Jump"
-					}
-				},
-				"Tutorial" : 
-				{
-
-				}
-			}
+			"include" : "MapReader",
+            "Component" : 
+            {
+                "MapReader" : 
+                {
+                    "load" : "temp"
+                }
+            }
 		}
 	]
 }

@@ -104,7 +104,7 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
     srcpos = Vector2I::null;
     size = Vector2I::null;
-    delta = Vector2I::zero;
+    offset = Vector2I::zero;
     anchorRaito = Vector2::zero;
 }
 
@@ -141,7 +141,7 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(transform->position.round().GetV2I() - cameraPos - GetAnchorPoint() + delta, transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(transform->position.round().GetV2I() - cameraPos - GetAnchorPoint() + offset, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -222,9 +222,9 @@ void SpriteRenderer::SetAnchorRaito(Vector2 pos)
     this->anchorRaito = pos;
 }
 
-void SpriteRenderer::SetDeltaPixel(Vector2I dp)
+void SpriteRenderer::SetOffset(Vector2I dp)
 {
-    this->delta = dp;
+    this->offset = offset;
 }
 
 Vector2I SpriteRenderer::GetAnchorPoint()
@@ -240,33 +240,33 @@ Vector2I SpriteRenderer::GetAnchorPoint()
 //////////////////////////////////////////////////////////////////
 Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
 {
-    this->deltaPoint = dP;
-    this->size = sz;
+    this->collisionInfo.offset = dP;
+    this->collisionInfo.size = sz;
 }
 
 bool Collider::PointCollision(Vector2I point)
 {
     GAME_ASSERT(transform != nullptr, (string("transform not found. #[Engine]Collision::PointCollision | Object : ") + gameObject->GetName()).c_str());
-    return point >= (transform->position.GetV2I() + deltaPoint) && point <= (transform->position.GetV2I() + deltaPoint + size);
+    return point >= (transform->position.GetV2I() + collisionInfo.offset) && point <= (transform->position.GetV2I() + collisionInfo.offset + collisionInfo.size);
 }
 
 bool Collider::BoxCollision(Collider* box)
 {
-    Vector2 aw = size.GetV2() / 2, bw = box->size.GetV2() / 2;
-    Vector2 l = ((transform->position + deltaPoint.GetV2() + aw) - (box->transform->position + box->deltaPoint.GetV2() + bw)).abs();
+    Vector2 aw = collisionInfo.size.GetV2() / 2, bw = box->collisionInfo.size.GetV2() / 2;
+    Vector2 l = ((transform->position + collisionInfo.offset.GetV2() + aw) - (box->transform->position + box->collisionInfo.offset.GetV2() + bw)).abs();
     return	(l == (aw + bw)) || (l < (aw + bw));
 }
 
 void Collider::ParseJSON(json j)
 {
-    if (j.find("deltaPoint") != j.end())
+    if (j.find("offset") != j.end())
     {
-        deltaPoint = j["deltaPoint"];
+		collisionInfo.offset = j["offset"];
     }
 
     if (j.find("size") != j.end())
     {
-        size = j["size"];
+		collisionInfo.size = j["size"];
     }
 }
 

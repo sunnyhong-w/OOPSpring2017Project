@@ -37,6 +37,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(Tutorial)
     RegisterComponent(TextStamp)
     RegisterComponent(TextRenderer)
+	RegisterComponent(MapReader)
     else return nullptr;
 }
 

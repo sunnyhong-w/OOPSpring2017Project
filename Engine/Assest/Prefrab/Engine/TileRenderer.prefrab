@@ -1,0 +1,6 @@
+{
+    "name": "TileRenderer",
+    "Component": {
+        "SpriteRenderer": {}
+    }
+}

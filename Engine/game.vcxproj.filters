@@ -150,6 +150,9 @@
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Engine\mapReader.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -219,6 +222,9 @@
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Engine\textRenderer.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine\mapReader.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>
