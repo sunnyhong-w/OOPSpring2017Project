@@ -163,6 +163,7 @@ private:
 class Rigidbody : public Component
 {
 public:
+	Rigidbody(GameObject* gobj) : Component(gobj) {};
 	Vector2 velocity;
 	void ParseJSON(json j) override;
 	void Update();
