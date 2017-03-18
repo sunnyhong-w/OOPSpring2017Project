@@ -97,6 +97,7 @@ class GameObject
         static std::map<std::string, GameObject*> objectsName;
         static std::multimap<Tag, GameObject*> objectsTag;
         static std::multimap<Layer, GameObject*> objectsLayer;
+		static std::vector<GameObject*> gameObjectsWaitingPools;
 
         //GameObject
         typedef std::multimap<std::type_index, Component*> ComponentData;

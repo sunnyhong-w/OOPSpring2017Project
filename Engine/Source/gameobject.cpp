@@ -251,6 +251,7 @@ void GameObject::SetLayer(Layer layer)
 /////////////////////////////////////////////////////////////////////////
 
 vector<GameObject*> GameObject::gameObjects;
+vector<GameObject*> GameObject::gameObjectsWaitingPools;
 map<string, json> GameObject::prefrabsData;
 map<string, GameObject*> GameObject::objectsName;
 multimap<Tag, GameObject*> GameObject::objectsTag;
@@ -266,7 +267,7 @@ GameObject* Instantiate(GameObject* gobj, Vector2 position)
     if (!position.isNull())
         gobj->GetComponent<Transform>()->position = position;
 
-    GameObject::Insert(gobj);
+	GameObject::gameObjectsWaitingPools.push_back(gobj);
     GameObject::UpdateName(gobj);
     GameObject::UpdateTag(gobj);
     GameObject::UpdateLayer(gobj);
@@ -283,17 +284,7 @@ GameObject* InstantiateJSON(json jsonobj, Vector2 position)
     if (!position.isNull())
         gobj->GetComponent<Transform>()->position = position;
 
-    GameObject::Insert(gobj);
-
-    if (jsonobj.find("name") == jsonobj.end())
-        GameObject::UpdateName(gobj);
-
-    if (jsonobj.find("tag") == jsonobj.end())
-        GameObject::UpdateTag(gobj);
-
-    if (jsonobj.find("layer") == jsonobj.end())
-        GameObject::UpdateLayer(gobj);
-
+	GameObject::gameObjectsWaitingPools.push_back(gobj);
     return gobj;
 }
 

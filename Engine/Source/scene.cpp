@@ -53,6 +53,12 @@ void GameScene::OnMove()
                 it++;
         }
 
+		for (auto ptr : GameObject::gameObjectsWaitingPools)
+		{
+			GameObject::Insert(ptr);
+		}
+		GameObject::gameObjectsWaitingPools.clear();
+
         //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
 
         //Windows File Transmission
