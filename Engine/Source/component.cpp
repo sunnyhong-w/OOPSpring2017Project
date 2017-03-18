@@ -13,6 +13,7 @@ HISTORY :
 #include"component.h"
 #include"gameobject.h"
 #include"enginelib.h"
+#include "gamebehavior.h"
 #include<fstream>
 
 namespace game_engine
@@ -255,13 +256,13 @@ bool Collider::PointCollision(Vector2I point)
     return point >= (transform->position.GetV2I() + collisionInfo.offset) && point <= (transform->position.GetV2I() + collisionInfo.offset + collisionInfo.size);
 }
 
-bool Collider::BoxCollision(Collider* box, Vector2I velocityOffset)
+bool Collider::BoxCollision(Collider* box, Vector2 velocityOffset)
 {
     Vector2 aw = collisionInfo.size.GetV2() / 2, bw = box->collisionInfo.size.GetV2() / 2;
 	SpriteRenderer *aSR = gameObject->GetComponent<SpriteRenderer>(), *bSR = box->gameObject->GetComponent<SpriteRenderer>();
 	Vector2 aSpriteOffset = aSR != nullptr ? aSR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 bSpriteOffset = bSR != nullptr ? bSR->GetAnchorPoint().GetV2() : Vector2::zero;
-	Vector2 apos = transform->position + collisionInfo.offset.GetV2() + velocityOffset.GetV2() - aSpriteOffset;
+	Vector2 apos = transform->position + collisionInfo.offset.GetV2() + velocityOffset - aSpriteOffset;
 	Vector2 bpos = box->transform->position + box->collisionInfo.offset.GetV2() - bSpriteOffset;
 	Vector2 amid = apos + aw;
 	Vector2 bmid = bpos + bw;
@@ -413,10 +414,40 @@ void Rigidbody::ParseJSON(json j)
 
 void Rigidbody::Update()
 {
+	Collider* collider = this->gameObject->GetComponent<Collider>();
+	if (collider == nullptr)
+	{
+		for (Layer l : collider->collisionLayer)
+		{
+			auto gobjvec = GameObject::findGameObjectsByLayer(l);
+
+			for (auto gobj : gobjvec)
+			{
+				Collider* tgcollider = gobj->GetComponent<Collider>();
+				if (tgcollider != nullptr)
+				{
+					if (collider->BoxCollision(tgcollider, velocity))
+					{
+						for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
+						{
+							if (it->second->isBehavior())
+							{
+								GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+
+								if (gb->enable)
+									gb->OnCollisionEnter(tgcollider);
 
 
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
-	this->transform->position = this->transform->position + velocity * Time::deltaTime;
+
+	this->transform->position = this->transform->position + velocity;
 }
 
 }

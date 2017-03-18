@@ -36,6 +36,7 @@ class GameObject
         friend class GameScene;
         friend class Transform;
         friend class game_framework::CGame;
+		friend class Rigidbody;
     public:
         GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
         ~GameObject();

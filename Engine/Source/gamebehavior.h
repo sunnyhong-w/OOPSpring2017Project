@@ -28,8 +28,8 @@ class GameBehaviour : public Component
 		virtual void Draw(Vector2I v2 = Vector2I::zero) {};
 
         virtual void OnCollisionEnter(Collider* c) {};
-        virtual void OnCollisionExit(Collider* c) {};
-        virtual void OnCollisionStay(Collider* c) {};
+        //virtual void OnCollisionExit(Collider* c) {};
+        //virtual void OnCollisionStay(Collider* c) {};
 
         virtual void OnRecivedBoardcast(json j) {};
 };

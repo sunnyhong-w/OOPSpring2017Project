@@ -114,7 +114,7 @@ class Collider : public Component
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
 		void OnDrawGismos();
         bool PointCollision(Vector2I point);
-        bool BoxCollision(Collider* box, Vector2I velocityOffset=Vector2I::zero);
+        bool BoxCollision(Collider* box, Vector2 velocityOffset=Vector2::zero);
         void ParseJSON(json j) override;
 		CollisionInfo collisionInfo;
 		vector<Layer> collisionLayer;
