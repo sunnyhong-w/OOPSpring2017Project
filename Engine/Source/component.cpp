@@ -285,8 +285,8 @@ void Collider::ParseJSON(json j)
 
 	if (j.find("collisionLayer") != j.end())
 	{
-		for (int i : j["collisionLayer"])
-			collisionLayer.push_back((Layer)i);
+		for (CollisionLayer cl : j["collisionLayer"])
+			collisionLayer.push_back(cl);
 	}
 		
 }
@@ -446,8 +446,22 @@ void Rigidbody::Update()
 		}
 	}
 
-
 	this->transform->position = this->transform->position + velocity;
+}
+
+CollisionLayer::CollisionLayer()
+{
+	layer = Layer::Default;
+	block = false;
+}
+
+void from_json(const json & j, CollisionLayer & cl)
+{
+	if (j.find("Block") != j.end())
+		cl.block = j["Block"];
+
+	if (j.find("Layer") != j.end())
+		cl.layer = (Layer)j["Layer"];
 }
 
 }

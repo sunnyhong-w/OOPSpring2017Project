@@ -108,6 +108,15 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         static map<string, unsigned int> fileInfo;
 };
 
+struct CollisionLayer
+{
+	CollisionLayer();
+	Layer layer;
+	bool block;
+};
+
+void from_json(const json &j, CollisionLayer &cl);
+
 class Collider : public Component
 {
     public:
@@ -117,7 +126,7 @@ class Collider : public Component
         bool BoxCollision(Collider* box, Vector2 velocityOffset=Vector2::zero);
         void ParseJSON(json j) override;
 		CollisionInfo collisionInfo;
-		vector<Layer> collisionLayer;
+		vector<CollisionLayer> collisionLayer;
 };
 
 class Animation : public Component
