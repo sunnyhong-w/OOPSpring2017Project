@@ -256,9 +256,9 @@ bool Collider::PointCollision(Vector2I point)
     return point >= (transform->position.GetV2I() + collisionInfo.offset) && point <= (transform->position.GetV2I() + collisionInfo.offset + collisionInfo.size);
 }
 
-bool Collider::BoxCollision(Collider* box, Vector2 velocityOffset)
+bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
 {
-    Vector2 aw = collisionInfo.size.GetV2() / 2, bw = box->collisionInfo.size.GetV2() / 2;
+    Vector2 aw = (collisionInfo.size.GetV2() - Vector2::one) / 2, bw = (box->collisionInfo.size.GetV2() - Vector2::one) / 2;
 	SpriteRenderer *aSR = gameObject->GetComponent<SpriteRenderer>(), *bSR = box->gameObject->GetComponent<SpriteRenderer>();
 	Vector2 aSpriteOffset = aSR != nullptr ? aSR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 bSpriteOffset = bSR != nullptr ? bSR->GetAnchorPoint().GetV2() : Vector2::zero;
@@ -268,7 +268,15 @@ bool Collider::BoxCollision(Collider* box, Vector2 velocityOffset)
 	Vector2 bmid = bpos + bw;
 	Vector2 w = aw + bw;
     Vector2 l = (amid - bmid).abs();
-    return	l <= w;
+	bool ret = l <= w;
+
+	if (ret && block)
+	{
+		Vector2 collideLength = w - l +Vector2::one;
+		velocityOffset = velocityOffset - collideLength * velocityOffset.side();
+	}
+
+	return ret;
 }
 
 void Collider::ParseJSON(json j)
