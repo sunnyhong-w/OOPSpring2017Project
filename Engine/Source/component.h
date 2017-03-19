@@ -60,6 +60,7 @@ class Transform : public Component
         Vector2 scale;
 
 		void SetParent(Transform* target);
+        void SetParent(GameObject* target);
         Transform* GetParent();
 		vector<Transform*> GetChild();
 
