@@ -43,6 +43,7 @@ Transform::Transform(GameObject* gobj, Vector2 v2, int z, RenderDepth rd) : Comp
     this->zindex = z;
     this->depth = rd;
     this->zcode = this->zindex + (int)this->depth;
+    this->parent = nullptr;
 }
 
 void Transform::SetRenderDepth(int z)
@@ -70,6 +71,29 @@ void Transform::SetRenderDepth(int z, RenderDepth rd)
 int Transform::GetZCode()
 {
     return zcode;
+}
+
+void Transform::SetParent(Transform *target)
+{
+    this->parent->RemoveChild(this);
+    this->parent = target;
+}
+
+Transform* Transform::GetParent()
+{
+    return parent;
+}
+
+vector<Transform*> Transform::GetChild()
+{
+    return child;
+}
+
+void Transform::RemoveChild(Transform * target)
+{
+    auto it = find(this->child.begin(), this->child.end(), target);
+    GAME_ASSERT(it != this->child.end(), "Remove Child Not Found,\nSomething went wrong.\nPlease connect engine dev......");
+    this->child.erase(it);
 }
 
 void Transform::ParseJSON(json j)

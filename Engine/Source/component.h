@@ -59,8 +59,8 @@ class Transform : public Component
         Vector2 position;
         Vector2 scale;
 
-		void SetParent(Transform* transform);
-		void GetParent();
+		void SetParent(Transform* target);
+        Transform* GetParent();
 		vector<Transform*> GetChild();
 
     private:
@@ -70,6 +70,7 @@ class Transform : public Component
 
 		Transform *parent;
 		vector<Transform*> child;
+        void RemoveChild(Transform* target);
 };
 
 /////////////////////////////////////////////////////////////////////////////
