@@ -268,6 +268,11 @@ multimap<Layer, GameObject*> GameObject::objectsLayer;
 void Destory(GameObject& gobj)
 {
     gobj.destoryFlag = true;
+    gobj.transform->SetParent(nullptr);
+    
+    auto childList = gobj.transform->GetChild();
+    for (auto childTransform : childList)
+        Destory(*(childTransform->gameObject));
 }
 
 GameObject* Instantiate(GameObject* gobj, Vector2 position)

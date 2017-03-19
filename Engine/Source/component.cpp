@@ -75,7 +75,9 @@ int Transform::GetZCode()
 
 void Transform::SetParent(Transform *target)
 {
-    this->parent->RemoveChild(this);
+    if(this->parent != nullptr)
+        this->parent->RemoveChild(this);
+    
     this->parent = target;
 }
 

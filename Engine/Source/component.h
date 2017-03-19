@@ -26,7 +26,7 @@ class Transform;
 class Component
 {
         friend class GameObject;
-
+        friend void Destory(GameObject &gobj);
     public:
         Component(GameObject* gobj, bool skip = false);
         virtual ~Component() {};
