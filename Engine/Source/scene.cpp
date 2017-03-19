@@ -168,7 +168,9 @@ void GameScene::IncludePrefrabs(json prefrabObject, map<string, string>& prefrab
 {
     for (json::iterator it = prefrabObject.begin(); it != prefrabObject.end(); it++)
     {
-        GAME_ASSERT(prefrabmap.find(it.key()) != prefrabmap.end(), ("ERROR : \nPrefrab map name duplicated => Mapping Name :"+it.key()).c_str());
+        if (prefrabmap.find(it.key()) != prefrabmap.end())
+            TRACE(("WARRING : \nPrefrab map name duplicated => Mapping Name :" + it.key()).c_str());
+
         prefrabmap[it.key()] = it.value().get<string>();
         ReadPrefrab(filename, it.value(), prefrabmap);
     }
@@ -233,7 +235,7 @@ GameObject* GameScene::CreateGameObject(json jsonobj, map<string, string> prefra
         {
             auto childList = InstantiateGameObject(prefrab["Child"], prefrabmap);
             for (auto childobj : childList)
-                childobj->transform->SetParent(gobj);
+                childobj->transform->SetParent(gobj->transform);
         }
     }
     else
@@ -249,7 +251,7 @@ GameObject* GameScene::CreateGameObject(json jsonobj, map<string, string> prefra
     {
         auto childList = InstantiateGameObject(jsonobj["Child"], prefrabmap);
         for (auto childobj : childList)
-            childobj->transform->SetParent(gobj);
+            childobj->transform->SetParent(gobj->transform);
     }
 
     return gobj;

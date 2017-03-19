@@ -81,11 +81,6 @@ void Transform::SetParent(Transform *target)
     this->parent = target;
 }
 
-void Transform::SetParent(GameObject * target)
-{
-    SetParent(target->transform);
-}
-
 Transform* Transform::GetParent()
 {
     return parent;
