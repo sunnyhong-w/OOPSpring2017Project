@@ -59,11 +59,17 @@ class Transform : public Component
         Vector2 position;
         Vector2 scale;
 
+		void SetParent(Transform* transform);
+		void GetParent();
+		vector<Transform*> GetChild();
 
     private:
         int zindex;
         RenderDepth depth;
         int zcode;
+
+		Transform *parent;
+		vector<Transform*> child;
 };
 
 /////////////////////////////////////////////////////////////////////////////
