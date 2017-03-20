@@ -267,13 +267,13 @@ Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
     this->collisionInfo.size = sz;
 }
 
-void Collider::OnDrawGismos()
+void Collider::OnDrawGismos(CDC *pDC)
 {
 	Vector2I w = collisionInfo.size;
 	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
 	Vector2 SpriteOffset = SR != nullptr ? SR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 pos = transform->position + collisionInfo.offset.GetV2()- SpriteOffset;
-	game_framework::CDDraw::DrawRect(pos.GetV2I(), w, RGB(0, 255, 0));
+    game_framework::CDDraw::DrawRect(pDC, pos.GetV2I(), w, RGB(0, 255, 0));
 }
 
 bool Collider::PointCollision(Vector2I point)

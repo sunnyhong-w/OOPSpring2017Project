@@ -142,12 +142,18 @@ void GameScene::OnShow()
 
     //Draw Superve GUI thing after gameobject drawn
 
+    //Draw Debug Info By CDC
+
+    CDC *pDC = game_framework::CDDraw::GetBackCDC();
+
 	for (GameObject* gobj : GameObject::gameObjects)
 	{
 		Collider* collider = gobj->GetComponent<Collider>();
 		if (collider != nullptr)
-			collider->OnDrawGismos();
+			collider->OnDrawGismos(pDC);
 	}
+
+    game_framework::CDDraw::ReleaseBackCDC();
 }
 
 #define FindJSON(str) j.find(str) != j.end()
