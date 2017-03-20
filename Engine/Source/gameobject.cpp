@@ -46,16 +46,10 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 
 #define FindJSON(str) j.find(str) != j.end()
 
-GameObject::GameObject(bool doNotDestoryOnChangeScene, bool isPureScript) : enable(true)
+GameObject::GameObject(bool doNotDestoryOnChangeScene) : enable(true)
 {
     this->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
-
-    if (!isPureScript)
-    {
-        this->transform = this->AddComponentOnce<Transform>();
-        this->isPureScript = isPureScript;
-    }
-
+    this->transform = this->AddComponentOnce<Transform>();
 	this->SetTag(Tag::Untagged);
 	this->SetLayer(Layer::Default);
 }
@@ -289,8 +283,7 @@ GameObject* Instantiate(GameObject* gobj, Vector2 position)
 GameObject* InstantiateJSON(json jsonobj, Vector2 position)
 {
     bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
-    bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
-    GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene, isPureScript);
+    GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene);
     gobj->ParseJSON(jsonobj);
 
     if (!position.isNull())
@@ -306,7 +299,7 @@ void GameObject::Insert(GameObject* gobj)
 	int size = GameObject::gameObjects.size();
 	int high = size - 1, low = 0, mid = 0;
 
-	if (gobj->isPureScript || size == 0)
+	if (size == 0)
 	{
 		GameObject::gameObjects.insert(GameObject::gameObjects.begin(), gobj);
 		return;
@@ -317,12 +310,6 @@ void GameObject::Insert(GameObject* gobj)
     {
         mid = (high + low) / 2;
 
-		while (mid < size && GameObject::gameObjects[mid]->isPureScript)
-			mid += 1;
-
-		if (mid == size)
-			break;
-			
         if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
             high = mid - 1;
         else if (GameObject::gameObjects[mid]->transform->GetZCode() < gobj->transform->GetZCode())
@@ -380,7 +367,7 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
     //Do an binary search so we know where could the object be,
     //which can save a lot of time when size is large.
     //when we found the index, go front and fo backward unitl zcode is different
-	if (gobj->isPureScript || GameObject::gameObjects.size() == 0)
+	if (GameObject::gameObjects.size() == 0)
 		return;
 	
 	int size = GameObject::gameObjects.size();
@@ -390,16 +377,6 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
     {
         mid = (high + low) / 2;
 
-		while (mid < size && GameObject::gameObjects[mid]->isPureScript)
-			mid += 1;
-
-		if (mid == size)
-		{
-			mid = -1;
-			break;
-		}
-
-
         if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
             high = mid - 1;
         else if (GameObject::gameObjects[mid]->transform->GetZCode() < gobj->transform->GetZCode())
@@ -408,17 +385,13 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
             break;
     }
 
-	int zcode = 0;
+	int zcode = GameObject::gameObjects[mid]->transform->GetZCode();
 
-	if (mid != -1)
-		zcode = GameObject::gameObjects[mid]->transform->GetZCode();
-	else
-		return;
 
     //backward
 	for (int i = mid; i < size; i++)
 	{
-		if (!GameObject::gameObjects[i]->isPureScript && GameObject::gameObjects[i]->transform->GetZCode() == zcode)
+		if (GameObject::gameObjects[i]->transform->GetZCode() == zcode)
 		{
 			if (GameObject::gameObjects[i] == gobj)
 			{
@@ -432,7 +405,7 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
     //foward
     for (int i = mid; i >= 0; i--)
     {
-		if (!GameObject::gameObjects[i]->isPureScript && GameObject::gameObjects[i]->transform->GetZCode() == zcode)
+		if (GameObject::gameObjects[i]->transform->GetZCode() == zcode)
 		{
 			if (GameObject::gameObjects[i] == gobj)
 			{

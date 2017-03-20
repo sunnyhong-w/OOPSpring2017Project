@@ -226,10 +226,8 @@ GameObject* GameScene::CreateGameObject(json jsonobj, map<string, string> prefra
     if (prefrab != nullptr)
     {
         bool doNOTDestoryOnChangeScene = prefrab.find("doNOTDestoryOnChangeScene") != prefrab.end() ? prefrab["doNOTDestoryOnChangeScene"] : false;
-        bool isPureScript = prefrab.find("isPureScript") != prefrab.end() ? prefrab["isPureScript"] : false;
         gobj = InstantiateJSON(prefrab);
         gobj->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
-        gobj->isPureScript = isPureScript;
 
         if (prefrab.find("Child") != prefrab.end())
         {
@@ -241,8 +239,7 @@ GameObject* GameScene::CreateGameObject(json jsonobj, map<string, string> prefra
     else
     {
         bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
-        bool isPureScript = jsonobj.find("isPureScript") != jsonobj.end() ? jsonobj["isPureScript"] : false;
-        gobj = Instantiate(new GameObject(doNOTDestoryOnChangeScene, isPureScript));
+        gobj = Instantiate(new GameObject(doNOTDestoryOnChangeScene));
     }
 
     gobj->ParseJSON(jsonobj);

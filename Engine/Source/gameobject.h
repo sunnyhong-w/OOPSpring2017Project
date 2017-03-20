@@ -38,7 +38,7 @@ class GameObject
         friend class game_framework::CGame;
 		friend class Rigidbody;
     public:
-        GameObject(bool doNotDestoryOnChangeScene = false, bool isPureScript = false);
+        GameObject(bool doNotDestoryOnChangeScene = false);
         ~GameObject();
         void ParseJSON(json j, bool noUpdateObjectPool = false);
         void Start();
@@ -107,7 +107,6 @@ class GameObject
         Tag tag;
         Layer layer;
         bool destoryFlag = false;
-        bool isPureScript = false;
         bool isStarted = false;
         bool renderByBehavior = false;
         bool doNOTDestoryOnChangeScene = false;
