@@ -74,7 +74,7 @@
 #define SHOW_LOAD_PROGRESS   true		                    // 是否顯示loading(OnInit)的進度
 #define DEFAULT_BG_COLOR	 RGB(0,0,0)	                    // 遊戲畫面預設的背景顏色(黑色)
 #define GAME_CYCLE_TIME		 33		                        // 每33ms跑一次Move及Show(每秒30次)
-#define SHOW_GAME_CYCLE_TIME false	                    	// 是否在debug mode顯示cycle time
+#define SHOW_GAME_CYCLE_TIME true	                    	// 是否在debug mode顯示cycle time
 #define ENABLE_GAME_PAUSE	 false	                       	// 是否允許以 Ctrl-Q 暫停遊戲
 #define ENABLE_AUDIO		 true		                    // 啟動音效介面
 #define ENABLE_AUDIO_PAUSE_WHEN_KILL_FOCUS	false		    // 啟動音效介面
@@ -157,8 +157,8 @@ public:
 	static bool  SetFullScreen(bool);		// 設定為全螢幕模式/視窗模式
 	static bool  IsFullScreen();			// 回答是否為全螢幕模式/視窗模式
 
-	static void  DrawLine(game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color);
-	static void  DrawRect(game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color);
+	static void  DrawLine(CDC *pDC, game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color);
+	static void  DrawRect(CDC *pDC, game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color);
 private:
 	CDDraw();								// private constructor
     static void  BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, bool cutSrc);

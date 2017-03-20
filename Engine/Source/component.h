@@ -26,7 +26,7 @@ class Transform;
 class Component
 {
         friend class GameObject;
-
+        friend void Destroy(GameObject &gobj);
     public:
         Component(GameObject* gobj, bool skip = false);
         virtual ~Component() {};
@@ -34,7 +34,6 @@ class Component
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
         bool enable;
-    protected:
         GameObject* gameObject;
         Transform* transform;
     private:
@@ -59,11 +58,19 @@ class Transform : public Component
         Vector2 position;
         Vector2 scale;
 
+		void SetParent(Transform* target);
+        Transform* GetParent();
+		vector<Transform*> GetChild();
 
     private:
         int zindex;
         RenderDepth depth;
         int zcode;
+
+		Transform *parent;
+		vector<Transform*> child;
+        void AddChild(Transform* target);
+        void RemoveChild(Transform* target);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -121,7 +128,7 @@ class Collider : public Component
 {
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
-		void OnDrawGismos();
+		void OnDrawGismos(CDC *pDC);
         bool PointCollision(Vector2I point);
 		bool BoxCollision(Collider* box, Vector2 &velocityOffse, bool block = false);
         void ParseJSON(json j) override;

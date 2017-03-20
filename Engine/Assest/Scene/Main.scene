@@ -13,7 +13,8 @@
                 "MapReader": {
                     "load": "temp"
                 }
-            }
+            },
+            "Child": []
         },
         {
             "include": "Player"

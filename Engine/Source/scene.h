@@ -4,6 +4,8 @@
 
 namespace game_engine
 {
+    class GameObject;
+
 class GameScene : public game_framework::CGameState
 {
         friend class game_framework::CGame;
@@ -30,9 +32,13 @@ class GameScene : public game_framework::CGameState
 
         bool lock = false;
 
-		static void ReadPrefrab(string filename,string includename);
     private:
         void LoadSceneData();
+        vector<GameObject*> InstantiateGameObject(json objArray, map<string, string> prefrabmap);
+        GameObject* CreateGameObject(json jsonobj, map<string, string> prefrabmap);
+        void IncludePrefrabs(json prefrabObject, map<string, string> &prefrabmap);
+        void ReadPrefrab(string filename, string includename, map<string, string> &prefrabmap);
+
         vector<json> TDPQueue;
         string filename;
         string loadname;

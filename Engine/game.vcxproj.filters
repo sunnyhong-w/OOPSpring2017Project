@@ -17,6 +17,12 @@
     <Filter Include="GameScript">
       <UniqueIdentifier>{390b231f-112b-4a81-8a41-f051626fce1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\EngingScript">
+      <UniqueIdentifier>{8ef2a66f-6747-478a-be6c-bc63189ad0ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EngineLib">
+      <UniqueIdentifier>{acdb326e-a467-4779-b6a3-707be65280d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\ball.bmp">
@@ -124,34 +130,34 @@
       <Filter>GameScript</Filter>
     </ClCompile>
     <ClCompile Include="Source\_setting.cpp">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
     <ClCompile Include="Source\component.cpp">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
     <ClCompile Include="Source\easing.cpp">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
     <ClCompile Include="Source\enginelib.cpp">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
     <ClCompile Include="Source\gameobject.cpp">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
     <ClCompile Include="Source\input.cpp">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
     <ClCompile Include="Source\scene.cpp">
-      <Filter>GameEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Assest\Script\Engine\textRenderer.cpp">
-      <Filter>GameEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Assest\Script\Engine\textStamp.cpp">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
     <ClCompile Include="Assest\Script\Engine\mapReader.cpp">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngingScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Engine\textRenderer.cpp">
+      <Filter>GameEngine\EngingScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Engine\textStamp.cpp">
+      <Filter>GameEngine\EngingScript</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,50 +188,50 @@
     <ClInclude Include="Assest\Script\tutorial.h">
       <Filter>GameScript</Filter>
     </ClInclude>
-    <ClInclude Include="Source\scene.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\_GameScripts.h">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
     <ClInclude Include="Source\_setting.h">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
     <ClInclude Include="Source\component.h">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
     <ClInclude Include="Source\easing.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\enginelib.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\gamebehavior.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\gameobject.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\input.h">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\json.hpp">
-      <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\json_include.h">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine.h">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
-    <ClInclude Include="Assest\Script\Engine\textStamp.h">
-      <Filter>GameEngine</Filter>
+    <ClInclude Include="Source\enginelib.h">
+      <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
-    <ClInclude Include="Assest\Script\Engine\textRenderer.h">
-      <Filter>GameEngine</Filter>
+    <ClInclude Include="Source\gamebehavior.h">
+      <Filter>GameEngine\EngineLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gameobject.h">
+      <Filter>GameEngine\EngineLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\input.h">
+      <Filter>GameEngine\EngineLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\json.hpp">
+      <Filter>GameEngine\EngineLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\json_include.h">
+      <Filter>GameEngine\EngineLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\scene.h">
+      <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Engine\mapReader.h">
-      <Filter>GameEngine</Filter>
+      <Filter>GameEngine\EngingScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine\textRenderer.h">
+      <Filter>GameEngine\EngingScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine\textStamp.h">
+      <Filter>GameEngine\EngingScript</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -43,6 +43,7 @@ Transform::Transform(GameObject* gobj, Vector2 v2, int z, RenderDepth rd) : Comp
     this->zindex = z;
     this->depth = rd;
     this->zcode = this->zindex + (int)this->depth;
+    this->parent = nullptr;
 }
 
 void Transform::SetRenderDepth(int z)
@@ -70,6 +71,39 @@ void Transform::SetRenderDepth(int z, RenderDepth rd)
 int Transform::GetZCode()
 {
     return zcode;
+}
+
+void Transform::SetParent(Transform *target)
+{
+    if(this->parent != nullptr)
+        this->parent->RemoveChild(this);
+
+    if(target != nullptr)
+        target->AddChild(this);
+
+    this->parent = target;
+}
+
+Transform* Transform::GetParent()
+{
+    return parent;
+}
+
+vector<Transform*> Transform::GetChild()
+{
+    return child;
+}
+
+void Transform::AddChild(Transform * target)
+{
+    this->child.push_back(target);
+}
+
+void Transform::RemoveChild(Transform * target)
+{
+    auto it = find(this->child.begin(), this->child.end(), target);
+    GAME_ASSERT(it != this->child.end(), "Remove Child Not Found,\nSomething went wrong.\nPlease connect engine dev......");
+    this->child.erase(it);
 }
 
 void Transform::ParseJSON(json j)
@@ -241,13 +275,13 @@ Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
     this->collisionInfo.size = sz;
 }
 
-void Collider::OnDrawGismos()
+void Collider::OnDrawGismos(CDC *pDC)
 {
 	Vector2I w = collisionInfo.size;
 	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
 	Vector2 SpriteOffset = SR != nullptr ? SR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 pos = transform->position + collisionInfo.offset.GetV2()- SpriteOffset;
-	game_framework::CDDraw::DrawRect(pos.GetV2I(), w, RGB(0, 255, 0));
+    game_framework::CDDraw::DrawRect(pDC, pos.GetV2I(), w, RGB(0, 255, 0));
 }
 
 bool Collider::PointCollision(Vector2I point)
