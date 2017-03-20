@@ -24,14 +24,14 @@ class Transform;
 class GameObject;
 
 //一些Public的最高權限Function
-void Destory(GameObject& gobj);
-void Destory(GameObject* gobj);
+void Destroy(GameObject& gobj);
+void Destroy(GameObject* gobj);
 GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision = Vector2::null);
 GameObject* InstantiateJSON(json prefrabJSON, Vector2 posision = Vector2::null);
 
 class GameObject
 {
-        friend void Destory(GameObject* gobj);
+        friend void Destroy(GameObject* gobj);
         friend GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision);
         friend GameObject* InstantiateJSON(json jsonobj, Vector2 posision);
         friend class GameScene;

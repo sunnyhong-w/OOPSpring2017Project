@@ -26,11 +26,9 @@ void MapReader::ParseJSON(json j)
 
 void MapReader::LoadMap(string fname)
 {
-	auto objlist = GameObject::findGameObjectsByTag(Tag::Tile);
-	for (GameObject* gobj : objlist)
-	{
-		Destory(*gobj);
-	}
+    auto objlist = transform->GetChild();
+	for (auto childtransform : objlist)
+		Destroy(childtransform->gameObject);
 
 	//-----
 
@@ -61,7 +59,7 @@ void MapReader::LoadMap(string fname)
 					{
 						for (TileSet tmp : tileMap.tileSetList)
 						{
-							if (tmp.firstgid == -1 || tindex < tmp.firstgid || tindex > tmp.firstgid + tmp.tilecount)
+							if (tmp.firstgid == -1 || tindex < tmp.firstgid || tindex >= tmp.firstgid + tmp.tilecount)
 								continue;
 
 							GameObject *gobj = new GameObject();
@@ -77,12 +75,13 @@ void MapReader::LoadMap(string fname)
 							if (tmp.tiles[tileindex].object.size() != 0)
 							{
 								Collider* cr = gobj->AddComponentOnce<Collider>();
-								cr->collisionInfo = tmp.tiles[tileindex].object[0]; //¥ý·í¥L¥u·|¦³¤@­Ócollider
+								cr->collisionInfo = tmp.tiles[tileindex].object[0]; //å…ˆç•¶ä»–åªæœƒæœ‰ä¸€å€‹collider
 							}
 
 							Instantiate(gobj, pos.GetV2());
 							gobj->transform->SetRenderDepth(zindex);
 							gobj->SetLayer(Layer::Tile);
+                            gobj->transform->SetParent(this->transform);
 							
 							break;
 						}
@@ -125,6 +124,13 @@ void MapReader::Update()
 	{
 		LoadMap("temp3");
 	}
+
+    if (Input::GetKeyClick(VK_F7))
+    {
+        vector<Transform*> objlist = transform->GetChild();
+        for (Transform* gobj : objlist)
+            Destroy(gobj->gameObject);
+    }
 }
 
 TileSet::TileSet()

@@ -259,19 +259,19 @@ map<string, GameObject*> GameObject::objectsName;
 multimap<Tag, GameObject*> GameObject::objectsTag;
 multimap<Layer, GameObject*> GameObject::objectsLayer;
 
-void Destory(GameObject& gobj)
+void Destroy(GameObject& gobj)
 {
-    Destory(&gobj);
+    Destroy(&gobj);
 }
 
-void Destory(GameObject* gobj)
+void Destroy(GameObject* gobj)
 {
     gobj->destoryFlag = true;
     gobj->transform->SetParent(nullptr);
 
     auto childList = gobj->transform->GetChild();
     for (auto childTransform : childList)
-        Destory(*(childTransform->gameObject));
+        Destroy(*(childTransform->gameObject));
 }
 
 GameObject* Instantiate(GameObject* gobj, Vector2 position)

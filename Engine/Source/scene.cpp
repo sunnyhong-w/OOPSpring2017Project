@@ -41,7 +41,7 @@ void GameScene::OnMove()
         //INPUT WORKOUT HERE
         Input::Update();
 
-        //Destory Dectechtion
+        //Destroy Dectechtion
         for (vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
         {
             if ((*it)->destoryFlag)
