@@ -77,7 +77,10 @@ void Transform::SetParent(Transform *target)
 {
     if(this->parent != nullptr)
         this->parent->RemoveChild(this);
-    
+
+    if(target != nullptr)
+        target->AddChild(this);
+
     this->parent = target;
 }
 
@@ -89,6 +92,11 @@ Transform* Transform::GetParent()
 vector<Transform*> Transform::GetChild()
 {
     return child;
+}
+
+void Transform::AddChild(Transform * target)
+{
+    this->child.push_back(target);
 }
 
 void Transform::RemoveChild(Transform * target)

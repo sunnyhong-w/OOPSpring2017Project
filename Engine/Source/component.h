@@ -34,7 +34,6 @@ class Component
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
         bool enable;
-    protected:
         GameObject* gameObject;
         Transform* transform;
     private:
@@ -70,6 +69,7 @@ class Transform : public Component
 
 		Transform *parent;
 		vector<Transform*> child;
+        void AddChild(Transform* target);
         void RemoveChild(Transform* target);
 };
 
