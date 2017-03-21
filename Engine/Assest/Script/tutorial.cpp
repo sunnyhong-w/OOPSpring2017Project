@@ -20,9 +20,9 @@ void Tutorial::Start()
 void Tutorial::Update()
 {
     Rigidbody *rb = gameObject->GetComponent<Rigidbody>();
-
+    rb->TimeSliceCollision = true;
 	
-	int speed = 3;
+	int speed = 500;
     //vel = rb->velocity;
 
     if (rb->colliderInfo.bottom || rb->colliderInfo.top)

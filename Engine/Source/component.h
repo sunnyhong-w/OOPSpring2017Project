@@ -188,11 +188,13 @@ public:
 	Rigidbody(GameObject* gobj) : Component(gobj) {};
 	Vector2 velocity;
     ColliderInfo colliderInfo;
+    bool TimeSliceCollision = false;
 	void ParseJSON(json j) override;
 	void Update();
 private:
     void OnCollision(Collider *tgcollider);
     bool DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block);
+    void CollisionDetection(Vector2& velocity);
 };
 
 }

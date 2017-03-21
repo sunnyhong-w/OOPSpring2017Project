@@ -505,7 +505,8 @@ void AnimationController::JumpState(string state)
 
 void Rigidbody::ParseJSON(json j)
 {
-
+    if (j.find("TimeSliceCollision") != j.end())
+        this->TimeSliceCollision = j["TimeSliceCollision"];
 }
 
 void Rigidbody::OnCollision(Collider *tgcollider)
@@ -540,6 +541,33 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
     return ret;
 }
 
+void Rigidbody::CollisionDetection(Vector2& invelocity)
+{
+    Collider* collider = this->gameObject->GetComponent<Collider>();
+    if (collider != nullptr)
+    {
+        for (CollisionLayer cl : collider->collisionLayer)
+        {
+            auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
+
+            if (cl.block)
+            {
+                //Horizontal Collision
+                Vector2 vHorizontal(invelocity.x, 0);
+                if (DoCollision(collider, gobjvec, vHorizontal, cl.block))
+                    invelocity.x = vHorizontal.x;
+
+                //Vertical Collision
+                Vector2 vVertical(invelocity.x, invelocity.y);
+                if (DoCollision(collider, gobjvec, vVertical, cl.block))
+                    invelocity.y = vVertical.y;
+            }
+            else
+                DoCollision(collider, gobjvec, invelocity, cl.block);
+        }
+    }
+}
+
 void Rigidbody::Update()
 {
     colliderInfo.Reset();
@@ -548,31 +576,38 @@ void Rigidbody::Update()
     velocity = velocity.round();
     Vector2 originalRoundVelocity = velocity;
 
-	Collider* collider = this->gameObject->GetComponent<Collider>();
-	if (collider != nullptr)
-	{
-		for (CollisionLayer cl : collider->collisionLayer)
-		{
-			auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
+    if (TimeSliceCollision)
+    {
+        vector<Vector2> sliceVelocity;
+        Vector2 sliceUnit = Vector2(16, 16);
+        Vector2 vslicenum = velocity / sliceUnit;
+        vslicenum = vslicenum.abs();
+        int sliceNum = ceil(vslicenum.x > vslicenum.y ? vslicenum.x : vslicenum.y);
+        if (sliceNum != 0)
+        {
+            Vector2 slice = velocity / sliceNum;
+            for (int i = 1; i < sliceNum; i++)
+                sliceVelocity.push_back((slice * i).round());
 
-            if (cl.block)
+            sliceVelocity.push_back(originalRoundVelocity);
+            velocity = originalRoundVelocity;
+
+            for (auto &v : sliceVelocity)
             {
-                //Horizontal Collision
-                Vector2 vHorizontal(velocity.x, 0);
-                if (DoCollision(collider, gobjvec, vHorizontal, cl.block))
-                    velocity.x = vHorizontal.x;
-
-                //Vertical Collision
-                Vector2 vVertical(velocity.x, velocity.y);
-                if (DoCollision(collider, gobjvec, vVertical, cl.block))
-                    velocity.y = vVertical.y;
+                Vector2 originalVelocity = v;
+                CollisionDetection(v);
+                if (v != originalVelocity)
+                {
+                    velocity = v;
+                    break;
+                }
             }
-            else
-                DoCollision(collider, gobjvec, velocity, cl.block);
-		}
-	}
-    this->transform->Translate(velocity);
+        }
+    }
+    else
+        CollisionDetection(velocity);
 
+    //Set ColliderInfo
     if (velocity.x != originalRoundVelocity.x)
     {
         if (originalRoundVelocity.x > 0)
@@ -588,8 +623,11 @@ void Rigidbody::Update()
         else if (originalRoundVelocity.y < 0)
             colliderInfo.top = true;
     }
-        
+    
+    //Move Object
+    this->transform->Translate(velocity);
 
+    //Set velocity accoriding to original velocity(Avoiding weird number problem when adding float velocity < 1)
     velocity = originalVelocity + (velocity - originalRoundVelocity);
 
 }
