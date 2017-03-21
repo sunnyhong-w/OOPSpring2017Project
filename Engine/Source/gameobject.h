@@ -99,6 +99,7 @@ class GameObject
         static void UpdateRenderOrder(GameObject* gobj);
         static std::map<std::string, json> prefrabsData;
         static std::map<std::string, GameObject*> objectsName;
+        static std::map<std::string, int> objectsNameCount;
         static std::multimap<Tag, GameObject*> objectsTag;
         static std::multimap<Layer, GameObject*> objectsLayer;
 		static std::vector<GameObject*> gameObjectsWaitingPools;

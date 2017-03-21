@@ -256,6 +256,7 @@ vector<GameObject*> GameObject::gameObjects;
 vector<GameObject*> GameObject::gameObjectsWaitingPools;
 map<string, json> GameObject::prefrabsData;
 map<string, GameObject*> GameObject::objectsName;
+map<string, int> GameObject::objectsNameCount;
 multimap<Tag, GameObject*> GameObject::objectsTag;
 multimap<Layer, GameObject*> GameObject::objectsLayer;
 
@@ -330,16 +331,17 @@ void GameObject::Insert(GameObject* gobj)
 
 void GameObject::UpdateName(GameObject* gobj)
 {
-    if (GameObject::objectsName.find(gobj->name) == GameObject::objectsName.end())
+    if (GameObject::objectsNameCount.find(gobj->name) == GameObject::objectsNameCount.end())
+    {
         GameObject::objectsName[gobj->name] = gobj;
+        GameObject::objectsNameCount[gobj->name] = 0;
+    }
     else
     {
-        int i;
-
-        for (i = 0; GameObject::objectsName.find(gobj->name + " Clone(" + to_string(i) + ")") != GameObject::objectsName.end(); i++);
-
-        GameObject::objectsName[gobj->name + " Clone(" + to_string(i) + ")"] = gobj;
-        gobj->name = gobj->name + " Clone(" + to_string(i) + ")";
+        string newname = gobj->name + " Clone(" + to_string(GameObject::objectsNameCount[gobj->name]) + ")";
+        GameObject::objectsName[newname] = gobj;
+        gobj->name = newname;
+        GameObject::objectsNameCount[gobj->name]++;
     }
 }
 
@@ -462,8 +464,8 @@ json GameObject::GetPrefrabs(std::string file)
 
 json GameObject::InsertPrefrabs(string file, json prefrabsJSON)
 {
-    GAME_ASSERT(GameObject::prefrabsData.find(file) == GameObject::prefrabsData.end(),
-                ("Prefrab name repeated. #[Engine]GameObject::InsertPrefrabs (PrefrabName : " + file + ")").c_str());
+    if (GameObject::prefrabsData.find(file) != GameObject::prefrabsData.end())
+        TRACE(("WARRING : Prefrab name repeated. #[Engine]GameObject::InsertPrefrabs (PrefrabName : " + file + ")").c_str());
     GameObject::prefrabsData[file] = prefrabsJSON;
     return prefrabsJSON;
 }
