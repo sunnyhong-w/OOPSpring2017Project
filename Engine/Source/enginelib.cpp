@@ -140,7 +140,7 @@ bool operator==(Vector2 left, Vector2 right)
 bool operator!=(Vector2 left, Vector2 right)
 {
 	bool hasNull = left.isNull() || right.isNull();
-	return hasNull ? left.isNull() != right.isNull() : left.x != right.x && left.y != right.y;
+	return hasNull ? left.isNull() != right.isNull() : left.x != right.x || left.y != right.y;
 }
 
 Vector2 Vector2::abs()
@@ -309,7 +309,7 @@ bool operator==(Vector2I left, Vector2I right)
 bool operator!=(Vector2I left, Vector2I right)
 {
 	bool hasNull = left.isNull() || right.isNull();
-	return hasNull ? left.isNull() != right.isNull() : left.x != right.x && left.y != left.y;
+	return hasNull ? left.isNull() != right.isNull() : left.x != right.x || left.y != left.y;
 }
 
 void from_json(const json& j, Vector2I& v)
