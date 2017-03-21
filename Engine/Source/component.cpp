@@ -74,8 +74,7 @@ void Transform::SetPosition(Vector2 newpos)
     Vector2 dp = newpos - this->position;
     this->position = newpos;
     this->worldposition = ((this->parent != nullptr) ? newpos + this->parent->worldposition : newpos);
-    for (auto c : child)
-        c->Translate(dp);
+    UpdateWorldPosition();
 }
 
 Vector2 Transform::GetWorldPosition()
@@ -88,8 +87,16 @@ void Transform::SetWorldPosition(Vector2 newpos)
     Vector2 dp = newpos - this->worldposition;
     this->worldposition = newpos;
     this->position = ((this->parent != nullptr) ? newpos - this->parent->worldposition : newpos);
+    UpdateWorldPosition();
+}
+
+void Transform::UpdateWorldPosition()
+{
     for (auto c : child)
-        c->Translate(dp);
+    {
+        c->worldposition = this->worldposition + c->position;
+        c->UpdateWorldPosition();
+    }
 }
 
 void Transform::Translate(Vector2 dpos)
