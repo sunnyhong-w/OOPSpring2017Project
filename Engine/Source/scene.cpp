@@ -88,7 +88,7 @@ void GameScene::OnMove()
 		for (GameObject* gobj : GameObject::gameObjects)
 		{
 			Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
-			if (rigidbody != nullptr)
+			if (rigidbody != nullptr && rigidbody->enable)
 				rigidbody->Update();
 		}
 
@@ -111,7 +111,7 @@ void GameScene::OnMove()
 		for (GameObject* gobj : GameObject::gameObjects)
 		{
 			AnimationController* anic = gobj->GetComponent<AnimationController>();
-			if (anic != nullptr)
+			if (anic != nullptr && anic->enable)
 				anic->Update();
 		}
 
@@ -119,7 +119,7 @@ void GameScene::OnMove()
         for (GameObject* gobj : GameObject::gameObjects)
         {
             Animation* ani = gobj->GetComponent<Animation>();
-            if (ani != nullptr)
+            if (ani != nullptr && ani->enable)
                 ani->Update();
         }
 
