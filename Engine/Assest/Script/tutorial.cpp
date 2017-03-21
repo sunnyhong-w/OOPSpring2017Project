@@ -21,9 +21,9 @@ void Tutorial::Update()
 	if (Input::GetKeyTrigger(VK_RIGHT))
 		vel = vel + Vector2::right* speed;
 	if (Input::GetKeyTrigger(VK_UP))
-		vel = vel + Vector2::down* speed;
-	if (Input::GetKeyTrigger(VK_DOWN))
 		vel = vel + Vector2::up* speed;
+	if (Input::GetKeyTrigger(VK_DOWN))
+		vel = vel + Vector2::down* speed;
 	Rigidbody *rb = gameObject->GetComponent<Rigidbody>();
 
 	if (rb != nullptr)

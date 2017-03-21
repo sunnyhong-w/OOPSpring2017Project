@@ -9,16 +9,16 @@ namespace game_engine
 // Vector2
 /////////////////////////////////////////////////////////////
 
-const Vector2 Vector2::up     = Vector2( 0,  1);
-const Vector2 Vector2::down   = Vector2( 0, -1);
+const Vector2 Vector2::up     = Vector2( 0, -1);
+const Vector2 Vector2::down   = Vector2( 0,  1);
 const Vector2 Vector2::left   = Vector2(-1,  0);
 const Vector2 Vector2::right  = Vector2( 1,  0);
 const Vector2 Vector2::one    = Vector2( 1,  1);
 const Vector2 Vector2::zero   = Vector2( 0,  0);
 const Vector2 Vector2::null   = Vector2(true);
 
-const Vector2I Vector2I::up   = Vector2I(0, 1);
-const Vector2I Vector2I::down = Vector2I(0, -1);
+const Vector2I Vector2I::up   = Vector2I(0, -1);
+const Vector2I Vector2I::down = Vector2I(0, 1);
 const Vector2I Vector2I::left = Vector2I(-1, 0);
 const Vector2I Vector2I::right = Vector2I( 1, 0);
 const Vector2I Vector2I::one  = Vector2I(1, 1);
