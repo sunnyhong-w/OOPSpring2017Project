@@ -24,10 +24,6 @@ void GameScene::OnBeginState()
     th.join();
     //After Loading Easing(Ex : Brighten the whole window)
     game_framework::CSpecialEffect::SetCurrentTime();
-
-    for (GameObject* gobj : GameObject::gameObjects)
-        if (!gobj->isStarted)
-            gobj->Start();
 }
 
 void GameScene::OnMove()
@@ -83,6 +79,7 @@ void GameScene::OnMove()
 		for (auto ptr : GameObject::gameObjectsWaitingPools)
 		{
 			GameObject::Insert(ptr);
+            ptr->Start();
 		}
 		GameObject::gameObjectsWaitingPools.clear();
 
