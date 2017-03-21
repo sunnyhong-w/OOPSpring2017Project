@@ -277,7 +277,7 @@ void Destroy(GameObject* gobj)
 GameObject* Instantiate(GameObject* gobj, Vector2 position)
 {
     if (!position.isNull())
-        gobj->GetComponent<Transform>()->position = position;
+        gobj->GetComponent<Transform>()->SetPosition(position);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     GameObject::UpdateTag(gobj);
@@ -292,7 +292,7 @@ GameObject* InstantiateJSON(json jsonobj, Vector2 position)
     gobj->ParseJSON(jsonobj);
 
     if (!position.isNull())
-        gobj->GetComponent<Transform>()->position = position;
+        gobj->GetComponent<Transform>()->SetPosition(position);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     return gobj;
@@ -303,16 +303,16 @@ void GameObject::Insert(GameObject* gobj)
     //Magic : Do an instertion sort with binary search
 	int size = GameObject::gameObjects.size();
 	int high = size - 1, low = 0, mid = 0;
-    int gobjzindex = gobj->transform->GetZIndex();
+    int gobjzindex = gobj->transform->GetWorldZIndex();
     int gobjsortinglayer = gobj->transform->GetSortingLayer();
     //Do an binary search so we know where should the object be
     while (low <= high)
     {
         mid = (high + low) / 2;
 
-        if (GameObject::gameObjects[mid]->transform->GetZIndex() > gobjzindex)
+        if (GameObject::gameObjects[mid]->transform->GetWorldZIndex() > gobjzindex)
             high = mid - 1;
-        else if (GameObject::gameObjects[mid]->transform->GetZIndex() < gobjzindex)
+        else if (GameObject::gameObjects[mid]->transform->GetWorldZIndex() < gobjzindex)
             low = mid + 1;
         else
         {
@@ -380,15 +380,15 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
 	int size = GameObject::gameObjects.size();
     int high = size - 1, low = 0, mid = 0;
 
-    int objzindex = gobj->transform->GetZIndex();
+    int objzindex = gobj->transform->GetWorldZIndex();
 
     while (low <= high)
     {
         mid = (high + low) / 2;
 
-        if (GameObject::gameObjects[mid]->transform->GetZIndex() > objzindex)
+        if (GameObject::gameObjects[mid]->transform->GetWorldZIndex() > objzindex)
             high = mid - 1;
-        else if (GameObject::gameObjects[mid]->transform->GetZIndex() < objzindex)
+        else if (GameObject::gameObjects[mid]->transform->GetWorldZIndex() < objzindex)
             low = mid + 1;
         else
             break;
@@ -397,7 +397,7 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
     //backward
 	for (int i = mid; i < size; i++)
 	{
-		if (GameObject::gameObjects[i]->transform->GetZIndex() == objzindex)
+		if (GameObject::gameObjects[i]->transform->GetWorldZIndex() == objzindex)
 		{
 			if (GameObject::gameObjects[i] == gobj)
 			{
@@ -411,7 +411,7 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
     //foward
     for (int i = mid; i >= 0; i--)
     {
-		if (GameObject::gameObjects[i]->transform->GetZIndex() == objzindex)
+		if (GameObject::gameObjects[i]->transform->GetWorldZIndex() == objzindex)
 		{
 			if (GameObject::gameObjects[i] == gobj)
 			{

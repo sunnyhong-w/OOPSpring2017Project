@@ -51,10 +51,17 @@ class Transform : public Component
         Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0);
         ~Transform() {};
         void ParseJSON(json j) override;
-        void SetZIndex(int z);
-        int  GetZIndex();
         int  GetSortingLayer();
-        Vector2 position;
+        int  GetZIndex();
+        void SetZIndex(int z);
+        int  GetWorldZIndex();
+        void SetWorldZIndex(int z);
+        Vector2 GetPostion();
+        void SetPosition(Vector2 newpos);
+        Vector2 GetWorldPosition();
+        void SetWorldPosition(Vector2 newpos);
+        void Translate(Vector2 dpos);
+
         Vector2 scale;
 
 		void SetParent(Transform* target);
@@ -63,6 +70,9 @@ class Transform : public Component
 
     private:
         int zindex;
+        int worldzindex;
+        Vector2 position;
+        Vector2 worldposition;
 
 		Transform *parent;
 		vector<Transform*> child;

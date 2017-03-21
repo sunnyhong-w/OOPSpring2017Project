@@ -78,11 +78,12 @@ void MapReader::LoadMap(string fname)
 								cr->collisionInfo = tmp.tiles[tileindex].object[0]; //先當他只會有一個collider
 							}
 
-							Instantiate(gobj, pos.GetV2());
-							gobj->transform->SetZIndex(gobj->transform->GetZIndex() + zindex);
-							gobj->SetLayer(Layer::Tile);
+							Instantiate(gobj);
                             gobj->transform->SetParent(this->transform);
-							
+                            gobj->transform->SetPosition(pos.GetV2());
+							gobj->transform->SetZIndex(zindex);
+							gobj->SetLayer(Layer::Tile);
+                            
 							break;
 						}
 					}
@@ -131,6 +132,9 @@ void MapReader::Update()
         for (Transform* gobj : objlist)
             Destroy(gobj->gameObject);
     }
+
+    if (Input::GetKeyPressing(VK_F6))
+        this->transform->Translate(Vector2::right * 5);
 }
 
 TileSet::TileSet()

@@ -38,16 +38,62 @@ bool Component::isBehavior()
 //////////////////////////////////////////////////////////////////
 Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj)
 {
-    this->position = v2;
     this->scale = Vector2::one;
     this->zindex = z;
     this->parent = nullptr;
+    this->worldposition = Vector2::zero;
+    this->SetPosition(v2);
+    this->transform = this;
 }
 
 void Transform::SetZIndex(int z)
 {
     this->zindex = z;
     GameObject::UpdateRenderOrder(this->gameObject);
+}
+
+int Transform::GetWorldZIndex()
+{
+    return worldzindex;
+}
+
+void Transform::SetWorldZIndex(int z)
+{
+    this->worldzindex = z;
+    this->zindex = ((this->parent != nullptr) ? z - this->parent->worldzindex : z);
+}
+
+Vector2 Transform::GetPostion()
+{
+    return position;
+}
+
+void Transform::SetPosition(Vector2 newpos)
+{
+    Vector2 dp = newpos - this->position;
+    this->position = newpos;
+    this->worldposition = ((this->parent != nullptr) ? newpos + this->parent->worldposition : newpos);
+    for (auto c : child)
+        c->Translate(dp);
+}
+
+Vector2 Transform::GetWorldPosition()
+{
+    return worldposition;
+}
+
+void Transform::SetWorldPosition(Vector2 newpos)
+{
+    Vector2 dp = newpos - this->worldposition;
+    this->worldposition = newpos;
+    this->position = ((this->parent != nullptr) ? newpos - this->parent->worldposition : newpos);
+    for (auto c : child)
+        c->Translate(dp);
+}
+
+void Transform::Translate(Vector2 dpos)
+{
+    SetPosition(position + dpos);
 }
 
 int Transform::GetZIndex()
@@ -72,7 +118,9 @@ void Transform::SetParent(Transform *target)
     if(target != nullptr)
         target->AddChild(this);
 
+    Vector2 myPos = GetWorldPosition();
     this->parent = target;
+    this->SetWorldPosition(myPos);
 }
 
 Transform* Transform::GetParent()
@@ -102,7 +150,7 @@ void Transform::ParseJSON(json j)
     bool doUpdateRenderOrder = false;
 
     if (j.find("position") != j.end())
-        this->position = j["position"];
+        this->SetPosition(j["position"]);
 
     if (j.find("scale") != j.end())
         this->scale = j["scale"];
@@ -166,7 +214,7 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(transform->position.round().GetV2I() - cameraPos - GetAnchorPoint() + offset, transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(transform->GetWorldPosition().round().GetV2I() - cameraPos - GetAnchorPoint() + offset, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -285,14 +333,14 @@ void Collider::OnDrawGismos(CDC *pDC)
 	Vector2I w = collisionInfo.size;
 	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
 	Vector2 SpriteOffset = SR != nullptr ? SR->GetAnchorPoint().GetV2() : Vector2::zero;
-	Vector2 pos = transform->position + collisionInfo.offset.GetV2()- SpriteOffset;
+	Vector2 pos = transform->GetWorldPosition() + collisionInfo.offset.GetV2()- SpriteOffset;
     game_framework::CDDraw::DrawRect(pDC, pos.GetV2I(), w, RGB(0, 255, 0));
 }
 
 bool Collider::PointCollision(Vector2I point)
 {
     GAME_ASSERT(transform != nullptr, (string("transform not found. #[Engine]Collision::PointCollision | Object : ") + gameObject->GetName()).c_str());
-    return point >= (transform->position.GetV2I() + collisionInfo.offset) && point <= (transform->position.GetV2I() + collisionInfo.offset + collisionInfo.size);
+    return point >= (transform->GetWorldPosition().GetV2I() + collisionInfo.offset) && point <= (transform->GetWorldPosition().GetV2I() + collisionInfo.offset + collisionInfo.size);
 }
 
 bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
@@ -301,8 +349,8 @@ bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
 	SpriteRenderer *aSR = gameObject->GetComponent<SpriteRenderer>(), *bSR = box->gameObject->GetComponent<SpriteRenderer>();
 	Vector2 aSpriteOffset = aSR != nullptr ? aSR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 bSpriteOffset = bSR != nullptr ? bSR->GetAnchorPoint().GetV2() : Vector2::zero;
-	Vector2 apos = transform->position + collisionInfo.offset.GetV2() + velocityOffset - aSpriteOffset;
-	Vector2 bpos = box->transform->position + box->collisionInfo.offset.GetV2() - bSpriteOffset;
+	Vector2 apos = transform->GetWorldPosition() + collisionInfo.offset.GetV2() + velocityOffset - aSpriteOffset;
+	Vector2 bpos = box->transform->GetWorldPosition() + box->collisionInfo.offset.GetV2() - bSpriteOffset;
 	Vector2 amid = apos + aw;
 	Vector2 bmid = bpos + bw;
 	Vector2 w = aw + bw;
@@ -517,7 +565,7 @@ void Rigidbody::Update()
 		}
 	}
 
-	this->transform->position = this->transform->position + velocity;
+    this->transform->Translate(velocity);
 }
 
 CollisionLayer::CollisionLayer()

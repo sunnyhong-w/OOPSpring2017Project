@@ -51,5 +51,5 @@ void TextStamp::randomShake()
 
 void TextStamp::setPosition(Vector2 stampPos)
 {
-    this->transform->position = stampPos;
+    this->transform->SetPosition(stampPos);
 }

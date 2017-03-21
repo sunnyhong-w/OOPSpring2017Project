@@ -5,12 +5,11 @@
             "position": {
                 "x": 224,
                 "y": 192
-            },
+            }
         },
         "SpriteRenderer": {
             "Bitmap": {
                 "name": "player"
-            }
             },
             "SortingLayer": 1
         },
