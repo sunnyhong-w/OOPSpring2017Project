@@ -39,6 +39,7 @@ bool Component::isBehavior()
 Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj)
 {
     this->scale = Vector2::one;
+    this->worldzindex = 0;
     this->zindex = z;
     this->parent = nullptr;
     this->worldposition = Vector2::zero;
@@ -565,7 +566,7 @@ void Rigidbody::Update()
 		}
 	}
 
-    this->transform->Translate(velocity);
+    this->transform->Translate(velocity * Time::deltaTime);
 }
 
 CollisionLayer::CollisionLayer()
