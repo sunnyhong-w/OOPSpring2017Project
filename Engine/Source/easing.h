@@ -91,7 +91,7 @@ class Easing
         /// <param name="d">總時間</param>
         /// <returns></returns>
         static Vector2 easeFT(double(*func)(double, double, double, double), double t, Vector2 from, Vector2 to, double d);
-        enum easeMode { easeIn, easeOut, easeInOut };
+        enum class easeMode { easeIn, easeOut, easeInOut };
         /// <summary>
         /// 從A點到B點的Easing Function
         /// </summary>

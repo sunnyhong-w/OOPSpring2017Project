@@ -48,13 +48,12 @@ class Component
 class Transform : public Component
 {
     public:
-        Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0, RenderDepth rd = RenderDepth::MAINGROUND);
+        Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0);
         ~Transform() {};
         void ParseJSON(json j) override;
-        void SetRenderDepth(int z);
-        void SetRenderDepth(RenderDepth rd);
-        void SetRenderDepth(int z, RenderDepth rd);
-        int GetZCode();
+        void SetZIndex(int z);
+        int  GetZIndex();
+        int  GetSortingLayer();
         Vector2 position;
         Vector2 scale;
 
@@ -64,8 +63,6 @@ class Transform : public Component
 
     private:
         int zindex;
-        RenderDepth depth;
-        int zcode;
 
 		Transform *parent;
 		vector<Transform*> child;
@@ -104,13 +101,15 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void SetAnchorRaito(Vector2 pos);
         void SetOffset(Vector2I offset);
         Vector2I GetAnchorPoint();
-
+        SortingLayer GetSortingLayer();
+        void SetSortingLayer(SortingLayer SL);
     private:
         Vector2I size;
         Vector2I srcpos;
         Vector2I offset;
         Vector2 anchorRaito;
 
+        SortingLayer sortingLayer;
         bool cutSrc = false;
         static map<string, unsigned int> fileInfo;
 };

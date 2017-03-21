@@ -303,24 +303,26 @@ void GameObject::Insert(GameObject* gobj)
     //Magic : Do an instertion sort with binary search
 	int size = GameObject::gameObjects.size();
 	int high = size - 1, low = 0, mid = 0;
-
-	if (size == 0)
-	{
-		GameObject::gameObjects.insert(GameObject::gameObjects.begin(), gobj);
-		return;
-	}
-
+    int gobjzindex = gobj->transform->GetZIndex();
+    int gobjsortinglayer = gobj->transform->GetSortingLayer();
     //Do an binary search so we know where should the object be
     while (low <= high)
     {
         mid = (high + low) / 2;
 
-        if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
+        if (GameObject::gameObjects[mid]->transform->GetZIndex() > gobjzindex)
             high = mid - 1;
-        else if (GameObject::gameObjects[mid]->transform->GetZCode() < gobj->transform->GetZCode())
+        else if (GameObject::gameObjects[mid]->transform->GetZIndex() < gobjzindex)
             low = mid + 1;
         else
-            break;
+        {
+            if(GameObject::gameObjects[mid]->transform->GetSortingLayer() > gobjsortinglayer)
+                high = mid - 1;
+            else if (GameObject::gameObjects[mid]->transform->GetSortingLayer() < gobjsortinglayer)
+                low = mid + 1;
+            else
+                break;
+        }
     }
 
     GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, gobj);
@@ -378,25 +380,24 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
 	int size = GameObject::gameObjects.size();
     int high = size - 1, low = 0, mid = 0;
 
+    int objzindex = gobj->transform->GetZIndex();
+
     while (low <= high)
     {
         mid = (high + low) / 2;
 
-        if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
+        if (GameObject::gameObjects[mid]->transform->GetZIndex() > objzindex)
             high = mid - 1;
-        else if (GameObject::gameObjects[mid]->transform->GetZCode() < gobj->transform->GetZCode())
+        else if (GameObject::gameObjects[mid]->transform->GetZIndex() < objzindex)
             low = mid + 1;
         else
             break;
     }
 
-	int zcode = GameObject::gameObjects[mid]->transform->GetZCode();
-
-
     //backward
 	for (int i = mid; i < size; i++)
 	{
-		if (GameObject::gameObjects[i]->transform->GetZCode() == zcode)
+		if (GameObject::gameObjects[i]->transform->GetZIndex() == objzindex)
 		{
 			if (GameObject::gameObjects[i] == gobj)
 			{
@@ -410,7 +411,7 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
     //foward
     for (int i = mid; i >= 0; i--)
     {
-		if (GameObject::gameObjects[i]->transform->GetZCode() == zcode)
+		if (GameObject::gameObjects[i]->transform->GetZIndex() == objzindex)
 		{
 			if (GameObject::gameObjects[i] == gobj)
 			{

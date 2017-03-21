@@ -13,9 +13,9 @@ void from_json(const json &j, Tag &t)
     t = (Tag)j.get<int>();
 }
 
-void from_json(const json &j, RenderDepth &rd)
+void from_json(const json &j, SortingLayer &rd)
 {
-    rd = (RenderDepth)j.get<int>();
+    rd = (SortingLayer)j.get<int>();
 }
 
 }
