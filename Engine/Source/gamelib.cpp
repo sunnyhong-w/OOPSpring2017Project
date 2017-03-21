@@ -1208,7 +1208,6 @@ bool CDDraw::CreateSurfaceWindowed()
 void CDDraw::DrawLine(CDC *pDC, game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color)
 {
 	CPen pen;
-    color |= 128 << 24;
 	pen.CreatePen(0, 1, color);
 	pDC->SelectObject(pen);
 	pDC->MoveTo(from.x, from.y);
