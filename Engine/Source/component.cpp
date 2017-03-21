@@ -222,7 +222,7 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(transform->GetWorldPosition().round().GetV2I() - cameraPos - GetAnchorPoint() + offset, transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(this->GetRealRenderPostion() - cameraPos, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -324,6 +324,11 @@ void SpriteRenderer::SetSortingLayer(SortingLayer SL)
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
+inline Vector2I SpriteRenderer::GetRealRenderPostion()
+{
+    return transform->GetWorldPosition().round().GetV2I() - GetAnchorPoint() + offset;
+}
+
 
 
 
@@ -336,13 +341,13 @@ Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
     this->collisionInfo.size = sz;
 }
 
-void Collider::OnDrawGismos(CDC *pDC)
+void Collider::OnDrawGismos(CDC *pDC, Vector2I cameraPos)
 {
 	Vector2I w = collisionInfo.size;
 	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
 	Vector2 SpriteOffset = SR != nullptr ? SR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 pos = transform->GetWorldPosition() + collisionInfo.offset.GetV2()- SpriteOffset;
-    game_framework::CDDraw::DrawRect(pDC, pos.GetV2I(), w, RGB(0, 255, 0));
+    game_framework::CDDraw::DrawRect(pDC, pos.GetV2I() - cameraPos, w, RGB(0, 255, 0));
 }
 
 bool Collider::PointCollision(Vector2I point)

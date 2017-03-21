@@ -114,6 +114,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         Vector2I GetAnchorPoint();
         SortingLayer GetSortingLayer();
         void SetSortingLayer(SortingLayer SL);
+        inline Vector2I GetRealRenderPostion();
     private:
         Vector2I size;
         Vector2I srcpos;
@@ -138,7 +139,7 @@ class Collider : public Component
 {
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
-		void OnDrawGismos(CDC *pDC);
+        void OnDrawGismos(CDC *pDC, Vector2I cameraPos);
         bool PointCollision(Vector2I point);
 		bool BoxCollision(Collider* box, Vector2 &velocityOffse, bool block = false);
         void ParseJSON(json j) override;
