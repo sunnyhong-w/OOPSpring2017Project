@@ -57,7 +57,7 @@ Vector2 Vector2::operator-(Vector2I subtraction)
 
 Vector2 Vector2::operator+(Vector2I adder)
 {
-    return Vector2(this->x - adder.x, this->y - adder.y);
+    return Vector2(this->x + adder.x, this->y + adder.y);
 }
 
 Vector2 Vector2::SmoothDamp(Vector2 current, Vector2 target, Vector2 &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
