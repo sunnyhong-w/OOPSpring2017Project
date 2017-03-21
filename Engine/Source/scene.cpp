@@ -18,7 +18,7 @@ void GameScene::OnBeginState()
     thread th(&GameScene::LoadSceneData, this);
 
     //Render Loading Animation(force it OnDraw)
-    while (!th.joinable())
+    while (loadname != "")
         OnDraw();
 
     th.join();
@@ -260,6 +260,16 @@ GameObject* GameScene::CreateGameObject(json jsonobj, map<string, string> prefra
 void GameScene::LoadScene(string filename)
 {
     this->loadname = filename;
+}
+
+Vector2I & GameScene::CameraPosition()
+{
+    return GameScene::NowScene()->cameraPosition;
+}
+
+GameScene * GameScene::NowScene()
+{
+    return ((GameScene*)game_framework::CGame::Instance()->GetState());
 }
 
 void GameScene::LoadSceneData()

@@ -42,6 +42,21 @@ void Tutorial::Update()
 
     vel.y += gravity * Time::deltaTime;
     rb->velocity = vel * tiledPixel * Time::deltaTime;
+
+    ////
+
+    if (Input::GetKeyPressing(VK_NUMPAD8))
+        GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::up * 10;
+    if (Input::GetKeyPressing(VK_NUMPAD6))
+        GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::right * 10;
+    if (Input::GetKeyPressing(VK_NUMPAD4))
+        GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::left * 10;
+    if (Input::GetKeyPressing(VK_NUMPAD2))
+        GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::down * 10;
+
+    if (Input::GetKeyDown(VK_F5))
+        GameScene::NowScene()->LoadScene("Main");
+       
 }
 
 void Tutorial::OnRecivedBoardcast(json j)
