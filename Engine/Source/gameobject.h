@@ -21,6 +21,7 @@ namespace game_engine
 
 class Component;
 class Transform;
+class SpriteRenderer;
 class GameObject;
 
 //一些Public的最高權限Function
@@ -36,6 +37,7 @@ class GameObject
         friend GameObject* InstantiateJSON(json jsonobj, Vector2 posision);
         friend class GameScene;
         friend class Transform;
+        friend class SpriteRenderer;
         friend class game_framework::CGame;
 		friend class Rigidbody;
     public:

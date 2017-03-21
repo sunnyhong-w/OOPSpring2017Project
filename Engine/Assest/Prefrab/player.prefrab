@@ -6,12 +6,13 @@
                 "x": 224,
                 "y": 192
             },
-            "zindex" : 100
         },
         "SpriteRenderer": {
             "Bitmap": {
                 "name": "player"
             }
+            },
+            "SortingLayer": 1
         },
         "Collider": {
             "size": {

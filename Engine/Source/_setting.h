@@ -10,18 +10,16 @@ enum class Layer : int { Default, Tile };
 //      Object  Tag  define      //
 ///////////////////////////////////
 enum class Tag : int { Untagged, Tile };
-///////////////////////////////////
-//Render Z-index position define //
-///////////////////////////////////
-enum class RenderDepth : int
-{
-    BACKGROUND = -1000,
-    MAINGROUND = 0,
-    FOREGROUND = 1000,
-    GUI = 10000
-};
+///////////////////////////////////////////////
+//    Sprite Renderer Render Order define    //
+//  The Layer in front will be render first  //
+///////////////////////////////////////////////
+enum class SortingLayer : int { Default, Player };
 
+////////////////////////////
+//    FromJSON Declear    //
+////////////////////////////
 void from_json(const json &j, Layer &l);
 void from_json(const json &j, Tag &t);
-void from_json(const json &j, RenderDepth &l);
+void from_json(const json &j, SortingLayer &l);
 }

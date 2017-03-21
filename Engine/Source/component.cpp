@@ -36,41 +36,32 @@ bool Component::isBehavior()
 //////////////////////////////////////////////////////////////////
 // Transform實作
 //////////////////////////////////////////////////////////////////
-Transform::Transform(GameObject* gobj, Vector2 v2, int z, RenderDepth rd) : Component(gobj)
+Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj)
 {
     this->position = v2;
     this->scale = Vector2::one;
     this->zindex = z;
-    this->depth = rd;
-    this->zcode = this->zindex + (int)this->depth;
     this->parent = nullptr;
 }
 
-void Transform::SetRenderDepth(int z)
+void Transform::SetZIndex(int z)
 {
     this->zindex = z;
-    this->zcode = this->zindex + (int)this->depth;
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
-void Transform::SetRenderDepth(RenderDepth rd)
+int Transform::GetZIndex()
 {
-    this->depth = rd;
-    this->zcode = this->zindex + (int)this->depth;
-    GameObject::UpdateRenderOrder(this->gameObject);
+    return zindex;
 }
 
-void Transform::SetRenderDepth(int z, RenderDepth rd)
+int Transform::GetSortingLayer()
 {
-    this->zindex = z;
-    this->depth = rd;
-    this->zcode = this->zindex + (int)this->depth;
-    GameObject::UpdateRenderOrder(this->gameObject);
-}
-
-int Transform::GetZCode()
-{
-    return zcode;
+    SpriteRenderer *SR = this->gameObject->GetComponent<SpriteRenderer>();
+    if (SR == nullptr)
+        return -1;
+    else
+        return (int)SR->GetSortingLayer();
 }
 
 void Transform::SetParent(Transform *target)
@@ -108,22 +99,19 @@ void Transform::RemoveChild(Transform * target)
 
 void Transform::ParseJSON(json j)
 {
+    bool doUpdateRenderOrder = false;
+
     if (j.find("position") != j.end())
         this->position = j["position"];
 
     if (j.find("scale") != j.end())
         this->scale = j["scale"];
 
-    if (j.find("depth") != j.end())
-        this->depth = j["depth"];
-
     if (j.find("zindex") != j.end())
+    {
         this->zindex = j["zindex"];
-
-    this->zcode = this->zindex + (int)this->depth;
-
-    if (j.find("depth") != j.end() || j.find("zindex") != j.end())
         GameObject::UpdateRenderOrder(this->gameObject);
+    }
 }
 
 //////////////////////////////////////////////////////////////////
@@ -167,6 +155,12 @@ void SpriteRenderer::ParseJSON(json j)
 
     if (j.find("SrcSize") != j.end())
         this->SetSize(j["SrcSize"]);
+
+    if (j.find("SortingLayer") != j.end())
+    {
+        this->sortingLayer = j["SortingLayer"];
+        GameObject::UpdateRenderOrder(this->gameObject);
+    }
 }
 
 void SpriteRenderer::Draw(Vector2I cameraPos)
@@ -261,6 +255,17 @@ void SpriteRenderer::SetOffset(Vector2I dp)
 Vector2I SpriteRenderer::GetAnchorPoint()
 {
     return (this->size.GetV2() * this->anchorRaito).GetV2I();
+}
+
+SortingLayer SpriteRenderer::GetSortingLayer()
+{
+    return sortingLayer;
+}
+
+void SpriteRenderer::SetSortingLayer(SortingLayer SL)
+{
+    this->sortingLayer = SL;
+    GameObject::UpdateRenderOrder(this->gameObject);
 }
 
 
