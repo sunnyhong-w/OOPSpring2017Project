@@ -176,11 +176,18 @@ private:
 	Animation* animation;
 };
 
+struct ColliderInfo
+{
+    bool top, bottom, left, right;
+    void Reset();
+};
+
 class Rigidbody : public Component
 {
 public:
 	Rigidbody(GameObject* gobj) : Component(gobj) {};
 	Vector2 velocity;
+    ColliderInfo colliderInfo;
 	void ParseJSON(json j) override;
 	void Update();
 private:

@@ -542,6 +542,12 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
 
 void Rigidbody::Update()
 {
+    colliderInfo.Reset();
+
+    Vector2 originalVelocity = velocity;
+    velocity = velocity.round();
+    Vector2 originalRoundVelocity = velocity;
+
 	Collider* collider = this->gameObject->GetComponent<Collider>();
 	if (collider != nullptr)
 	{
@@ -565,8 +571,27 @@ void Rigidbody::Update()
                 DoCollision(collider, gobjvec, velocity, cl.block);
 		}
 	}
+    this->transform->Translate(velocity);
 
-    this->transform->Translate(velocity * Time::deltaTime);
+    if (velocity.x != originalRoundVelocity.x)
+    {
+        if (originalRoundVelocity.x > 0)
+            colliderInfo.right = true;
+        else if (originalRoundVelocity.x < 0)
+            colliderInfo.left = true;
+    }
+
+    if (velocity.y != originalRoundVelocity.y)
+    {
+        if (originalRoundVelocity.y > 0)
+            colliderInfo.bottom = true;
+        else if (originalRoundVelocity.y < 0)
+            colliderInfo.top = true;
+    }
+        
+
+    velocity = originalVelocity + (velocity - originalRoundVelocity);
+
 }
 
 CollisionLayer::CollisionLayer()
@@ -582,6 +607,11 @@ void from_json(const json & j, CollisionLayer & cl)
 
 	if (j.find("Layer") != j.end())
 		cl.layer = (Layer)j["Layer"];
+}
+
+void ColliderInfo::Reset()
+{
+    top = bottom = left = right = false;
 }
 
 }
