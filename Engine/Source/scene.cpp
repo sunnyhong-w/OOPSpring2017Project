@@ -133,24 +133,27 @@ void GameScene::OnMove()
 
 void GameScene::OnShow()
 {
-    for (GameObject* gobj : GameObject::gameObjects)
-        if (gobj->enable)
-            gobj->Draw(cameraPosition);
+    if (loadname == "")
+    {
+        for (GameObject* gobj : GameObject::gameObjects)
+            if (gobj->enable)
+                gobj->Draw(cameraPosition);
 
-    //Draw Superve GUI thing after gameobject drawn
+        //Draw Superve GUI thing after gameobject drawn
 
-    //Draw Debug Info By CDC
+        //Draw Debug Info By CDC
 
-    CDC *pDC = game_framework::CDDraw::GetBackCDC();
-
-	for (GameObject* gobj : GameObject::gameObjects)
-	{
-		Collider* collider = gobj->GetComponent<Collider>();
-		if (collider != nullptr)
-			collider->OnDrawGismos(pDC);
-	}
-
-    game_framework::CDDraw::ReleaseBackCDC();
+        //CDC *pDC = game_framework::CDDraw::GetBackCDC();
+        //
+        //for (GameObject* gobj : GameObject::gameObjects)
+        //{
+        //	Collider* collider = gobj->GetComponent<Collider>();
+        //	if (collider != nullptr)
+        //		collider->OnDrawGismos(pDC);
+        //}
+        //
+        //game_framework::CDDraw::ReleaseBackCDC();
+    }
 }
 
 #define FindJSON(str) j.find(str) != j.end()
