@@ -568,6 +568,88 @@ void Rigidbody::CollisionDetection(Vector2& invelocity)
     }
 }
 
+void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
+{
+    Collider* collider = this->gameObject->GetComponent<Collider>();
+    if (collider != nullptr)
+    {
+        for (CollisionLayer cl : collider->collisionLayer)
+        {
+            vector<Vector2> sliceVelocity;
+            Vector2 sliceUnit = Vector2(16, 16);
+            Vector2 vslicenum = velocity / sliceUnit;
+            vslicenum = vslicenum.abs();
+
+
+            auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
+
+            if (cl.block)
+            {
+                Vector2I sliceNum(ceil(vslicenum.x), ceil(vslicenum.y));
+
+                //Horizontal Collision
+                if (sliceNum.x != 0)
+                {
+                    Vector2 slice = invelocity / sliceNum.x;
+                    for (int i = 1; i <= sliceNum.x; i++)
+                    {
+                        Vector2 v;
+                        if (i != sliceNum.x)
+                            v = (slice * i).round();
+                        else
+                            v = invelocity;
+                        Vector2 vHorizontal(v.x, 0);
+                        if (DoCollision(collider, gobjvec, vHorizontal, cl.block))
+                        {
+                            invelocity.x = vHorizontal.x;
+                            break;
+                        }
+                    }
+                }
+
+                if (sliceNum.y != 0)
+                {
+                    Vector2 slice = invelocity / sliceNum.y;
+                    for (int i = 1; i <= sliceNum.y; i++)
+                    {
+                        Vector2 v;
+                        if (i != sliceNum.y)
+                            v = (slice * i).round();
+                        else
+                            v = invelocity;
+                        Vector2 vVertical(invelocity.x, v.y);
+                        if (DoCollision(collider, gobjvec, vVertical, cl.block))
+                        {
+                            invelocity.y = vVertical.y;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Vector2I temp(ceil(vslicenum.x), ceil(vslicenum.y));
+                int sliceNum = temp.x > temp.y ? temp.x : temp.y;
+
+                if (sliceNum != 0)
+                {
+                    Vector2 slice = invelocity / sliceNum;
+                    for (int i = 1; i <= sliceNum; i++)
+                    {
+                        Vector2 v;
+                        if (i != sliceNum)
+                            v = (slice * i).round();
+                        else
+                            v = invelocity;
+                        
+                        DoCollision(collider, gobjvec, v, cl.block);
+                    }
+                }
+            }
+        }
+    }
+}
+
 void Rigidbody::Update()
 {
     colliderInfo.Reset();
@@ -577,33 +659,7 @@ void Rigidbody::Update()
     Vector2 originalRoundVelocity = velocity;
 
     if (TimeSliceCollision)
-    {
-        vector<Vector2> sliceVelocity;
-        Vector2 sliceUnit = Vector2(16, 16);
-        Vector2 vslicenum = velocity / sliceUnit;
-        vslicenum = vslicenum.abs();
-        int sliceNum = ceil(vslicenum.x > vslicenum.y ? vslicenum.x : vslicenum.y);
-        if (sliceNum != 0)
-        {
-            Vector2 slice = velocity / sliceNum;
-            for (int i = 1; i < sliceNum; i++)
-                sliceVelocity.push_back((slice * i).round());
-
-            sliceVelocity.push_back(originalRoundVelocity);
-            velocity = originalRoundVelocity;
-
-            for (auto &v : sliceVelocity)
-            {
-                Vector2 originalVelocity = v;
-                CollisionDetection(v);
-                if (v != originalVelocity)
-                {
-                    velocity = v;
-                    break;
-                }
-            }
-        }
-    }
+        CollisionDetectionSlice(velocity);
     else
         CollisionDetection(velocity);
 
