@@ -9,16 +9,16 @@ namespace game_engine
 // Vector2
 /////////////////////////////////////////////////////////////
 
-const Vector2 Vector2::up     = Vector2( 0,  1);
-const Vector2 Vector2::down   = Vector2( 0, -1);
+const Vector2 Vector2::up     = Vector2( 0, -1);
+const Vector2 Vector2::down   = Vector2( 0,  1);
 const Vector2 Vector2::left   = Vector2(-1,  0);
 const Vector2 Vector2::right  = Vector2( 1,  0);
 const Vector2 Vector2::one    = Vector2( 1,  1);
 const Vector2 Vector2::zero   = Vector2( 0,  0);
 const Vector2 Vector2::null   = Vector2(true);
 
-const Vector2I Vector2I::up   = Vector2I(0, 1);
-const Vector2I Vector2I::down = Vector2I(0, -1);
+const Vector2I Vector2I::up   = Vector2I(0, -1);
+const Vector2I Vector2I::down = Vector2I(0, 1);
 const Vector2I Vector2I::left = Vector2I(-1, 0);
 const Vector2I Vector2I::right = Vector2I( 1, 0);
 const Vector2I Vector2I::one  = Vector2I(1, 1);
@@ -57,7 +57,7 @@ Vector2 Vector2::operator-(Vector2I subtraction)
 
 Vector2 Vector2::operator+(Vector2I adder)
 {
-    return Vector2(this->x - adder.x, this->y - adder.y);
+    return Vector2(this->x + adder.x, this->y + adder.y);
 }
 
 Vector2 Vector2::SmoothDamp(Vector2 current, Vector2 target, Vector2 &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
@@ -140,7 +140,7 @@ bool operator==(Vector2 left, Vector2 right)
 bool operator!=(Vector2 left, Vector2 right)
 {
 	bool hasNull = left.isNull() || right.isNull();
-	return hasNull ? left.isNull() != right.isNull() : left.x != right.x && left.y != right.y;
+	return hasNull ? left.isNull() != right.isNull() : left.x != right.x || left.y != right.y;
 }
 
 Vector2 Vector2::abs()
@@ -309,7 +309,7 @@ bool operator==(Vector2I left, Vector2I right)
 bool operator!=(Vector2I left, Vector2I right)
 {
 	bool hasNull = left.isNull() || right.isNull();
-	return hasNull ? left.isNull() != right.isNull() : left.x != right.x && left.y != left.y;
+	return hasNull ? left.isNull() != right.isNull() : left.x != right.x || left.y != left.y;
 }
 
 void from_json(const json& j, Vector2I& v)

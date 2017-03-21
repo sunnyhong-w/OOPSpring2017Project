@@ -11,7 +11,7 @@
             "Bitmap": {
                 "name": "player"
             },
-            "zindex" : 100
+            "SortingLayer": 1
         },
         "Collider": {
             "size": {

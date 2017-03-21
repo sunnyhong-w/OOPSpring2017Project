@@ -48,14 +48,21 @@ class Component
 class Transform : public Component
 {
     public:
-        Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0, RenderDepth rd = RenderDepth::MAINGROUND);
+        Transform(GameObject* gobj, Vector2 pos = Vector2::zero, int z = 0);
         ~Transform() {};
         void ParseJSON(json j) override;
-        void SetRenderDepth(int z);
-        void SetRenderDepth(RenderDepth rd);
-        void SetRenderDepth(int z, RenderDepth rd);
-        int GetZCode();
-        Vector2 position;
+        int  GetSortingLayer();
+        int  GetZIndex();
+        void SetZIndex(int z);
+        int  GetWorldZIndex();
+        void SetWorldZIndex(int z);
+        Vector2 GetPostion();
+        void SetPosition(Vector2 newpos);
+        Vector2 GetWorldPosition();
+        void SetWorldPosition(Vector2 newpos);
+        void UpdateWorldPosition();
+        void Translate(Vector2 dpos);
+
         Vector2 scale;
 
 		void SetParent(Transform* target);
@@ -64,8 +71,9 @@ class Transform : public Component
 
     private:
         int zindex;
-        RenderDepth depth;
-        int zcode;
+        int worldzindex;
+        Vector2 position;
+        Vector2 worldposition;
 
 		Transform *parent;
 		vector<Transform*> child;
@@ -104,13 +112,16 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void SetAnchorRaito(Vector2 pos);
         void SetOffset(Vector2I offset);
         Vector2I GetAnchorPoint();
-
+        SortingLayer GetSortingLayer();
+        void SetSortingLayer(SortingLayer SL);
+        inline Vector2I GetRealRenderPostion();
     private:
         Vector2I size;
         Vector2I srcpos;
         Vector2I offset;
         Vector2 anchorRaito;
 
+        SortingLayer sortingLayer;
         bool cutSrc = false;
         static map<string, unsigned int> fileInfo;
 };
@@ -128,7 +139,7 @@ class Collider : public Component
 {
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
-		void OnDrawGismos(CDC *pDC);
+        void OnDrawGismos(CDC *pDC, Vector2I cameraPos);
         bool PointCollision(Vector2I point);
 		bool BoxCollision(Collider* box, Vector2 &velocityOffse, bool block = false);
         void ParseJSON(json j) override;
@@ -167,16 +178,26 @@ private:
 	Animation* animation;
 };
 
+struct ColliderInfo
+{
+    bool top, bottom, left, right;
+    void Reset();
+};
+
 class Rigidbody : public Component
 {
 public:
 	Rigidbody(GameObject* gobj) : Component(gobj) {};
 	Vector2 velocity;
+    ColliderInfo colliderInfo;
+    bool TimeSliceCollision = false;
 	void ParseJSON(json j) override;
 	void Update();
 private:
     void OnCollision(Collider *tgcollider);
     bool DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block);
+    void CollisionDetection(Vector2& invelocity);
+    void CollisionDetectionSlice(Vector2& invelocity);
 };
 
 }

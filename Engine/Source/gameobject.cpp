@@ -256,6 +256,7 @@ vector<GameObject*> GameObject::gameObjects;
 vector<GameObject*> GameObject::gameObjectsWaitingPools;
 map<string, json> GameObject::prefrabsData;
 map<string, GameObject*> GameObject::objectsName;
+map<string, int> GameObject::objectsNameCount;
 multimap<Tag, GameObject*> GameObject::objectsTag;
 multimap<Layer, GameObject*> GameObject::objectsLayer;
 
@@ -277,7 +278,7 @@ void Destroy(GameObject* gobj)
 GameObject* Instantiate(GameObject* gobj, Vector2 position)
 {
     if (!position.isNull())
-        gobj->GetComponent<Transform>()->position = position;
+        gobj->GetComponent<Transform>()->SetPosition(position);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     GameObject::UpdateTag(gobj);
@@ -292,7 +293,7 @@ GameObject* InstantiateJSON(json jsonobj, Vector2 position)
     gobj->ParseJSON(jsonobj);
 
     if (!position.isNull())
-        gobj->GetComponent<Transform>()->position = position;
+        gobj->GetComponent<Transform>()->SetPosition(position);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     return gobj;
@@ -303,24 +304,26 @@ void GameObject::Insert(GameObject* gobj)
     //Magic : Do an instertion sort with binary search
 	int size = GameObject::gameObjects.size();
 	int high = size - 1, low = 0, mid = 0;
-
-	if (size == 0)
-	{
-		GameObject::gameObjects.insert(GameObject::gameObjects.begin(), gobj);
-		return;
-	}
-
+    int gobjzindex = gobj->transform->GetWorldZIndex();
+    int gobjsortinglayer = gobj->transform->GetSortingLayer();
     //Do an binary search so we know where should the object be
     while (low <= high)
     {
         mid = (high + low) / 2;
 
-        if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
+        if (GameObject::gameObjects[mid]->transform->GetWorldZIndex() > gobjzindex)
             high = mid - 1;
-        else if (GameObject::gameObjects[mid]->transform->GetZCode() < gobj->transform->GetZCode())
+        else if (GameObject::gameObjects[mid]->transform->GetWorldZIndex() < gobjzindex)
             low = mid + 1;
         else
-            break;
+        {
+            if(GameObject::gameObjects[mid]->transform->GetSortingLayer() > gobjsortinglayer)
+                high = mid - 1;
+            else if (GameObject::gameObjects[mid]->transform->GetSortingLayer() < gobjsortinglayer)
+                low = mid + 1;
+            else
+                break;
+        }
     }
 
     GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, gobj);
@@ -328,16 +331,17 @@ void GameObject::Insert(GameObject* gobj)
 
 void GameObject::UpdateName(GameObject* gobj)
 {
-    if (GameObject::objectsName.find(gobj->name) == GameObject::objectsName.end())
+    if (GameObject::objectsNameCount.find(gobj->name) == GameObject::objectsNameCount.end())
+    {
         GameObject::objectsName[gobj->name] = gobj;
+        GameObject::objectsNameCount[gobj->name] = 0;
+    }
     else
     {
-        int i;
-
-        for (i = 0; GameObject::objectsName.find(gobj->name + " Clone(" + to_string(i) + ")") != GameObject::objectsName.end(); i++);
-
-        GameObject::objectsName[gobj->name + " Clone(" + to_string(i) + ")"] = gobj;
-        gobj->name = gobj->name + " Clone(" + to_string(i) + ")";
+        string newname = gobj->name + " Clone(" + to_string(GameObject::objectsNameCount[gobj->name]) + ")";
+        GameObject::objectsName[newname] = gobj;
+        gobj->name = newname;
+        GameObject::objectsNameCount[gobj->name]++;
     }
 }
 
@@ -378,25 +382,24 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
 	int size = GameObject::gameObjects.size();
     int high = size - 1, low = 0, mid = 0;
 
+    int objzindex = gobj->transform->GetWorldZIndex();
+
     while (low <= high)
     {
         mid = (high + low) / 2;
 
-        if (GameObject::gameObjects[mid]->transform->GetZCode() > gobj->transform->GetZCode())
+        if (GameObject::gameObjects[mid]->transform->GetWorldZIndex() > objzindex)
             high = mid - 1;
-        else if (GameObject::gameObjects[mid]->transform->GetZCode() < gobj->transform->GetZCode())
+        else if (GameObject::gameObjects[mid]->transform->GetWorldZIndex() < objzindex)
             low = mid + 1;
         else
             break;
     }
 
-	int zcode = GameObject::gameObjects[mid]->transform->GetZCode();
-
-
     //backward
 	for (int i = mid; i < size; i++)
 	{
-		if (GameObject::gameObjects[i]->transform->GetZCode() == zcode)
+		if (GameObject::gameObjects[i]->transform->GetWorldZIndex() == objzindex)
 		{
 			if (GameObject::gameObjects[i] == gobj)
 			{
@@ -410,7 +413,7 @@ void GameObject::UpdateRenderOrder(GameObject* gobj)
     //foward
     for (int i = mid; i >= 0; i--)
     {
-		if (GameObject::gameObjects[i]->transform->GetZCode() == zcode)
+		if (GameObject::gameObjects[i]->transform->GetWorldZIndex() == objzindex)
 		{
 			if (GameObject::gameObjects[i] == gobj)
 			{
@@ -461,8 +464,8 @@ json GameObject::GetPrefrabs(std::string file)
 
 json GameObject::InsertPrefrabs(string file, json prefrabsJSON)
 {
-    GAME_ASSERT(GameObject::prefrabsData.find(file) == GameObject::prefrabsData.end(),
-                ("Prefrab name repeated. #[Engine]GameObject::InsertPrefrabs (PrefrabName : " + file + ")").c_str());
+    if (GameObject::prefrabsData.find(file) != GameObject::prefrabsData.end())
+        TRACE(("WARRING : Prefrab name repeated. #[Engine]GameObject::InsertPrefrabs (PrefrabName : " + file + ")").c_str());
     GameObject::prefrabsData[file] = prefrabsJSON;
     return prefrabsJSON;
 }

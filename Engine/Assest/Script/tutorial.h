@@ -18,4 +18,14 @@ class Tutorial : public GameBehaviour
         double time;
         Vector2I textPos = Vector2I::zero;
 		Vector2I winpos = Vector2I::zero;
+        Vector2 vel = Vector2::zero;
+        float gravity;
+        int tiledPixel;
+        float MinJumpHeight = .5f;
+        float MaxJumpHeight = 2;
+        float MaxJumpVelocity;
+        float MinJumpVelocity;
+        float jumpTimeApex = .4f;
+
+        void Jump(Vector2 &velocity);
 };

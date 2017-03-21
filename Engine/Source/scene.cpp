@@ -18,16 +18,12 @@ void GameScene::OnBeginState()
     thread th(&GameScene::LoadSceneData, this);
 
     //Render Loading Animation(force it OnDraw)
-    while (!th.joinable())
+    while (loadname != "")
         OnDraw();
 
     th.join();
     //After Loading Easing(Ex : Brighten the whole window)
     game_framework::CSpecialEffect::SetCurrentTime();
-
-    for (GameObject* gobj : GameObject::gameObjects)
-        if (!gobj->isStarted)
-            gobj->Start();
 }
 
 void GameScene::OnMove()
@@ -83,6 +79,7 @@ void GameScene::OnMove()
 		for (auto ptr : GameObject::gameObjectsWaitingPools)
 		{
 			GameObject::Insert(ptr);
+            ptr->Start();
 		}
 		GameObject::gameObjectsWaitingPools.clear();
 
@@ -91,7 +88,7 @@ void GameScene::OnMove()
 		for (GameObject* gobj : GameObject::gameObjects)
 		{
 			Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
-			if (rigidbody != nullptr)
+			if (rigidbody != nullptr && rigidbody->enable)
 				rigidbody->Update();
 		}
 
@@ -114,7 +111,7 @@ void GameScene::OnMove()
 		for (GameObject* gobj : GameObject::gameObjects)
 		{
 			AnimationController* anic = gobj->GetComponent<AnimationController>();
-			if (anic != nullptr)
+			if (anic != nullptr && anic->enable)
 				anic->Update();
 		}
 
@@ -122,7 +119,7 @@ void GameScene::OnMove()
         for (GameObject* gobj : GameObject::gameObjects)
         {
             Animation* ani = gobj->GetComponent<Animation>();
-            if (ani != nullptr)
+            if (ani != nullptr && ani->enable)
                 ani->Update();
         }
 
@@ -136,24 +133,48 @@ void GameScene::OnMove()
 
 void GameScene::OnShow()
 {
-    for (GameObject* gobj : GameObject::gameObjects)
-        if (gobj->enable)
-            gobj->Draw(cameraPosition);
+    if (loadname == "")
+    {
+        for (GameObject* gobj : GameObject::gameObjects)
+            if (gobj->enable)
+                gobj->Draw(cameraPosition);
 
-    //Draw Superve GUI thing after gameobject drawn
+        //Draw Superve GUI thing after gameobject drawn
 
-    //Draw Debug Info By CDC
+        //Draw Debug Info By CDC
 
-    CDC *pDC = game_framework::CDDraw::GetBackCDC();
+        CDC *pDC = game_framework::CDDraw::GetBackCDC();
+        pDC->SetBkMode(TRANSPARENT);
+        for (GameObject* gobj : GameObject::gameObjects)
+        {
+        	Collider* collider = gobj->GetComponent<Collider>();
+        	if (collider != nullptr)
+        		collider->OnDrawGismos(pDC, cameraPosition);
 
-	for (GameObject* gobj : GameObject::gameObjects)
-	{
-		Collider* collider = gobj->GetComponent<Collider>();
-		if (collider != nullptr)
-			collider->OnDrawGismos(pDC);
-	}
+            //SpriteRenderer *SR = gobj->GetComponent<SpriteRenderer>();
+            //if (SR != nullptr)
+            //{
+            //    CPen pen;
+            //    pen.CreatePen(0, 1, RGB(255,0,0));
+            //    pDC->SelectObject(pen);
+            //
+            //    Vector2I pos = (SR->GetRealRenderPostion() - cameraPosition);
+            //    int r = 2;
+            //    pDC->Ellipse(pos.x - r, pos.y - r, pos.x + r, pos.y + r);
+            //}
+        }
+        
+        Vector2 vw = Input::GetMouseWorldPos();
+        Vector2I vc = Input::GetMousePos();
 
-    game_framework::CDDraw::ReleaseBackCDC();
+        //pDC->TextOutA(vc.x, vc.y - 20, CString(vw.toString().c_str()));
+        //pDC->TextOutA(vc.x, vc.y + 20, CString(vc.GetV2().toString().c_str()));
+        pDC->TextOutA(0, 0, CString(("Camera Pos : " + cameraPosition.GetV2().toString()).c_str()));
+
+        game_framework::CDDraw::ReleaseBackCDC();
+
+
+    }
 }
 
 #define FindJSON(str) j.find(str) != j.end()
@@ -263,6 +284,16 @@ GameObject* GameScene::CreateGameObject(json jsonobj, map<string, string> prefra
 void GameScene::LoadScene(string filename)
 {
     this->loadname = filename;
+}
+
+Vector2I & GameScene::CameraPosition()
+{
+    return GameScene::NowScene()->cameraPosition;
+}
+
+GameScene * GameScene::NowScene()
+{
+    return ((GameScene*)game_framework::CGame::Instance()->GetState());
 }
 
 void GameScene::LoadSceneData()

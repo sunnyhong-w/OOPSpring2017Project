@@ -36,41 +36,86 @@ bool Component::isBehavior()
 //////////////////////////////////////////////////////////////////
 // Transform實作
 //////////////////////////////////////////////////////////////////
-Transform::Transform(GameObject* gobj, Vector2 v2, int z, RenderDepth rd) : Component(gobj)
+Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj)
 {
-    this->position = v2;
     this->scale = Vector2::one;
+    this->worldzindex = 0;
     this->zindex = z;
-    this->depth = rd;
-    this->zcode = this->zindex + (int)this->depth;
     this->parent = nullptr;
+    this->worldposition = Vector2::zero;
+    this->SetPosition(v2);
+    this->transform = this;
 }
 
-void Transform::SetRenderDepth(int z)
+void Transform::SetZIndex(int z)
 {
     this->zindex = z;
-    this->zcode = this->zindex + (int)this->depth;
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
-void Transform::SetRenderDepth(RenderDepth rd)
+int Transform::GetWorldZIndex()
 {
-    this->depth = rd;
-    this->zcode = this->zindex + (int)this->depth;
-    GameObject::UpdateRenderOrder(this->gameObject);
+    return worldzindex;
 }
 
-void Transform::SetRenderDepth(int z, RenderDepth rd)
+void Transform::SetWorldZIndex(int z)
 {
-    this->zindex = z;
-    this->depth = rd;
-    this->zcode = this->zindex + (int)this->depth;
-    GameObject::UpdateRenderOrder(this->gameObject);
+    this->worldzindex = z;
+    this->zindex = ((this->parent != nullptr) ? z - this->parent->worldzindex : z);
 }
 
-int Transform::GetZCode()
+Vector2 Transform::GetPostion()
 {
-    return zcode;
+    return position;
+}
+
+void Transform::SetPosition(Vector2 newpos)
+{
+    Vector2 dp = newpos - this->position;
+    this->position = newpos;
+    this->worldposition = ((this->parent != nullptr) ? newpos + this->parent->worldposition : newpos);
+    UpdateWorldPosition();
+}
+
+Vector2 Transform::GetWorldPosition()
+{
+    return worldposition;
+}
+
+void Transform::SetWorldPosition(Vector2 newpos)
+{
+    Vector2 dp = newpos - this->worldposition;
+    this->worldposition = newpos;
+    this->position = ((this->parent != nullptr) ? newpos - this->parent->worldposition : newpos);
+    UpdateWorldPosition();
+}
+
+void Transform::UpdateWorldPosition()
+{
+    for (auto c : child)
+    {
+        c->worldposition = this->worldposition + c->position;
+        c->UpdateWorldPosition();
+    }
+}
+
+void Transform::Translate(Vector2 dpos)
+{
+    SetPosition(position + dpos);
+}
+
+int Transform::GetZIndex()
+{
+    return zindex;
+}
+
+int Transform::GetSortingLayer()
+{
+    SpriteRenderer *SR = this->gameObject->GetComponent<SpriteRenderer>();
+    if (SR == nullptr)
+        return -1;
+    else
+        return (int)SR->GetSortingLayer();
 }
 
 void Transform::SetParent(Transform *target)
@@ -81,7 +126,9 @@ void Transform::SetParent(Transform *target)
     if(target != nullptr)
         target->AddChild(this);
 
+    Vector2 myPos = GetWorldPosition();
     this->parent = target;
+    this->SetWorldPosition(myPos);
 }
 
 Transform* Transform::GetParent()
@@ -108,22 +155,19 @@ void Transform::RemoveChild(Transform * target)
 
 void Transform::ParseJSON(json j)
 {
+    bool doUpdateRenderOrder = false;
+
     if (j.find("position") != j.end())
-        this->position = j["position"];
+        this->SetPosition(j["position"]);
 
     if (j.find("scale") != j.end())
         this->scale = j["scale"];
 
-    if (j.find("depth") != j.end())
-        this->depth = j["depth"];
-
     if (j.find("zindex") != j.end())
+    {
         this->zindex = j["zindex"];
-
-    this->zcode = this->zindex + (int)this->depth;
-
-    if (j.find("depth") != j.end() || j.find("zindex") != j.end())
         GameObject::UpdateRenderOrder(this->gameObject);
+    }
 }
 
 //////////////////////////////////////////////////////////////////
@@ -167,12 +211,18 @@ void SpriteRenderer::ParseJSON(json j)
 
     if (j.find("SrcSize") != j.end())
         this->SetSize(j["SrcSize"]);
+
+    if (j.find("SortingLayer") != j.end())
+    {
+        this->sortingLayer = j["SortingLayer"];
+        GameObject::UpdateRenderOrder(this->gameObject);
+    }
 }
 
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(transform->position.round().GetV2I() - cameraPos - GetAnchorPoint() + offset, transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(this->GetRealRenderPostion() - cameraPos, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -263,6 +313,22 @@ Vector2I SpriteRenderer::GetAnchorPoint()
     return (this->size.GetV2() * this->anchorRaito).GetV2I();
 }
 
+SortingLayer SpriteRenderer::GetSortingLayer()
+{
+    return sortingLayer;
+}
+
+void SpriteRenderer::SetSortingLayer(SortingLayer SL)
+{
+    this->sortingLayer = SL;
+    GameObject::UpdateRenderOrder(this->gameObject);
+}
+
+inline Vector2I SpriteRenderer::GetRealRenderPostion()
+{
+    return transform->GetWorldPosition().round().GetV2I() - GetAnchorPoint() + offset;
+}
+
 
 
 
@@ -275,19 +341,19 @@ Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
     this->collisionInfo.size = sz;
 }
 
-void Collider::OnDrawGismos(CDC *pDC)
+void Collider::OnDrawGismos(CDC *pDC, Vector2I cameraPos)
 {
 	Vector2I w = collisionInfo.size;
 	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
 	Vector2 SpriteOffset = SR != nullptr ? SR->GetAnchorPoint().GetV2() : Vector2::zero;
-	Vector2 pos = transform->position + collisionInfo.offset.GetV2()- SpriteOffset;
-    game_framework::CDDraw::DrawRect(pDC, pos.GetV2I(), w, RGB(0, 255, 0));
+	Vector2 pos = transform->GetWorldPosition() + collisionInfo.offset.GetV2()- SpriteOffset;
+    game_framework::CDDraw::DrawRect(pDC, pos.GetV2I() - cameraPos, w, RGB(0, 255, 0));
 }
 
 bool Collider::PointCollision(Vector2I point)
 {
     GAME_ASSERT(transform != nullptr, (string("transform not found. #[Engine]Collision::PointCollision | Object : ") + gameObject->GetName()).c_str());
-    return point >= (transform->position.GetV2I() + collisionInfo.offset) && point <= (transform->position.GetV2I() + collisionInfo.offset + collisionInfo.size);
+    return point >= (transform->GetWorldPosition().GetV2I() + collisionInfo.offset) && point <= (transform->GetWorldPosition().GetV2I() + collisionInfo.offset + collisionInfo.size);
 }
 
 bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
@@ -296,8 +362,8 @@ bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
 	SpriteRenderer *aSR = gameObject->GetComponent<SpriteRenderer>(), *bSR = box->gameObject->GetComponent<SpriteRenderer>();
 	Vector2 aSpriteOffset = aSR != nullptr ? aSR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 bSpriteOffset = bSR != nullptr ? bSR->GetAnchorPoint().GetV2() : Vector2::zero;
-	Vector2 apos = transform->position + collisionInfo.offset.GetV2() + velocityOffset - aSpriteOffset;
-	Vector2 bpos = box->transform->position + box->collisionInfo.offset.GetV2() - bSpriteOffset;
+	Vector2 apos = transform->GetWorldPosition() + collisionInfo.offset.GetV2() + velocityOffset - aSpriteOffset;
+	Vector2 bpos = box->transform->GetWorldPosition() + box->collisionInfo.offset.GetV2() - bSpriteOffset;
 	Vector2 amid = apos + aw;
 	Vector2 bmid = bpos + bw;
 	Vector2 w = aw + bw;
@@ -451,7 +517,8 @@ void AnimationController::JumpState(string state)
 
 void Rigidbody::ParseJSON(json j)
 {
-
+    if (j.find("TimeSliceCollision") != j.end())
+        this->TimeSliceCollision = j["TimeSliceCollision"];
 }
 
 void Rigidbody::OnCollision(Collider *tgcollider)
@@ -486,33 +553,151 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
     return ret;
 }
 
-void Rigidbody::Update()
+void Rigidbody::CollisionDetection(Vector2& invelocity)
 {
-	Collider* collider = this->gameObject->GetComponent<Collider>();
-	if (collider != nullptr)
-	{
-		for (CollisionLayer cl : collider->collisionLayer)
-		{
-			auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
+    Collider* collider = this->gameObject->GetComponent<Collider>();
+    if (collider != nullptr)
+    {
+        for (CollisionLayer cl : collider->collisionLayer)
+        {
+            auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
 
             if (cl.block)
             {
                 //Horizontal Collision
-                Vector2 vHorizontal(velocity.x, 0);
+                Vector2 vHorizontal(invelocity.x, 0);
                 if (DoCollision(collider, gobjvec, vHorizontal, cl.block))
-                    velocity.x = vHorizontal.x;
+                    invelocity.x = vHorizontal.x;
 
                 //Vertical Collision
-                Vector2 vVertical(velocity.x, velocity.y);
+                Vector2 vVertical(invelocity.x, invelocity.y);
                 if (DoCollision(collider, gobjvec, vVertical, cl.block))
-                    velocity.y = vVertical.y;
+                    invelocity.y = vVertical.y;
             }
             else
-                DoCollision(collider, gobjvec, velocity, cl.block);
-		}
-	}
+                DoCollision(collider, gobjvec, invelocity, cl.block);
+        }
+    }
+}
 
-	this->transform->position = this->transform->position + velocity;
+void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
+{
+    Collider* collider = this->gameObject->GetComponent<Collider>();
+    if (collider != nullptr)
+    {
+        for (CollisionLayer cl : collider->collisionLayer)
+        {
+            vector<Vector2> sliceVelocity;
+            Vector2 sliceUnit = Vector2(16, 16);
+            Vector2 vslicenum = velocity / sliceUnit;
+            vslicenum = vslicenum.abs();
+
+
+            auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
+
+            if (cl.block)
+            {
+                Vector2I sliceNum(ceil(vslicenum.x), ceil(vslicenum.y));
+
+                //Horizontal Collision
+                if (sliceNum.x != 0)
+                {
+                    Vector2 slice = invelocity / sliceNum.x;
+                    for (int i = 1; i <= sliceNum.x; i++)
+                    {
+                        Vector2 v;
+                        if (i != sliceNum.x)
+                            v = (slice * i).round();
+                        else
+                            v = invelocity;
+                        Vector2 vHorizontal(v.x, 0);
+                        if (DoCollision(collider, gobjvec, vHorizontal, cl.block))
+                        {
+                            invelocity.x = vHorizontal.x;
+                            break;
+                        }
+                    }
+                }
+
+                if (sliceNum.y != 0)
+                {
+                    Vector2 slice = invelocity / sliceNum.y;
+                    for (int i = 1; i <= sliceNum.y; i++)
+                    {
+                        Vector2 v;
+                        if (i != sliceNum.y)
+                            v = (slice * i).round();
+                        else
+                            v = invelocity;
+                        Vector2 vVertical(invelocity.x, v.y);
+                        if (DoCollision(collider, gobjvec, vVertical, cl.block))
+                        {
+                            invelocity.y = vVertical.y;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Vector2I temp(ceil(vslicenum.x), ceil(vslicenum.y));
+                int sliceNum = temp.x > temp.y ? temp.x : temp.y;
+
+                if (sliceNum != 0)
+                {
+                    Vector2 slice = invelocity / sliceNum;
+                    for (int i = 1; i <= sliceNum; i++)
+                    {
+                        Vector2 v;
+                        if (i != sliceNum)
+                            v = (slice * i).round();
+                        else
+                            v = invelocity;
+                        
+                        DoCollision(collider, gobjvec, v, cl.block);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Rigidbody::Update()
+{
+    colliderInfo.Reset();
+
+    Vector2 originalVelocity = velocity;
+    velocity = velocity.round();
+    Vector2 originalRoundVelocity = velocity;
+
+    if (TimeSliceCollision)
+        CollisionDetectionSlice(velocity);
+    else
+        CollisionDetection(velocity);
+
+    //Set ColliderInfo
+    if (velocity.x != originalRoundVelocity.x)
+    {
+        if (originalRoundVelocity.x > 0)
+            colliderInfo.right = true;
+        else if (originalRoundVelocity.x < 0)
+            colliderInfo.left = true;
+    }
+
+    if (velocity.y != originalRoundVelocity.y)
+    {
+        if (originalRoundVelocity.y > 0)
+            colliderInfo.bottom = true;
+        else if (originalRoundVelocity.y < 0)
+            colliderInfo.top = true;
+    }
+    
+    //Move Object
+    this->transform->Translate(velocity);
+
+    //Set velocity accoriding to original velocity(Avoiding weird number problem when adding float velocity < 1)
+    velocity = originalVelocity + (velocity - originalRoundVelocity);
+
 }
 
 CollisionLayer::CollisionLayer()
@@ -528,6 +713,11 @@ void from_json(const json & j, CollisionLayer & cl)
 
 	if (j.find("Layer") != j.end())
 		cl.layer = (Layer)j["Layer"];
+}
+
+void ColliderInfo::Reset()
+{
+    top = bottom = left = right = false;
 }
 
 }

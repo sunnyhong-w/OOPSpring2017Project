@@ -53,4 +53,9 @@ Vector2I Input::GetMousePos()
     return Input::nowPos;
 }
 
+Vector2 Input::GetMouseWorldPos()
+{
+    return (Input::nowPos + GameScene::CameraPosition()).GetV2();
+}
+
 }

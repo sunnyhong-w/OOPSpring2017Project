@@ -21,6 +21,7 @@ namespace game_engine
 
 class Component;
 class Transform;
+class SpriteRenderer;
 class GameObject;
 
 //一些Public的最高權限Function
@@ -36,6 +37,7 @@ class GameObject
         friend GameObject* InstantiateJSON(json jsonobj, Vector2 posision);
         friend class GameScene;
         friend class Transform;
+        friend class SpriteRenderer;
         friend class game_framework::CGame;
 		friend class Rigidbody;
     public:
@@ -97,6 +99,7 @@ class GameObject
         static void UpdateRenderOrder(GameObject* gobj);
         static std::map<std::string, json> prefrabsData;
         static std::map<std::string, GameObject*> objectsName;
+        static std::map<std::string, int> objectsNameCount;
         static std::multimap<Tag, GameObject*> objectsTag;
         static std::multimap<Layer, GameObject*> objectsLayer;
 		static std::vector<GameObject*> gameObjectsWaitingPools;

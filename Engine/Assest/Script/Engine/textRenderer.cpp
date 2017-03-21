@@ -58,7 +58,7 @@ void TextRenderer::Start()
 
 void TextRenderer::Update()
 {
-	Vector2 pos = this->transform->position;
+	Vector2 pos = this->transform->GetPostion();
 
 	for (wchar_t word : line)
 	{
@@ -85,7 +85,7 @@ void TextRenderer::Update()
         tobj->Update();
     }
 	
-    Vector2I stampPos = this->transform->position.GetV2I();
+    Vector2I stampPos = this->transform->GetPostion().GetV2I();
    
 	remainFraps--;
     if (remainFraps <= 0)
