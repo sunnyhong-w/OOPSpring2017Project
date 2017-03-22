@@ -34,6 +34,7 @@ class GameScene : public game_framework::CGameState
         
         static Vector2I& CameraPosition();
         static GameScene* NowScene();
+		static Vector2I& WindowPosition();
     private:
         void LoadSceneData();
         vector<GameObject*> InstantiateGameObject(json objArray, map<string, string> prefrabmap);

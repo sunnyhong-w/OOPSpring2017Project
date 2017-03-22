@@ -296,6 +296,11 @@ GameScene * GameScene::NowScene()
     return ((GameScene*)game_framework::CGame::Instance()->GetState());
 }
 
+Vector2I & GameScene::WindowPosition()
+{
+	return game_framework::CGame::Instance()->windowPosition;
+}
+
 void GameScene::LoadSceneData()
 {
     this->filename = loadname;
