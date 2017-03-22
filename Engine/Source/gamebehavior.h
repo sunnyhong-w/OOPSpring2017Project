@@ -32,5 +32,6 @@ class GameBehaviour : public Component
         //virtual void OnCollisionStay(Collider* c) {};
 
         virtual void OnRecivedBoardcast(json j) {};
+		virtual void OnDrawGizmos(CDC *pDC) {};
 };
 }

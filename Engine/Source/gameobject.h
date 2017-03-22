@@ -49,6 +49,7 @@ class GameObject
         void LateUpdate();
         void Draw(Vector2I cameraPos);
         void OnRecivedBoardcast(json j);
+		void OnDrawGizmos(CDC* pDC);
         void SetName(string name);
         string GetName();
         void SetTag(Tag tag);

@@ -183,6 +183,20 @@ void GameObject::OnRecivedBoardcast(json j)
     }
 }
 
+void GameObject::OnDrawGizmos(CDC * pDC)
+{
+	for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+	{
+		if (it->second->isBehavior())
+		{
+			GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+
+			if (gb->enable)
+				gb->OnDrawGizmos(pDC);
+		}
+	}
+}
+
 void GameObject::SetName(string name)
 {
     if (!this->doNOTUpdateObjectPool)
