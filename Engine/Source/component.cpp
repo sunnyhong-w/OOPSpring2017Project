@@ -551,6 +551,9 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
     bool ret = false;
     for (auto gobj : gobjvec)
     {
+		if (gobj == this->gameObject)
+			continue;
+
         Collider* tgcollider = gobj->GetComponent<Collider>();
         if (tgcollider != nullptr)
         {
