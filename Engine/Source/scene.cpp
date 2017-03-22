@@ -150,6 +150,8 @@ void GameScene::OnShow()
         	Collider* collider = gobj->GetComponent<Collider>();
         	if (collider != nullptr)
         		collider->OnDrawGismos(pDC, cameraPosition);
+			
+			gobj->OnDrawGizmos(pDC);
 
             //SpriteRenderer *SR = gobj->GetComponent<SpriteRenderer>();
             //if (SR != nullptr)

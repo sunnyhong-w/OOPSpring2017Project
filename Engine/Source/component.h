@@ -181,6 +181,7 @@ private:
 struct ColliderInfo
 {
     bool top, bottom, left, right;
+	string toString();
     void Reset();
 };
 

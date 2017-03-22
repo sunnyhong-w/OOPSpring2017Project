@@ -11,6 +11,7 @@ class Tutorial : public GameBehaviour
         void Start() override;
         void Update() override;
         void OnRecivedBoardcast(json j) override;
+		void OnDrawGizmos(CDC* pDC) override;
 
         int speed;
     private:
@@ -26,6 +27,6 @@ class Tutorial : public GameBehaviour
         float MaxJumpVelocity;
         float MinJumpVelocity;
         float jumpTimeApex = .4f;
-
+		bool canJump = true;
         void Jump(Vector2 &velocity);
 };

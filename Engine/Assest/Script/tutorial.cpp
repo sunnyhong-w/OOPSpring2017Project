@@ -22,7 +22,7 @@ void Tutorial::Update()
     Rigidbody *rb = gameObject->GetComponent<Rigidbody>();
     rb->TimeSliceCollision = true;
 	
-	int speed = 500;
+	int speed = 5;
     //vel = rb->velocity;
 
     if (rb->colliderInfo.bottom || rb->colliderInfo.top)
@@ -37,13 +37,19 @@ void Tutorial::Update()
         vel.x = -1 * speed;
 	if (Input::GetKeyPressing('D') || Input::GetKeyPressing(VK_RIGHT))
         vel.x =  speed;
-    if (Input::GetKeyDown('W') || Input::GetKeyDown(VK_SPACE))
-        vel.y = MaxJumpVelocity;
+	//TRACE(("\ncolliderINFO Bottom : " + to_string(rb->colliderInfo.bottom) + "\n").c_str());
+	if (rb->colliderInfo.bottom)
+	{
+		canJump = true;
+	}
 
-    vel.y += gravity * Time::deltaTime;
-    rb->velocity = vel * tiledPixel * Time::deltaTime;
-
-    ////
+	if (Input::GetKeyDown('W') || Input::GetKeyDown(VK_SPACE))
+	{
+		Jump(vel);
+	}
+	vel.y += gravity * Time::deltaTime;
+	rb->velocity = vel * tiledPixel * Time::deltaTime;
+			////
 
     if (Input::GetKeyPressing(VK_NUMPAD8))
         GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::up * 10;
@@ -53,17 +59,33 @@ void Tutorial::Update()
         GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::left * 10;
     if (Input::GetKeyPressing(VK_NUMPAD2))
         GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::down * 10;
-
+	if (Input::GetKeyDown(VK_NUMPAD5))
+	{
+		//GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
+	}
     if (Input::GetKeyDown(VK_F5))
         GameScene::NowScene()->LoadScene("Main");
-       
+	Vector2 size = Vector2((float)SIZE_X / 2, (float)SIZE_Y / 2);
+	GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 }
 
 void Tutorial::OnRecivedBoardcast(json j)
 {
 }
 
+void Tutorial::OnDrawGizmos(CDC * pDC)
+{
+	Rigidbody *rb = this->gameObject->GetComponent<Rigidbody>();
+	pDC->TextOutA(0, 20, ("colliderINFO : " + rb->colliderInfo.toString()).c_str());
+	pDC->TextOutA(0, 40, ("Can Jump : " + to_string(canJump)).c_str());
+	pDC->TextOutA(0, 60, ("velocity : " + rb->velocity.toString()).c_str());
+}
+
 void Tutorial::Jump(Vector2 & velocity)
 {
-    velocity.y = MaxJumpVelocity;
+	if (canJump)
+	{
+		velocity.y = MaxJumpVelocity;
+		canJump = false;
+	}
 }

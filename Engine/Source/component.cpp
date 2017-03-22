@@ -715,6 +715,11 @@ void from_json(const json & j, CollisionLayer & cl)
 		cl.layer = (Layer)j["Layer"];
 }
 
+string ColliderInfo::toString()
+{
+	return "top : " + to_string(top) + " | bottom : " + to_string(bottom) + " | left : " + to_string(left) + " | right : " + to_string(right);
+}
+
 void ColliderInfo::Reset()
 {
     top = bottom = left = right = false;
