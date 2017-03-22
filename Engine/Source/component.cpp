@@ -191,6 +191,7 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
     size = Vector2I::null;
     offset = Vector2I::zero;
     anchorRaito = Vector2::zero;
+	sortingLayer = SortingLayer::Default;
 }
 
 void SpriteRenderer::ParseJSON(json j)

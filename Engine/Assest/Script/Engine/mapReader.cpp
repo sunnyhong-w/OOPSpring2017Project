@@ -98,7 +98,34 @@ void MapReader::LoadMap(string fname)
 
 					count++;
 				}
+			}
+			else if (j["type"].get<string>() == "objectgroup")
+			{
+				json objectJSONList = j["objects"];
+				for (auto obj : objectJSONList)
+				{
+					int tindex = obj["gid"];
 
+					for (ObjectSet tmp : tileMap.objectSetList)
+					{
+						if (tmp.firstgid == -1 || tindex < tmp.firstgid || tindex >= tmp.firstgid + tmp.tilecount)
+							continue;
+
+						GameObject *gobj = new GameObject();
+						int tileindex = tindex - tmp.firstgid;
+						SpriteRenderer* SR = gobj->AddComponentOnce<SpriteRenderer>();
+						SR->LoadBitmapData(tmp.objects[tileindex].image);
+						
+						Instantiate(gobj);
+						gobj->transform->SetParent(this->transform);
+						gobj->transform->SetPosition(obj);
+						gobj->transform->SetZIndex(zindex);
+						gobj->SetLayer(Layer::Tile);
+
+						break;
+
+					}
+				}
 			}
 
 			zindex++;
@@ -151,41 +178,56 @@ void from_json(const json& j, TileMap& tm)
 	tm.tileWidth = j["tilewidth"];
 	tm.tileHeight = j["tileheight"];
 	tm.layers = j["layers"];
-	for (TileSet ts : j["tilesets"])
-		tm.tileSetList.push_back(ts);
+	for (json tileset : j["tilesets"])
+	{
+		if (tileset["columns"].get<int>() != 0)
+			tm.tileSetList.push_back(tileset);
+		else
+			tm.objectSetList.push_back(tileset);
+
+		
+	}
 }
+
+void from_json(const json & j, ObjectSet & os)
+{
+	os.firstgid = j["firstgid"];
+	os.tilecount = j["tilecount"];
+
+	for (int i = 0; i < os.tilecount; i++)
+	{
+		string imgname = j["tiles"][to_string(i)]["image"].get<string>();
+		imgname = imgname.substr(imgname.find_first_of("Bitmap") + 7);
+		imgname = imgname.substr(0, imgname.find_last_of("."));
+
+		json prop = (j.find("tileproperties") != j.end() ? j["tileproperties"][to_string(i)] : json());
+
+		os.objects.push_back(TileObject(imgname, prop));
+	}
+}
+
 
 void from_json(const json& j, TileSet& ts)
 {
 	ts.columns = j["columns"];
+	string imgname = j["image"].get<string>();
+	imgname = imgname.substr(imgname.find_first_of("Bitmap") + 7);
+	imgname = imgname.substr(0, imgname.find_last_of("."));
+	ts.image = imgname;
+	ts.tileSize = Vector2I(j["tilewidth"], j["tileheight"]);
+	ts.firstgid = j["firstgid"];
+	ts.tilecount = j["tilecount"];
 
-	if (ts.columns != 0) // Tileset
+	if (j.find("tiles") != j.end())
 	{
-		string imgname = j["image"].get<string>();
-		imgname = imgname.substr(10);
-		imgname = imgname.substr(0, imgname.find_last_of("."));
-		ts.image = imgname;
-		ts.tileSize = Vector2I(j["tilewidth"], j["tileheight"]);
-		ts.firstgid = j["firstgid"];
-		ts.tilecount = j["tilecount"];
-
-		if (j.find("tiles") != j.end())
-		{
-			for (int i = 0; i < ts.tilecount; i++)
-				if (j["tiles"].find(to_string(i)) != j["tiles"].end())
-					ts.tiles.push_back(j["tiles"][to_string(i)]["objectgroup"]);
-		}
-		else
-		{
-			GAME_ASSERT(false, ("collider not found in tile map,image : "+imgname).c_str());
-		}
+		for (int i = 0; i < ts.tilecount; i++)
+			if (j["tiles"].find(to_string(i)) != j["tiles"].end())
+				ts.tiles.push_back(j["tiles"][to_string(i)]["objectgroup"]);
 	}
-	else //Collection of image
+	else
 	{
-
+		GAME_ASSERT(false, ("collider not found in tile map,image : " + imgname).c_str());
 	}
-
-
 }
 
 void from_json(const json& j, Tile& to)
@@ -218,4 +260,10 @@ void from_json(const json& j, Tile& to)
 			to.object.push_back(ci);
 		}
 	}
+}
+
+TileObject::TileObject(string imgname, json inproperties)
+{
+	image = imgname;
+	properties = inproperties;
 }

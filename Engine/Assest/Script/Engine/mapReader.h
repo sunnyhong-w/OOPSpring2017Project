@@ -18,6 +18,23 @@ struct TileSet
 	vector<Tile> tiles;
 };
 
+
+struct TileObject
+{
+	TileObject(string imgname, json inproperties);
+	string image;
+	json properties;
+};
+
+struct ObjectSet
+{
+	int firstgid;
+	int tilecount;
+	vector<TileObject> objects;
+};
+
+void from_json(const json& j, ObjectSet& ts);
+
 struct TileMap
 {
 	int width;
@@ -25,6 +42,7 @@ struct TileMap
 	int tileHeight;
 	int tileWidth;
 	vector<TileSet> tileSetList;
+	vector<ObjectSet> objectSetList;
 	json layers;
 };
 
