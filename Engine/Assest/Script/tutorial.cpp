@@ -30,6 +30,10 @@ void Tutorial::Update()
 
     vel.x = 0;
 
+	float extraGravityHack = 0;
+	if (rb->colliderInfo.bottom)
+		extraGravityHack = 1;
+
     if (Input::GetKeyClick(VK_LBUTTON))
         this->transform->SetWorldPosition(Input::GetMouseWorldPos());
 
@@ -48,7 +52,7 @@ void Tutorial::Update()
 		Jump(vel);
 	}
 	vel.y += gravity * Time::deltaTime;
-	rb->velocity = vel * tiledPixel * Time::deltaTime;
+	rb->velocity = vel * tiledPixel * Time::deltaTime + extraGravityHack * Vector2::down;
 			////
 
     if (Input::GetKeyPressing(VK_NUMPAD8))

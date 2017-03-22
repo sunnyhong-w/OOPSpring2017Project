@@ -26,6 +26,8 @@ struct Vector2
         bool isNull();
         Vector2 abs();
 		Vector2 round();
+		Vector2 floor();
+		Vector2 ceil();
 		Vector2 side();
 
         float x;

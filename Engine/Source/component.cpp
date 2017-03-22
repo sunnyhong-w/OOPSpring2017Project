@@ -667,8 +667,8 @@ void Rigidbody::Update()
     colliderInfo.Reset();
 
     Vector2 originalVelocity = velocity;
-    velocity = velocity.round();
-    Vector2 originalRoundVelocity = velocity;
+    velocity = velocity.floor();
+    Vector2 originalFloorVelocity = velocity;
 
     if (TimeSliceCollision)
         CollisionDetectionSlice(velocity);
@@ -676,19 +676,19 @@ void Rigidbody::Update()
         CollisionDetection(velocity);
 
     //Set ColliderInfo
-    if (velocity.x != originalRoundVelocity.x)
+    if (velocity.x != originalFloorVelocity.x)
     {
-        if (originalRoundVelocity.x > 0)
+        if (originalFloorVelocity.x > 0)
             colliderInfo.right = true;
-        else if (originalRoundVelocity.x < 0)
+        else if (originalFloorVelocity.x < 0)
             colliderInfo.left = true;
     }
 
-    if (velocity.y != originalRoundVelocity.y)
+    if (velocity.y != originalFloorVelocity.y)
     {
-        if (originalRoundVelocity.y > 0)
+        if (originalFloorVelocity.y > 0)
             colliderInfo.bottom = true;
-        else if (originalRoundVelocity.y < 0)
+        else if (originalFloorVelocity.y < 0)
             colliderInfo.top = true;
     }
     
@@ -696,7 +696,7 @@ void Rigidbody::Update()
     this->transform->Translate(velocity);
 
     //Set velocity accoriding to original velocity(Avoiding weird number problem when adding float velocity < 1)
-    velocity = originalVelocity + (velocity - originalRoundVelocity);
+    velocity = originalVelocity + (velocity - originalFloorVelocity);
 
 }
 

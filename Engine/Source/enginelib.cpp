@@ -153,6 +153,16 @@ Vector2 Vector2::round()
 	return Vector2(roundf(x), roundf(y));
 }
 
+Vector2 Vector2::floor()
+{
+	return Vector2(floorf(x),floorf(y));
+}
+
+Vector2 Vector2::ceil()
+{
+	return Vector2(ceilf(x),ceilf(y));
+}
+
 Vector2 Vector2::side()
 {
 	Vector2 ret = Vector2::zero;
