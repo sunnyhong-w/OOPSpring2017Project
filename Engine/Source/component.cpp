@@ -692,6 +692,10 @@ void Rigidbody::Update()
 
     Vector2 originalVelocity = velocity;
     velocity = velocity.floor();
+
+	if (velocity == Vector2::zero)
+		return;
+
     Vector2 originalFloorVelocity = velocity;
 
     if (TimeSliceCollision)
