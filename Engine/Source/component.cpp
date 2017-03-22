@@ -533,6 +533,17 @@ void Rigidbody::OnCollision(Collider *tgcollider)
                 gb->OnCollisionEnter(tgcollider);
         }
     }
+	Collider* c = this->gameObject->GetComponent<Collider>();
+	for (GameObject::ComponentData::iterator it = tgcollider->gameObject->componentData.begin(); it != tgcollider->gameObject->componentData.end(); it++)
+	{
+		if (it->second->isBehavior())
+		{
+			GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+
+			if (gb->enable)
+				gb->OnCollisionEnter(c);
+		}
+	}
 }
 
 bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block)
