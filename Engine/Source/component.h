@@ -66,6 +66,7 @@ class Transform : public Component
         Vector2 scale;
 
 		void SetParent(Transform* target);
+		void SetParentAbsolute(Transform* target);
         Transform* GetParent();
 		vector<Transform*> GetChild();
 

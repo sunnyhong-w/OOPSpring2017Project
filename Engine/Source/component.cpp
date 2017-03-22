@@ -71,7 +71,6 @@ Vector2 Transform::GetPostion()
 
 void Transform::SetPosition(Vector2 newpos)
 {
-    Vector2 dp = newpos - this->position;
     this->position = newpos;
     this->worldposition = ((this->parent != nullptr) ? newpos + this->parent->worldposition : newpos);
     UpdateWorldPosition();
@@ -84,7 +83,6 @@ Vector2 Transform::GetWorldPosition()
 
 void Transform::SetWorldPosition(Vector2 newpos)
 {
-    Vector2 dp = newpos - this->worldposition;
     this->worldposition = newpos;
     this->position = ((this->parent != nullptr) ? newpos - this->parent->worldposition : newpos);
     UpdateWorldPosition();
@@ -126,9 +124,21 @@ void Transform::SetParent(Transform *target)
     if(target != nullptr)
         target->AddChild(this);
 
-    Vector2 myPos = GetWorldPosition();
-    this->parent = target;
-    this->SetWorldPosition(myPos);
+	this->parent = target;
+	this->SetPosition(position);
+}
+
+void Transform::SetParentAbsolute(Transform* target)
+{
+	if (this->parent != nullptr)
+		this->parent->RemoveChild(this);
+
+	if (target != nullptr)
+		target->AddChild(this);
+
+	Vector2 myPos = GetWorldPosition();
+	this->parent = target;
+	this->SetWorldPosition(myPos);
 }
 
 Transform* Transform::GetParent()
