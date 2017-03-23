@@ -187,7 +187,7 @@ void GameScene::OnShow()
 void GameScene::ParseJSON(json j)
 {
     if (FindJSON("IncludePrefrab"))
-        GameScene::IncludePrefrabs(filename + ".scene", j["IncludePrefrab"]);
+        IncludePrefrabs(filename + ".scene", j["IncludePrefrab"]);
     
     if (FindJSON("GameObject"))
         InstantiateGameObject(filename + ".scene", j["GameObject"]);
@@ -201,7 +201,6 @@ void GameScene::IncludePrefrabs(string filename, json prefrabObject)
     for (json::iterator it = prefrabObject.begin(); it != prefrabObject.end(); it++)
         ReadPrefrab(filename, it.value());
 }
-
 
 void GameScene::ReadPrefrab(string filename, string includename)
 {

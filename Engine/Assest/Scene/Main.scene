@@ -1,6 +1,5 @@
 {
     "IncludePrefrab": {
-        "testabc": "test",
         "TextStamp": "Engine\\TextRenderer\\TextStamp",
         "TextRenderer": "Engine\\TextRenderer\\TextRenderer",
         "MapReader": "Engine\\MapReader",
@@ -15,9 +14,6 @@
                 }
             },
             "Child": []
-        },
-        {
-            "include": "Player"
         }
     ]
 }

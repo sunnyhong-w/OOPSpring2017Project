@@ -335,7 +335,6 @@
     <ClInclude Include="Source\scene.h" />
     <ClInclude Include="Source\StdAfx.h" />
     <ClInclude Include="Source\gamelib.h" />
-    <ClInclude Include="Source\_GameScripts.h" />
     <ClInclude Include="Source\_setting.h" />
   </ItemGroup>
   <ItemGroup>

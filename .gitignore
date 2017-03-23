@@ -276,3 +276,4 @@ _Pvt_Extensions
 *.stackdump
 
 **/Map/**/*.json
+_GameScripts.h

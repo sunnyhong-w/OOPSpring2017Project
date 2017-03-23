@@ -194,9 +194,6 @@
     <ClInclude Include="Assest\Script\tutorial.h">
       <Filter>GameScript</Filter>
     </ClInclude>
-    <ClInclude Include="Source\_GameScripts.h">
-      <Filter>GameEngine\EngineLib</Filter>
-    </ClInclude>
     <ClInclude Include="Source\_setting.h">
       <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
