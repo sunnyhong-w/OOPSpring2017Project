@@ -171,8 +171,11 @@ template<class T> inline const std::vector<T*> GameObject::GetComponents()
 template<class T> inline void GameObject::RemoveComponent()
 {
     std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(std::type_index(typeid(T)));
-    if(data.first != data.second)
+    if (data.first != data.second)
+    {
+        delete data.first->second;
         componentData.erase(data.first);
+    }
 }
 
 template<class T> inline void GameObject::RemoveComponent(T* comp)
