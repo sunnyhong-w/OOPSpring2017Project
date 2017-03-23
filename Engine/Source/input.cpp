@@ -12,10 +12,12 @@ map<UINT, DWORD> Input::nowState;
 map<UINT, DWORD> Input::lastState;
 Vector2I Input::mousePos;
 Vector2I Input::nowPos;
+Vector2I Input::lastPos;
 const DWORD Input::trigger_ms = 200;
 void Input::Update()
 {
     Input::lastState = Input::nowState;
+	Input::lastPos = Input::nowPos;
     Input::nowState = Input::keyEvent;
     Input::nowPos = Input::mousePos;
 }
@@ -52,7 +54,10 @@ Vector2I Input::GetMousePos()
 {
     return Input::nowPos;
 }
-
+Vector2I Input::GetMouseDeltaPos()
+{
+	return Input::mousePos - Input::lastPos;
+}
 Vector2 Input::GetMouseWorldPos()
 {
     return (Input::nowPos + GameScene::CameraPosition()).GetV2();
