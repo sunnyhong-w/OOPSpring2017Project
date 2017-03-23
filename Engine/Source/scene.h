@@ -35,17 +35,21 @@ class GameScene : public game_framework::CGameState
         static Vector2I& CameraPosition();
         static GameScene* NowScene();
 		static Vector2I& WindowPosition();
+
+        static void IncludePrefrabs(string filename, json prefrabObject);
+        static void ReadPrefrab(string filename, string includename);
+        static vector<GameObject*> InstantiateGameObject(string filename, json objArray);
+        static GameObject* CreateGameObject(string filename, json jsonobj);
     private:
         void LoadSceneData();
-        vector<GameObject*> InstantiateGameObject(json objArray, map<string, string> prefrabmap);
-        GameObject* CreateGameObject(json jsonobj, map<string, string> prefrabmap);
-        void IncludePrefrabs(json prefrabObject, map<string, string> &prefrabmap);
-        void ReadPrefrab(string filename, string includename, map<string, string> &prefrabmap);
+
+
 
         vector<json> TDPQueue;
         string filename;
         string loadname;
         Vector2I cameraPosition;
+        static json prefrabmap;
 
 };
 }

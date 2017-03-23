@@ -11,6 +11,8 @@
 namespace game_engine
 {
 
+json GameScene::prefrabmap;
+
 void GameScene::OnBeginState()
 {
     GameObject::ResetObjectPool();
@@ -76,8 +78,9 @@ void GameScene::OnMove()
         }
 
 
-		for (auto ptr : GameObject::gameObjectsWaitingPools)
+		for (unsigned i = 0; i < GameObject::gameObjectsWaitingPools.size(); i++)
 		{
+            auto ptr = GameObject::gameObjectsWaitingPools[i];
 			GameObject::Insert(ptr);
             ptr->Start();
 		}
@@ -183,31 +186,28 @@ void GameScene::OnShow()
 
 void GameScene::ParseJSON(json j)
 {
-    map<string, string> prefrabmap;
-
     if (FindJSON("IncludePrefrab"))
-        IncludePrefrabs(j["IncludePrefrab"], prefrabmap);
+        GameScene::IncludePrefrabs(filename + ".scene", j["IncludePrefrab"]);
     
     if (FindJSON("GameObject"))
-        InstantiateGameObject(j["GameObject"], prefrabmap);
+        InstantiateGameObject(filename + ".scene", j["GameObject"]);
     
 }
 
-void GameScene::IncludePrefrabs(json prefrabObject, map<string, string>& prefrabmap)
+void GameScene::IncludePrefrabs(string filename, json prefrabObject)
 {
-    for (json::iterator it = prefrabObject.begin(); it != prefrabObject.end(); it++)
-    {
-        if (prefrabmap.find(it.key()) != prefrabmap.end())
-            TRACE(("WARRING : \nPrefrab map name duplicated => Mapping Name :" + it.key()).c_str());
+    prefrabmap[filename] = prefrabObject;
 
-        prefrabmap[it.key()] = it.value().get<string>();
-        ReadPrefrab(filename, it.value(), prefrabmap);
-    }
+    for (json::iterator it = prefrabObject.begin(); it != prefrabObject.end(); it++)
+        ReadPrefrab(filename, it.value());
 }
 
 
-void GameScene::ReadPrefrab(string filename, string includename, map<string, string> &prefrabmap)
+void GameScene::ReadPrefrab(string filename, string includename)
 {
+    if (GameObject::GetPrefrabs(includename) != nullptr)
+        return;
+
     string PATH = R"(.\Assest\Prefrab\)";
     ifstream file;
     file.open(PATH + includename + ".prefrab");
@@ -221,7 +221,7 @@ void GameScene::ReadPrefrab(string filename, string includename, map<string, str
         GameObject::InsertPrefrabs(includename, jsonobj);
 
         if (jsonobj.find("IncludePrefrab") != jsonobj.end())
-            IncludePrefrabs(jsonobj["IncludePrefrab"], prefrabmap);
+            IncludePrefrabs(includename, jsonobj["IncludePrefrab"]);
     }
     else
     {
@@ -233,34 +233,36 @@ void GameScene::ReadPrefrab(string filename, string includename, map<string, str
     }
 }
 
-vector<GameObject*> GameScene::InstantiateGameObject(json objArray, map<string, string> prefrabmap)
+vector<GameObject*> GameScene::InstantiateGameObject(string filename, json objArray)
 {
     vector<GameObject*> objectList;
     for (json jsonobj : objArray)
-    {
-        objectList.push_back(CreateGameObject(jsonobj, prefrabmap));
-    }
+        objectList.push_back(CreateGameObject(filename, jsonobj));
     return objectList;
 }
 
-GameObject* GameScene::CreateGameObject(json jsonobj, map<string, string> prefrabmap)
+GameObject* GameScene::CreateGameObject(string filename, json jsonobj)
 {
     GameObject* gobj;
 
     json prefrab = nullptr;
 
-    if (jsonobj.find("include") != jsonobj.end() && prefrabmap.find(jsonobj["include"]) != prefrabmap.end())
-        prefrab = GameObject::GetPrefrabs(prefrabmap[jsonobj["include"]]);
+    if (jsonobj.find("include") != jsonobj.end())
+    {
+        json filemap = prefrabmap[filename];
+        string prefrabcode = jsonobj["include"].get<string>();
+        prefrab = GameObject::GetPrefrabs(filemap[prefrabcode]);
+    }
 
     if (prefrab != nullptr)
     {
-        bool doNOTDestoryOnChangeScene = prefrab.find("doNOTDestoryOnChangeScene") != prefrab.end() ? prefrab["doNOTDestoryOnChangeScene"] : false;
+        string prefrabcode = jsonobj["include"].get<string>();
         gobj = InstantiateJSON(prefrab);
-        gobj->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
 
         if (prefrab.find("Child") != prefrab.end())
         {
-            auto childList = InstantiateGameObject(prefrab["Child"], prefrabmap);
+            auto childList = InstantiateGameObject(prefrabcode, prefrab["Child"]);
+
             for (auto childobj : childList)
                 childobj->transform->SetParent(gobj->transform);
         }
@@ -275,7 +277,7 @@ GameObject* GameScene::CreateGameObject(json jsonobj, map<string, string> prefra
 
     if (jsonobj.find("Child") != jsonobj.end())
     {
-        auto childList = InstantiateGameObject(jsonobj["Child"], prefrabmap);
+        auto childList = InstantiateGameObject(filename, jsonobj["Child"]);
         for (auto childobj : childList)
             childobj->transform->SetParent(gobj->transform);
     }
