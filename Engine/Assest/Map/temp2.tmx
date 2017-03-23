@@ -41,6 +41,9 @@
    </objectgroup>
   </tile>
   <tile id="5">
+   <properties>
+    <property name="test" value="123"/>
+   </properties>
    <objectgroup draworder="index">
     <object id="1" x="0" y="0">
      <polygon points="0,0 0,32 32,32 32,0"/>
@@ -48,6 +51,9 @@
    </objectgroup>
   </tile>
   <tile id="6">
+   <properties>
+    <property name="fgasg" value="qwrqw"/>
+   </properties>
    <objectgroup draworder="index">
     <object id="1" x="0" y="0">
      <polygon points="0,0 0,32 32,32 32,0"/>
@@ -139,7 +145,7 @@
  <tileset firstgid="19" name="as1f23afs" tilewidth="20" tileheight="20" tilecount="3" columns="0">
   <tile id="0">
    <properties>
-    <property name="123" type="int" value="123"/>
+    <property name="include" value="test"/>
    </properties>
    <image width="20" height="20" source="../Bitmap/ball1.bmp"/>
   </tile>

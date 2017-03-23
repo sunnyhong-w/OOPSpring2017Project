@@ -351,4 +351,7 @@
       <UserProperties RESOURCE_FILE="Source\game.rc" />
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+  </PropertyGroup>
 </Project>

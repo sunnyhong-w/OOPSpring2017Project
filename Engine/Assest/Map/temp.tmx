@@ -115,9 +115,12 @@
    </objectgroup>
   </tile>
  </tileset>
- <tileset firstgid="17" name="Obj" tilewidth="20" tileheight="20" tilecount="1" columns="0">
+ <tileset firstgid="17" name="Obj" tilewidth="16" tileheight="16" tilecount="1" columns="0">
   <tile id="0">
-   <image width="20" height="20" source="../Bitmap/ball1.bmp"/>
+   <properties>
+    <property name="include" value="spawnPlayer"/>
+   </properties>
+   <image width="16" height="16" source="../Bitmap/Obj/SpwanPoint.bmp"/>
   </tile>
  </tileset>
  <layer name="BackGround" width="15" height="10">
@@ -135,7 +138,7 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="1" gid="17" x="232" y="136" width="20" height="20">
+  <object id="1" gid="17" x="184" y="168" width="20" height="20">
    <properties>
     <property name="test" type="int" value="123"/>
    </properties>
