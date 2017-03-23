@@ -1,0 +1,214 @@
+{
+    "IncludePrefrab": {},
+    "GameObject": [
+        {
+            "name": "BoxParent",
+            "Component": {
+                "Transform": {
+                    "position": {
+                        "x": 22,
+                        "y": 30
+                    }
+                }
+            },
+            "Child": [
+                {
+                    "name": "RedBlock",
+                    "Component": {
+                        "Transform": {
+                            "position": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "SpriteRenderer": {
+                            "Bitmap": {
+                                "name": "Slide\\SlideBox"
+                            },
+                            "SrcSize": {
+                                "x": 128,
+                                "y": 64
+                            },
+                            "SrcPosition": {
+                                "x": 0,
+                                "y": 128
+                            }
+                        },
+                        "Collider": {
+                            "size": {
+                                "x": 128,
+                                "y": 64
+                            },
+                            "collisionLayer": [
+                                {
+                                    "Block": true,
+                                    "Layer": 1
+                                }
+                            ]
+                        },
+                        "Rigidbody": {},
+                        "Slide":{}
+                    },
+                    "layer":1
+                },
+                {
+                    "name": "YellowBlock",
+                    "Component": {
+                        "Transform": {
+                            "position": {
+                                "x": 130,
+                                "y": 0
+                            }
+                        },
+                        "SpriteRenderer": {
+                            "Bitmap": {
+                                "name": "Slide\\SlideBox"
+                            },
+                            "SrcSize": {
+                                "x": 128,
+                                "y": 64
+                            },
+                            "SrcPosition": {
+                                "x": 0,
+                                "y": 192
+                            }
+                        },
+                        "Collider": {
+                            "size": {
+                                "x": 128,
+                                "y": 64
+                            },
+                            "collisionLayer": [
+                                {
+                                    "Block": true,
+                                    "Layer": 1
+                                }
+                            ]
+                        },
+                        "Rigidbody": {},
+                        "Slide":{}
+                    },
+                    "layer":1
+                },
+                {
+                    "name": "WhiteBlock",
+                    "Component": {
+                        "Transform": {
+                            "position": {
+                                "x": 194,
+                                "y": 66
+                            }
+                        },
+                        "SpriteRenderer": {
+                            "Bitmap": {
+                                "name": "Slide\\SlideBox"
+                            },
+                            "SrcSize": {
+                                "x": 64,
+                                "y": 64
+                            },
+                            "SrcPosition": {
+                                "x": 128,
+                                "y": 128
+                            }
+                        },
+                        "Collider": {
+                            "size": {
+                                "x": 64,
+                                "y": 64
+                            },
+                            "collisionLayer": [
+                                {
+                                    "Block": true,
+                                    "Layer": 1
+                                }
+                            ]
+                        },
+                        "Rigidbody": {},
+                        "Slide":{}
+                    },
+                    "layer":1
+                },
+                {
+                    "name": "GreenBlock",
+                    "Component": {
+                        "Transform": {
+                            "position": {
+                                "x": 194,
+                                "y": 131
+                            }
+                        },
+                        "SpriteRenderer": {
+                            "Bitmap": {
+                                "name": "Slide\\SlideBox"
+                            },
+                            "SrcSize": {
+                                "x": 64,
+                                "y": 128
+                            },
+                            "SrcPosition": {
+                                "x": 128,
+                                "y": 0
+                            }
+                        },
+                        "Collider": {
+                            "size": {
+                                "x": 64,
+                                "y": 128
+                            },
+                            "collisionLayer": [
+                                {
+                                    "Block": true,
+                                    "Layer": 1
+                                }
+                            ]
+                        },
+                        "Rigidbody": {},
+                        "Slide":{}
+                    },
+                    "layer":1
+
+                },
+                {
+                    "name": "BlueBlock",
+                    "Component": {
+                        "Transform": {
+                            "position": {
+                                "x": 0,
+                                "y": 131
+                            }
+                        },
+                        "SpriteRenderer": {
+                            "Bitmap": {
+                                "name": "Slide\\SlideBox"
+                            },
+                            "SrcSize": {
+                                "x": 128,
+                                "y": 128
+                            },
+                            "SrcPosition": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "Collider": {
+                            "size": {
+                                "x": 128,
+                                "y": 128
+                            },
+                            "collisionLayer": [
+                                {
+                                    "Block": true,
+                                    "Layer": 1
+                                }
+                            ]
+                        },
+                        "Rigidbody": {},
+                        "Slide":{}
+                    },
+                    "layer":1
+                }
+            ]
+        }
+    ]
+}

@@ -6,3 +6,4 @@
 #include ".\Script\Engine\mapReader.h"
 #include ".\Script\Engine\textRenderer.h"
 #include ".\Script\Engine\textStamp.h"
+#include ".\Script\Slide\slide.h"
