@@ -274,3 +274,5 @@ _Pvt_Extensions
 *.app
 
 *.stackdump
+
+**/Map/**/*.json
