@@ -30,6 +30,6 @@
             ]
         },
         "Rigidbody": {},
-        "Tutorial": {}
+        "Player": {}
     }
 }
