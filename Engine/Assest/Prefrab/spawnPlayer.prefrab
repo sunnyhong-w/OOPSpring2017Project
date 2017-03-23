@@ -1,0 +1,12 @@
+{
+	"IncludePrefrab" : {
+		"player" : "player"
+	},
+
+    "name": "SpawnPlayer",
+    "Component": {
+        "SpawnPlayer": {
+        	"wait" : 1
+        }
+    }
+}
