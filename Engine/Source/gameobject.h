@@ -14,6 +14,7 @@ HISTORY :
 #include<vector>
 #include<typeindex>
 #include"scene.h"
+#include"Script\Engine\mapReader.h"
 #include"_setting.h"
 
 namespace game_engine
@@ -40,6 +41,7 @@ class GameObject
         friend class SpriteRenderer;
         friend class game_framework::CGame;
 		friend class Rigidbody;
+        friend class MapReader;
     public:
         GameObject(bool doNotDestoryOnChangeScene = false);
         ~GameObject();
@@ -74,6 +76,9 @@ class GameObject
         //要判斷已沒有就判斷first==second，有的話就是true
         //T component的泛型
         template<class T> const std::vector<T*> GetComponents();
+        //刪除指定型別的第一個Component物件
+        //T component的泛型
+        template<class T> void RemoveComponent();
         //刪除指定型別的Component物件
         //T component的泛型
         template<class T> void RemoveComponent(T* comp);
@@ -161,6 +166,13 @@ template<class T> inline const std::vector<T*> GameObject::GetComponents()
         retval.push_back(static_cast<T*>(it->second));
 
     return retval;
+}
+
+template<class T> inline void GameObject::RemoveComponent()
+{
+    std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(std::type_index(typeid(T)));
+    if(data.first != data.second)
+        componentData.erase(data.first);
 }
 
 template<class T> inline void GameObject::RemoveComponent(T* comp)
