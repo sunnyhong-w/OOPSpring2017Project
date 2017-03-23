@@ -52,6 +52,7 @@ struct Tile
 {
 	Tile() {};
 	json properties;
+    json colliderProperties;
 	vector<CollisionInfo> object;
 };
 
@@ -61,11 +62,12 @@ public:
 	~MapReader();
 	MapReader(GameObject* gobj) : GameBehaviour(gobj) {}
 	void ParseJSON(json j) override;
+    void ParseProperties(GameObject* gobj, string filename, json prop);
 	void LoadMap(string str);
 	void Draw(Vector2I campos) override;
 	void Update() override;
 
 private:
 	TileMap tileMap;
-	
+    map<string, string> prefrabmap;
 };

@@ -14,18 +14,44 @@ MapReader::~MapReader()
 
 void MapReader::ParseJSON(json j)
 {
-	json emptyjson;
-	SpriteRenderer* SR = this->gameObject->AddComponentOnce<SpriteRenderer>();
-	SR->ParseJSON(emptyjson);
-
 	if (j.find("load") != j.end())
 	{
 		LoadMap(j["load"].get<string>());
 	}
 }
 
+void MapReader::ParseProperties(GameObject * gobj, string filename, json prop)
+{
+    for (json::iterator j = prop.begin(); j != prop.end(); j++)
+    {
+        if (j.key() == "include")
+        {
+            string prefrabName = j.value();
+            json prefrab = GameObject::GetPrefrabs(prefrabName);
+            if (prefrab == nullptr)
+            {
+                GameScene::IncludePrefrabs(filename + ".map", { {prefrabName , prefrabName} });
+                prefrab = GameObject::GetPrefrabs(prefrabName);
+            }
+
+            bool doNOTDestoryOnChangeScene = prefrab.find("doNOTDestoryOnChangeScene") != prefrab.end() ? prefrab["doNOTDestoryOnChangeScene"] : false;
+            gobj->ParseJSON(prefrab);
+            gobj->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
+
+            if (prefrab.find("Child") != prefrab.end())
+            {
+                auto childList = GameScene::InstantiateGameObject(filename + ".map", prefrab["Child"]);
+
+                for (auto childobj : childList)
+                    childobj->transform->SetParent(gobj->transform);
+            }
+        }
+    }
+}
+
 void MapReader::LoadMap(string fname)
 {
+    prefrabmap.clear();
     auto objlist = transform->GetChild();
 	for (auto childtransform : objlist)
 		Destroy(childtransform->gameObject);
@@ -62,13 +88,17 @@ void MapReader::LoadMap(string fname)
 							if (tmp.firstgid == -1 || tindex < tmp.firstgid || tindex >= tmp.firstgid + tmp.tilecount)
 								continue;
 
-							GameObject *gobj = new GameObject();
-							gobj->ParseJSON(GameObject::GetPrefrabs("Engine\\TileRenderer"));
-							SpriteRenderer* SR = gobj->GetComponent<SpriteRenderer>();
-							SR->LoadBitmapData(tmp.image);
-							int tileindex = tindex - tmp.firstgid;
+                            int tileindex = tindex - tmp.firstgid;
 
-							Vector2I srcpos(tileindex% tmp.columns, tileindex / tmp.columns);
+							GameObject *gobj = new GameObject();
+
+                            ParseProperties(gobj, fname ,tmp.tiles[tileindex].properties);
+
+							gobj->ParseJSON(GameObject::GetPrefrabs("Engine\\TileRenderer"));
+							SpriteRenderer* SR = gobj->AddComponentOnce<SpriteRenderer>();
+							SR->LoadBitmapData(tmp.image);
+
+							Vector2I srcpos(tileindex % tmp.columns, tileindex / tmp.columns);
 							SR->SetSourcePos(srcpos * tmp.tileSize);
 							SR->SetSize(tmp.tileSize);
 
@@ -112,7 +142,10 @@ void MapReader::LoadMap(string fname)
 							continue;
 
 						GameObject *gobj = new GameObject();
-						int tileindex = tindex - tmp.firstgid;
+                        int tileindex = tindex - tmp.firstgid;
+
+                        ParseProperties(gobj, fname, tmp.objects[tileindex].properties);
+
 						SpriteRenderer* SR = gobj->AddComponentOnce<SpriteRenderer>();
 						SR->LoadBitmapData(tmp.objects[tileindex].image);
 						
@@ -123,7 +156,6 @@ void MapReader::LoadMap(string fname)
 						gobj->SetLayer(Layer::Tile);
 
 						break;
-
 					}
 				}
 			}
@@ -200,12 +232,18 @@ void from_json(const json & j, ObjectSet & os)
 		imgname = imgname.substr(imgname.find_first_of("Bitmap") + 7);
 		imgname = imgname.substr(0, imgname.find_last_of("."));
 
-		json prop = (j.find("tileproperties") != j.end() ? j["tileproperties"][to_string(i)] : json());
+        json prop;
+        if (j.find("tileproperties") != j.end())
+        {
+            if (j["tileproperties"].find(to_string(i)) != j["tileproperties"].end())
+            {
+                prop = j["tileproperties"][to_string(i)];
+            }
+        }
 
 		os.objects.push_back(TileObject(imgname, prop));
 	}
 }
-
 
 void from_json(const json& j, TileSet& ts)
 {
@@ -220,9 +258,26 @@ void from_json(const json& j, TileSet& ts)
 
 	if (j.find("tiles") != j.end())
 	{
-		for (int i = 0; i < ts.tilecount; i++)
-			if (j["tiles"].find(to_string(i)) != j["tiles"].end())
-				ts.tiles.push_back(j["tiles"][to_string(i)]["objectgroup"]);
+        for (int i = 0; i < ts.tilecount; i++)
+        {
+            if (j["tiles"].find(to_string(i)) != j["tiles"].end())
+            {
+                Tile t = j["tiles"][to_string(i)]["objectgroup"];
+                
+                json prop;
+                if (j.find("tileproperties") != j.end())
+                {
+                    if (j["tileproperties"].find(to_string(i)) != j["tileproperties"].end())
+                    {
+                        prop = j["tileproperties"][to_string(i)];
+                    }
+                }
+
+                t.properties = prop;
+
+                ts.tiles.push_back(t);
+            }
+        }
 	}
 	else
 	{
@@ -233,7 +288,7 @@ void from_json(const json& j, TileSet& ts)
 void from_json(const json& j, Tile& to)
 {
 	if(j.find("properties") != j.end())
-		to.properties = j["properties"];
+		to.colliderProperties = j["properties"];
 
 	if (j.find("objects") != j.end())
 	{
