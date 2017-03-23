@@ -69,5 +69,4 @@ public:
 
 private:
 	TileMap tileMap;
-    map<string, string> prefrabmap;
 };

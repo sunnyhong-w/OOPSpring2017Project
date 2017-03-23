@@ -20,7 +20,7 @@ void GameScene::OnBeginState()
     thread th(&GameScene::LoadSceneData, this);
 
     //Render Loading Animation(force it OnDraw)
-    while (loadname != "")
+    while (!th.joinable())
         OnDraw();
 
     th.join();
@@ -30,109 +30,107 @@ void GameScene::OnBeginState()
 
 void GameScene::OnMove()
 {
-    if (loadname != "")
+    while (loadname != "")
         OnBeginState();
-    else
+
+    Time::Update();
+
+    //INPUT WORKOUT HERE
+    Input::Update();
+
+    //Destroy Dectechtion
+    for (vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
     {
-		Time::Update();
-
-        //INPUT WORKOUT HERE
-        Input::Update();
-
-        //Destroy Dectechtion
-        for (vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
+        if ((*it)->destoryFlag)
         {
-            if ((*it)->destoryFlag)
+            typedef multimap<Tag, GameObject*>::iterator iter_tag;
+            std::pair<iter_tag, iter_tag> data_t = GameObject::objectsTag.equal_range((*it)->tag);
+
+            for (iter_tag tit = data_t.first; tit != data_t.second; tit++)
             {
-				typedef multimap<Tag, GameObject*>::iterator iter_tag;
-				std::pair<iter_tag, iter_tag> data_t = GameObject::objectsTag.equal_range((*it)->tag);
-
-				for (iter_tag tit = data_t.first; tit != data_t.second; tit++)
-				{
-					if (tit->second == (*it))
-					{
-						GameObject::objectsTag.erase(tit);
-						break;
-					}
-				}
-
-				typedef multimap<Layer, GameObject*>::iterator iter_layer;
-				std::pair<iter_layer, iter_layer> data_l = GameObject::objectsLayer.equal_range((*it)->layer);
-
-				for (iter_layer tit = data_l.first; tit != data_l.second; tit++)
-				{
-					if (tit->second == (*it))
-					{
-						GameObject::objectsLayer.erase(tit);
-						break;
-					}
-				}
-
-				GameObject::objectsName.erase((*it)->name);
-
-                delete (*it);
-				it = GameObject::gameObjects.erase(it);
+                if (tit->second == (*it))
+                {
+                    GameObject::objectsTag.erase(tit);
+                    break;
+                }
             }
-            else
-                it++;
+
+            typedef multimap<Layer, GameObject*>::iterator iter_layer;
+            std::pair<iter_layer, iter_layer> data_l = GameObject::objectsLayer.equal_range((*it)->layer);
+
+            for (iter_layer tit = data_l.first; tit != data_l.second; tit++)
+            {
+                if (tit->second == (*it))
+                {
+                    GameObject::objectsLayer.erase(tit);
+                    break;
+                }
+            }
+
+            GameObject::objectsName.erase((*it)->name);
+
+            delete (*it);
+            it = GameObject::gameObjects.erase(it);
         }
-
-
-		for (unsigned i = 0; i < GameObject::gameObjectsWaitingPools.size(); i++)
-		{
-            auto ptr = GameObject::gameObjectsWaitingPools[i];
-			GameObject::Insert(ptr);
-            ptr->Start();
-		}
-		GameObject::gameObjectsWaitingPools.clear();
-
-        //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
-
-		for (GameObject* gobj : GameObject::gameObjects)
-		{
-			Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
-			if (rigidbody != nullptr && rigidbody->enable)
-				rigidbody->Update();
-		}
-
-        //Windows File Transmission
-        while (TDPQueue.size() != 0)
-        {
-            for (GameObject* gobj : GameObject::gameObjects)
-                if (gobj->enable)
-                    gobj->OnRecivedBoardcast(TDPQueue[0]);
-
-            TDPQueue.erase(TDPQueue.begin());
-        }
-
-        //GameBehavior Update Cycle
-        for (GameObject* gobj : GameObject::gameObjects)
-            if (gobj->enable)
-                gobj->Update();
-
-		//Animator Update Workout Here
-		for (GameObject* gobj : GameObject::gameObjects)
-		{
-			AnimationController* anic = gobj->GetComponent<AnimationController>();
-			if (anic != nullptr && anic->enable)
-				anic->Update();
-		}
-
-        //Animation Update
-        for (GameObject* gobj : GameObject::gameObjects)
-        {
-            Animation* ani = gobj->GetComponent<Animation>();
-            if (ani != nullptr && ani->enable)
-                ani->Update();
-        }
-
-        //GameBehavior LateUpdate Cycle
-        for (GameObject* gobj : GameObject::gameObjects)
-            if (gobj->enable)
-                gobj->LateUpdate();
+        else
+            it++;
     }
-}
 
+
+    for (unsigned i = 0; i < GameObject::gameObjectsWaitingPools.size(); i++)
+    {
+        auto ptr = GameObject::gameObjectsWaitingPools[i];
+        GameObject::Insert(ptr);
+        ptr->Start();
+    }
+    GameObject::gameObjectsWaitingPools.clear();
+
+    //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
+
+    for (GameObject* gobj : GameObject::gameObjects)
+    {
+        Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
+        if (rigidbody != nullptr && rigidbody->enable)
+            rigidbody->Update();
+    }
+
+    //Windows File Transmission
+    while (TDPQueue.size() != 0)
+    {
+        for (GameObject* gobj : GameObject::gameObjects)
+            if (gobj->enable)
+                gobj->OnRecivedBoardcast(TDPQueue[0]);
+
+        TDPQueue.erase(TDPQueue.begin());
+    }
+
+    //GameBehavior Update Cycle
+    for (GameObject* gobj : GameObject::gameObjects)
+        if (gobj->enable)
+            gobj->Update();
+
+    //Animator Update Workout Here
+    for (GameObject* gobj : GameObject::gameObjects)
+    {
+        AnimationController* anic = gobj->GetComponent<AnimationController>();
+        if (anic != nullptr && anic->enable)
+            anic->Update();
+    }
+
+    //Animation Update
+    for (GameObject* gobj : GameObject::gameObjects)
+    {
+        Animation* ani = gobj->GetComponent<Animation>();
+        if (ani != nullptr && ani->enable)
+            ani->Update();
+    }
+
+    //GameBehavior LateUpdate Cycle
+    for (GameObject* gobj : GameObject::gameObjects)
+        if (gobj->enable)
+            gobj->LateUpdate();
+
+}
 
 void GameScene::OnShow()
 {
@@ -186,12 +184,20 @@ void GameScene::OnShow()
 
 void GameScene::ParseJSON(json j)
 {
+    if (FindJSON("LoadScene"))
+    {
+        string SceneName = j["LoadScene"].get<string>();
+        if (SceneName != "")
+            this->loadname = SceneName;
+
+        return;
+    }
+
     if (FindJSON("IncludePrefrab"))
         IncludePrefrabs(filename + ".scene", j["IncludePrefrab"]);
     
     if (FindJSON("GameObject"))
-        InstantiateGameObject(filename + ".scene", j["GameObject"]);
-    
+        InstantiateGameObject(filename + ".scene", j["GameObject"]);    
 }
 
 void GameScene::IncludePrefrabs(string filename, json prefrabObject)
@@ -284,10 +290,38 @@ GameObject* GameScene::CreateGameObject(string filename, json jsonobj)
     return gobj;
 }
 
+
 void GameScene::LoadScene(string filename)
 {
     this->loadname = filename;
 }
+
+void GameScene::LoadSceneData()
+{
+    this->filename = loadname;
+    this->loadname = "";
+
+    string PATH = R"(.\Assest\Scene\)";
+    ifstream file;
+    file.open(PATH + filename + ".scene");
+
+    if (file.good())
+    {
+        stringstream buffer;
+        buffer << file.rdbuf();
+        file.close();
+        json jsonobj = json::parse(buffer);
+        this->ParseJSON(jsonobj);
+    }
+    else
+    {
+        file.close();
+        string str = "ERROR : Scene NOT FOUND when LoadScene!\n";
+        str += "Scene : " + filename;
+        GAME_ASSERT(false, str.c_str());
+    }
+}
+
 
 Vector2I & GameScene::CameraPosition()
 {
@@ -302,31 +336,6 @@ GameScene * GameScene::NowScene()
 Vector2I & GameScene::WindowPosition()
 {
 	return game_framework::CGame::Instance()->windowPosition;
-}
-
-void GameScene::LoadSceneData()
-{
-    this->filename = loadname;
-    string PATH = R"(.\Assest\Scene\)";
-    ifstream file;
-    file.open(PATH + filename + ".scene");
-
-    if (file.good())
-    {
-        stringstream buffer;
-        buffer << file.rdbuf();
-        json jsonobj = json::parse(buffer);
-        this->ParseJSON(jsonobj);
-    }
-    else
-    {
-        string str = "ERROR : Scene NOT FOUND when LoadScene!\n";
-        str += "Scene : " + filename;
-        GAME_ASSERT(false, str.c_str());
-    }
-
-    file.close();
-    this->loadname = "";
 }
 
 void GameScene::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)

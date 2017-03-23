@@ -129,9 +129,6 @@
     <ClCompile Include="Source\StdAfx.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
-    <ClCompile Include="Assest\Script\tutorial.cpp">
-      <Filter>GameScript</Filter>
-    </ClCompile>
     <ClCompile Include="Source\_setting.cpp">
       <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
@@ -165,6 +162,9 @@
     <ClCompile Include="Assest\Script\Hop\spawnPlayer.cpp">
       <Filter>GameScript\Hop</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\player.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -190,9 +190,6 @@
     </ClInclude>
     <ClInclude Include="Source\StdAfx.h">
       <Filter>MFC</Filter>
-    </ClInclude>
-    <ClInclude Include="Assest\Script\tutorial.h">
-      <Filter>GameScript</Filter>
     </ClInclude>
     <ClInclude Include="Source\_setting.h">
       <Filter>GameEngine\EngineLib</Filter>
@@ -237,6 +234,9 @@
       <Filter>GameEngine\EngingScript</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Hop\spawnPlayer.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\player.h">
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
   </ItemGroup>

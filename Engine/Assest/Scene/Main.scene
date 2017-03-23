@@ -1,19 +1,5 @@
 {
-    "IncludePrefrab": {
-        "TextStamp": "Engine\\TextRenderer\\TextStamp",
-        "TextRenderer": "Engine\\TextRenderer\\TextRenderer",
-        "MapReader": "Engine\\MapReader",
-        "Player": "player"
-    },
-    "GameObject": [
-        {
-            "include": "MapReader",
-            "Component": {
-                "MapReader": {
-                    "load": "temp"
-                }
-            },
-            "Child": []
-        }
-    ]
+    "LoadScene" : "Main_Hop",
+    "IncludePrefrab": {},
+    "GameObject": []
 }

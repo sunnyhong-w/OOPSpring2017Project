@@ -7,6 +7,7 @@ class SpawnPlayer : public GameBehaviour
 {
     public:
         SpawnPlayer(GameObject* gobj) :GameBehaviour(gobj) { }
+        ~SpawnPlayer() {};
 
         void ParseJSON(json j) override;
         void Start() override;

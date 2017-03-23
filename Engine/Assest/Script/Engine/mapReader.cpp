@@ -51,7 +51,6 @@ void MapReader::ParseProperties(GameObject * gobj, string filename, json prop)
 
 void MapReader::LoadMap(string fname)
 {
-    prefrabmap.clear();
     auto objlist = transform->GetChild();
 	for (auto childtransform : objlist)
 		Destroy(childtransform->gameObject);

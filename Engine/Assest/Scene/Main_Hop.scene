@@ -1,0 +1,15 @@
+{
+    "IncludePrefrab": {
+        "MapReader": "Engine\\MapReader"
+    },
+    "GameObject": [
+        {
+            "include": "MapReader",
+            "Component": {
+                "MapReader": {
+                    "load": "temp"
+                }
+            }
+        }
+    ]
+}
