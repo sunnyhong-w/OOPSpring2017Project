@@ -120,13 +120,13 @@
    <properties>
     <property name="include" value="spawnPlayer"/>
    </properties>
-   <image width="16" height="16" source="../Bitmap/Obj/SpwanPoint.bmp"/>
+   <image width="16" height="16" source="../Bitmap/GameObject/SpwanPoint.bmp"/>
   </tile>
   <tile id="1">
    <properties>
     <property name="include" value="button"/>
    </properties>
-   <image width="16" height="16" source="../Bitmap/Obj/button.bmp"/>
+   <image width="16" height="16" source="../Bitmap/GameObject/button.bmp"/>
   </tile>
  </tileset>
  <layer name="BackGround" width="15" height="10">
