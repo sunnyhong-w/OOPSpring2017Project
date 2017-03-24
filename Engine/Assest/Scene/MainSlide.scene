@@ -7,7 +7,7 @@
                 "Transform": {
                     "position": {
                         "x": 22,
-                        "y": 30
+                        "y": 22
                     }
                 }
             },
@@ -47,16 +47,16 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide":{}
+                        "Slide": {}
                     },
-                    "layer":1
+                    "layer": 1
                 },
                 {
                     "name": "YellowBlock",
                     "Component": {
                         "Transform": {
                             "position": {
-                                "x": 130,
+                                "x": 128,
                                 "y": 0
                             }
                         },
@@ -86,17 +86,17 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide":{}
+                        "Slide": {}
                     },
-                    "layer":1
+                    "layer": 1
                 },
                 {
                     "name": "WhiteBlock",
                     "Component": {
                         "Transform": {
                             "position": {
-                                "x": 194,
-                                "y": 66
+                                "x": 192,
+                                "y": 64
                             }
                         },
                         "SpriteRenderer": {
@@ -125,17 +125,17 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide":{}
+                        "Slide": {}
                     },
-                    "layer":1
+                    "layer": 1
                 },
                 {
                     "name": "GreenBlock",
                     "Component": {
                         "Transform": {
                             "position": {
-                                "x": 194,
-                                "y": 131
+                                "x": 192,
+                                "y": 128
                             }
                         },
                         "SpriteRenderer": {
@@ -164,10 +164,9 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide":{}
+                        "Slide": {}
                     },
-                    "layer":1
-
+                    "layer": 1
                 },
                 {
                     "name": "BlueBlock",
@@ -175,7 +174,7 @@
                         "Transform": {
                             "position": {
                                 "x": 0,
-                                "y": 131
+                                "y": 128
                             }
                         },
                         "SpriteRenderer": {
@@ -204,9 +203,118 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide":{}
+                        "Slide": {}
                     },
-                    "layer":1
+                    "layer": 1
+                }
+            ]
+        },
+        {
+            "name": "BorderParent",
+            "Component": {
+                "Transform": {
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    }
+                }
+            },
+            "Child": [
+                {
+                    "name": "BorderTop",
+                    "Component": {
+                        "Transform": {
+                            "position": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "Collider": {
+                            "size": {
+                                "x": 300,
+                                "y": 22
+                            },
+                            "collisionLayer": [
+                                {
+                                    "Block": true,
+                                    "Layer": 1
+                                }
+                            ]
+                        }
+                    },
+                    "layer": 1
+                },
+                {
+                    "name": "BorderRight",
+                    "Component": {
+                        "Transform": {
+                            "position": {
+                                "x": 278,
+                                "y": 0
+                            }
+                        },
+                        "Collider": {
+                            "size": {
+                                "x": 22,
+                                "y": 300
+                            },
+                            "collisionLayer": [
+                                {
+                                    "Block": true,
+                                    "Layer": 1
+                                }
+                            ]
+                        }
+                    },
+                    "layer": 1
+                },
+                {
+                    "name": "BorderBottom",
+                    "Component": {
+                        "Transform": {
+                            "position": {
+                                "x": 0,
+                                "y": 278
+                            }
+                        },
+                        "Collider": {
+                            "size": {
+                                "x": 300,
+                                "y": 22
+                            },
+                            "collisionLayer": [
+                                {
+                                    "Block": true,
+                                    "Layer": 1
+                                }
+                            ]
+                        }
+                    },
+                    "layer": 1
+                },
+                {
+                    "name": "BorderLeft",
+                    "Component": {
+                        "Transform": {
+                            "position": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "Collider": {
+                            "size": {
+                                "x": 22,
+                                "y": 300
+                            },
+                            "collisionLayer": [
+                                {
+                                    "Block": true,
+                                    "Layer": 1
+                                }
+                            ]
+                        }
+                    },
+                    "layer": 1
                 }
             ]
         }
