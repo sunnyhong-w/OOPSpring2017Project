@@ -40,6 +40,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(TextRenderer)
 	RegisterComponent(MapReader)
     RegisterComponent(SpawnPlayer)
+	RegisterComponent(Button)
     else return nullptr;
 }
 
@@ -222,18 +223,24 @@ void GameObject::SetTag(Tag tag)
         typedef multimap<Tag, GameObject*>::iterator iter;
         std::pair<iter, iter> data = GameObject::objectsTag.equal_range(this->tag);
 
+		bool find = false;
         for (iter it = data.first; it != data.second; it++)
         {
             if (it->second == this)
             {
+				find = true;
                 GameObject::objectsTag.erase(it);
                 this->tag = tag;
                 GameObject::UpdateTag(this);
                 break;
             }
         }
-
-		this->tag = tag;
+	
+		if (!find)
+		{
+			this->tag = tag;
+			GameObject::UpdateTag(this);
+		}
     }
     else
         this->tag = tag;
@@ -246,6 +253,7 @@ void GameObject::SetLayer(Layer layer)
         typedef multimap<Layer, GameObject*>::iterator iter;
         std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(this->layer);
 
+		bool find = false;
         for (iter it = data.first; it != data.second; it++)
         {
             if (it->second == this)
@@ -253,11 +261,15 @@ void GameObject::SetLayer(Layer layer)
                 GameObject::objectsLayer.erase(it);
                 this->layer = layer;
                 GameObject::UpdateLayer(this);
+				find = true;
                 break;
             }
         }
-
-		this->layer = layer;
+		if (!find)
+		{
+			this->layer = layer;
+			GameObject::UpdateLayer(this);
+		}
     }
     else
         this->layer = layer;
@@ -307,6 +319,9 @@ GameObject* InstantiateJSON(json jsonobj, Vector2 position)
     GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene);
     gobj->ParseJSON(jsonobj);
 
+	gobj->SetLayer(gobj->layer);
+	gobj->SetTag(gobj->tag);
+
     if (!position.isNull())
         gobj->GetComponent<Transform>()->SetPosition(position);
 
@@ -355,8 +370,8 @@ void GameObject::UpdateName(GameObject* gobj)
     {
         string newname = gobj->name + " Clone(" + to_string(GameObject::objectsNameCount[gobj->name]) + ")";
         GameObject::objectsName[newname] = gobj;
+		GameObject::objectsNameCount[gobj->name]++;
         gobj->name = newname;
-        GameObject::objectsNameCount[gobj->name]++;
     }
 }
 
