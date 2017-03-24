@@ -1,6 +1,7 @@
 {
     "IncludePrefrab": {
-        "MapReader": "Engine\\MapReader"
+        "MapReader": "Engine\\MapReader",
+        "Button":"button"
     },
     "GameObject": [
         {
@@ -10,6 +11,18 @@
                     "load": "temp"
                 }
             }
+        },
+        {
+            "include":"Button",
+            "Component":{
+                "Transform":{
+                    "position":{
+                        "x":64,
+                        "y":256
+                    }
+                }
+            }
         }
+
     ]
 }

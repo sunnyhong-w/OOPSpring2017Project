@@ -165,6 +165,9 @@
     <ClCompile Include="Assest\Script\Hop\player.cpp">
       <Filter>GameScript\Hop</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\button.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -237,6 +240,9 @@
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Hop\player.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\button.h">
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
   </ItemGroup>

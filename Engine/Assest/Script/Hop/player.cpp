@@ -34,17 +34,22 @@ void Player::Update()
 	if (rb->colliderInfo.bottom)
 		extraGravityHack = 1;
 
-    if (Input::GetKeyClick(VK_LBUTTON))
-        this->transform->SetWorldPosition(Input::GetMouseWorldPos());
+    //if (Input::GetKeyClick(VK_LBUTTON))
+    //    this->transform->SetWorldPosition(Input::GetMouseWorldPos());
 
 	if (Input::GetKeyPressing('A') || Input::GetKeyPressing(VK_LEFT))
-        vel.x = -1 * speed;
+        vel.x += -1 * speed;
+	
 	if (Input::GetKeyPressing('D') || Input::GetKeyPressing(VK_RIGHT))
-        vel.x =  speed;
+        vel.x +=  speed;
 	//TRACE(("\ncolliderINFO Bottom : " + to_string(rb->colliderInfo.bottom) + "\n").c_str());
 	if (rb->colliderInfo.bottom)
 	{
 		canJump = true;
+	}
+	else
+	{
+		canJump = false;
 	}
 
 	if (Input::GetKeyDown('W') || Input::GetKeyDown(VK_SPACE))

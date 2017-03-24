@@ -265,6 +265,7 @@
     <ClCompile Include="Assest\Script\Engine\mapReader.cpp" />
     <ClCompile Include="Assest\Script\Engine\textRenderer.cpp" />
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp" />
+    <ClCompile Include="Assest\Script\Hop\button.cpp" />
     <ClCompile Include="Assest\Script\Hop\player.cpp" />
     <ClCompile Include="Assest\Script\Hop\spawnPlayer.cpp" />
     <ClCompile Include="Source\audio.cpp" />
@@ -315,6 +316,7 @@
     <ClInclude Include="Assest\Script\Engine\mapReader.h" />
     <ClInclude Include="Assest\Script\Engine\textRenderer.h" />
     <ClInclude Include="Assest\Script\Engine\textStamp.h" />
+    <ClInclude Include="Assest\Script\Hop\button.h" />
     <ClInclude Include="Assest\Script\Hop\player.h" />
     <ClInclude Include="Assest\Script\Hop\spawnPlayer.h" />
     <ClInclude Include="Source\audio.h" />

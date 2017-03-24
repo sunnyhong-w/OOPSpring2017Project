@@ -87,6 +87,13 @@ void GameScene::OnMove()
 
     //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
 
+	for (GameObject* gobj : GameObject::gameObjects)
+	{
+		Collider* collider = gobj->GetComponent<Collider>();
+		if (collider != nullptr && collider->enable)
+			collider->Update();
+	}
+
     for (GameObject* gobj : GameObject::gameObjects)
     {
         Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
