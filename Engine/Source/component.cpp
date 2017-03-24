@@ -417,7 +417,7 @@ void Collider::Update()
 
 	for (auto c : OnEnter)
 	{
-		for (GameObject::ComponentData::iterator it = c->gameObject->componentData.begin(); it != c->gameObject->componentData.end(); it++)
+		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
 		{
 			if (it->second->isBehavior())
 			{
@@ -431,7 +431,7 @@ void Collider::Update()
 
 	for (auto c : OnStay)
 	{
-		for (GameObject::ComponentData::iterator it = c->gameObject->componentData.begin(); it != c->gameObject->componentData.end(); it++)
+		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
 		{
 			if (it->second->isBehavior())
 			{
@@ -445,7 +445,7 @@ void Collider::Update()
 
 	for (auto c : OnExit)
 	{
-		for (GameObject::ComponentData::iterator it = c->gameObject->componentData.begin(); it != c->gameObject->componentData.end(); it++)
+		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
 		{
 			if (it->second->isBehavior())
 			{
