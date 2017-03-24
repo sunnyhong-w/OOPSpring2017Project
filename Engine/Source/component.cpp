@@ -391,6 +391,76 @@ bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
 	return ret;
 }
 
+void Collider::Update()
+{
+	sort(collidedCollider.begin(), collidedCollider.end(), less<Collider*>());
+	sort(lastCollidedCollder.begin(), lastCollidedCollder.end(), less<Collider*>());
+
+	vector<Collider*> OnEnter;
+	vector<Collider*> OnStay;
+	vector<Collider*> OnExit;
+
+	//OnEnter
+	set_difference(collidedCollider.begin(), collidedCollider.end(),
+		lastCollidedCollder.begin(), lastCollidedCollder.end(),
+		std::back_inserter(OnEnter));
+
+	//OnStay
+	set_intersection(collidedCollider.begin(), collidedCollider.end(),
+		lastCollidedCollder.begin(), lastCollidedCollder.end(),
+		std::back_inserter(OnStay));
+
+	//OnExit
+	set_difference(lastCollidedCollder.begin(), lastCollidedCollder.end(), 
+		collidedCollider.begin(), collidedCollider.end(),
+		std::back_inserter(OnExit));
+
+	for (auto c : OnEnter)
+	{
+		for (GameObject::ComponentData::iterator it = c->gameObject->componentData.begin(); it != c->gameObject->componentData.end(); it++)
+		{
+			if (it->second->isBehavior())
+			{
+				GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+
+				if (gb->enable)
+					gb->OnCollisionEnter(c);
+			}
+		}
+	}
+
+	for (auto c : OnStay)
+	{
+		for (GameObject::ComponentData::iterator it = c->gameObject->componentData.begin(); it != c->gameObject->componentData.end(); it++)
+		{
+			if (it->second->isBehavior())
+			{
+				GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+
+				if (gb->enable)
+					gb->OnCollisionStay(c);
+			}
+		}
+	}
+
+	for (auto c : OnExit)
+	{
+		for (GameObject::ComponentData::iterator it = c->gameObject->componentData.begin(); it != c->gameObject->componentData.end(); it++)
+		{
+			if (it->second->isBehavior())
+			{
+				GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+
+				if (gb->enable)
+					gb->OnCollisionExit(c);
+			}
+		}
+	}
+
+	lastCollidedCollder = collidedCollider;
+	collidedCollider.clear();
+}
+
 void Collider::ParseJSON(json j)
 {
     if (j.find("offset") != j.end())
@@ -410,7 +480,6 @@ void Collider::ParseJSON(json j)
 	}
 		
 }
-
 
 
 void Animation::LoadAnimation(json jsonobj)
@@ -535,27 +604,10 @@ void Rigidbody::ParseJSON(json j)
 
 void Rigidbody::OnCollision(Collider *tgcollider)
 {
-    for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
-    {
-        if (it->second->isBehavior())
-        {
-            GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-            if (gb->enable)
-                gb->OnCollisionEnter(tgcollider);
-        }
-    }
 	Collider* c = this->gameObject->GetComponent<Collider>();
-	for (GameObject::ComponentData::iterator it = tgcollider->gameObject->componentData.begin(); it != tgcollider->gameObject->componentData.end(); it++)
-	{
-		if (it->second->isBehavior())
-		{
-			GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
 
-			if (gb->enable)
-				gb->OnCollisionEnter(c);
-		}
-	}
+	tgcollider->collidedCollider.push_back(c);
+	c->collidedCollider.push_back(tgcollider);
 }
 
 bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block)
@@ -567,7 +619,7 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
 			continue;
 
         Collider* tgcollider = gobj->GetComponent<Collider>();
-        if (tgcollider != nullptr)
+        if (tgcollider != nullptr && tgcollider->enable != false)
         {
             if (collider->BoxCollision(tgcollider, tempVelocity, block))
             {
@@ -663,6 +715,9 @@ void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
                         }
                     }
                 }
+
+				if (sliceNum == Vector2I::zero)
+					DoCollision(collider, gobjvec, invelocity, cl.block);
             }
             else
             {
@@ -683,6 +738,8 @@ void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
                         DoCollision(collider, gobjvec, v, cl.block);
                     }
                 }
+				else
+					DoCollision(collider, gobjvec, invelocity, cl.block);
             }
         }
     }
@@ -694,9 +751,6 @@ void Rigidbody::Update()
 
     Vector2 originalVelocity = velocity;
     velocity = velocity.floor();
-
-	if (velocity == Vector2::zero)
-		return;
 
     Vector2 originalFloorVelocity = velocity;
 
