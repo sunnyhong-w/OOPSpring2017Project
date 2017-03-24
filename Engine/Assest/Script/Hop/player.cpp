@@ -15,6 +15,8 @@ void Player::Start()
     gravity =(2 * MaxJumpHeight) / pow(jumpTimeApex, 2);
     MaxJumpVelocity = -1 * gravity * jumpTimeApex;
     MinJumpVelocity = sqrt(2 * abs(gravity) * MinJumpHeight);
+	bounce = false;
+	isBouncing = false;
 }
 
 void Player::Update()
@@ -46,16 +48,31 @@ void Player::Update()
 	if (rb->colliderInfo.bottom)
 	{
 		canJump = true;
+		isBouncing = false;
 	}
 	else
 	{
 		canJump = false;
 	}
 
+	if (bounce)
+	{
+		vel.y += MaxJumpVelocity * 1.2;
+		isBouncing = true;
+	}
+
 	if (Input::GetKeyDown('W') || Input::GetKeyDown(VK_SPACE))
 	{
 		Jump(vel);
 	}
+	else if (Input::GetKeyUp(VK_SPACE) && !isBouncing)
+	{
+		if (vel.y < -9)
+			vel = Vector2::up * 9;
+	}
+	
+
+
 	vel.y += gravity * Time::deltaTime;
 	rb->velocity = vel * tiledPixel * Time::deltaTime + extraGravityHack * Vector2::down;
 			////
@@ -76,6 +93,8 @@ void Player::Update()
         GameScene::NowScene()->LoadScene("Main");
 	Vector2 size = Vector2((float)SIZE_X / 2, (float)SIZE_Y / 2);
 	GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
+
+	bounce = false;
 }
 
 void Player::OnRecivedBoardcast(json j)

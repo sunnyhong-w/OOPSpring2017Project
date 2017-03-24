@@ -11,17 +11,6 @@
                     "load": "temp"
                 }
             }
-        },
-        {
-            "include":"Button",
-            "Component":{
-                "Transform":{
-                    "position":{
-                        "x":64,
-                        "y":256
-                    }
-                }
-            }
         }
 
     ]

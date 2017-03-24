@@ -147,12 +147,12 @@ void MapReader::LoadMap(string fname)
 
 						SpriteRenderer* SR = gobj->AddComponentOnce<SpriteRenderer>();
 						SR->LoadBitmapData(tmp.objects[tileindex].image);
+						SR->SetAnchorRaito(Vector2::down);
 						
 						Instantiate(gobj);
 						gobj->transform->SetParent(this->transform);
 						gobj->transform->SetPosition(obj);
 						gobj->transform->SetZIndex(zindex);
-						gobj->SetLayer(Layer::Tile);
 
 						break;
 					}

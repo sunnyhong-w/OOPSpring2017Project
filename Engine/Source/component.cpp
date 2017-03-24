@@ -667,7 +667,7 @@ void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
         {
             vector<Vector2> sliceVelocity;
             Vector2 sliceUnit = Vector2(16, 16);
-            Vector2 vslicenum = velocity / sliceUnit;
+            Vector2 vslicenum = invelocity / sliceUnit;
             vslicenum = vslicenum.abs();
 
 

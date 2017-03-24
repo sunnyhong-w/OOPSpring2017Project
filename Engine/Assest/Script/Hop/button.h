@@ -18,4 +18,5 @@ public:
 	int speed;
 private:
 	bool pressed;
+	bool lastState;
 };
