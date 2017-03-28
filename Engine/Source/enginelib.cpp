@@ -60,22 +60,22 @@ Vector2 Vector2::operator+(Vector2I adder)
     return Vector2(this->x + adder.x, this->y + adder.y);
 }
 
-Vector2 Vector2::SmoothDamp(Vector2 current, Vector2 target, Vector2 &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
+Vector2 Vector2::SmoothDamp(Vector2 currentPosition, Vector2 target, Vector2 &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
 {
-	return Vector2::SmoothDampEX(current, target, currentVelocity, 0.003f, 4, smoothTime, maxSpeed, deltaTime);
+	return Vector2::SmoothDampEX(currentPosition, target, currentVelocity, 0.003f, 4, smoothTime, maxSpeed, deltaTime);
 }
 
-Vector2 Vector2::SmoothDampEX(Vector2 current, Vector2 target, Vector2 & currentVelocity, float pd, float f, float smoothTime, float maxSpeed, float deltaTime)
+Vector2 Vector2::SmoothDampEX(Vector2 currentPosition, Vector2 target, Vector2 & currentVelocity, float pd, float f, float smoothTime, float maxSpeed, float deltaTime)
 {
 	float dt = deltaTime != 0 ? deltaTime : Time::deltaTime;
 
-	Damp(current.x, currentVelocity.x, target.x, smoothTime, pd, f, dt);
-	Damp(current.y, currentVelocity.y, target.y, smoothTime, pd, f, dt);
+	Damp(currentPosition.x, currentVelocity.x, target.x, smoothTime, pd, f, dt);
+	Damp(currentPosition.y, currentVelocity.y, target.y, smoothTime, pd, f, dt);
 	if (currentVelocity.x > maxSpeed && maxSpeed != 0)
 		currentVelocity.x = maxSpeed;
 	if (currentVelocity.y > maxSpeed && maxSpeed != 0)
 		currentVelocity.y = maxSpeed;
-	return current;
+	return currentPosition;
 }
 
 Vector2 operator*(Vector2 multiplied, Vector2 multiplier)
