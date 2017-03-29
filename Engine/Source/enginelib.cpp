@@ -190,6 +190,11 @@ Vector2 Vector2::side()
 	return ret;
 }
 
+Vector2 Vector2::sliceRound(Vector2 slice)
+{
+    return ((*this) /slice).round() * slice;
+}
+
 Vector2I Vector2::GetV2I()
 {
     return Vector2I(this);

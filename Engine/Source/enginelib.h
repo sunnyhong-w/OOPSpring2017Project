@@ -31,6 +31,7 @@ struct Vector2
 		Vector2 ceilSpecial();
 		Vector2 floorSpecial();
 		Vector2 side();
+        Vector2 sliceRound(Vector2 slice);
 
         float x;
         float y;
