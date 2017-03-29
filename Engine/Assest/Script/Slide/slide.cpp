@@ -12,6 +12,7 @@ void Slide::Start()
 	rigidbody = this->gameObject->GetComponent<Rigidbody>();
 	rigidbody->TimeSliceCollision = true;
 	vel = Vector2::zero;
+	targetPosition = this->transform->GetPostion();
 }
 
 void Slide::Update()
@@ -34,19 +35,27 @@ void Slide::Update()
 
 		Vector2 nowPos = this->transform->GetPostion();
 		Vector2 slice(64,64);
-		nowPos = (nowPos / slice).round() * slice;
-		
-		this->transform->SetPosition(nowPos);
+		targetPosition = (nowPos / slice).round() * slice;
 	}
 	
 	if (locked && Input::GetKeyPressing(VK_LBUTTON))
 	{
 		Vector2 dv = Input::GetMouseWorldPos() - clickPos;
-		Vector2 tp = oWorldPos + dv;;
-		Vector2::SmoothDampEX(this->transform->GetWorldPosition(), tp, vel, 0.00001f, 2, 0.5);
+		targetPosition = oWorldPos + dv;
+		Vector2 wpos = this->transform->GetWorldPosition();
+		Vector2 newpos = Vector2::SmoothDampEX(wpos, targetPosition, vel, 0.003f, 2, 0.5f);
+
+		rigidbody->velocity = newpos - wpos;
+	}
+	else
+	{
+		Vector2 vpos = this->transform->GetPostion();
+		Vector2 newpos = Vector2::SmoothDampEX(vpos, targetPosition, vel, 15.0f, 10, 9.0f);
+
+		rigidbody->velocity = newpos - vpos;
 	}
 	
-	rigidbody->velocity = vel * Time::deltaTime;
+	//rigidbody->velocity = vel * Time::deltaTime;
 }
 
 void Slide::OnRecivedBoardcast(json j)
@@ -59,7 +68,9 @@ void Slide::OnDrawGizmos(CDC * pDC)
 	//pDC->TextOutA(0, 20, ("colliderINFO : " + rb->colliderInfo.toString()).c_str());
 	//pDC->TextOutA(0, 40, ("Can Jump : " + to_string(canJump)).c_str());
 	//pDC->TextOutA(0, 60, ("velocity : " + rb->velocity.toString()).c_str());
-	pDC->TextOutA(0, 20, ("mouse  pos : " + Input::GetMouseWorldPos().toString()).c_str());
+	Vector2 pos = transform->GetPostion();
+	Vector2 worldpos = transform->GetWorldPosition();
+	pDC->TextOutA(worldpos.x, worldpos.y, (pos.toString()).c_str());
 }
 
 void Slide::SendData()
