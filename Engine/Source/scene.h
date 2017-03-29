@@ -44,7 +44,7 @@ class GameScene : public game_framework::CGameState
         void LoadSceneData();
 
 
-
+        bool debug = false;
         vector<json> TDPQueue;
         string filename;
         string loadname;

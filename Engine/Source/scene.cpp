@@ -38,6 +38,11 @@ void GameScene::OnMove()
     //INPUT WORKOUT HERE
     Input::Update();
 
+    if (Input::GetKeyDown(VK_F1))
+    {
+        debug = !debug;
+    }
+
     //Destroy Dectechtion
     for (vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
     {
@@ -144,39 +149,40 @@ void GameScene::OnShow()
 
         //Draw Debug Info By CDC
 
-        CDC *pDC = game_framework::CDDraw::GetBackCDC();
-        pDC->SetBkMode(TRANSPARENT);
-        for (GameObject* gobj : GameObject::gameObjects)
+        if (debug)
         {
-        	Collider* collider = gobj->GetComponent<Collider>();
-        	if (collider != nullptr)
-        		collider->OnDrawGismos(pDC, cameraPosition);
-			
-			gobj->OnDrawGizmos(pDC);
+            CDC *pDC = game_framework::CDDraw::GetBackCDC();
+            pDC->SetBkMode(TRANSPARENT);
+            for (GameObject* gobj : GameObject::gameObjects)
+            {
+                Collider* collider = gobj->GetComponent<Collider>();
+                if (collider != nullptr)
+                    collider->OnDrawGismos(pDC, cameraPosition);
 
-            //SpriteRenderer *SR = gobj->GetComponent<SpriteRenderer>();
-            //if (SR != nullptr)
-            //{
-            //    CPen pen;
-            //    pen.CreatePen(0, 1, RGB(255,0,0));
-            //    pDC->SelectObject(pen);
-            //
-            //    Vector2I pos = (SR->GetRealRenderPostion() - cameraPosition);
-            //    int r = 2;
-            //    pDC->Ellipse(pos.x - r, pos.y - r, pos.x + r, pos.y + r);
-            //}
+                gobj->OnDrawGizmos(pDC);
+
+                //SpriteRenderer *SR = gobj->GetComponent<SpriteRenderer>();
+                //if (SR != nullptr)
+                //{
+                //    CPen pen;
+                //    pen.CreatePen(0, 1, RGB(255,0,0));
+                //    pDC->SelectObject(pen);
+                //
+                //    Vector2I pos = (SR->GetRealRenderPostion() - cameraPosition);
+                //    int r = 2;
+                //    pDC->Ellipse(pos.x - r, pos.y - r, pos.x + r, pos.y + r);
+                //}
+            }
+
+            Vector2 vw = Input::GetMouseWorldPos();
+            Vector2I vc = Input::GetMousePos();
+
+            //pDC->TextOutA(vc.x, vc.y - 20, CString(vw.toString().c_str()));
+            //pDC->TextOutA(vc.x, vc.y + 20, CString(vc.GetV2().toString().c_str()));
+            pDC->TextOutA(0, 0, CString(("Camera Pos : " + cameraPosition.GetV2().toString()).c_str()));
+
+            game_framework::CDDraw::ReleaseBackCDC();
         }
-        
-        Vector2 vw = Input::GetMouseWorldPos();
-        Vector2I vc = Input::GetMousePos();
-
-        //pDC->TextOutA(vc.x, vc.y - 20, CString(vw.toString().c_str()));
-        //pDC->TextOutA(vc.x, vc.y + 20, CString(vc.GetV2().toString().c_str()));
-        pDC->TextOutA(0, 0, CString(("Camera Pos : " + cameraPosition.GetV2().toString()).c_str()));
-
-        game_framework::CDDraw::ReleaseBackCDC();
-
-
     }
 }
 
