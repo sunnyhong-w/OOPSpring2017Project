@@ -78,7 +78,7 @@
 #define ENABLE_GAME_PAUSE	 false	                       	// 是否允許以 Ctrl-Q 暫停遊戲
 #define ENABLE_AUDIO		 true		                    // 啟動音效介面
 #define ENABLE_AUDIO_PAUSE_WHEN_KILL_FOCUS	false		    // 啟動音效介面
-#define WINDOW_NAME          "TEST_A"                       // 視窗的名稱設定
+#define WINDOW_NAME          "Hop"                       // 視窗的名稱設定
 
 /////////////////////////////////////////////////////////////////////////////
 // 定義CGame及CGameState所使用的三個狀態常數
@@ -362,7 +362,7 @@ private:
     bool            popStack = false;
     vector<CGameState*> SceneStack;
 	static CGame	instance;			// 遊戲唯一的instance
-    const CString targetwindow[2] = { "TEST_A" , "TEST_B" }; //Boardcast清單
+    const CString targetwindow[2] = { "Hop" , "Slide" }; //Boardcast清單
 };
 
 }
