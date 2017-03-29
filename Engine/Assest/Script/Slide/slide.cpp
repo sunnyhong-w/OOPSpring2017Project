@@ -91,6 +91,8 @@ void Slide::SendData()
 
 void from_json(const json & j, PassState & ps)
 {
+    ps.top = ps.bottom = ps.left = ps.right = false;
+
     if (j.find("top") != j.end())
         ps.top = j["top"];
 

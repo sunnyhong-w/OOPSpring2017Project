@@ -5,10 +5,7 @@ using namespace game_engine;
 
 struct PassState
 {
-    bool top;
-    bool bottom;
-    bool left;
-    bool right;
+    bool top, bottom, left, right;
 };
 
 void from_json(const json& j, PassState& ps);
