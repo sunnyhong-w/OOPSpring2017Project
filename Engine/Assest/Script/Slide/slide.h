@@ -42,5 +42,6 @@ private:
 	Rigidbody* rigidbody;
 	Vector2 oWorldPos;
 	Vector2 clickPos;
+    Vector2 targetPos;
 	Vector2 vel;
 };
