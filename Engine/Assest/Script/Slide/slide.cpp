@@ -8,46 +8,45 @@ void Slide::ParseJSON(json j)
 void Slide::Start()
 {
 	locked = false;
+	collider = this->gameObject->GetComponent<Collider>();
+	rigidbody = this->gameObject->GetComponent<Rigidbody>();
+	rigidbody->TimeSliceCollision = true;
+	vel = Vector2::zero;
 }
 
 void Slide::Update()
 {
-	Rigidbody *rb = gameObject->GetComponent<Rigidbody>();
-	rb->TimeSliceCollision = true;
-	bool collided = this->gameObject->GetComponent<Collider>()->PointCollision(Input::GetMouseWorldPos().GetV2I());
+	bool collided = collider->PointCollision(Input::GetMouseWorldPos().GetV2I());
 
 	if (Input::GetKeyDown(VK_LBUTTON) && collided)
 	{
 		locked = true;
+		clickPos = Input::GetMouseWorldPos();
+		oWorldPos = this->transform->GetWorldPosition();
 	}
 
-	if (Input::GetKeyUp(VK_LBUTTON)||!collided)
+	if (Input::GetKeyUp(VK_LBUTTON))
 	{
 		locked = false;
-		rb->velocity = Vector2::zero;
+		rigidbody->velocity = Vector2::zero;
+		vel = Vector2::zero;
+		clickPos = Vector2::zero;
+
+		Vector2 nowPos = this->transform->GetPostion();
+		Vector2 slice(64,64);
+		nowPos = (nowPos / slice).round() * slice;
+		
+		this->transform->SetPosition(nowPos);
 	}
-	if (locked &&Input::GetKeyPressing(VK_LBUTTON) && collided)
+	
+	if (locked && Input::GetKeyPressing(VK_LBUTTON))
 	{
-		rb->velocity = Input::GetMouseDeltaPos().GetV2();
+		Vector2 dv = Input::GetMouseWorldPos() - clickPos;
+		Vector2 tp = oWorldPos + dv;;
+		Vector2::SmoothDampEX(this->transform->GetWorldPosition(), tp, vel, 0.00001f, 2, 0.5);
 	}
-	//rb->velocity = Vector2::zero;
-	//rb->velocity = vel * tiledPixel * Time::deltaTime ;
-
-	if (Input::GetKeyPressing(VK_NUMPAD8))
-		GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::up * 10;
-	if (Input::GetKeyPressing(VK_NUMPAD6))
-		GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::right * 10;
-	if (Input::GetKeyPressing(VK_NUMPAD4))
-		GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::left * 10;
-	if (Input::GetKeyPressing(VK_NUMPAD2))
-		GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::down * 10;
-	if (Input::GetKeyDown(VK_NUMPAD5))
-	{
-		Vector2 size = Vector2((float)SIZE_X / 2, (float)SIZE_Y / 2);
-
-		GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
-	}
-
+	
+	rigidbody->velocity = vel * Time::deltaTime;
 }
 
 void Slide::OnRecivedBoardcast(json j)
@@ -60,7 +59,12 @@ void Slide::OnDrawGizmos(CDC * pDC)
 	//pDC->TextOutA(0, 20, ("colliderINFO : " + rb->colliderInfo.toString()).c_str());
 	//pDC->TextOutA(0, 40, ("Can Jump : " + to_string(canJump)).c_str());
 	//pDC->TextOutA(0, 60, ("velocity : " + rb->velocity.toString()).c_str());
-	pDC->TextOutA(0, 20, ("mouse  pos : " + Input::GetMousePos().GetV2().toString()).c_str());
+	pDC->TextOutA(0, 20, ("mouse  pos : " + Input::GetMouseWorldPos().toString()).c_str());
+}
+
+void Slide::SendData()
+{
+
 }
 
 
