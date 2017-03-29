@@ -62,19 +62,46 @@ Vector2 Vector2::operator+(Vector2I adder)
 
 Vector2 Vector2::SmoothDamp(Vector2 currentPosition, Vector2 target, Vector2 &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
 {
-	return Vector2::SmoothDampEX(currentPosition, target, currentVelocity, 0.003f, 4, smoothTime, maxSpeed, deltaTime);
+    float dt = deltaTime != 0 ? deltaTime : Time::deltaTime;
+
+    Damping::SmoothDamp(currentPosition.x, currentVelocity.x, target.x, smoothTime, dt);
+    Damping::SmoothDamp(currentPosition.y, currentVelocity.y, target.y, smoothTime, dt);
+
+    if (currentVelocity.x > maxSpeed && maxSpeed != 0)
+        currentVelocity.x = maxSpeed;
+    if (currentVelocity.y > maxSpeed && maxSpeed != 0)
+        currentVelocity.y = maxSpeed;
+
+    return currentPosition;
 }
 
-Vector2 Vector2::SmoothDampEX(Vector2 currentPosition, Vector2 target, Vector2 & currentVelocity, float pd, float f, float smoothTime, float maxSpeed, float deltaTime)
+Vector2 Vector2::BounceDamp(Vector2 currentPosition, Vector2 target, Vector2 & currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
+{
+    float dt = deltaTime != 0 ? deltaTime : Time::deltaTime;
+
+    Damping::BounceDamp(currentPosition.x, currentVelocity.x, target.x, smoothTime, dt);
+    Damping::BounceDamp(currentPosition.y, currentVelocity.y, target.y, smoothTime, dt);
+
+    if (currentVelocity.x > maxSpeed && maxSpeed != 0)
+        currentVelocity.x = maxSpeed;
+    if (currentVelocity.y > maxSpeed && maxSpeed != 0)
+        currentVelocity.y = maxSpeed;
+
+    return currentPosition;
+}
+
+Vector2 Vector2::Damp(Vector2 currentPosition, Vector2 target, Vector2 & currentVelocity, float pd, float f, float smoothTime, float maxSpeed, float deltaTime)
 {
 	float dt = deltaTime != 0 ? deltaTime : Time::deltaTime;
 
-	Damp(currentPosition.x, currentVelocity.x, target.x, smoothTime, pd, f, dt);
-	Damp(currentPosition.y, currentVelocity.y, target.y, smoothTime, pd, f, dt);
+	Damping::Damp(currentPosition.x, currentVelocity.x, target.x, smoothTime, pd, f, dt);
+    Damping::Damp(currentPosition.y, currentVelocity.y, target.y, smoothTime, pd, f, dt);
+
 	if (currentVelocity.x > maxSpeed && maxSpeed != 0)
 		currentVelocity.x = maxSpeed;
 	if (currentVelocity.y > maxSpeed && maxSpeed != 0)
 		currentVelocity.y = maxSpeed;
+
 	return currentPosition;
 }
 

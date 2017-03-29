@@ -396,7 +396,7 @@ Vector2 Easing::easeFTBasic(easeMode mode, double t, Vector2 from, Vector2 to, d
     }
 }
 
-void Spring(float & x, float & v, float xt, float zeta, float omega, float h)
+inline void Damping::Spring(float & x, float & v, float xt, float zeta, float omega, float h)
 {
 	const float f = 1.0f + 2.0f * h * zeta * omega;
 	const float oo = omega * omega;
@@ -409,11 +409,21 @@ void Spring(float & x, float & v, float xt, float zeta, float omega, float h)
 	v = detV * detInv;
 }
 
-void Damp(float & x, float & v, float xt, float td, float pd, float f, float h)
+void Damping::Damp(float & x, float & v, float xt, float td, float pd, float f, float h)
 {
 	const float omega = 2 * M_PI * f;
 	const float zeta = log(pd) / (-1 * omega * td);
 	Spring(x, v, xt, zeta, omega, h);
+}
+
+void Damping::SmoothDamp(float & x, float & v, float xt, float td, float h)
+{
+    Damp(x, v, xt, td, 1, 0.1f, h);
+}
+
+void Damping::BounceDamp(float & x, float & v, float xt, float td, float h)
+{
+    Damp(x, v, xt, td, 0.003f, 4, h);
 }
 
 }

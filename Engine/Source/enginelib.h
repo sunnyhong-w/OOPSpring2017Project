@@ -75,6 +75,19 @@ struct Vector2
 		static Vector2 SmoothDamp(Vector2 currentPosition,Vector2 targetPosition, Vector2 &currentVelocity,
 								  float smoothTime, float maxSpeed = 0, float deltaTime = 0);
 
+        /// <summary>
+        /// Smooth Damping
+        /// </summary>
+        /// <param name="currentPosition">現在的位置</param>
+        /// <param name="targetPosition">目標的位置</param>
+        /// <param name="currentVelocity">現在的速度</param>
+        /// <param name="smoothTime">Damping的總時間</param>
+        /// <param name="maxSpeed">最大速度(0則不限制)</param>
+        /// <param name="deltaTime">時間的變量(預設為Time::deltaTime)</param>
+        /// <returns></returns>
+        static Vector2 BounceDamp(Vector2 currentPosition, Vector2 targetPosition, Vector2 &currentVelocity,
+            float smoothTime, float maxSpeed = 0, float deltaTime = 0);
+
 		/// <summary>
 		/// Smooth Damping
 		/// </summary>
@@ -87,7 +100,7 @@ struct Vector2
 		/// <param name="maxSpeed">最大速度(0則不限制)</param>
 		/// <param name="deltaTime">時間的變量(預設為Time::deltaTime)</param>
 		/// <returns></returns>
-		static Vector2 SmoothDampEX(Vector2 currentPosition, Vector2 targetPosition, Vector2 &currentVelocity,
+		static Vector2 Damp(Vector2 currentPosition, Vector2 targetPosition, Vector2 &currentVelocity,
 						            float pd, float f, float smoothTime, float maxSpeed = 0, float deltaTime = 0);
 
     private:
