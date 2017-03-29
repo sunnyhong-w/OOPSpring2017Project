@@ -239,16 +239,14 @@
     <ClInclude Include="Assest\Script\Engine\textStamp.h">
       <Filter>GameEngine\EngingScript</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="Assest\Script\Slide\slide.h">
       <Filter>GameScript\Slide</Filter>
-=======
+    </ClInclude>
     <ClInclude Include="Assest\Script\Hop\spawnPlayer.h">
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Hop\player.h">
       <Filter>GameScript\Hop</Filter>
->>>>>>> develop
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
