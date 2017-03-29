@@ -696,7 +696,7 @@ void Rigidbody::Update()
     colliderInfo.Reset();
 
     Vector2 originalVelocity = velocity;
-    velocity = velocity.floor();
+    velocity = velocity.ceilSpecial();
 
 	if (velocity == Vector2::zero)
 		return;

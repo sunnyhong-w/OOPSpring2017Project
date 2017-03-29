@@ -23,16 +23,11 @@ void Player::Update()
     rb->TimeSliceCollision = true;
 	
 	int speed = 5;
-    //vel = rb->velocity;
 
     if (rb->colliderInfo.bottom || rb->colliderInfo.top)
         vel.y = 0;
 
     vel.x = 0;
-
-	float extraGravityHack = 0;
-	if (rb->colliderInfo.bottom)
-		extraGravityHack = 1;
 
     if (Input::GetKeyClick(VK_LBUTTON))
         this->transform->SetWorldPosition(Input::GetMouseWorldPos());
@@ -41,7 +36,6 @@ void Player::Update()
         vel.x = -1 * speed;
 	if (Input::GetKeyPressing('D') || Input::GetKeyPressing(VK_RIGHT))
         vel.x =  speed;
-	//TRACE(("\ncolliderINFO Bottom : " + to_string(rb->colliderInfo.bottom) + "\n").c_str());
 	if (rb->colliderInfo.bottom)
 	{
 		canJump = true;
@@ -52,8 +46,9 @@ void Player::Update()
 		Jump(vel);
 	}
 	vel.y += gravity * Time::deltaTime;
-	rb->velocity = vel * tiledPixel * Time::deltaTime + extraGravityHack * Vector2::down;
-			////
+	rb->velocity = vel * tiledPixel * Time::deltaTime;
+
+
 
     if (Input::GetKeyPressing(VK_NUMPAD8))
         GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::up * 10;
@@ -67,6 +62,7 @@ void Player::Update()
 	{
 		//GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 	}
+
     if (Input::GetKeyDown(VK_F5))
         GameScene::NowScene()->LoadScene("Main");
 	Vector2 size = Vector2((float)SIZE_X / 2, (float)SIZE_Y / 2);
