@@ -418,7 +418,7 @@ void Damping::Damp(float & x, float & v, float xt, float td, float pd, float f, 
 
 void Damping::SmoothDamp(float & x, float & v, float xt, float td, float h)
 {
-    Damp(x, v, xt, td, 1, 0.1f, h);
+    Damp(x, v, xt, td, 0.1f, 1, h);
 }
 
 void Damping::BounceDamp(float & x, float & v, float xt, float td, float h)
