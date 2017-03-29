@@ -267,6 +267,8 @@
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp" />
     <ClCompile Include="Assest\Script\Slide\slide.cpp" />
     <ClCompile Include="Assest\Script\tutorial.cpp" />
+    <ClCompile Include="Assest\Script\Hop\player.cpp" />
+    <ClCompile Include="Assest\Script\Hop\spawnPlayer.cpp" />
     <ClCompile Include="Source\audio.cpp" />
     <ClCompile Include="Source\component.cpp" />
     <ClCompile Include="Source\easing.cpp" />
@@ -317,6 +319,8 @@
     <ClInclude Include="Assest\Script\Engine\textStamp.h" />
     <ClInclude Include="Assest\Script\Slide\slide.h" />
     <ClInclude Include="Assest\Script\tutorial.h" />
+    <ClInclude Include="Assest\Script\Hop\player.h" />
+    <ClInclude Include="Assest\Script\Hop\spawnPlayer.h" />
     <ClInclude Include="Source\audio.h" />
     <ClInclude Include="Source\component.h" />
     <ClInclude Include="Source\easing.h" />
@@ -335,7 +339,6 @@
     <ClInclude Include="Source\scene.h" />
     <ClInclude Include="Source\StdAfx.h" />
     <ClInclude Include="Source\gamelib.h" />
-    <ClInclude Include="Source\_GameScripts.h" />
     <ClInclude Include="Source\_setting.h" />
   </ItemGroup>
   <ItemGroup>
@@ -353,4 +356,7 @@
       <UserProperties RESOURCE_FILE="Source\game.rc" />
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+  </PropertyGroup>
 </Project>

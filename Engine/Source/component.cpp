@@ -191,6 +191,7 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
     size = Vector2I::null;
     offset = Vector2I::zero;
     anchorRaito = Vector2::zero;
+	sortingLayer = SortingLayer::Default;
 }
 
 void SpriteRenderer::ParseJSON(json j)
@@ -198,7 +199,8 @@ void SpriteRenderer::ParseJSON(json j)
     if (j.find("Bitmap") != j.end())
     {
         int r, g, b;
-        r = g = b = 0;
+        r = g = 255;
+        b = 0;
 
         if (j["Bitmap"].find("colorkey") != j["Bitmap"].end())
         {
@@ -556,8 +558,9 @@ void Rigidbody::OnCollision(Collider *tgcollider)
 	}
 }
 
-bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block)
+bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block, bool resetVX)
 {
+	float vx = tempVelocity.x;
     bool ret = false;
     for (auto gobj : gobjvec)
     {
@@ -572,6 +575,8 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
                 OnCollision(tgcollider);
                 ret = true;
             }
+			if (resetVX)
+				tempVelocity.x = vx;
         }
     }
     return ret;
@@ -595,7 +600,7 @@ void Rigidbody::CollisionDetection(Vector2& invelocity)
 
                 //Vertical Collision
                 Vector2 vVertical(invelocity.x, invelocity.y);
-                if (DoCollision(collider, gobjvec, vVertical, cl.block))
+                if (DoCollision(collider, gobjvec, vVertical, cl.block, true))
                     invelocity.y = vVertical.y;
             }
             else
@@ -654,7 +659,7 @@ void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
                         else
                             v = invelocity;
                         Vector2 vVertical(invelocity.x, v.y);
-                        if (DoCollision(collider, gobjvec, vVertical, cl.block))
+                        if (DoCollision(collider, gobjvec, vVertical, cl.block, true))
                         {
                             invelocity.y = vVertical.y;
                             break;

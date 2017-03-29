@@ -197,7 +197,7 @@ public:
 	void Update();
 private:
     void OnCollision(Collider *tgcollider);
-    bool DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block);
+    bool DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block, bool resetVX = false);
     void CollisionDetection(Vector2& invelocity);
     void CollisionDetectionSlice(Vector2& invelocity);
 };

@@ -2,9 +2,7 @@
     "IncludePrefrab": {
         "TileRenderer": "Engine\\TileRenderer"
     },
-    "include": [
-        "TileRenderer"
-    ],
+
     "name": "MapReader",
     "isPureScript": true,
     "renderByBehavior": true,
