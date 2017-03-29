@@ -116,30 +116,55 @@ class Easing
         Vector2 easeFTBasic(easeMode mode, double t, Vector2 from, Vector2 to, double d, double a);
 };
 
-//Spring Function By AllenChou(CJCat)
-/// <summary>
-/// 阻尼平滑系統
-/// </summary>
-/// <param name="x">value</param>
-/// <param name="v">velocity</param>
-/// <param name="xt">target value</param>
-/// <param name="zeta">damping ratio</param>
-/// <param name="omega">angular frequency</param>
-/// <param name="h">time step</param>
-/// <returns></returns>
-inline void Spring(float &x, float &v, float xt, float zeta, float omega, float h = Time::deltaTime);
+class Damping {
+public :
+    //Spring Function By AllenChou(CJCat)
+    /// <summary>
+    /// 阻尼平滑系統
+    /// </summary>
+    /// <param name="x">value</param>
+    /// <param name="v">velocity</param>
+    /// <param name="xt">target value</param>
+    /// <param name="zeta">damping ratio</param>
+    /// <param name="omega">angular frequency</param>
+    /// <param name="h">time step</param>
+    /// <returns></returns>
+    inline static void Spring(float &x, float &v, float xt, float zeta, float omega, float h = Time::deltaTime);
 
-/// <summary>
-/// 阻尼平滑系統(設計者友好)
-/// </summary>
-/// <param name="x">value</param>
-/// <param name="v">velocity</param>
-/// <param name="xt">target value</param>
-/// <param name="td">specific duration</param>
-/// <param name="pd">fraction of oscillation magnitude reduced </param>
-/// <param name="f">oscillation frequency</param>
-/// <param name="h">time step</param>
-/// <returns></returns>
-void Damp(float &x, float &v, float xt, float td, float pd, float f, float h = Time::deltaTime);
+    /// <summary>
+    /// 阻尼平滑系統(設計者友好)
+    /// </summary>
+    /// <param name="x">value</param>
+    /// <param name="v">velocity</param>
+    /// <param name="xt">target value</param>
+    /// <param name="td">specific duration</param>
+    /// <param name="pd">fraction of oscillation magnitude reduced </param>
+    /// <param name="f">oscillation frequency</param>
+    /// <param name="h">time step</param>
+    /// <returns></returns>
+    static void Damp(float &x, float &v, float xt, float td, float pd, float f, float h = Time::deltaTime);
+
+    /// <summary>
+    /// 阻尼平滑系統(Preset)
+    /// </summary>
+    /// <param name="x">value</param>
+    /// <param name="v">velocity</param>
+    /// <param name="xt">target value</param>
+    /// <param name="td">smooth time</param>
+    /// <param name="h">time step</param>
+    /// <returns></returns>
+    static void SmoothDamp(float &x, float &v, float xt, float td = 0.5f, float h = Time::deltaTime);
+
+    /// <summary>
+    /// 阻尼平滑系統(Preset)
+    /// </summary>
+    /// <param name="x">value</param>
+    /// <param name="v">velocity</param>
+    /// <param name="xt">target value</param>
+    /// <param name="td">smooth time</param>
+    /// <param name="h">time step</param>
+    /// <returns></returns>
+    static void BounceDamp(float &x, float &v, float xt, float td = 0.5f, float h = Time::deltaTime);
+};
 
 }

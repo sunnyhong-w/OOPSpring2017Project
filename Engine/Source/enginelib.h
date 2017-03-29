@@ -26,7 +26,12 @@ struct Vector2
         bool isNull();
         Vector2 abs();
 		Vector2 round();
+		Vector2 floor();
+		Vector2 ceil();
+		Vector2 ceilSpecial();
+		Vector2 floorSpecial();
 		Vector2 side();
+        Vector2 sliceRound(Vector2 slice);
 
         float x;
         float y;
@@ -57,10 +62,45 @@ struct Vector2
         friend bool operator !=(Vector2 left, Vector2 right);
         //Vector2I operator =(Vector2 equ);
 
-		static Vector2 SmoothDamp(Vector2 current,Vector2 target, Vector2 &currentVelocity,
+		/// <summary>
+		/// Smooth Damping
+		/// </summary>
+		/// <param name="currentPosition">現在的位置</param>
+		/// <param name="targetPosition">目標的位置</param>
+		/// <param name="currentVelocity">現在的速度</param>
+		/// <param name="smoothTime">Damping的總時間</param>
+		/// <param name="maxSpeed">最大速度(0則不限制)</param>
+		/// <param name="deltaTime">時間的變量(預設為Time::deltaTime)</param>
+		/// <returns></returns>
+		static Vector2 SmoothDamp(Vector2 currentPosition,Vector2 targetPosition, Vector2 &currentVelocity,
 								  float smoothTime, float maxSpeed = 0, float deltaTime = 0);
 
-		static Vector2 SmoothDampEX(Vector2 current, Vector2 target, Vector2 &currentVelocity,
+        /// <summary>
+        /// Smooth Damping
+        /// </summary>
+        /// <param name="currentPosition">現在的位置</param>
+        /// <param name="targetPosition">目標的位置</param>
+        /// <param name="currentVelocity">現在的速度</param>
+        /// <param name="smoothTime">Damping的總時間</param>
+        /// <param name="maxSpeed">最大速度(0則不限制)</param>
+        /// <param name="deltaTime">時間的變量(預設為Time::deltaTime)</param>
+        /// <returns></returns>
+        static Vector2 BounceDamp(Vector2 currentPosition, Vector2 targetPosition, Vector2 &currentVelocity,
+            float smoothTime, float maxSpeed = 0, float deltaTime = 0);
+
+		/// <summary>
+		/// Smooth Damping
+		/// </summary>
+		/// <param name="currentPosition">現在的位置</param>
+		/// <param name="targetPosition">目標的位置</param>
+		/// <param name="currentVelocity">現在的速度</param>
+		/// <param name="pd">fraction of oscillation magnitude reduced</param>
+		/// <param name="f">波型頻率</param>
+		/// <param name="smoothTime">Damping的總時間</param>
+		/// <param name="maxSpeed">最大速度(0則不限制)</param>
+		/// <param name="deltaTime">時間的變量(預設為Time::deltaTime)</param>
+		/// <returns></returns>
+		static Vector2 Damp(Vector2 currentPosition, Vector2 targetPosition, Vector2 &currentVelocity,
 						            float pd, float f, float smoothTime, float maxSpeed = 0, float deltaTime = 0);
 
     private:

@@ -66,6 +66,7 @@ class Transform : public Component
         Vector2 scale;
 
 		void SetParent(Transform* target);
+		void SetParentAbsolute(Transform* target);
         Transform* GetParent();
 		vector<Transform*> GetChild();
 
@@ -137,14 +138,19 @@ void from_json(const json &j, CollisionLayer &cl);
 
 class Collider : public Component
 {
+	friend class Rigidbody;
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
         void OnDrawGismos(CDC *pDC, Vector2I cameraPos);
         bool PointCollision(Vector2I point);
 		bool BoxCollision(Collider* box, Vector2 &velocityOffse, bool block = false);
+		void Update();
         void ParseJSON(json j) override;
 		CollisionInfo collisionInfo;
 		vector<CollisionLayer> collisionLayer;
+	private:
+		vector<Collider*> collidedCollider;
+		vector<Collider*> lastCollidedCollder;
 };
 
 class Animation : public Component
@@ -181,6 +187,7 @@ private:
 struct ColliderInfo
 {
     bool top, bottom, left, right;
+	string toString();
     void Reset();
 };
 
@@ -195,7 +202,7 @@ public:
 	void Update();
 private:
     void OnCollision(Collider *tgcollider);
-    bool DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block);
+    bool DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block, bool resetVX = false);
     void CollisionDetection(Vector2& invelocity);
     void CollisionDetectionSlice(Vector2& invelocity);
 };

@@ -23,6 +23,12 @@
     <Filter Include="GameEngine\EngineLib">
       <UniqueIdentifier>{acdb326e-a467-4779-b6a3-707be65280d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameScript\Slide">
+      <UniqueIdentifier>{3b052ff8-7540-4931-aa50-cec2153add6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameScript\Hop">
+      <UniqueIdentifier>{d1484843-e62e-44ad-bee9-3c5cee4bfb6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\ball.bmp">
@@ -126,9 +132,6 @@
     <ClCompile Include="Source\StdAfx.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
-    <ClCompile Include="Assest\Script\tutorial.cpp">
-      <Filter>GameScript</Filter>
-    </ClCompile>
     <ClCompile Include="Source\_setting.cpp">
       <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
@@ -159,6 +162,22 @@
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp">
       <Filter>GameEngine\EngingScript</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Slide\slide.cpp">
+      <Filter>GameScript\Slide</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\spawnPlayer.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\player.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\tutorial.cpp" />
+    <ClCompile Include="Assest\Script\Slide\BoxParent.cpp">
+      <Filter>GameScript\Slide</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\spring.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -184,12 +203,6 @@
     </ClInclude>
     <ClInclude Include="Source\StdAfx.h">
       <Filter>MFC</Filter>
-    </ClInclude>
-    <ClInclude Include="Assest\Script\tutorial.h">
-      <Filter>GameScript</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\_GameScripts.h">
-      <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
     <ClInclude Include="Source\_setting.h">
       <Filter>GameEngine\EngineLib</Filter>
@@ -232,6 +245,22 @@
     </ClInclude>
     <ClInclude Include="Assest\Script\Engine\textStamp.h">
       <Filter>GameEngine\EngingScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Slide\slide.h">
+      <Filter>GameScript\Slide</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\spawnPlayer.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\player.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\tutorial.h" />
+    <ClInclude Include="Assest\Script\Slide\BoxParent.h">
+      <Filter>GameScript\Slide</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\spring.h">
+      <Filter>GameScript\Hop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

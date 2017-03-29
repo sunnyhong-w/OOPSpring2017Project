@@ -783,10 +783,11 @@ void CGame::OnCopyData(json reciveddata)
 
 void CGame::BoardcastMessage(json boardcastdata)
 {
-    RECT rect;
-    AfxGetMainWnd()->GetWindowRect(&rect);
-    boardcastdata["posision"] = { { "x" , rect.left } ,{ "y" , rect.top } };
-    boardcastdata["size"] = { { "w" , rect.right - rect.left } ,{ "h" , rect.bottom - rect.top } };
+    //RECT rect;
+    //AfxGetMainWnd()->GetWindowRect(&rect);
+
+	boardcastdata["posision"] = windowPosition;
+    boardcastdata["size"] = { { "w" , SIZE_X } ,{ "h" , SIZE_Y } };
     boardcastdata["sender"] = WINDOW_NAME;
 
     string strdata = boardcastdata.dump();

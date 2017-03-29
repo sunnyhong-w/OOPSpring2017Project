@@ -60,22 +60,49 @@ Vector2 Vector2::operator+(Vector2I adder)
     return Vector2(this->x + adder.x, this->y + adder.y);
 }
 
-Vector2 Vector2::SmoothDamp(Vector2 current, Vector2 target, Vector2 &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
+Vector2 Vector2::SmoothDamp(Vector2 currentPosition, Vector2 target, Vector2 &currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
 {
-	return Vector2::SmoothDampEX(current, target, currentVelocity, 0.003f, 4, smoothTime, maxSpeed, deltaTime);
+    float dt = deltaTime != 0 ? deltaTime : Time::deltaTime;
+
+    Damping::SmoothDamp(currentPosition.x, currentVelocity.x, target.x, smoothTime, dt);
+    Damping::SmoothDamp(currentPosition.y, currentVelocity.y, target.y, smoothTime, dt);
+
+    if (currentVelocity.x > maxSpeed && maxSpeed != 0)
+        currentVelocity.x = maxSpeed;
+    if (currentVelocity.y > maxSpeed && maxSpeed != 0)
+        currentVelocity.y = maxSpeed;
+
+    return currentPosition;
 }
 
-Vector2 Vector2::SmoothDampEX(Vector2 current, Vector2 target, Vector2 & currentVelocity, float pd, float f, float smoothTime, float maxSpeed, float deltaTime)
+Vector2 Vector2::BounceDamp(Vector2 currentPosition, Vector2 target, Vector2 & currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
+{
+    float dt = deltaTime != 0 ? deltaTime : Time::deltaTime;
+
+    Damping::BounceDamp(currentPosition.x, currentVelocity.x, target.x, smoothTime, dt);
+    Damping::BounceDamp(currentPosition.y, currentVelocity.y, target.y, smoothTime, dt);
+
+    if (currentVelocity.x > maxSpeed && maxSpeed != 0)
+        currentVelocity.x = maxSpeed;
+    if (currentVelocity.y > maxSpeed && maxSpeed != 0)
+        currentVelocity.y = maxSpeed;
+
+    return currentPosition;
+}
+
+Vector2 Vector2::Damp(Vector2 currentPosition, Vector2 target, Vector2 & currentVelocity, float pd, float f, float smoothTime, float maxSpeed, float deltaTime)
 {
 	float dt = deltaTime != 0 ? deltaTime : Time::deltaTime;
 
-	Damp(current.x, currentVelocity.x, target.x, smoothTime, pd, f, dt);
-	Damp(current.y, currentVelocity.y, target.y, smoothTime, pd, f, dt);
+	Damping::Damp(currentPosition.x, currentVelocity.x, target.x, smoothTime, pd, f, dt);
+    Damping::Damp(currentPosition.y, currentVelocity.y, target.y, smoothTime, pd, f, dt);
+
 	if (currentVelocity.x > maxSpeed && maxSpeed != 0)
 		currentVelocity.x = maxSpeed;
 	if (currentVelocity.y > maxSpeed && maxSpeed != 0)
 		currentVelocity.y = maxSpeed;
-	return current;
+
+	return currentPosition;
 }
 
 Vector2 operator*(Vector2 multiplied, Vector2 multiplier)
@@ -153,6 +180,26 @@ Vector2 Vector2::round()
 	return Vector2(roundf(x), roundf(y));
 }
 
+Vector2 Vector2::floor()
+{
+	return Vector2(floorf(x),floorf(y));
+}
+
+Vector2 Vector2::ceil()
+{
+	return Vector2(ceilf(x),ceilf(y));
+}
+
+Vector2 Vector2::ceilSpecial()
+{
+	return Vector2((x > 0 ? ceilf(x) : floorf(x)), (y > 0 ? ceilf(y) : floorf(y)));
+}
+
+Vector2 Vector2::floorSpecial()
+{
+	return Vector2((x < 0 ? ceilf(x) : floorf(x)), (y < 0 ? ceilf(y) : floorf(y)));
+}
+
 Vector2 Vector2::side()
 {
 	Vector2 ret = Vector2::zero;
@@ -168,6 +215,11 @@ Vector2 Vector2::side()
 		ret.y = -1;
 
 	return ret;
+}
+
+Vector2 Vector2::sliceRound(Vector2 slice)
+{
+    return ((*this) /slice).round() * slice;
 }
 
 Vector2I Vector2::GetV2I()

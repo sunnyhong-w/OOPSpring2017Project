@@ -15,8 +15,8 @@
         },
         "Collider": {
             "size": {
-                "x": 32,
-                "y": 64
+                "x": 16,
+                "y": 32
             },
             "offset": {
                 "x": 0,
@@ -26,10 +26,13 @@
                 {
                     "Block": true,
                     "Layer": 1
+                },
+                {
+                    "Layer": 2
                 }
             ]
         },
         "Rigidbody": {},
-        "Tutorial": {}
+        "Player": {}
     }
 }
