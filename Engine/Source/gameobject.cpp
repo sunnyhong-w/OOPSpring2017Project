@@ -40,6 +40,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(TextRenderer)
 	RegisterComponent(MapReader)
 	RegisterComponent(Slide)
+    RegisterComponent(BoxParent)   
     else return nullptr;
 }
 

@@ -3,6 +3,11 @@
 #include "slide.h" //Include you header
 void Slide::ParseJSON(json j)
 {
+    if (j.find("tileSetting") != j.end())
+    {
+        for (auto sbsjson : j["tileSetting"])
+            this->boxdata.push_back(sbsjson);
+    }
 }
 
 void Slide::Start()
@@ -12,12 +17,13 @@ void Slide::Start()
 	rigidbody = this->gameObject->GetComponent<Rigidbody>();
 	rigidbody->TimeSliceCollision = true;
 	vel = Vector2::zero;
-	targetPosition = this->transform->GetPostion();
 }
 
 void Slide::Update()
 {
 	bool collided = collider->PointCollision(Input::GetMouseWorldPos().GetV2I());
+    rigidbody->velocity = Vector2::zero;
+
 
 	if (Input::GetKeyDown(VK_LBUTTON) && collided)
 	{
@@ -35,27 +41,20 @@ void Slide::Update()
 
 		Vector2 nowPos = this->transform->GetPostion();
 		Vector2 slice(64,64);
-		targetPosition = (nowPos / slice).round() * slice;
+        Vector2 newPos = (nowPos / slice).round() * slice;
+
+        rigidbody->velocity = newPos - nowPos;
+        this->transform->GetParent()->gameObject->GetComponent<BoxParent>()->CheckData();
 	}
 	
 	if (locked && Input::GetKeyPressing(VK_LBUTTON))
 	{
 		Vector2 dv = Input::GetMouseWorldPos() - clickPos;
-		targetPosition = oWorldPos + dv;
 		Vector2 wpos = this->transform->GetWorldPosition();
-		Vector2 newpos = Vector2::SmoothDampEX(wpos, targetPosition, vel, 0.003f, 2, 0.5f);
+		Vector2 newpos = Vector2::SmoothDampEX(wpos, oWorldPos + dv, vel, 0.003f, 2, 1.0f);
 
 		rigidbody->velocity = newpos - wpos;
 	}
-	else
-	{
-		Vector2 vpos = this->transform->GetPostion();
-		Vector2 newpos = Vector2::SmoothDampEX(vpos, targetPosition, vel, 15.0f, 10, 9.0f);
-
-		rigidbody->velocity = newpos - vpos;
-	}
-	
-	//rigidbody->velocity = vel * Time::deltaTime;
 }
 
 void Slide::OnRecivedBoardcast(json j)
@@ -70,7 +69,7 @@ void Slide::OnDrawGizmos(CDC * pDC)
 	//pDC->TextOutA(0, 60, ("velocity : " + rb->velocity.toString()).c_str());
 	Vector2 pos = transform->GetPostion();
 	Vector2 worldpos = transform->GetWorldPosition();
-	pDC->TextOutA(worldpos.x, worldpos.y, (pos.toString()).c_str());
+	//pDC->TextOutA(worldpos.x, worldpos.y, (pos.toString()).c_str());
 }
 
 void Slide::SendData()
@@ -78,4 +77,39 @@ void Slide::SendData()
 
 }
 
+void from_json(const json & j, PassState & ps)
+{
+    if (j.find("top") != j.end())
+        ps.top = j["top"];
 
+    if (j.find("bottom") != j.end())
+        ps.bottom = j["bottom"];
+
+    if (j.find("left") != j.end())
+        ps.left = j["left"];
+
+    if (j.find("right") != j.end())
+        ps.right = j["right"];
+}
+
+void to_json(json & j, const PassState & ps)
+{
+    j["top"] = ps.top;
+    j["bottom"] = ps.bottom;
+    j["left"] = ps.left;
+    j["right"] = ps.right;
+}
+
+void from_json(const json & j, SlideBoxSetting & sbs)
+{
+    sbs.position = j["position"];
+
+    if(j.find("state") != j.end())
+        sbs.state = j["state"];
+}
+
+void to_json(json & j, const SlideBoxSetting & sbs)
+{
+    j["position"] = sbs.position;
+    j["state"] = sbs.state;
+}

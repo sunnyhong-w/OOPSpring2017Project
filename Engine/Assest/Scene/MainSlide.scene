@@ -9,7 +9,8 @@
                         "x": 22,
                         "y": 22
                     }
-                }
+                },
+                "BoxParent": {}
             },
             "Child": [
                 {
@@ -47,7 +48,28 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide": {}
+                        "Slide": {
+                            "tileSetting": [
+                                {
+                                    "position": {
+                                        "x": 0,
+                                        "y": 0
+                                    },
+                                    "state": {
+                                        "left": true
+                                    }
+                                },
+                                {
+                                    "position": {
+                                        "x": 1,
+                                        "y": 0
+                                    },
+                                    "state": {
+                                        "right": true
+                                    }
+                                }
+                            ]
+                        }
                     },
                     "layer": 1
                 },
@@ -86,7 +108,25 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide": {}
+                        "Slide": {
+                            "tileSetting": [
+                                {
+                                    "position": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                },
+                                {
+                                    "position": {
+                                        "x": 1,
+                                        "y": 0
+                                    },
+                                    "state": {
+                                        "top": true
+                                    }
+                                }
+                            ]
+                        }
                     },
                     "layer": 1
                 },
@@ -125,7 +165,19 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide": {}
+                        "Slide": {
+                            "tileSetting": [
+                                {
+                                    "position": {
+                                        "x": 0,
+                                        "y": 0
+                                    },
+                                    "state": {
+                                        "bottom": true
+                                    }
+                                }
+                            ]
+                        }
                     },
                     "layer": 1
                 },
@@ -164,7 +216,25 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide": {}
+                        "Slide": {
+                            "tileSetting": [
+                                {
+                                    "position": {
+                                        "x": 0,
+                                        "y": 0
+                                    }
+                                },
+                                {
+                                    "position": {
+                                        "x": 0,
+                                        "y": 1
+                                    },
+                                    "state": {
+                                        "left": true
+                                    }
+                                }
+                            ]
+                        }
                     },
                     "layer": 1
                 },
@@ -203,7 +273,43 @@
                             ]
                         },
                         "Rigidbody": {},
-                        "Slide": {}
+                        "Slide": {
+                            "tileSetting": [
+                                {
+                                    "position": {
+                                        "x": 0,
+                                        "y": 0
+                                    },
+                                    "state": {
+                                        "left": true
+                                    }
+                                },
+                                {
+                                    "position": {
+                                        "x": 1,
+                                        "y": 0
+                                    }
+                                },
+                                {
+                                    "position": {
+                                        "x": 0,
+                                        "y": 1
+                                    },
+                                    "state": {
+                                        "bottom": true
+                                    }
+                                },
+                                {
+                                    "position": {
+                                        "x": 1,
+                                        "y": 1
+                                    },
+                                    "state": {
+                                        "right": true
+                                    }
+                                }
+                            ]
+                        }
                     },
                     "layer": 1
                 }
