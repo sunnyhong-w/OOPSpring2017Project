@@ -124,7 +124,7 @@
   </tile>
   <tile id="1">
    <properties>
-    <property name="include" value="button"/>
+    <property name="include" value="spring"/>
    </properties>
    <image width="16" height="16" source="../Bitmap/GameObject/button.bmp"/>
   </tile>

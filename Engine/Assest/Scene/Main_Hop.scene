@@ -1,7 +1,7 @@
 {
     "IncludePrefrab": {
         "MapReader": "Engine\\MapReader",
-        "Button":"button"
+        "Spring":"spring"
     },
     "GameObject": [
         {
