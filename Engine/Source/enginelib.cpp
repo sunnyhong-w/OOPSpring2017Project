@@ -163,6 +163,16 @@ Vector2 Vector2::ceil()
 	return Vector2(ceilf(x),ceilf(y));
 }
 
+Vector2 Vector2::ceilSpecial()
+{
+	return Vector2((x > 0 ? ceilf(x) : floorf(x)), (y > 0 ? ceilf(y) : floorf(y)));
+}
+
+Vector2 Vector2::floorSpecial()
+{
+	return Vector2((x < 0 ? ceilf(x) : floorf(x)), (y < 0 ? ceilf(y) : floorf(y)));
+}
+
 Vector2 Vector2::side()
 {
 	Vector2 ret = Vector2::zero;
@@ -178,6 +188,11 @@ Vector2 Vector2::side()
 		ret.y = -1;
 
 	return ret;
+}
+
+Vector2 Vector2::sliceRound(Vector2 slice)
+{
+    return ((*this) /slice).round() * slice;
 }
 
 Vector2I Vector2::GetV2I()

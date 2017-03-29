@@ -35,11 +35,12 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(Animation)
 	RegisterComponent(AnimationController)
     //Register Script
-    RegisterComponent(Player)
+    RegisterComponent(Tutorial)
     RegisterComponent(TextStamp)
     RegisterComponent(TextRenderer)
 	RegisterComponent(MapReader)
-    RegisterComponent(SpawnPlayer)
+	RegisterComponent(Slide)
+    RegisterComponent(BoxParent)   
     else return nullptr;
 }
 
