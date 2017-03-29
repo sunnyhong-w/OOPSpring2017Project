@@ -175,6 +175,9 @@
     <ClCompile Include="Assest\Script\Slide\BoxParent.cpp">
       <Filter>GameScript\Slide</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\spring.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -255,6 +258,9 @@
     <ClInclude Include="Assest\Script\tutorial.h" />
     <ClInclude Include="Assest\Script\Slide\BoxParent.h">
       <Filter>GameScript\Slide</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\spring.h">
+      <Filter>GameScript\Hop</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

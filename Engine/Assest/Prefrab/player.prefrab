@@ -26,6 +26,9 @@
                 {
                     "Block": true,
                     "Layer": 1
+                },
+                {
+                    "Layer": 2
                 }
             ]
         },

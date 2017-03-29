@@ -1,6 +1,7 @@
 {
     "IncludePrefrab": {
-        "MapReader": "Engine\\MapReader"
+        "MapReader": "Engine\\MapReader",
+        "Spring":"spring"
     },
     "GameObject": [
         {
@@ -11,5 +12,6 @@
                 }
             }
         }
+
     ]
 }

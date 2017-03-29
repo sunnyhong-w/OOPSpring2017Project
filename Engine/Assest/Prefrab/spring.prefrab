@@ -1,0 +1,13 @@
+{
+    "name": "spring",
+    "layer": 2,
+    "Component": {
+        "Collider": {
+            "size": {
+                "x": 16,
+                "y": 16
+            }
+        },
+        "Spring": {}
+    }
+}

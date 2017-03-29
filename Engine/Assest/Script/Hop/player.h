@@ -14,12 +14,15 @@ class Player : public GameBehaviour
 		void OnDrawGizmos(CDC* pDC) override;
 
         int speed;
+		Vector2 vel = Vector2::zero;
+		bool bounce;
     private:
 		bool tmp = true;
         double time;
         Vector2I textPos = Vector2I::zero;
 		Vector2I winpos = Vector2I::zero;
-        Vector2 vel = Vector2::zero;
+		bool isBouncing;
+
         float gravity;
         int tiledPixel;
         float MinJumpHeight = .5f;

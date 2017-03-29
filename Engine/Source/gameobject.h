@@ -40,7 +40,7 @@ class GameObject
         friend class Transform;
         friend class SpriteRenderer;
         friend class game_framework::CGame;
-		friend class Rigidbody;
+		friend class Collider;
         friend class MapReader;
     public:
         GameObject(bool doNotDestoryOnChangeScene = false);
