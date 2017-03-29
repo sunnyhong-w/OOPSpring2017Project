@@ -13,10 +13,6 @@ void Spring::Start()
 
 void Spring::Update()
 {
-	json j;
-	j["pressed"] = pressed;
-	if (lastState != pressed)
-		game_framework::CGame::Instance()->BoardcastMessage(j);
 }
 
 void Spring::OnRecivedBoardcast(json j)
