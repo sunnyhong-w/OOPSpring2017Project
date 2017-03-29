@@ -44,6 +44,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(Player)
     RegisterComponent(SpawnPlayer)
 	RegisterComponent(Spring)
+	RegisterComponent(Button)
     else return nullptr;
 }
 
