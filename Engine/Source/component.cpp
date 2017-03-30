@@ -52,6 +52,7 @@ void Transform::SetZIndex(int z)
     this->zindex = z;
     this->worldzindex = ((this->parent != nullptr) ? z + this->parent->worldzindex : z);
     GameObject::UpdateRenderOrder(this->gameObject);
+    UpdateWorldZIndex();
 }
 
 int Transform::GetWorldZIndex()
@@ -63,6 +64,17 @@ void Transform::SetWorldZIndex(int z)
 {
     this->worldzindex = z;
     this->zindex = ((this->parent != nullptr) ? z - this->parent->worldzindex : z);
+    GameObject::UpdateRenderOrder(this->gameObject);
+    UpdateWorldZIndex();
+}
+
+void Transform::UpdateWorldZIndex()
+{
+    for (auto c : child)
+    {
+        c->worldzindex = this->worldzindex + c->zindex;
+        c->UpdateWorldZIndex();
+    }
 }
 
 Vector2 Transform::GetPostion()
@@ -247,6 +259,11 @@ void SpriteRenderer::ResetSourcePos()
 {
     this->srcpos = Vector2I(-1, -1);
     this->cutSrc = false;
+}
+
+Vector2I SpriteRenderer::GetSourcePos()
+{
+    return this->srcpos;
 }
 
 void SpriteRenderer::SetSize(Vector2I size)
