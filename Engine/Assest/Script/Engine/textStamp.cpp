@@ -18,7 +18,7 @@ void TextStamp::Update()
     shake();
 }
 
-void TextStamp::OnRecivedBoardcast(json j)
+void TextStamp::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
 }
 

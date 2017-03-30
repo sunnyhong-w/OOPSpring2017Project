@@ -9,7 +9,7 @@ class BoxParent : public GameBehaviour
     	BoxParent(GameObject* gobj) : GameBehaviour(gobj){}
         void Start() override;
         void CheckData();
-        void OnRecivedBoardcast(json j) override;
+        void OnRecivedBoardcast(BoardcastMessageData bmd) override;
     private:
         string boxdata[4][4];
 

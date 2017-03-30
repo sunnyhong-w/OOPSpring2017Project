@@ -96,7 +96,7 @@ void Player::Update()
 	bounce = false;
 }
 
-void Player::OnRecivedBoardcast(json j)
+void Player::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
 }
 

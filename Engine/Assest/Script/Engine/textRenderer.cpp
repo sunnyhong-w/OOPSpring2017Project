@@ -97,7 +97,7 @@ void TextRenderer::Update()
     }
 }
 
-void TextRenderer::OnRecivedBoardcast(json j)
+void TextRenderer::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
 }
 

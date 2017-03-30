@@ -62,7 +62,8 @@ void BoxParent::CheckData()
     }
 }
 
-void BoxParent::OnRecivedBoardcast(json j)
+void BoxParent::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
+	json j = bmd;
     AfxMessageBox(j.dump(4).c_str());
 }

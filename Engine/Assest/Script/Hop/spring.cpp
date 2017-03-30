@@ -15,7 +15,7 @@ void Spring::Update()
 {
 }
 
-void Spring::OnRecivedBoardcast(json j)
+void Spring::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
 }
 

@@ -69,7 +69,7 @@ void Slide::Update()
     }
 }
 
-void Slide::OnRecivedBoardcast(json j)
+void Slide::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
 }
 
