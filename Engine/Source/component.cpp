@@ -50,6 +50,7 @@ Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj)
 void Transform::SetZIndex(int z)
 {
     this->zindex = z;
+    this->worldzindex = ((this->parent != nullptr) ? z + this->parent->worldzindex : z);
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
@@ -175,8 +176,7 @@ void Transform::ParseJSON(json j)
 
     if (j.find("zindex") != j.end())
     {
-        this->zindex = j["zindex"];
-        GameObject::UpdateRenderOrder(this->gameObject);
+        this->SetZIndex(j["zindex"]);
     }
 }
 
