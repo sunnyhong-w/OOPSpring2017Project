@@ -15,6 +15,7 @@ struct TileSet
 	int firstgid;
 	int tilecount;
 	int columns;
+    string tileSetName;
 	vector<Tile> tiles;
 };
 
