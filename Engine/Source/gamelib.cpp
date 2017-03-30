@@ -837,9 +837,10 @@ void CGame::BoardcastMessage(game_engine::BoardcastMessageData bmd, string windo
 	}
 	else
 	{
-        for (unsigned int i = 0; i < windowList.size(); i++)
+        int size = windowList.size();
+        for (int i = 0; i < size; i++)
         {
-            if (windowList[i] != me &&  windowNameList[i].Compare(windowName.c_str()))
+            if (windowList[i] != me && windowNameList[i].Compare(windowName.c_str()) == 0)
                 SendMessage(windowList[i], WM_COPYDATA, 0, (LPARAM)&data);
         }
 	}
