@@ -175,7 +175,7 @@ void GameObject::Draw(Vector2I cameraPos)
     }
 }
 
-void GameObject::OnRecivedBoardcast(json j)
+void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
     for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
     {
@@ -183,8 +183,8 @@ void GameObject::OnRecivedBoardcast(json j)
         {
             GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
 
-            if (gb->enable)
-                gb->OnRecivedBoardcast(j);
+            if (gb->enable && gb->eventListener[bmd.event])
+                gb->OnRecivedBoardcast(bmd);
         }
     }
 }
