@@ -2,6 +2,19 @@
     "IncludePrefrab": {},
     "GameObject": [
         {
+            "name": "Background",
+            "Component": {
+                "Transform": {
+                    "zindex": -10
+                },
+                "SpriteRenderer": {
+                    "Bitmap": {
+                        "name": "Slide\\Background"
+                    }
+                }
+            }
+        },
+        {
             "name": "BoxParent",
             "Component": {
                 "Transform": {
