@@ -781,14 +781,13 @@ void CGame::OnCopyData(json reciveddata)
     gameState->OnCopyData(reciveddata);
 }
 
-void CGame::BoardcastMessage(json boardcastdata)
+void CGame::BoardcastMessage(game_engine::BoardcastMessageData bmd, string windowName)
 {
-    //RECT rect;
-    //AfxGetMainWnd()->GetWindowRect(&rect);
+	bmd.position = windowPosition;
+	bmd.size = Vector2I(SIZE_X, SIZE_Y);
+	bmd.sender = WINDOW_NAME;
 
-	boardcastdata["posision"] = windowPosition;
-    boardcastdata["size"] = { { "w" , SIZE_X } ,{ "h" , SIZE_Y } };
-    boardcastdata["sender"] = WINDOW_NAME;
+	json boardcastdata = bmd;
 
     string strdata = boardcastdata.dump();
 
@@ -797,18 +796,26 @@ void CGame::BoardcastMessage(json boardcastdata)
     data.dwData = 0;
     data.lpData = (LPVOID)strdata.c_str();
     
-    for (CString key : targetwindow)
-    {
-        if (key == WINDOW_NAME)
-            continue;
-        else
-        {
-            CWnd* targetWin = CWnd::FindWindow(NULL, key);
-    
-            if (targetWin)
-                SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
-        }
-    }
+	if (windowName == "")
+	{
+		for (CString key : targetwindow)
+		{
+			if (key != WINDOW_NAME)
+			{
+				CWnd* targetWin = CWnd::FindWindow(NULL, key);
+
+				if (targetWin)
+					SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
+			}
+		}
+	}
+	else
+	{
+		CWnd* targetWin = CWnd::FindWindow(NULL, CString(windowName.c_str()));
+
+		if (targetWin)
+			SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
+	}
 }
 
 CGameState* CGame::GetState()
