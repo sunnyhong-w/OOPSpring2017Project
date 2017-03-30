@@ -616,11 +616,11 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
     bool ret = false;
     for (auto gobj : gobjvec)
     {
-		if (gobj == this->gameObject)
+		if (gobj == this->gameObject || !gobj->enable)
 			continue;
 
         Collider* tgcollider = gobj->GetComponent<Collider>();
-        if (tgcollider != nullptr && tgcollider->enable != false)
+        if (tgcollider != nullptr && tgcollider->enable)
         {
             if (collider->BoxCollision(tgcollider, tempVelocity, block))
             {
