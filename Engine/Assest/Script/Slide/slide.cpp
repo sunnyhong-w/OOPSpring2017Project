@@ -29,7 +29,7 @@ void Slide::Update()
 	if (Input::GetKeyDown(VK_LBUTTON) && collided)
 	{
 		locked = true;
-		clickPos = Input::GetMouseWorldPos();
+		clickPos = this->transform->GetParent()->GetWorldPosition() + this->transform->GetPostion().sliceRound(Vector2(64, 64)) + Vector2(32, 32);
 		oWorldPos = this->transform->GetWorldPosition();
 	}
 
