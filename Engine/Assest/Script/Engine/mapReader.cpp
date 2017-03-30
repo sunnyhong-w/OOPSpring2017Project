@@ -73,7 +73,7 @@ void MapReader::LoadMap(string fname)
 		{
 			if (j["type"].get<string>() == "tilelayer")
 			{
-				Vector2I pos = Vector2I::zero;
+				Vector2I pos = Vector2I(0, tileMap.tileHeight);
 				int count = 0;
 
 				for (int i = 0; i < tileMap.width * tileMap.height; i++)
@@ -100,6 +100,7 @@ void MapReader::LoadMap(string fname)
 							Vector2I srcpos(tileindex % tmp.columns, tileindex / tmp.columns);
 							SR->SetSourcePos(srcpos * tmp.tileSize);
 							SR->SetSize(tmp.tileSize);
+                            SR->SetAnchorRaito(Vector2::down);
 
 							if (tmp.tiles[tileindex].object.size() != 0)
 							{
@@ -164,6 +165,7 @@ void MapReader::LoadMap(string fname)
 
 			zindex++;
 		}
+        this->transform->SetWorldZIndex(-1 * zindex);
 	}
 	else
 	{
@@ -254,6 +256,7 @@ void from_json(const json& j, TileSet& ts)
 	imgname = imgname.substr(imgname.find_first_of("Bitmap") + 7);
 	imgname = imgname.substr(0, imgname.find_last_of("."));
 	ts.image = imgname;
+    ts.tileSetName = j["name"];
 	ts.tileSize = Vector2I(j["tilewidth"], j["tileheight"]);
 	ts.firstgid = j["firstgid"];
 	ts.tilecount = j["tilecount"];
@@ -262,23 +265,27 @@ void from_json(const json& j, TileSet& ts)
 	{
         for (int i = 0; i < ts.tilecount; i++)
         {
-            if (j["tiles"].find(to_string(i)) != j["tiles"].end())
+            string errorstr = "Tile Collider Not found!\n";
+            errorstr += "filename : " + ts.tileSetName + "\n";
+            errorstr += "id : " + to_string(i);
+
+            GAME_ASSERT(j["tiles"].find(to_string(i)) != j["tiles"].end(), errorstr.c_str());
+
+            Tile t = j["tiles"][to_string(i)]["objectgroup"];
+
+            json prop;
+            if (j.find("tileproperties") != j.end())
             {
-                Tile t = j["tiles"][to_string(i)]["objectgroup"];
-                
-                json prop;
-                if (j.find("tileproperties") != j.end())
+                if (j["tileproperties"].find(to_string(i)) != j["tileproperties"].end())
                 {
-                    if (j["tileproperties"].find(to_string(i)) != j["tileproperties"].end())
-                    {
-                        prop = j["tileproperties"][to_string(i)];
-                    }
+                    prop = j["tileproperties"][to_string(i)];
                 }
-
-                t.properties = prop;
-
-                ts.tiles.push_back(t);
             }
+
+            t.properties = prop;
+
+            ts.tiles.push_back(t);
+
         }
 	}
 	else
