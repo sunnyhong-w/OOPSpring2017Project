@@ -797,6 +797,7 @@ BOOL CALLBACK EnumWindowsProc(_In_ HWND hWnd, _In_ LPARAM lParam)
             {
                 CGame::Instance()->windowList.push_back(hWnd);
                 CGame::Instance()->windowNameList.push_back(ts);
+                delete[] s;
                 return true;
             }
         }
