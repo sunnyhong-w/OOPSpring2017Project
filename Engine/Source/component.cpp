@@ -199,8 +199,8 @@ void SpriteRenderer::ParseJSON(json j)
     if (j.find("Bitmap") != j.end())
     {
         int r, g, b;
-        r = g = 255;
-        b = 0;
+        r = b = 255;
+        g = 0;
 
         if (j["Bitmap"].find("colorkey") != j["Bitmap"].end())
         {
