@@ -327,6 +327,8 @@ protected:
 
 class CGame {
 public:
+    friend BOOL CALLBACK EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam);
+
 	CGame();										// Constructor
 	~CGame();										// Destructor
 	bool IsRunning();								// 讀取遊戲是否正在進行中
@@ -362,6 +364,8 @@ private:
     bool            popStack = false;
     vector<CGameState*> SceneStack;
 	static CGame	instance;			// 遊戲唯一的instance
+    vector<HWND> windowList;
+    vector<CString> windowNameList;
     const CString targetwindow[2] = { "Hop" , "Slide" }; //Boardcast清單
 };
 

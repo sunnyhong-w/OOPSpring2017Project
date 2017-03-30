@@ -781,6 +781,32 @@ void CGame::OnCopyData(json reciveddata)
     gameState->OnCopyData(reciveddata);
 }
 
+BOOL CALLBACK EnumWindowsProc(_In_ HWND hWnd, _In_ LPARAM lParam)
+{
+    int size = GetWindowTextLength(hWnd);
+
+    if (size++ > 0)
+    {
+        LPTSTR s = new TCHAR[size];
+
+        GetWindowText(hWnd, s, size);
+
+        for (auto ts : CGame::Instance()->targetwindow)
+        {
+            if (ts.Compare(s) == 0)
+            {
+                CGame::Instance()->windowList.push_back(hWnd);
+                CGame::Instance()->windowNameList.push_back(ts);
+                return true;
+            }
+        }
+
+        delete[] s;
+    }
+
+    return true;
+}
+
 void CGame::BoardcastMessage(game_engine::BoardcastMessageData bmd, string windowName)
 {
 	bmd.position = windowPosition;
@@ -796,25 +822,26 @@ void CGame::BoardcastMessage(game_engine::BoardcastMessageData bmd, string windo
     data.dwData = 0;
     data.lpData = (LPVOID)strdata.c_str();
     
+    windowList.clear();
+    windowNameList.clear();
+    EnumWindows(EnumWindowsProc, 0);
+    HWND me = AfxGetMainWnd()->GetSafeHwnd();
+
 	if (windowName == "")
 	{
-		for (CString key : targetwindow)
-		{
-			if (key != WINDOW_NAME)
-			{
-				CWnd* targetWin = CWnd::FindWindow(NULL, key);
-
-				if (targetWin)
-					SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
-			}
-		}
+        for (auto hWnd : windowList)
+        {
+            if(hWnd != me)
+               SendMessage(hWnd, WM_COPYDATA, 0, (LPARAM)&data);
+        }
 	}
 	else
 	{
-		CWnd* targetWin = CWnd::FindWindow(NULL, CString(windowName.c_str()));
-
-		if (targetWin)
-			SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
+        for (unsigned int i = 0; i < windowList.size(); i++)
+        {
+            if (windowList[i] != me &&  windowNameList[i].Compare(windowName.c_str()))
+                SendMessage(windowList[i], WM_COPYDATA, 0, (LPARAM)&data);
+        }
 	}
 }
 
