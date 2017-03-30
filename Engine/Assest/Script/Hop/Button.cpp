@@ -39,15 +39,15 @@ void Button::OnCollisionEnter(Collider * c)
 		GameScene::Boardcast(BoardcastEvent::ButtonPressed, data);
 	}
 	isPressing = true;
-	ticker = 150;
+	ticker = 60;
 }
 
 void Button::OnCollisionStay(Collider * c)
 {
-	ticker = 150;
+	ticker = 60;
 }
 
 void Button::OnCollisionExit(Collider * c)
 {
-	ticker = 150;
+	ticker = 60;
 }
