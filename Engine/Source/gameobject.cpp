@@ -359,8 +359,10 @@ void GameObject::Insert(GameObject* gobj)
                 break;
         }
     }
-
-    GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, gobj);
+    if (mid == GameObject::gameObjects.size())
+        GameObject::gameObjects.push_back(gobj);
+    else
+        GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid + 1, gobj);
 }
 
 void GameObject::UpdateName(GameObject* gobj)
