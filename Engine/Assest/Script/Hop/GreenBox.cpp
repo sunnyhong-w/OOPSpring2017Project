@@ -74,6 +74,8 @@ void GreenBox::BoxON()
 
     this->gameObject->GetComponent<SpriteRenderer>()->SetSourcePos(pos);
     this->gameObject->GetComponent<Collider>()->enable = true;
+
+    tick = 0;
 }
 
 void GreenBox::BoxOff()
