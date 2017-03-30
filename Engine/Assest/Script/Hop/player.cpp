@@ -31,11 +31,6 @@ void Player::Update()
 
     vel.x = 0;
 
-
-    if (Input::GetKeyClick(VK_LBUTTON))
-        this->transform->SetWorldPosition(Input::GetMouseWorldPos());
-
-
 	if (Input::GetKeyPressing('A') || Input::GetKeyPressing(VK_LEFT))
         vel.x += -1 * speed;
 	

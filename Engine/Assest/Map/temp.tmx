@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="10" tilewidth="32" tileheight="32" nextobjectid="13">
- <tileset firstgid="1" name="Tiled1" tilewidth="32" tileheight="32" tilecount="16" columns="4">
-  <image source="../Bitmap/test.bmp" width="128" height="128"/>
+ <tileset firstgid="1" name="Tiled1" tilewidth="32" tileheight="32" tilecount="20" columns="5">
+  <image source="../Bitmap/Tile.bmp" width="160" height="128"/>
   <tile id="0">
    <objectgroup draworder="index">
     <object id="4" x="0" y="0">
@@ -95,7 +95,7 @@
   </tile>
   <tile id="13">
    <objectgroup draworder="index">
-    <object id="2" x="0" y="0">
+    <object id="1" x="0" y="0">
      <polygon points="0,0 0,32 32,32 32,0"/>
     </object>
    </objectgroup>
@@ -114,8 +114,36 @@
     </object>
    </objectgroup>
   </tile>
+  <tile id="16">
+   <objectgroup draworder="index">
+    <object id="2" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="17">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="18">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="19">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
  </tileset>
- <tileset firstgid="17" name="Obj" tilewidth="16" tileheight="16" tilecount="3" columns="0">
+ <tileset firstgid="21" name="Obj" tilewidth="16" tileheight="16" tilecount="3" columns="0">
   <tile id="0">
    <properties>
     <property name="include" value="spawnPlayer"/>
@@ -135,7 +163,7 @@
    <image width="16" height="16" source="../Bitmap/GameObject/redButton.bmp"/>
   </tile>
  </tileset>
- <tileset firstgid="20" name="GreenBox" tilewidth="64" tileheight="64" tilecount="4" columns="2">
+ <tileset firstgid="24" name="GreenBox" tilewidth="64" tileheight="64" tilecount="4" columns="2">
   <image source="../Bitmap/Slide/GreenBox.bmp" trans="ff00ff" width="128" height="128"/>
   <tile id="0">
    <properties>
@@ -180,16 +208,16 @@ xxxx</property>
  </tileset>
  <layer name="BackGround" width="15" height="10">
   <data encoding="csv">
-6,10,10,10,10,10,10,10,10,10,10,10,10,10,6,
-7,0,0,0,0,4,0,0,0,0,0,0,0,0,5,
-7,0,0,0,0,8,0,0,0,0,0,0,0,0,5,
-7,0,0,0,0,12,0,0,0,0,0,0,0,0,5,
-7,0,0,0,0,0,0,0,0,0,0,0,0,0,5,
-7,0,0,0,0,0,0,0,0,0,0,0,0,0,5,
-7,0,16,0,13,14,15,0,0,0,0,0,0,0,5,
-7,0,0,0,0,0,0,0,0,0,0,0,0,0,5,
-7,0,0,0,0,0,0,0,0,0,0,0,0,0,5,
-6,2,2,2,2,2,2,2,2,2,2,2,2,2,6
+5,12,12,12,12,12,12,12,12,12,12,12,12,12,15,
+8,0,0,0,0,4,0,0,0,0,0,0,0,0,6,
+8,0,0,0,0,9,0,0,0,0,0,0,0,0,6,
+8,0,0,0,0,14,0,0,0,0,0,0,0,0,6,
+8,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+8,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+8,0,19,0,16,17,18,0,0,0,0,0,0,0,6,
+8,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+8,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+10,2,2,2,2,2,2,2,2,2,2,2,2,2,20
 </data>
  </layer>
  <layer name="Special Tile" width="15" height="10">
@@ -199,7 +227,7 @@ xxxx</property>
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,20,0,0,22,0,0,0,
+0,0,0,0,0,0,0,0,24,0,0,26,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -207,14 +235,14 @@ xxxx</property>
 </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="1" gid="17" x="224" y="113" width="20" height="20">
+  <object id="1" gid="21" x="224" y="113" width="20" height="20">
    <properties>
     <property name="test" type="int" value="123"/>
    </properties>
   </object>
-  <object id="2" gid="18" x="328" y="288" width="16" height="16"/>
-  <object id="4" name="Button1" gid="19" x="40" y="288" width="16" height="16"/>
-  <object id="8" name="Button2" gid="19" x="424" y="288" width="16" height="16"/>
-  <object id="12" gid="18" x="104" y="288" width="16" height="16"/>
+  <object id="2" gid="22" x="328" y="288" width="16" height="16"/>
+  <object id="4" name="Button1" gid="23" x="40" y="288" width="16" height="16"/>
+  <object id="8" name="Button2" gid="23" x="424" y="288" width="16" height="16"/>
+  <object id="12" gid="22" x="104" y="288" width="16" height="16"/>
  </objectgroup>
 </map>
