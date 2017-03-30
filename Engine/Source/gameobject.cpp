@@ -45,6 +45,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(SpawnPlayer)
 	RegisterComponent(Spring)
 	RegisterComponent(Button)
+    RegisterComponent(GreenBox)
     else return nullptr;
 }
 
@@ -362,7 +363,7 @@ void GameObject::Insert(GameObject* gobj)
     if (mid == GameObject::gameObjects.size())
         GameObject::gameObjects.push_back(gobj);
     else
-        GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid + 1, gobj);
+        GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, gobj);
 }
 
 void GameObject::UpdateName(GameObject* gobj)

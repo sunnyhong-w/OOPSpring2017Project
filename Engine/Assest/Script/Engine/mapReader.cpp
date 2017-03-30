@@ -46,6 +46,19 @@ void MapReader::ParseProperties(GameObject * gobj, string filename, json prop)
                     childobj->transform->SetParent(gobj->transform);
             }
         }
+        else if (j.key() == "GreenBox")
+        {
+            GreenBox* gb = gobj->AddComponentOnce<GreenBox>();
+            string tmp = "";
+            string jstr = j.value();
+            for (char c : jstr)
+            {
+                if (c != '\n')
+                    tmp += c;
+            }
+
+            gb->SetData(tmp);
+        }
     }
 }
 

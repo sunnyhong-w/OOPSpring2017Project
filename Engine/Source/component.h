@@ -56,6 +56,7 @@ class Transform : public Component
         void SetZIndex(int z);
         int  GetWorldZIndex();
         void SetWorldZIndex(int z);
+        void UpdateWorldZIndex();
         Vector2 GetPostion();
         void SetPosition(Vector2 newpos);
         Vector2 GetWorldPosition();
@@ -97,6 +98,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         ///<summary>取消Sprite的圖片裁剪功能</summary>
         void ResetSourcePos();
         ///<summary>設定Sprite的輸出大小</summary>
+        Vector2I GetSourcePos();
         void SetSize(Vector2I size);
         ///<summary>將Size重置成最後一次Load的圖片大小</summary>
         void ResetSize();
