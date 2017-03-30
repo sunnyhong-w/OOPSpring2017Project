@@ -4,7 +4,8 @@
 
 namespace game_engine
 {
-    class GameObject;
+
+class GameObject;
 
 class GameScene : public game_framework::CGameState
 {
@@ -35,6 +36,8 @@ class GameScene : public game_framework::CGameState
         static Vector2I& CameraPosition();
         static GameScene* NowScene();
 		static Vector2I& WindowPosition();
+
+		static void Boardcast(BoardcastEvent event, json data, string windowName = "");
 
         static void IncludePrefrabs(string filename, json prefrabObject);
         static void ReadPrefrab(string filename, string includename);

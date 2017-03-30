@@ -50,11 +50,7 @@ void BoxParent::CheckData()
 
     if (!Same)
     {
-        json send;
-        send["data"] = sendData;
-        send["event"] = "UpdateBoxPostion";
-
-        game_framework::CGame::Instance()->BoardcastMessage(send);
+		GameScene::Boardcast(BoardcastEvent::UpdateBoxPosition, sendData);
 
         for (int x = 0; x < 4; x++)
         {
@@ -68,5 +64,5 @@ void BoxParent::CheckData()
 
 void BoxParent::OnRecivedBoardcast(json j)
 {
-    //AfxMessageBox(j.dump(4).c_str());
+    AfxMessageBox(j.dump(4).c_str());
 }

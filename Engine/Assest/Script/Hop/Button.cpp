@@ -16,11 +16,10 @@ void Button::Update()
 	}
 	else if (ticker == 1)
 	{
-		json send;
-		send["data"]["room"] = "red";
-		send["data"]["name"] = this->gameObject->GetName();
-		send["event"] = "button unpressed";
-		game_framework::CGame::Instance()->BoardcastMessage(send);
+		json data;
+		data["room"] = "red";
+		data["name"] = this->gameObject->GetName();
+		GameScene::Boardcast(BoardcastEvent::ButtonRelease, data);
 		ticker--;
 	}
 	else
@@ -34,11 +33,10 @@ void Button::OnCollisionEnter(Collider * c)
 {
 	if (!isPressing)
 	{
-		json send;
-		send["data"]["room"] = "red";
-		send["data"]["name"] = this->gameObject->GetName();
-		send["event"] = "button pressed";
-		game_framework::CGame::Instance()->BoardcastMessage(send);
+		json data;
+		data["room"] = "red";
+		data["name"] = this->gameObject->GetName();
+		GameScene::Boardcast(BoardcastEvent::ButtonPressed, data);
 	}
 	isPressing = true;
 	ticker = 150;

@@ -351,6 +351,14 @@ Vector2I & GameScene::WindowPosition()
 	return game_framework::CGame::Instance()->windowPosition;
 }
 
+void GameScene::Boardcast(BoardcastEvent event, json data, string windowName)
+{
+	BoardcastMessageData bmd;
+	bmd.event = event;
+	bmd.data = data;
+	game_framework::CGame::Instance()->BoardcastMessage(bmd, windowName);
+}
+
 void GameScene::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     if (Input::keyEvent.find(nChar) == Input::keyEvent.end())
