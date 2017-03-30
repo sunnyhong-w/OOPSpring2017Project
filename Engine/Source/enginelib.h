@@ -182,4 +182,26 @@ struct CollisionInfo
 	Vector2I offset = Vector2I::zero;
 };
 
+enum class BoardcastEvent 
+{
+	UpdateBoxPosition,
+	ButtonPressed,
+	ButtonRelease
+};
+
+void from_json(const json& j, BoardcastEvent& be);
+void to_json(json& j, const BoardcastEvent& be);
+
+struct BoardcastMessageData 
+{
+	BoardcastEvent event;
+	json data;
+	Vector2I position;
+	Vector2I size;
+	string sender;
+};
+
+void from_json(const json& j, BoardcastMessageData& bmd);
+void to_json(json& j, const BoardcastMessageData& bmd);
+
 }

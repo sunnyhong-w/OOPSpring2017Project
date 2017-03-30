@@ -447,4 +447,33 @@ void Time::Update()
 	Time::timeStamp = ts;
 }
 
+
+void from_json(const json & j, BoardcastEvent & be)
+{
+	be = (BoardcastEvent)j.get<int>();
+}
+
+void to_json(json & j, const BoardcastEvent & be)
+{
+	j = (int)be;
+}
+
+void from_json(const json & j, BoardcastMessageData & bmd)
+{
+	bmd.event = j["event"];
+	bmd.data = j["data"];
+	bmd.position = j["position"];
+	bmd.size = j["size"];
+	bmd.sender = j["sender"].get<string>();
+}
+
+void to_json(json & j, const BoardcastMessageData & bmd)
+{
+	j["event"] = bmd.event;
+	j["data"] = bmd.data;
+	j["position"] = bmd.position;
+	j["size"] = bmd.size;
+	j["sender"] = bmd.sender;
+}
+
 }
