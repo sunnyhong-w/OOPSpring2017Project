@@ -183,7 +183,7 @@ void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
         {
             GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
 
-            if (gb->enable && gb->eventListener[bmd.event])
+            if (gb->enable && (gb->eventListener[BoardcastEvent::All] || gb->eventListener[bmd.event]))
                 gb->OnRecivedBoardcast(bmd);
         }
     }
