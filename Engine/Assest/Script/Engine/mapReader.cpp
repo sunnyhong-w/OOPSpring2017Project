@@ -154,6 +154,9 @@ void MapReader::LoadMap(string fname)
 						gobj->transform->SetPosition(obj);
 						gobj->transform->SetZIndex(zindex);
 
+						if (obj["name"] != "")
+							gobj->SetName(obj["name"]);
+
 						break;
 					}
 				}
