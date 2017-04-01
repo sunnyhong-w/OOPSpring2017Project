@@ -152,8 +152,11 @@ class Collider : public Component
 		CollisionInfo collisionInfo;
 		vector<CollisionLayer> collisionLayer;
 	private:
-		vector<Collider*> collidedCollider;
-		vector<Collider*> lastCollidedCollder;
+		set<Collider*> collidedCollider;
+        set<Collider*> lastCollidedCollder;
+
+        vector<Collider*> OnEnter;
+        vector<Collider*> OnStay;
 };
 
 class Animation : public Component

@@ -424,27 +424,22 @@ bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
 
 void Collider::Update()
 {
-	sort(collidedCollider.begin(), collidedCollider.end(), less<Collider*>());
-	sort(lastCollidedCollder.begin(), lastCollidedCollder.end(), less<Collider*>());
+	OnEnter.clear();
+	OnStay.clear();
 
-	vector<Collider*> OnEnter;
-	vector<Collider*> OnStay;
-	vector<Collider*> OnExit;
-
-	//OnEnter
-	set_difference(collidedCollider.begin(), collidedCollider.end(),
-		lastCollidedCollder.begin(), lastCollidedCollder.end(),
-		std::back_inserter(OnEnter));
-
-	//OnStay
-	set_intersection(collidedCollider.begin(), collidedCollider.end(),
-		lastCollidedCollder.begin(), lastCollidedCollder.end(),
-		std::back_inserter(OnStay));
-
-	//OnExit
-	set_difference(lastCollidedCollder.begin(), lastCollidedCollder.end(), 
-		collidedCollider.begin(), collidedCollider.end(),
-		std::back_inserter(OnExit));
+    for (auto c : collidedCollider)
+    {
+        auto it = lastCollidedCollder.find(c);
+        if (it == lastCollidedCollder.end())
+        {
+            OnEnter.push_back(c);
+        }
+        else
+        {
+            OnStay.push_back(c);
+            lastCollidedCollder.erase(it);
+        }
+    }
 
 	for (auto c : OnEnter)
 	{
@@ -474,7 +469,7 @@ void Collider::Update()
 		}
 	}
 
-	for (auto c : OnExit)
+	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
 	{
 		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
 		{
@@ -666,16 +661,18 @@ void Rigidbody::OnCollision(Collider *tgcollider)
 {
 	Collider* c = this->gameObject->collider;
 
-	tgcollider->collidedCollider.push_back(c);
-	c->collidedCollider.push_back(tgcollider);
+	tgcollider->collidedCollider.insert(c);
+	c->collidedCollider.insert(tgcollider);
 }
 
-bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block, bool resetVX)
+bool Rigidbody::DoCollision(Collider *collider, LayerPair gobjLayerPair, Vector2 &tempVelocity, bool block, bool resetVX)
 {
 	float vx = tempVelocity.x;
     bool ret = false;
-    for (auto gobj : gobjvec)
+    for (auto it = gobjLayerPair.first; it != gobjLayerPair.second; it++)
     {
+        auto gobj = (*it).second;
+
 		if (gobj == this->gameObject || !gobj->enable)
 			continue;
 
@@ -732,7 +729,6 @@ void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
             Vector2 sliceUnit = Vector2(16, 16);
             Vector2 vslicenum = invelocity / sliceUnit;
             vslicenum = vslicenum.abs();
-
 
             auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
 
