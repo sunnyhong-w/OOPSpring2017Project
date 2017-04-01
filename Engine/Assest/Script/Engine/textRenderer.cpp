@@ -17,7 +17,7 @@ void TextRenderer::ParseJSON(json j)
 
     if (j.find("fontsetting") != j.end())
     {
-        for (json::iterator it = j["fontsetting"].begin(); it != j["fontsetting"].end(); it++)
+        for (json::iterator it = j["fontsetting"].begin(); it != j["fontsetting"].end(); ++it)
         {
             fontInfo[it.key()] = it.value();
             SR->LoadBitmapData(R"(Font\)" + it.key());
@@ -35,7 +35,7 @@ void TextRenderer::ParseJSON(json j)
     {
         data >> str;
 
-        for (wstring::iterator it = str.begin(); it != str.end(); it++)
+        for (wstring::iterator it = str.begin(); it != str.end(); ++it)
         {
             if (*it != '\n')
             {

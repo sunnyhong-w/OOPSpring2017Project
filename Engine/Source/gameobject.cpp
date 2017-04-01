@@ -107,7 +107,7 @@ void GameObject::ParseJSON(json j, bool noUpdateObjectPool)
 
 void GameObject::Start()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
     {
         if (it->second->isBehavior())
         {
@@ -121,7 +121,7 @@ void GameObject::Start()
 
 void GameObject::Update()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
     {
         if (it->second->isBehavior())
         {
@@ -135,7 +135,7 @@ void GameObject::Update()
 
 void GameObject::LateUpdate()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
     {
         if (it->second->isBehavior())
         {
@@ -183,7 +183,7 @@ void GameObject::Draw(Vector2I cameraPos)
 
 void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
     {
         if (it->second->isBehavior())
         {
@@ -197,7 +197,7 @@ void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
 
 void GameObject::OnDrawGizmos(CDC * pDC)
 {
-	for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+	for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
 	{
 		if (it->second->isBehavior())
 		{
@@ -234,7 +234,7 @@ void GameObject::SetTag(Tag tag)
         std::pair<iter, iter> data = GameObject::objectsTag.equal_range(this->tag);
 
 		bool find = false;
-        for (iter it = data.first; it != data.second; it++)
+        for (iter it = data.first; it != data.second; ++it)
         {
             if (it->second == this)
             {
@@ -264,7 +264,7 @@ void GameObject::SetLayer(Layer layer)
         std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(this->layer);
 
 		bool find = false;
-        for (iter it = data.first; it != data.second; it++)
+        for (iter it = data.first; it != data.second; ++it)
         {
             if (it->second == this)
             {
@@ -409,7 +409,7 @@ void GameObject::ResetObjectPool()
             it = GameObject::gameObjects.erase(it);
         }
         else
-            it++;
+            ++it;
     }
 }
 

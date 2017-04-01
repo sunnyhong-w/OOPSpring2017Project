@@ -170,7 +170,7 @@ template<class T> inline const std::vector<T*> GameObject::GetComponents()
     std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(std::type_index(typeid(T)));
     std::vector<T*> retval;
 
-    for (ComponentData::iterator it = data.first; it != data.second; it++)
+    for (ComponentData::iterator it = data.first; it != data.second; ++it)
         retval.push_back(static_cast<T*>(it->second));
 
     return retval;
@@ -190,7 +190,7 @@ template<class T> inline void GameObject::RemoveComponent(T* comp)
 {
     std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(std::type_index(typeid(T)));
 
-    for (ComponentData::iterator it = data.first; it != data.second; it++)
+    for (ComponentData::iterator it = data.first; it != data.second; ++it)
     {
         if (it->second == comp)
         {

@@ -48,10 +48,9 @@ void GameScene::OnMove()
     {
         if ((*it)->destoryFlag)
         {
-            typedef multimap<Tag, GameObject*>::iterator iter_tag;
-            std::pair<iter_tag, iter_tag> data_t = GameObject::objectsTag.equal_range((*it)->tag);
+            TagPair data_t = GameObject::objectsTag.equal_range((*it)->tag);
 
-            for (iter_tag tit = data_t.first; tit != data_t.second; tit++)
+            for (auto tit = data_t.first; tit != data_t.second; ++tit)
             {
                 if (tit->second == (*it))
                 {
@@ -60,10 +59,9 @@ void GameScene::OnMove()
                 }
             }
 
-            typedef multimap<Layer, GameObject*>::iterator iter_layer;
-            std::pair<iter_layer, iter_layer> data_l = GameObject::objectsLayer.equal_range((*it)->layer);
+            LayerPair data_l = GameObject::objectsLayer.equal_range((*it)->layer);
 
-            for (iter_layer tit = data_l.first; tit != data_l.second; tit++)
+            for (auto tit = data_l.first; tit != data_l.second; ++tit)
             {
                 if (tit->second == (*it))
                 {
@@ -78,7 +76,7 @@ void GameScene::OnMove()
             it = GameObject::gameObjects.erase(it);
         }
         else
-            it++;
+            ++it;
     }
 
 
@@ -217,7 +215,7 @@ void GameScene::IncludePrefrabs(string filename, json prefrabObject)
 {
     prefrabmap[filename] = prefrabObject;
 
-    for (json::iterator it = prefrabObject.begin(); it != prefrabObject.end(); it++)
+    for (json::iterator it = prefrabObject.begin(); it != prefrabObject.end(); ++it)
         ReadPrefrab(filename, it.value());
 }
 

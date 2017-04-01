@@ -443,7 +443,7 @@ void Collider::Update()
 
 	for (auto c : OnEnter)
 	{
-		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
+		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); ++it)
 		{
 			if (it->second->isBehavior())
 			{
@@ -457,7 +457,7 @@ void Collider::Update()
 
 	for (auto c : OnStay)
 	{
-		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
+		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); ++it)
 		{
 			if (it->second->isBehavior())
 			{
@@ -471,7 +471,7 @@ void Collider::Update()
 
 	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
 	{
-		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
+		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); ++it)
 		{
 			if (it->second->isBehavior())
 			{
@@ -669,7 +669,7 @@ bool Rigidbody::DoCollision(Collider *collider, LayerPair gobjLayerPair, Vector2
 {
 	float vx = tempVelocity.x;
     bool ret = false;
-    for (auto it = gobjLayerPair.first; it != gobjLayerPair.second; it++)
+    for (auto it = gobjLayerPair.first; it != gobjLayerPair.second; ++it)
     {
         auto gobj = (*it).second;
 

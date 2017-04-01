@@ -6,7 +6,7 @@ void GreenBox::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
     char newstate[4][4];
 
-    for (json::iterator it = bmd.data.begin(); it != bmd.data.end(); it++)
+    for (json::iterator it = bmd.data.begin(); it != bmd.data.end(); ++it)
     {
         string name = it.key();
 
