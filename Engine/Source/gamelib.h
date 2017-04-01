@@ -97,6 +97,7 @@ enum GAME_STATES {
 #include <list>
 #include <vector>
 #include <map>
+#include <set>
 #include "enginelib.h"
 using namespace std;
 
