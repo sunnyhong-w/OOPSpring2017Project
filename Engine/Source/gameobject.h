@@ -31,6 +31,9 @@ void Destroy(GameObject* gobj);
 GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision = Vector2::null);
 GameObject* InstantiateJSON(json prefrabJSON, Vector2 posision = Vector2::null);
 
+typedef pair<multimap<Tag, GameObject*>::iterator, multimap<Tag, GameObject*>::iterator> TagPair;
+typedef pair<multimap<Layer, GameObject*>::iterator, multimap<Layer, GameObject*>::iterator> LayerPair;
+
 class GameObject
 {
         friend void Destroy(GameObject* gobj);
@@ -95,8 +98,8 @@ class GameObject
         static json GetPrefrabs(std::string file);
         static json InsertPrefrabs(string file, json prefrabJSON);
         static GameObject* findGameObjectByName(string name);
-        static vector<GameObject*> findGameObjectsByTag(Tag tag);
-        static vector<GameObject*> findGameObjectsByLayer(Layer layer);
+        static TagPair findGameObjectsByTag(Tag tag);
+        static LayerPair findGameObjectsByLayer(Layer layer);
 
         static vector<GameObject*> gameObjects;
 

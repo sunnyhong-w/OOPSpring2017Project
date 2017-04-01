@@ -472,28 +472,14 @@ GameObject* GameObject::findGameObjectByName(string name)
     return GameObject::objectsName[name];
 }
 
-vector<GameObject*> GameObject::findGameObjectsByTag(Tag tag)
+TagPair GameObject::findGameObjectsByTag(Tag tag)
 {
-    vector<GameObject*> retdat;
-    typedef multimap<Tag, GameObject*>::iterator iter;
-    std::pair<iter, iter> data = GameObject::objectsTag.equal_range(tag);
-
-    for (iter it = data.first; it != data.second; it++)
-        retdat.push_back(it->second);
-
-    return retdat;
+    return GameObject::objectsTag.equal_range(tag);
 }
 
-vector<GameObject*> GameObject::findGameObjectsByLayer(Layer layer)
+LayerPair GameObject::findGameObjectsByLayer(Layer layer)
 {
-    vector<GameObject*> retdat;
-    typedef multimap<Layer, GameObject*>::iterator iter;
-    std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(layer);
-
-    for (iter it = data.first; it != data.second; it++)
-        retdat.push_back(it->second);
-
-    return retdat;
+    return GameObject::objectsLayer.equal_range(layer);
 }
 
 json GameObject::GetPrefrabs(std::string file)

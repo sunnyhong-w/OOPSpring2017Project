@@ -210,8 +210,10 @@ public:
 	void ParseJSON(json j) override;
 	void Update();
 private:
+    typedef pair<multimap<Layer, GameObject*>::iterator, multimap<Layer, GameObject*>::iterator> LayerPair;
+
     void OnCollision(Collider *tgcollider);
-    bool DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block, bool resetVX = false);
+    bool DoCollision(Collider *collider, LayerPair gobjLayerPair, Vector2 &tempVelocity, bool block, bool resetVX = false);
     void CollisionDetection(Vector2& invelocity);
     void CollisionDetectionSlice(Vector2& invelocity);
 };
