@@ -94,14 +94,14 @@ void GameScene::OnMove()
 
 	for (GameObject* gobj : GameObject::gameObjects)
 	{
-		Collider* collider = gobj->GetComponent<Collider>();
+		Collider* collider = gobj->collider;
 		if (collider != nullptr && collider->enable)
 			collider->Update();
 	}
 
     for (GameObject* gobj : GameObject::gameObjects)
     {
-        Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
+        Rigidbody* rigidbody = gobj->rigidbody;
         if (rigidbody != nullptr && rigidbody->enable)
             rigidbody->Update();
     }
@@ -124,7 +124,7 @@ void GameScene::OnMove()
     //Animator Update Workout Here
     for (GameObject* gobj : GameObject::gameObjects)
     {
-        AnimationController* anic = gobj->GetComponent<AnimationController>();
+        AnimationController* anic = gobj->animationController;
         if (anic != nullptr && anic->enable)
             anic->Update();
     }
@@ -132,7 +132,7 @@ void GameScene::OnMove()
     //Animation Update
     for (GameObject* gobj : GameObject::gameObjects)
     {
-        Animation* ani = gobj->GetComponent<Animation>();
+        Animation* ani = gobj->animation;
         if (ani != nullptr && ani->enable)
             ani->Update();
     }
@@ -162,7 +162,7 @@ void GameScene::OnShow()
             pDC->SetBkMode(TRANSPARENT);
             for (GameObject* gobj : GameObject::gameObjects)
             {
-                Collider* collider = gobj->GetComponent<Collider>();
+                Collider* collider = gobj->collider;
                 if (collider != nullptr)
                     collider->OnDrawGismos(pDC, cameraPosition);
 

@@ -43,7 +43,7 @@ void GreenBox::OnRecivedBoardcast(BoardcastMessageData bmd)
 
 void GreenBox::Start()
 {
-    BoxNum = this->gameObject->GetComponent<SpriteRenderer>()->GetSourcePos().y / 64;
+    BoxNum = this->gameObject->spriteRenderer->GetSourcePos().y / 64;
     BoxOff();
 }
 
@@ -72,8 +72,8 @@ void GreenBox::BoxON()
     Vector2I pos(64, 64);
     pos = pos * Vector2I(1, BoxNum);
 
-    this->gameObject->GetComponent<SpriteRenderer>()->SetSourcePos(pos);
-    this->gameObject->GetComponent<Collider>()->enable = true;
+    this->gameObject->spriteRenderer->SetSourcePos(pos);
+    this->gameObject->collider->enable = true;
 
     tick = 0;
 }
@@ -83,6 +83,6 @@ void GreenBox::BoxOff()
     Vector2I pos(64, 64);
     pos = pos * Vector2I(0, BoxNum);
 
-    this->gameObject->GetComponent<SpriteRenderer>()->SetSourcePos(pos);
-    this->gameObject->GetComponent<Collider>()->enable = false;
+    this->gameObject->spriteRenderer->SetSourcePos(pos);
+    this->gameObject->collider->enable = false;
 }

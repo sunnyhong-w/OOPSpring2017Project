@@ -158,7 +158,7 @@ class Collider : public Component
 class Animation : public Component
 {
 public:
-    Animation(GameObject* gobj) : Component(gobj) {};
+    Animation(GameObject* gobj);
     void LoadAnimation(json jsonobj);
     void ParseJSON(json j) override;
     void Update();
@@ -174,7 +174,7 @@ private:
 class AnimationController : public Component
 {
 public:
-    AnimationController(GameObject* gobj) : Component(gobj) {};
+    AnimationController(GameObject* gobj);
     void ParseJSON(json j) override;
     void Update();
 	void JumpState(string state);
@@ -196,7 +196,7 @@ struct ColliderInfo
 class Rigidbody : public Component
 {
 public:
-	Rigidbody(GameObject* gobj) : Component(gobj) {};
+	Rigidbody(GameObject* gobj);
 	Vector2 velocity;
     ColliderInfo colliderInfo;
     bool TimeSliceCollision = false;

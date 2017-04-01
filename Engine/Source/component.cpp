@@ -25,7 +25,7 @@ namespace game_engine
 Component::Component(GameObject* gobj, bool isGB) : isGameBehavior(isGB) , enable(true)
 {
     this->gameObject = gobj;
-    this->transform = gobj->GetComponent<Transform>();
+    this->transform = gobj->transform;
 }
 
 bool Component::isBehavior()
@@ -122,7 +122,7 @@ int Transform::GetZIndex()
 
 int Transform::GetSortingLayer()
 {
-    SpriteRenderer *SR = this->gameObject->GetComponent<SpriteRenderer>();
+    SpriteRenderer *SR = this->gameObject->spriteRenderer;
     if (SR == nullptr)
         return -1;
     else
@@ -199,6 +199,8 @@ void Transform::ParseJSON(json j)
 map<string, unsigned int> SpriteRenderer::fileInfo;
 SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
+    this->gameObject->spriteRenderer = this;
+
     srcpos = Vector2I::null;
     size = Vector2I::null;
     offset = Vector2I::zero;
@@ -366,6 +368,8 @@ inline Vector2I SpriteRenderer::GetRealRenderPostion()
 //////////////////////////////////////////////////////////////////
 Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
 {
+    this->gameObject->collider = this;
+
     this->collisionInfo.offset = dP;
     this->collisionInfo.size = sz;
 }
@@ -373,7 +377,7 @@ Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
 void Collider::OnDrawGismos(CDC *pDC, Vector2I cameraPos)
 {
 	Vector2I w = collisionInfo.size;
-	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
+	SpriteRenderer *SR = gameObject->spriteRenderer;
 	Vector2 SpriteOffset = SR != nullptr ? SR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 pos = transform->GetWorldPosition() + collisionInfo.offset.GetV2()- SpriteOffset;
     game_framework::CDDraw::DrawRect(pDC, pos.GetV2I() - cameraPos, w, RGB(0, 255, 0));
@@ -388,7 +392,7 @@ bool Collider::PointCollision(Vector2I point)
 bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
 {
     Vector2 aw = (collisionInfo.size.GetV2() - Vector2::one) / 2, bw = (box->collisionInfo.size.GetV2() - Vector2::one) / 2;
-	SpriteRenderer *aSR = gameObject->GetComponent<SpriteRenderer>(), *bSR = box->gameObject->GetComponent<SpriteRenderer>();
+	SpriteRenderer *aSR = gameObject->spriteRenderer, *bSR = box->gameObject->spriteRenderer;
 	Vector2 aSpriteOffset = aSR != nullptr ? aSR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 bSpriteOffset = bSR != nullptr ? bSR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 apos = transform->GetWorldPosition() + collisionInfo.offset.GetV2() + velocityOffset - aSpriteOffset;
@@ -498,6 +502,10 @@ void Collider::ParseJSON(json j)
 		
 }
 
+Animation::Animation(GameObject * gobj) : Component(gobj)
+{
+    this->gameObject->animation = this;
+}
 
 void Animation::LoadAnimation(json jsonobj)
 {
@@ -552,6 +560,11 @@ void Animation::ResetAnimation()
     this->animateCount = this->animationInfo.size() - 1;
     this->timeStamp = clock();
     this->duration = 0;
+}
+
+AnimationController::AnimationController(GameObject * gobj) : Component(gobj)
+{
+    this->gameObject->animationController = this;
 }
 
 void AnimationController::ParseJSON(json j)
@@ -613,6 +626,11 @@ void AnimationController::JumpState(string state)
 	jumpState = state;
 }
 
+Rigidbody::Rigidbody(GameObject * gobj) : Component(gobj)
+{
+    this->gameObject->rigidbody = this;
+}
+
 void Rigidbody::ParseJSON(json j)
 {
     if (j.find("TimeSliceCollision") != j.end())
@@ -621,7 +639,7 @@ void Rigidbody::ParseJSON(json j)
 
 void Rigidbody::OnCollision(Collider *tgcollider)
 {
-	Collider* c = this->gameObject->GetComponent<Collider>();
+	Collider* c = this->gameObject->collider;
 
 	tgcollider->collidedCollider.push_back(c);
 	c->collidedCollider.push_back(tgcollider);
@@ -636,7 +654,7 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
 		if (gobj == this->gameObject || !gobj->enable)
 			continue;
 
-        Collider* tgcollider = gobj->GetComponent<Collider>();
+        Collider* tgcollider = gobj->collider;
         if (tgcollider != nullptr && tgcollider->enable)
         {
             if (collider->BoxCollision(tgcollider, tempVelocity, block))
@@ -653,7 +671,7 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
 
 void Rigidbody::CollisionDetection(Vector2& invelocity)
 {
-    Collider* collider = this->gameObject->GetComponent<Collider>();
+    Collider* collider = this->gameObject->collider;
     if (collider != nullptr)
     {
         for (CollisionLayer cl : collider->collisionLayer)
@@ -680,7 +698,7 @@ void Rigidbody::CollisionDetection(Vector2& invelocity)
 
 void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
 {
-    Collider* collider = this->gameObject->GetComponent<Collider>();
+    Collider* collider = this->gameObject->collider;
     if (collider != nullptr)
     {
         for (CollisionLayer cl : collider->collisionLayer)

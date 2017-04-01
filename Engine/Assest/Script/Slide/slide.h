@@ -35,8 +35,6 @@ private:
 	void SendData();
 
 	bool locked;
-	Collider* collider;
-	Rigidbody* rigidbody;
 	Vector2 oWorldPos;
 	Vector2 clickPos;
     Vector2 targetPos;

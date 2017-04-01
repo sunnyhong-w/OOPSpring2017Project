@@ -146,7 +146,7 @@ void GameObject::Draw(Vector2I cameraPos)
 {
     if (!this->renderByBehavior)
     {
-        SpriteRenderer* SR = this->GetComponent<SpriteRenderer>();
+        SpriteRenderer* SR = this->spriteRenderer;
 
         if (SR != nullptr && SR->enable)
         {
@@ -310,7 +310,7 @@ void Destroy(GameObject* gobj)
 GameObject* Instantiate(GameObject* gobj, Vector2 position)
 {
     if (!position.isNull())
-        gobj->GetComponent<Transform>()->SetPosition(position);
+        gobj->transform->SetPosition(position);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     GameObject::UpdateTag(gobj);
@@ -328,7 +328,7 @@ GameObject* InstantiateJSON(json jsonobj, Vector2 position)
 	gobj->SetTag(gobj->tag);
 
     if (!position.isNull())
-        gobj->GetComponent<Transform>()->SetPosition(position);
+        gobj->transform->SetPosition(position);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     return gobj;

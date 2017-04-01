@@ -19,7 +19,7 @@ void Tutorial::Start()
 
 void Tutorial::Update()
 {
-    Rigidbody *rb = gameObject->GetComponent<Rigidbody>();
+    Rigidbody *rb = gameObject->rigidbody;
     rb->TimeSliceCollision = true;
 	
 	int speed = 5;
@@ -79,7 +79,7 @@ void Tutorial::OnRecivedBoardcast(BoardcastMessageData bmd)
 
 void Tutorial::OnDrawGizmos(CDC * pDC)
 {
-	Rigidbody *rb = this->gameObject->GetComponent<Rigidbody>();
+	Rigidbody *rb = this->gameObject->rigidbody;
 	pDC->TextOutA(0, 20, ("colliderINFO : " + rb->colliderInfo.toString()).c_str());
 	pDC->TextOutA(0, 40, ("Can Jump : " + to_string(canJump)).c_str());
 	pDC->TextOutA(0, 60, ("velocity : " + rb->velocity.toString()).c_str());

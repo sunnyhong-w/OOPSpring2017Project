@@ -60,6 +60,11 @@ class GameObject
         bool isGUI = false;
         bool enable = true;
         Transform* transform;
+        SpriteRenderer* spriteRenderer;
+        Collider* collider;
+        Rigidbody* rigidbody;
+        Animation* animation;
+        AnimationController* animationController;
 
         //處理Component的Template
         //加入指定型別的物件，如果成功加入，會回傳對應指標

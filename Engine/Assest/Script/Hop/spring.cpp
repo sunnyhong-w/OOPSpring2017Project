@@ -37,7 +37,7 @@ void Spring::OnCollisionStay(Collider * c)
 	pressed = true;
 	lastState = pressed;
 	Player* pl = c->gameObject->GetComponent<Player>();
-	if (pl->gameObject->GetComponent<Rigidbody>()->colliderInfo.bottom)
+	if (pl->gameObject->rigidbody->colliderInfo.bottom)
 	{
 		pl->bounce = true;
 	}
