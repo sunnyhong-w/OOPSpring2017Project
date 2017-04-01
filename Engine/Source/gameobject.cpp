@@ -57,6 +57,11 @@ GameObject::GameObject(bool doNotDestoryOnChangeScene) : enable(true)
 {
     this->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
     this->transform = this->AddComponentOnce<Transform>();
+    this->spriteRenderer = nullptr;
+    this->collider = nullptr;
+    this->rigidbody = nullptr;
+    this->animation = nullptr;
+    this->animationController = nullptr;
 	this->SetTag(Tag::Untagged);
 	this->SetLayer(Layer::Default);
 }
