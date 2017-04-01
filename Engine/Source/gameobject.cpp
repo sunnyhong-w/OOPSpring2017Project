@@ -56,12 +56,12 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 GameObject::GameObject(bool doNotDestoryOnChangeScene) : enable(true)
 {
     this->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
-    this->transform = this->AddComponentOnce<Transform>();
     this->spriteRenderer = nullptr;
     this->collider = nullptr;
     this->rigidbody = nullptr;
     this->animation = nullptr;
     this->animationController = nullptr;
+    this->transform = this->AddComponentOnce<Transform>();
 	this->SetTag(Tag::Untagged);
 	this->SetLayer(Layer::Default);
 }
@@ -107,12 +107,12 @@ void GameObject::ParseJSON(json j, bool noUpdateObjectPool)
 
 void GameObject::Start()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
+    for (auto comp : componentData)
     {
-        if (it->second->isBehavior())
+        if (comp.second->isBehavior())
         {
-            it->second->enable = true;
-            static_cast<GameBehaviour*>(it->second)->Start();
+            comp.second->enable = true;
+            static_cast<GameBehaviour*>(comp.second)->Start();
         }
     }
 
@@ -121,28 +121,24 @@ void GameObject::Start()
 
 void GameObject::Update()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
+    for (auto comp : componentData)
     {
-        if (it->second->isBehavior())
+        if (comp.second->enable && comp.second->isBehavior())
         {
-            GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-            if (gb->enable)
-                gb->Update();
+            GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
+            gb->Update();
         }
     }
 }
 
 void GameObject::LateUpdate()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
+    for (auto comp : componentData)
     {
-        if (it->second->isBehavior())
+        if (comp.second->enable && comp.second->isBehavior())
         {
-            GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-            if (gb->enable)
-                gb->LateUpdate();
+            GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
+            gb->LateUpdate();
         }
     }
 }
@@ -165,17 +161,14 @@ void GameObject::Draw(Vector2I cameraPos)
     {
         for (auto comp : componentData)
         {
-            if (comp.second->isBehavior())
+            if (comp.second->enable && comp.second->isBehavior())
             {
                 GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
 
-                if (gb->enable)
-                {
-                    if (this->isGUI)
-                        gb->Draw();
-                    else
-                        gb->Draw(cameraPos);
-                }
+                if (this->isGUI)
+                    gb->Draw();
+                else
+                    gb->Draw(cameraPos);
             }
         }
     }
@@ -183,13 +176,13 @@ void GameObject::Draw(Vector2I cameraPos)
 
 void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
+    for (auto comp : componentData)
     {
-        if (it->second->isBehavior())
+        if (comp.second->enable && comp.second->isBehavior())
         {
-            GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+            GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
 
-            if (gb->enable && (gb->eventListener[BoardcastEvent::All] || gb->eventListener[bmd.event]))
+            if (gb->eventListener[BoardcastEvent::All] || gb->eventListener[bmd.event])
                 gb->OnRecivedBoardcast(bmd);
         }
     }
@@ -197,14 +190,12 @@ void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
 
 void GameObject::OnDrawGizmos(CDC * pDC)
 {
-	for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); ++it)
-	{
-		if (it->second->isBehavior())
+    for (auto comp : componentData)
+    {
+		if (comp.second->enable && comp.second->isBehavior())
 		{
-			GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-			if (gb->enable)
-				gb->OnDrawGizmos(pDC);
+			GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
+			gb->OnDrawGizmos(pDC);
 		}
 	}
 }

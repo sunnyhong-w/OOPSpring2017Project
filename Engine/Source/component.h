@@ -118,12 +118,15 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         SortingLayer GetSortingLayer();
         void SetSortingLayer(SortingLayer SL);
         inline Vector2I GetRealRenderPostion();
+        inline void UpdateRealRenderPostion();
     private:
+        bool CameraTest(Vector2I cameraPos);
+
         Vector2I size;
         Vector2I srcpos;
         Vector2I offset;
         Vector2 anchorRaito;
-
+        Vector2I realRenderPosition;
         SortingLayer sortingLayer;
         bool cutSrc = false;
         static map<string, unsigned int> fileInfo;

@@ -86,6 +86,8 @@ void Transform::SetPosition(Vector2 newpos)
 {
     this->position = newpos;
     this->worldposition = ((this->parent != nullptr) ? newpos + this->parent->worldposition : newpos);
+    if (gameObject->spriteRenderer != nullptr)
+        gameObject->spriteRenderer->UpdateRealRenderPostion();
     UpdateWorldPosition();
 }
 
@@ -98,6 +100,8 @@ void Transform::SetWorldPosition(Vector2 newpos)
 {
     this->worldposition = newpos;
     this->position = ((this->parent != nullptr) ? newpos - this->parent->worldposition : newpos);
+    if (gameObject->spriteRenderer != nullptr)
+        gameObject->spriteRenderer->UpdateRealRenderPostion();
     UpdateWorldPosition();
 }
 
@@ -206,6 +210,7 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
     offset = Vector2I::zero;
     anchorRaito = Vector2::zero;
 	sortingLayer = SortingLayer::Default;
+    realRenderPosition = Vector2I::zero;
 }
 
 SpriteRenderer::~SpriteRenderer()
@@ -253,7 +258,8 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(this->GetRealRenderPostion() - cameraPos, transform->scale, srcpos, size, cutSrc);
+    if(CameraTest(cameraPos))
+        this->ShowBitmap(this->GetRealRenderPostion() - cameraPos, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -337,11 +343,13 @@ void SpriteRenderer::Reset()
 void SpriteRenderer::SetAnchorRaito(Vector2 pos)
 {
     this->anchorRaito = pos;
+    UpdateRealRenderPostion();
 }
 
 void SpriteRenderer::SetOffset(Vector2I dp)
 {
     this->offset = offset;
+    UpdateRealRenderPostion();
 }
 
 Vector2I SpriteRenderer::GetAnchorPoint()
@@ -362,7 +370,18 @@ void SpriteRenderer::SetSortingLayer(SortingLayer SL)
 
 inline Vector2I SpriteRenderer::GetRealRenderPostion()
 {
-    return transform->GetWorldPosition().round().GetV2I() - GetAnchorPoint() + offset;
+    return realRenderPosition;
+}
+
+inline void SpriteRenderer::UpdateRealRenderPostion()
+{
+    realRenderPosition = transform->GetWorldPosition().round().GetV2I() - GetAnchorPoint() + offset;
+}
+
+bool SpriteRenderer::CameraTest(Vector2I cameraPos)
+{
+    Vector2 aw = (this->size.GetV2() - Vector2::one) / 2, bw = (Vector2(SIZE_X, SIZE_Y) - Vector2::one) / 2;
+    return ((aw + GetRealRenderPostion()) - (bw + cameraPos)).abs() <= aw + bw;
 }
 
 
@@ -443,42 +462,36 @@ void Collider::Update()
 
 	for (auto c : OnEnter)
 	{
-		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); ++it)
-		{
-			if (it->second->isBehavior())
+        for (auto comp : gameObject->componentData)
+        {
+			if (comp.second->enable && comp.second->isBehavior())
 			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-				if (gb->enable)
-					gb->OnCollisionEnter(c);
+				GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
+				gb->OnCollisionEnter(c);
 			}
 		}
 	}
 
 	for (auto c : OnStay)
 	{
-		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); ++it)
-		{
-			if (it->second->isBehavior())
+        for (auto comp : gameObject->componentData)
+        {
+			if (comp.second->enable && comp.second->isBehavior())
 			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-				if (gb->enable)
-					gb->OnCollisionStay(c);
+				GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
+				gb->OnCollisionStay(c);
 			}
 		}
 	}
 
 	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
 	{
-		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); ++it)
-		{
-			if (it->second->isBehavior())
+        for (auto comp : gameObject->componentData)
+        {
+			if (comp.second->enable && comp.second->isBehavior())
 			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-				if (gb->enable)
-					gb->OnCollisionExit(c);
+				GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
+				gb->OnCollisionExit(c);
 			}
 		}
 	}
