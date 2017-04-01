@@ -208,6 +208,11 @@ SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 	sortingLayer = SortingLayer::Default;
 }
 
+SpriteRenderer::~SpriteRenderer()
+{
+    this->gameObject->spriteRenderer = nullptr;
+}
+
 void SpriteRenderer::ParseJSON(json j)
 {
     if (j.find("Bitmap") != j.end())
@@ -374,6 +379,11 @@ Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
     this->collisionInfo.size = sz;
 }
 
+Collider::~Collider()
+{
+    this->gameObject = nullptr;
+}
+
 void Collider::OnDrawGismos(CDC *pDC, Vector2I cameraPos)
 {
 	Vector2I w = collisionInfo.size;
@@ -507,6 +517,11 @@ Animation::Animation(GameObject * gobj) : Component(gobj)
     this->gameObject->animation = this;
 }
 
+Animation::~Animation()
+{
+    this->gameObject->animation = nullptr;
+}
+
 void Animation::LoadAnimation(json jsonobj)
 {
     this->animationInfo.clear();
@@ -565,6 +580,11 @@ void Animation::ResetAnimation()
 AnimationController::AnimationController(GameObject * gobj) : Component(gobj)
 {
     this->gameObject->animationController = this;
+}
+
+AnimationController::~AnimationController()
+{
+    this->gameObject->animationController = nullptr;
 }
 
 void AnimationController::ParseJSON(json j)
@@ -629,6 +649,11 @@ void AnimationController::JumpState(string state)
 Rigidbody::Rigidbody(GameObject * gobj) : Component(gobj)
 {
     this->gameObject->rigidbody = this;
+}
+
+Rigidbody::~Rigidbody()
+{
+    this->gameObject->rigidbody = nullptr;
 }
 
 void Rigidbody::ParseJSON(json j)

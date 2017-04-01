@@ -90,7 +90,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
 {
     public:
         SpriteRenderer(GameObject* gobj);
-        ~SpriteRenderer() {};
+        ~SpriteRenderer();
         void ParseJSON(json j) override;
         void Draw(Vector2I cameraPos = Vector2I::zero);
         ///<summary>設定Sprite的圖源剪位置</summary>
@@ -143,6 +143,7 @@ class Collider : public Component
 	friend class Rigidbody;
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
+        ~Collider();
         void OnDrawGismos(CDC *pDC, Vector2I cameraPos);
         bool PointCollision(Vector2I point);
 		bool BoxCollision(Collider* box, Vector2 &velocityOffse, bool block = false);
@@ -159,6 +160,7 @@ class Animation : public Component
 {
 public:
     Animation(GameObject* gobj);
+    ~Animation();
     void LoadAnimation(json jsonobj);
     void ParseJSON(json j) override;
     void Update();
@@ -175,6 +177,7 @@ class AnimationController : public Component
 {
 public:
     AnimationController(GameObject* gobj);
+    ~AnimationController();
     void ParseJSON(json j) override;
     void Update();
 	void JumpState(string state);
@@ -197,6 +200,7 @@ class Rigidbody : public Component
 {
 public:
 	Rigidbody(GameObject* gobj);
+    ~Rigidbody();
 	Vector2 velocity;
     ColliderInfo colliderInfo;
     bool TimeSliceCollision = false;
