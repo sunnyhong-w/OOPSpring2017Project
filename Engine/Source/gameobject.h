@@ -45,6 +45,8 @@ class GameObject
         friend class game_framework::CGame;
 		friend class Collider;
         friend class MapReader;
+        friend class GameBehaviour;
+
     public:
         GameObject(bool doNotDestoryOnChangeScene = false);
         ~GameObject();
@@ -98,8 +100,8 @@ class GameObject
         static json GetPrefrabs(std::string file);
         static json InsertPrefrabs(string file, json prefrabJSON);
         static GameObject* findGameObjectByName(string name);
-        static TagPair findGameObjectsByTag(Tag tag);
-        static LayerPair findGameObjectsByLayer(Layer layer);
+        static set<GameObject*>& findGameObjectsByTag(Tag tag);
+        static set<GameObject*>& findGameObjectsByLayer(Layer layer);
 
         static vector<GameObject*> gameObjects;
 
@@ -107,20 +109,23 @@ class GameObject
         //GameObjectManagement
         static void Insert(GameObject* gobj);
         static void UpdateName(GameObject* gobj);
-        static void UpdateTag(GameObject* gobj);
-        static void UpdateLayer(GameObject* gobj);
+        static void InsertTag(GameObject* gobj);
+        static void InsertLayer(GameObject* gobj);
         static void ResetObjectPool();
         static void UpdateRenderOrder(GameObject* gobj);
         static std::map<std::string, json> prefrabsData;
         static std::map<std::string, GameObject*> objectsName;
         static std::map<std::string, int> objectsNameCount;
-        static std::multimap<Tag, GameObject*> objectsTag;
-        static std::multimap<Layer, GameObject*> objectsLayer;
+        static std::map<Tag, set<GameObject*>> objectsTag;
+        static std::map<Layer, set<GameObject*>> objectsLayer;
 		static std::vector<GameObject*> gameObjectsWaitingPools;
 
         //GameObject
+
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
+        set<GameBehaviour*> gamebehaviorSet;
+
         std::string name = "GameObject";
         Tag tag;
         Layer layer;

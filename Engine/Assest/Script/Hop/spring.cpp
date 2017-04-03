@@ -41,7 +41,6 @@ void Spring::OnCollisionStay(Collider * c)
 	{
 		pl->bounce = true;
 	}
-	TRACE("\n---------why----------\n");
 }
 
 void Spring::OnCollisionExit(Collider * c)

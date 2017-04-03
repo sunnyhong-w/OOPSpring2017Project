@@ -184,6 +184,9 @@
     <ClCompile Include="Assest\Script\Hop\GreenBox.cpp">
       <Filter>GameScript\Hop</Filter>
     </ClCompile>
+    <ClCompile Include="Source\gamebehavior.cpp">
+      <Filter>GameEngine\EngineLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">

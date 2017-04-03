@@ -48,27 +48,15 @@ void GameScene::OnMove()
     {
         if ((*it)->destoryFlag)
         {
-            TagPair data_t = GameObject::objectsTag.equal_range((*it)->tag);
+            auto &gobjTagSet = GameObject::objectsTag[(*it)->tag];
+            auto itTagSet = gobjTagSet.find((*it));
+            if (itTagSet != gobjTagSet.end())
+                gobjTagSet.erase(itTagSet);
 
-            for (auto tit = data_t.first; tit != data_t.second; ++tit)
-            {
-                if (tit->second == (*it))
-                {
-                    GameObject::objectsTag.erase(tit);
-                    break;
-                }
-            }
-
-            LayerPair data_l = GameObject::objectsLayer.equal_range((*it)->layer);
-
-            for (auto tit = data_l.first; tit != data_l.second; ++tit)
-            {
-                if (tit->second == (*it))
-                {
-                    GameObject::objectsLayer.erase(tit);
-                    break;
-                }
-            }
+            auto &gobjLayerSet = GameObject::objectsLayer[(*it)->layer];
+            auto itLayerSet = gobjLayerSet.find((*it));
+            if (itLayerSet != gobjLayerSet.end())
+                gobjLayerSet.erase(itLayerSet);
 
             GameObject::objectsName.erase((*it)->name);
 

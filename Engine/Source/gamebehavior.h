@@ -18,7 +18,9 @@ class GameBehaviour : public Component
 {
 
     public:
-        GameBehaviour(GameObject* gobj) : Component(gobj, true) {};
+        GameBehaviour(GameObject* gobj);
+        ~GameBehaviour();
+
         virtual void ParseJSON(json j) {};
 
         virtual void Start() {};

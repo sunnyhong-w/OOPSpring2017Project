@@ -460,41 +460,20 @@ void Collider::Update()
         }
     }
 
-	for (auto c : OnEnter)
-	{
-        for (auto comp : gameObject->componentData)
-        {
-			if (comp.second->enable && comp.second->isBehavior())
-			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
-				gb->OnCollisionEnter(c);
-			}
-		}
-	}
+    for (auto c : OnEnter)
+        for (auto gbh : gameObject->gamebehaviorSet)
+            if (gbh->enable)
+                gbh->OnCollisionEnter(c);
 
 	for (auto c : OnStay)
-	{
-        for (auto comp : gameObject->componentData)
-        {
-			if (comp.second->enable && comp.second->isBehavior())
-			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
-				gb->OnCollisionStay(c);
-			}
-		}
-	}
+        for (auto gbh : gameObject->gamebehaviorSet)
+            if (gbh->enable)
+                gbh->OnCollisionStay(c);
 
 	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
-	{
-        for (auto comp : gameObject->componentData)
-        {
-			if (comp.second->enable && comp.second->isBehavior())
-			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
-				gb->OnCollisionExit(c);
-			}
-		}
-	}
+        for (auto gbh : gameObject->gamebehaviorSet)
+            if (gbh->enable)
+                gbh->OnCollisionExit(c);
 
 	lastCollidedCollder = collidedCollider;
 	collidedCollider.clear();
@@ -678,14 +657,12 @@ void Rigidbody::OnCollision(Collider *tgcollider)
 	c->collidedCollider.insert(tgcollider);
 }
 
-bool Rigidbody::DoCollision(Collider *collider, LayerPair gobjLayerPair, Vector2 &tempVelocity, bool block, bool resetVX)
+bool Rigidbody::DoCollision(Collider *collider, set<GameObject*>& gobjset, Vector2 &tempVelocity, bool block, bool resetVX)
 {
 	float vx = tempVelocity.x;
     bool ret = false;
-    for (auto it = gobjLayerPair.first; it != gobjLayerPair.second; ++it)
+    for (auto gobj : gobjset)
     {
-        auto gobj = (*it).second;
-
 		if (gobj == this->gameObject || !gobj->enable)
 			continue;
 
@@ -743,7 +720,7 @@ void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
             Vector2 vslicenum = invelocity / sliceUnit;
             vslicenum = vslicenum.abs();
 
-            auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
+            auto &gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
 
             if (cl.block)
             {

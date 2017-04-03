@@ -53,7 +53,7 @@ void Player::Update()
 		isBouncing = true;
 	}
 
-	if (Input::GetKeyDown('W') || Input::GetKeyDown(VK_SPACE))
+	if (Input::GetKeyDown('W') || Input::GetKeyDown(VK_UP) || Input::GetKeyDown(VK_SPACE))
 	{
 		Jump(vel);
 	}
@@ -86,7 +86,7 @@ void Player::Update()
     if (Input::GetKeyDown(VK_F5))
         GameScene::NowScene()->LoadScene("Main");
 	Vector2 size = Vector2((float)SIZE_X / 2, (float)SIZE_Y / 2);
-	//GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
+	GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 
 	bounce = false;
 }

@@ -269,7 +269,7 @@ void from_json(const json& j, TileSet& ts)
 	imgname = imgname.substr(imgname.find_first_of("Bitmap") + 7);
 	imgname = imgname.substr(0, imgname.find_last_of("."));
 	ts.image = imgname;
-    ts.tileSetName = j["name"];
+    ts.tileSetName = j["name"].get<string>();
 	ts.tileSize = Vector2I(j["tilewidth"], j["tileheight"]);
 	ts.firstgid = j["firstgid"];
 	ts.tilecount = j["tilecount"];
@@ -278,32 +278,35 @@ void from_json(const json& j, TileSet& ts)
 	{
         for (int i = 0; i < ts.tilecount; i++)
         {
-            string errorstr = "Tile Collider Not found!\n";
-            errorstr += "filename : " + ts.tileSetName + "\n";
-            errorstr += "id : " + to_string(i);
-
-            GAME_ASSERT(j["tiles"].find(to_string(i)) != j["tiles"].end(), errorstr.c_str());
-
-            Tile t = j["tiles"][to_string(i)]["objectgroup"];
-
-            json prop;
-            if (j.find("tileproperties") != j.end())
+            if (j["tiles"].find(to_string(i)) != j["tiles"].end())
             {
-                if (j["tileproperties"].find(to_string(i)) != j["tileproperties"].end())
+                Tile t = j["tiles"][to_string(i)]["objectgroup"];
+
+                json prop;
+                if (j.find("tileproperties") != j.end())
                 {
-                    prop = j["tileproperties"][to_string(i)];
+                    if (j["tileproperties"].find(to_string(i)) != j["tileproperties"].end())
+                    {
+                        prop = j["tileproperties"][to_string(i)];
+                    }
                 }
+
+                t.properties = prop;
+
+                ts.tiles.push_back(t);
             }
-
-            t.properties = prop;
-
-            ts.tiles.push_back(t);
-
+            else
+            {
+                ts.tiles.push_back(Tile());
+            }
         }
 	}
 	else
 	{
-		GAME_ASSERT(false, ("collider not found in tile map,image : " + imgname).c_str());
+        for (int i = 0; i < ts.tilecount; i++)
+        {
+            ts.tiles.push_back(Tile());
+        }
 	}
 }
 

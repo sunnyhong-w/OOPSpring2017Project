@@ -216,7 +216,7 @@ private:
     typedef pair<multimap<Layer, GameObject*>::iterator, multimap<Layer, GameObject*>::iterator> LayerPair;
 
     void OnCollision(Collider *tgcollider);
-    bool DoCollision(Collider *collider, LayerPair gobjLayerPair, Vector2 &tempVelocity, bool block, bool resetVX = false);
+    bool DoCollision(Collider *collider, set<GameObject*>& gobjset, Vector2 &tempVelocity, bool block, bool resetVX = false);
     void CollisionDetection(Vector2& invelocity);
     void CollisionDetectionSlice(Vector2& invelocity);
 };
