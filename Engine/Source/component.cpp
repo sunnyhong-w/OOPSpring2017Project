@@ -461,19 +461,19 @@ void Collider::Update()
     }
 
     for (auto c : OnEnter)
-        for (auto gbh : gameObject->gamebehaviorSet)
-            if (gbh->enable)
-                gbh->OnCollisionEnter(c);
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->enable)
+                (*it)->OnCollisionEnter(c);
 
 	for (auto c : OnStay)
-        for (auto gbh : gameObject->gamebehaviorSet)
-            if (gbh->enable)
-                gbh->OnCollisionStay(c);
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->enable)
+                (*it)->OnCollisionStay(c);
 
 	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
-        for (auto gbh : gameObject->gamebehaviorSet)
-            if (gbh->enable)
-                gbh->OnCollisionExit(c);
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->enable)
+                (*it)->OnCollisionEnter(c);
 
 	lastCollidedCollder = collidedCollider;
 	collidedCollider.clear();

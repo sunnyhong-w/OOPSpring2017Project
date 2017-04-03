@@ -46,6 +46,8 @@ class GameScene : public game_framework::CGameState
     private:
         void LoadSceneData();
 
+        vector<GameObject*>::iterator gameobjectVectorBegin;
+        vector<GameObject*>::iterator gameobjectVectorEnd;
 
         bool debug = false;
         vector<json> TDPQueue;

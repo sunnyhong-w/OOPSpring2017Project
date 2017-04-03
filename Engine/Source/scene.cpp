@@ -43,6 +43,8 @@ void GameScene::OnMove()
         debug = !debug;
     }
 
+    bool updateGameObjectIter = false;
+
     //Destroy Dectechtion
     for (vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
     {
@@ -62,6 +64,8 @@ void GameScene::OnMove()
 
             delete (*it);
             it = GameObject::gameObjects.erase(it);
+
+            updateGameObjectIter = true;
         }
         else
             ++it;
@@ -73,60 +77,79 @@ void GameScene::OnMove()
         auto ptr = GameObject::gameObjectsWaitingPools[i];
         GameObject::Insert(ptr);
         ptr->Start();
+        updateGameObjectIter = true;
     }
     GameObject::gameObjectsWaitingPools.clear();
 
+    if (updateGameObjectIter)
+    {
+        gameobjectVectorBegin = GameObject::gameObjects.begin();
+        gameobjectVectorEnd = GameObject::gameObjects.end();
+    }
+
     //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
 
-	for (GameObject* gobj : GameObject::gameObjects)
+	for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
 	{
-		Collider* collider = gobj->collider;
-		if (collider != nullptr && collider->enable)
-			collider->Update();
+        if ((*it)->enable)
+        {
+            Collider* collider = (*it)->collider;
+            if (collider != nullptr && collider->enable)
+                collider->Update();
+        }
 	}
 
-    for (GameObject* gobj : GameObject::gameObjects)
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
     {
-        Rigidbody* rigidbody = gobj->rigidbody;
-        if (rigidbody != nullptr && rigidbody->enable)
-            rigidbody->Update();
+        if ((*it)->enable)
+        {
+            Rigidbody* rigidbody = (*it)->rigidbody;
+            if (rigidbody != nullptr && rigidbody->enable)
+                rigidbody->Update();
+        }
     }
 
     //Windows File Transmission
     while (TDPQueue.size() != 0)
     {
-        for (GameObject* gobj : GameObject::gameObjects)
-            if (gobj->enable)
-                gobj->OnRecivedBoardcast(TDPQueue[0]);
+        for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
+            if ((*it)->enable)
+                (*it)->OnRecivedBoardcast(TDPQueue[0]);
 
         TDPQueue.erase(TDPQueue.begin());
     }
 
     //GameBehavior Update Cycle
-    for (GameObject* gobj : GameObject::gameObjects)
-        if (gobj->enable)
-            gobj->Update();
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
+        if ((*it)->enable)
+            (*it)->Update();
 
     //Animator Update Workout Here
-    for (GameObject* gobj : GameObject::gameObjects)
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
     {
-        AnimationController* anic = gobj->animationController;
-        if (anic != nullptr && anic->enable)
-            anic->Update();
+        if ((*it)->enable)
+        {
+            AnimationController* anic = (*it)->animationController;
+            if (anic != nullptr && anic->enable)
+                anic->Update();
+        }
     }
 
     //Animation Update
-    for (GameObject* gobj : GameObject::gameObjects)
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
     {
-        Animation* ani = gobj->animation;
-        if (ani != nullptr && ani->enable)
-            ani->Update();
+        if ((*it)->enable)
+        {
+            Animation* ani = (*it)->animation;
+            if (ani != nullptr && ani->enable)
+                ani->Update();
+        }
     }
 
     //GameBehavior LateUpdate Cycle
-    for (GameObject* gobj : GameObject::gameObjects)
-        if (gobj->enable)
-            gobj->LateUpdate();
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
+        if ((*it)->enable)
+            (*it)->LateUpdate();
 
 }
 
@@ -134,9 +157,9 @@ void GameScene::OnShow()
 {
     if (loadname == "")
     {
-        for (GameObject* gobj : GameObject::gameObjects)
-            if (gobj->enable)
-                gobj->Draw(cameraPosition);
+        for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
+            if ((*it)->enable)
+                (*it)->Draw(cameraPosition);
 
         //Draw Superve GUI thing after gameobject drawn
 
@@ -146,13 +169,13 @@ void GameScene::OnShow()
         {
             CDC *pDC = game_framework::CDDraw::GetBackCDC();
             pDC->SetBkMode(TRANSPARENT);
-            for (GameObject* gobj : GameObject::gameObjects)
+            for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
             {
-                Collider* collider = gobj->collider;
+                Collider* collider = (*it)->collider;
                 if (collider != nullptr)
                     collider->OnDrawGismos(pDC, cameraPosition);
 
-                gobj->OnDrawGizmos(pDC);
+                (*it)->OnDrawGizmos(pDC);
 
                 //SpriteRenderer *SR = gobj->GetComponent<SpriteRenderer>();
                 //if (SR != nullptr)

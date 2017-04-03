@@ -5,7 +5,7 @@
 void Player::ParseJSON(json j)
 {
     MinJumpHeight = .5f;
-    MaxJumpHeight = 4;
+    MaxJumpHeight = 3;
     jumpTimeApex = .4f;
     tiledPixel = 32;
 }

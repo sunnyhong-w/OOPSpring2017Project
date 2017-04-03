@@ -121,10 +121,13 @@ class GameObject
 		static std::vector<GameObject*> gameObjectsWaitingPools;
 
         //GameObject
+        void UpdateComponentPair();
 
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
         set<GameBehaviour*> gamebehaviorSet;
+        set<GameBehaviour*>::iterator gamebehaviorSetBegin;
+        set<GameBehaviour*>::iterator gamebehaviorSetEnd;
 
         std::string name = "GameObject";
         Tag tag;
@@ -143,6 +146,7 @@ template<class T> inline T* GameObject::AddComponent()
 {
     T* TPointer = new T(this);
     componentData.insert(ComponentData::value_type(std::type_index(typeid(T)), TPointer));
+    UpdateComponentPair();
     return TPointer;
 }
 
@@ -154,6 +158,7 @@ template<class T> inline T* GameObject::AddComponentOnce()
     {
         T* TPointer = new T(this);
         componentData.insert(ComponentData::value_type(std::type_index(typeid(T)), TPointer));
+        UpdateComponentPair();
         return TPointer;
     }
     else
@@ -188,6 +193,7 @@ template<class T> inline void GameObject::RemoveComponent()
     {
         delete data.first->second;
         componentData.erase(data.first);
+        UpdateComponentPair();
     }
 }
 
@@ -201,6 +207,7 @@ template<class T> inline void GameObject::RemoveComponent(T* comp)
         {
             delete comp;
             componentData.erase(it);
+            UpdateComponentPair();
             break;
         }
     }
@@ -214,6 +221,7 @@ template<class T> inline void GameObject::RemoveComponents()
         delete tempcomp;
 
     componentData.erase(std::type_index(typeid(T)));
+    UpdateComponentPair();
 }
 
 }

@@ -107,25 +107,25 @@ void GameObject::ParseJSON(json j, bool noUpdateObjectPool)
 
 void GameObject::Start()
 {
-    for (auto gbh : gamebehaviorSet)
-        if(gbh->enable)
-            gbh->Start();
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+        if((*it)->enable)
+            (*it)->Start();
 
     isStarted = true;
 }
 
 void GameObject::Update()
 {
-    for (auto gbh : gamebehaviorSet)
-        if (gbh->enable)
-            gbh->Update();
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+        if ((*it)->enable)
+            (*it)->Update();
 }
 
 void GameObject::LateUpdate()
 {
-    for (auto gbh : gamebehaviorSet)
-        if (gbh->enable)
-            gbh->LateUpdate();
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+        if ((*it)->enable)
+            (*it)->LateUpdate();
 }
 
 void GameObject::Draw(Vector2I cameraPos)
@@ -144,14 +144,14 @@ void GameObject::Draw(Vector2I cameraPos)
     }
     else
     {
-        for (auto gbh : gamebehaviorSet)
+        for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
         {
-            if (gbh->enable)
+            if ((*it)->enable)
             {
                 if (this->isGUI)
-                    gbh->Draw();
+                    (*it)->Draw();
                 else
-                    gbh->Draw(cameraPos);
+                    (*it)->Draw(cameraPos);
             }
         }
     }
@@ -159,21 +159,21 @@ void GameObject::Draw(Vector2I cameraPos)
 
 void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
-    for (auto gbh : gamebehaviorSet)
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
     {
-        if (gbh->enable)
+        if ((*it)->enable)
         {
-            if (gbh->eventListener[BoardcastEvent::All] || gbh->eventListener[bmd.event])
-                gbh->OnRecivedBoardcast(bmd);
+            if ((*it)->eventListener[BoardcastEvent::All] || (*it)->eventListener[bmd.event])
+                (*it)->OnRecivedBoardcast(bmd);
         }
     }
 }
 
 void GameObject::OnDrawGizmos(CDC * pDC)
 {
-    for (auto gbh : gamebehaviorSet)
-        if (gbh->enable)
-            gbh->OnDrawGizmos(pDC);
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+        if ((*it)->enable)
+            (*it)->OnDrawGizmos(pDC);
 }
 
 void GameObject::SetName(string name)
@@ -225,6 +225,12 @@ void GameObject::SetLayer(Layer layer)
     }
     else
         this->layer = layer;
+}
+
+void GameObject::UpdateComponentPair()
+{
+    this->gamebehaviorSetBegin = gamebehaviorSet.begin();
+    this->gamebehaviorSetEnd = gamebehaviorSet.end();
 }
 
 /////////////////////////////////////////////////////////////////////////
