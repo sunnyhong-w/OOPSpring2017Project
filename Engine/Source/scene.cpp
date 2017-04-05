@@ -151,6 +151,18 @@ void GameScene::OnMove()
         if ((*it)->enable)
             (*it)->LateUpdate();
 
+
+    // Update Render Order
+    for (auto gobj : GameObject::gameObjectRenderOrderUpdatePool)
+        GameObject::UpdateRenderOrder(gobj);
+    
+    if (GameObject::gameObjectRenderOrderUpdatePool.size() != 0)
+    {
+        gameobjectVectorBegin = GameObject::gameObjects.begin();
+        gameobjectVectorEnd = GameObject::gameObjects.end();
+    }
+
+    GameObject::gameObjectRenderOrderUpdatePool.clear();
 }
 
 void GameScene::OnShow()

@@ -268,6 +268,7 @@ void GameObject::UpdateEnable()
 
 vector<GameObject*> GameObject::gameObjects;
 vector<GameObject*> GameObject::gameObjectsWaitingPools;
+set<GameObject*> GameObject::gameObjectRenderOrderUpdatePool;
 map<string, json> GameObject::prefrabsData;
 map<string, GameObject*> GameObject::objectsName;
 map<string, int> GameObject::objectsNameCount;

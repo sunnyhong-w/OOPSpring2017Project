@@ -122,6 +122,7 @@ class GameObject
         static std::map<Tag, set<GameObject*>> objectsTag;
         static std::map<Layer, set<GameObject*>> objectsLayer;
 		static std::vector<GameObject*> gameObjectsWaitingPools;
+        static std::set<GameObject*> gameObjectRenderOrderUpdatePool;
 
         //GameObject
         void UpdateComponentPair();

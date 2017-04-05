@@ -68,7 +68,7 @@ void Transform::SetWorldZIndex(int z)
 
 void Transform::UpdateWorldZIndex()
 {
-    GameObject::UpdateRenderOrder(this->gameObject);
+    GameObject::gameObjectRenderOrderUpdatePool.insert(this->gameObject);
 
     for (auto c : child)
     {
