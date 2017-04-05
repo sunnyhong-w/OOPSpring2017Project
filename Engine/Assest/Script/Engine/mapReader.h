@@ -69,5 +69,8 @@ public:
 	void Update() override;
 
 private:
+    GameObject* GenerateTile(string fname, int tindex);
+
 	TileMap tileMap;
+    Vector2 slicer;
 };

@@ -14,10 +14,17 @@ MapReader::~MapReader()
 
 void MapReader::ParseJSON(json j)
 {
+
+    if (j.find("slicer") != j.end())
+    {
+        slicer = j["slicer"];
+    }
+
 	if (j.find("load") != j.end())
 	{
 		LoadMap(j["load"].get<string>());
 	}
+
 }
 
 void MapReader::ParseProperties(GameObject * gobj, string filename, json prop)
@@ -81,66 +88,56 @@ void MapReader::LoadMap(string fname)
 		json jsondat = json::parse(buffer);
 		tileMap = jsondat;
 
+        Vector2I tileSlice = (Vector2(tileMap.width, tileMap.height) / slicer).ceil().GetV2I();
+        for (int sliceY = 0; sliceY < tileSlice.y; sliceY++)
+        {
+            for (int sliceX = 0; sliceX < tileSlice.x; sliceX++)
+            {
+                GameObject* sliceParent = new GameObject();
+                Instantiate(sliceParent);
+                sliceParent->SetName(this->gameObject->name + " Slice(" + to_string(sliceX) + ", " + to_string(sliceY) + ")");
+                sliceParent->transform->SetParent(this->transform);
+                sliceParent->transform->SetPosition(Vector2(sliceX, sliceY) * slicer * Vector2(tileMap.tileWidth, tileMap.tileHeight));
+            }
+        }
+
 		int zindex = 0;
 		for (json j : tileMap.layers)
 		{
 			if (j["type"].get<string>() == "tilelayer")
 			{
-				Vector2I pos = Vector2I(0, tileMap.tileHeight);
-				int count = 0;
+				Vector2 pos = Vector2(0, tileMap.tileHeight);
 
-				for (int i = 0; i < tileMap.width * tileMap.height; i++)
-				{
-					int tindex = j["data"][i];
+                for (int sliceY = 0; sliceY < tileSlice.y; sliceY++)
+                {
+                    for (int sliceX = 0; sliceX < tileSlice.x; sliceX++)
+                    {
+                        GameObject* sliceParent = GameObject::findGameObjectByName(this->gameObject->name + " Slice(" + to_string(sliceX) + ", " + to_string(sliceY) + ")");
 
-					if (tindex != 0)
-					{
-						for (TileSet tmp : tileMap.tileSetList)
-						{
-							if (tmp.firstgid == -1 || tindex < tmp.firstgid || tindex >= tmp.firstgid + tmp.tilecount)
-								continue;
+                        for (int y = 0; y < slicer.y; y++)
+                        {
+                            int ty = sliceY * slicer.y + y;
+                            if (ty >= tileMap.height)
+                                break;
 
-                            int tileindex = tindex - tmp.firstgid;
+                            for (int x = 0; x < slicer.x; x++)
+                            {
+                                int tx = sliceX * slicer.x + x;
+                                if (tx >= tileMap.width)
+                                    break;
 
-							GameObject *gobj = new GameObject();
+                                GameObject* gobj = GenerateTile(fname, j["data"][ty * tileMap.width + tx]);
 
-                            ParseProperties(gobj, fname ,tmp.tiles[tileindex].properties);
-
-							gobj->ParseJSON(GameObject::GetPrefrabs("Engine\\TileRenderer"));
-							SpriteRenderer* SR = gobj->AddComponentOnce<SpriteRenderer>();
-							SR->LoadBitmapData(tmp.image);
-
-							Vector2I srcpos(tileindex % tmp.columns, tileindex / tmp.columns);
-							SR->SetSourcePos(srcpos * tmp.tileSize);
-							SR->SetSize(tmp.tileSize);
-                            SR->SetAnchorRaito(Vector2::down);
-
-							if (tmp.tiles[tileindex].object.size() != 0)
-							{
-								Collider* cr = gobj->AddComponentOnce<Collider>();
-								cr->collisionInfo = tmp.tiles[tileindex].object[0]; //先當他只會有一個collider
-							}
-
-							Instantiate(gobj);
-                            gobj->transform->SetParent(this->transform);
-                            gobj->transform->SetPosition(pos.GetV2());
-							gobj->transform->SetZIndex(zindex);
-							gobj->SetLayer(Layer::Tile);
-                            
-							break;
-						}
-					}
-
-					pos.x += tileMap.tileWidth;
-
-					if (i % tileMap.width == tileMap.width - 1)
-					{
-						pos.x = 0;
-						pos.y += tileMap.tileHeight;
-					}
-
-					count++;
-				}
+                                if (gobj != nullptr)
+                                {
+                                    gobj->transform->SetParent(sliceParent->transform);
+                                    gobj->transform->SetPosition(Vector2(x,y) * Vector2(tileMap.tileWidth, tileMap.tileHeight));
+                                    gobj->transform->SetZIndex(zindex);
+                                }
+                            }
+                        }
+                    }
+                }
 			}
 			else if (j["type"].get<string>() == "objectgroup")
 			{
@@ -211,6 +208,46 @@ void MapReader::Update()
 
     if (Input::GetKeyPressing(VK_F6))
         this->transform->Translate(Vector2::right * 5);
+}
+
+GameObject* MapReader::GenerateTile(string fname, int tindex)
+{
+    if (tindex != 0)
+    {
+        for (TileSet tmp : tileMap.tileSetList)
+        {
+            if (tmp.firstgid == -1 || tindex < tmp.firstgid || tindex >= tmp.firstgid + tmp.tilecount)
+                continue;
+
+            int tileindex = tindex - tmp.firstgid;
+
+            GameObject *gobj = new GameObject();
+
+            ParseProperties(gobj, fname, tmp.tiles[tileindex].properties);
+
+            gobj->ParseJSON(GameObject::GetPrefrabs("Engine\\TileRenderer"));
+            SpriteRenderer* SR = gobj->AddComponentOnce<SpriteRenderer>();
+            SR->LoadBitmapData(tmp.image);
+
+            Vector2I srcpos(tileindex % tmp.columns, tileindex / tmp.columns);
+            SR->SetSourcePos(srcpos * tmp.tileSize);
+            SR->SetSize(tmp.tileSize);
+            SR->SetAnchorRaito(Vector2::down);
+
+            if (tmp.tiles[tileindex].object.size() != 0)
+            {
+                Collider* cr = gobj->AddComponentOnce<Collider>();
+                cr->collisionInfo = tmp.tiles[tileindex].object[0]; //先當他只會有一個collider
+            }
+
+            Instantiate(gobj);
+            gobj->SetLayer(Layer::Tile);
+
+            return gobj;
+        }
+    }
+
+    return nullptr;
 }
 
 TileSet::TileSet()
