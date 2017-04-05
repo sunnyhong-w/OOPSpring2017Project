@@ -53,7 +53,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 
 #define FindJSON(str) j.find(str) != j.end()
 
-GameObject::GameObject(bool doNotDestoryOnChangeScene) : enable(true)
+GameObject::GameObject(bool doNotDestoryOnChangeScene)
 {
     this->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
     this->spriteRenderer = nullptr;
@@ -64,6 +64,9 @@ GameObject::GameObject(bool doNotDestoryOnChangeScene) : enable(true)
     this->transform = this->AddComponentOnce<Transform>();
 	this->SetTag(Tag::Untagged);
 	this->SetLayer(Layer::Default);
+    this->enableIndex = 0;
+    this->privateEnable = true;
+    this->enable = true;
 }
 
 GameObject::~GameObject()
@@ -87,7 +90,7 @@ void GameObject::ParseJSON(json j, bool noUpdateObjectPool)
     }
 
     if (FindJSON("enable"))
-        this->enable = j["enable"];
+        this->SetEnable(j["enable"]);
 
     if (FindJSON("name"))
         this->SetName(j["name"].get<string>());
@@ -227,10 +230,36 @@ void GameObject::SetLayer(Layer layer)
         this->layer = layer;
 }
 
+void GameObject::SetEnable(bool enable)
+{
+    if (privateEnable ^ enable)
+    {
+        privateEnable = enable;
+        UpdateEnable();
+    }
+}
+
+bool GameObject::GetEnable()
+{
+    return enable;
+}
+
 void GameObject::UpdateComponentPair()
 {
     this->gamebehaviorSetBegin = gamebehaviorSet.begin();
     this->gamebehaviorSetEnd = gamebehaviorSet.end();
+}
+
+void GameObject::UpdateEnable()
+{
+    auto *parent = this->transform->GetParent();
+    int enableIndex = (parent != nullptr ? parent->gameObject->enableIndex : 0);
+
+    this->enableIndex = enableIndex + (this->privateEnable ? 0 : 1);
+    enable = this->enableIndex == 0;
+
+    for (auto ctrans : this->transform->GetChild())
+        ctrans->gameObject->UpdateEnable();
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -44,8 +44,10 @@ class GameObject
         friend class SpriteRenderer;
         friend class game_framework::CGame;
 		friend class Collider;
+        friend class Rigidbody;
         friend class MapReader;
         friend class GameBehaviour;
+        friend class GameScene;
 
     public:
         GameObject(bool doNotDestoryOnChangeScene = false);
@@ -61,9 +63,10 @@ class GameObject
         string GetName();
         void SetTag(Tag tag);
         void SetLayer(Layer layer);
+        void SetEnable(bool enable);
+        bool GetEnable();
 
         bool isGUI = false;
-        bool enable = true;
         Transform* transform;
         SpriteRenderer* spriteRenderer;
         Collider* collider;
@@ -122,6 +125,7 @@ class GameObject
 
         //GameObject
         void UpdateComponentPair();
+        void UpdateEnable();
 
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
@@ -137,6 +141,9 @@ class GameObject
         bool renderByBehavior = false;
         bool doNOTDestoryOnChangeScene = false;
         bool doNOTUpdateObjectPool = false;
+        bool enable;
+        bool privateEnable;
+        int enableIndex; // 等於0時enable為true，否則為flase
 };
 
 //由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中

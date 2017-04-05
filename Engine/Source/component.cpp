@@ -143,6 +143,7 @@ void Transform::SetParent(Transform *target)
 
 	this->parent = target;
 	this->SetPosition(position);
+    this->gameObject->UpdateEnable();
 }
 
 void Transform::SetParentAbsolute(Transform* target)
@@ -156,6 +157,7 @@ void Transform::SetParentAbsolute(Transform* target)
 	Vector2 myPos = GetWorldPosition();
 	this->parent = target;
 	this->SetWorldPosition(myPos);
+    this->gameObject->UpdateEnable();
 }
 
 Transform* Transform::GetParent()
