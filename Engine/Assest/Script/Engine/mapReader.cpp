@@ -184,10 +184,7 @@ void MapReader::LoadMap(string fname)
                         SR->LoadBitmapData(tmp.objects[tileindex].image);
                         SR->SetAnchorRaito(Vector2::down);
 
-                        Instantiate(gobj);
-
-                        gobj->transform->SetParent(objParent->transform);
-                        gobj->transform->SetPosition(obj);
+                        Instantiate(gobj, objParent->transform, obj);
                         gobj->transform->SetZIndex(zindex);
 
                         if (obj["name"] != "")

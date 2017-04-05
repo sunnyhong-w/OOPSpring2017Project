@@ -289,10 +289,13 @@ void Destroy(GameObject* gobj)
         Destroy(childTransform->gameObject);
 }
 
-GameObject* Instantiate(GameObject* gobj, Vector2 position)
+GameObject* Instantiate(GameObject* gobj, Transform* parent, Vector2 position)
 {
     if (!position.isNull())
         gobj->transform->SetPosition(position);
+
+    if (parent != nullptr)
+        gobj->transform->SetParent(parent);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     GameObject::InsertTag(gobj);
@@ -300,7 +303,7 @@ GameObject* Instantiate(GameObject* gobj, Vector2 position)
     return gobj;
 }
 
-GameObject* InstantiateJSON(json jsonobj, Vector2 position)
+GameObject* InstantiateJSON(json jsonobj, Transform* parent, Vector2 position)
 {
     bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
     GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene);
@@ -311,6 +314,9 @@ GameObject* InstantiateJSON(json jsonobj, Vector2 position)
 
     if (!position.isNull())
         gobj->transform->SetPosition(position);
+
+    if (parent != nullptr)
+        gobj->transform->SetParent(parent);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     return gobj;
