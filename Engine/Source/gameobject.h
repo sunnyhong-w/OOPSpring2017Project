@@ -28,8 +28,8 @@ class GameObject;
 //一些Public的最高權限Function
 void Destroy(GameObject& gobj);
 void Destroy(GameObject* gobj);
-GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision = Vector2::null);
-GameObject* InstantiateJSON(json prefrabJSON, Vector2 posision = Vector2::null);
+GameObject* Instantiate(GameObject* objectPrefrabs, Transform* parent = nullptr, Vector2 posision = Vector2::null);
+GameObject* InstantiateJSON(json prefrabJSON, Transform* parent = nullptr, Vector2 posision = Vector2::null);
 
 typedef pair<multimap<Tag, GameObject*>::iterator, multimap<Tag, GameObject*>::iterator> TagPair;
 typedef pair<multimap<Layer, GameObject*>::iterator, multimap<Layer, GameObject*>::iterator> LayerPair;
@@ -37,8 +37,8 @@ typedef pair<multimap<Layer, GameObject*>::iterator, multimap<Layer, GameObject*
 class GameObject
 {
         friend void Destroy(GameObject* gobj);
-        friend GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision);
-        friend GameObject* InstantiateJSON(json jsonobj, Vector2 posision);
+        friend GameObject* Instantiate(GameObject* objectPrefrabs, Transform* parent, Vector2 posision);
+        friend GameObject* InstantiateJSON(json jsonobj, Transform* parent, Vector2 posision);
         friend class GameScene;
         friend class Transform;
         friend class SpriteRenderer;
@@ -122,6 +122,7 @@ class GameObject
         static std::map<Tag, set<GameObject*>> objectsTag;
         static std::map<Layer, set<GameObject*>> objectsLayer;
 		static std::vector<GameObject*> gameObjectsWaitingPools;
+        static std::set<GameObject*> gameObjectRenderOrderUpdatePool;
 
         //GameObject
         void UpdateComponentPair();

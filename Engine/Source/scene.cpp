@@ -94,7 +94,7 @@ void GameScene::OnMove()
         if ((*it)->enable)
         {
             Collider* collider = (*it)->collider;
-            if (collider != nullptr && collider->enable)
+            if (collider != nullptr && collider->GetEnable())
                 collider->Update();
         }
 	}
@@ -104,7 +104,7 @@ void GameScene::OnMove()
         if ((*it)->enable)
         {
             Rigidbody* rigidbody = (*it)->rigidbody;
-            if (rigidbody != nullptr && rigidbody->enable)
+            if (rigidbody != nullptr && rigidbody->GetEnable())
                 rigidbody->Update();
         }
     }
@@ -130,7 +130,7 @@ void GameScene::OnMove()
         if ((*it)->enable)
         {
             AnimationController* anic = (*it)->animationController;
-            if (anic != nullptr && anic->enable)
+            if (anic != nullptr && anic->GetEnable())
                 anic->Update();
         }
     }
@@ -141,7 +141,7 @@ void GameScene::OnMove()
         if ((*it)->enable)
         {
             Animation* ani = (*it)->animation;
-            if (ani != nullptr && ani->enable)
+            if (ani != nullptr && ani->GetEnable())
                 ani->Update();
         }
     }
@@ -151,6 +151,18 @@ void GameScene::OnMove()
         if ((*it)->enable)
             (*it)->LateUpdate();
 
+
+    // Update Render Order
+    for (auto gobj : GameObject::gameObjectRenderOrderUpdatePool)
+        GameObject::UpdateRenderOrder(gobj);
+    
+    if (GameObject::gameObjectRenderOrderUpdatePool.size() != 0)
+    {
+        gameobjectVectorBegin = GameObject::gameObjects.begin();
+        gameobjectVectorEnd = GameObject::gameObjects.end();
+    }
+
+    GameObject::gameObjectRenderOrderUpdatePool.clear();
 }
 
 void GameScene::OnShow()

@@ -258,6 +258,19 @@ void GameObject::UpdateEnable()
     this->enableIndex = enableIndex + (this->privateEnable ? 0 : 1);
     enable = this->enableIndex == 0;
 
+    if (enable)
+    {
+        for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+            if ((*it)->enable)
+                (*it)->Awake();
+    }
+    else
+    {
+        for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+            if ((*it)->enable)
+                (*it)->Sleep();
+    }
+
     for (auto ctrans : this->transform->GetChild())
         ctrans->gameObject->UpdateEnable();
 }
@@ -268,6 +281,7 @@ void GameObject::UpdateEnable()
 
 vector<GameObject*> GameObject::gameObjects;
 vector<GameObject*> GameObject::gameObjectsWaitingPools;
+set<GameObject*> GameObject::gameObjectRenderOrderUpdatePool;
 map<string, json> GameObject::prefrabsData;
 map<string, GameObject*> GameObject::objectsName;
 map<string, int> GameObject::objectsNameCount;
@@ -286,13 +300,16 @@ void Destroy(GameObject* gobj)
 
     auto childList = gobj->transform->GetChild();
     for (auto childTransform : childList)
-        Destroy(*(childTransform->gameObject));
+        Destroy(childTransform->gameObject);
 }
 
-GameObject* Instantiate(GameObject* gobj, Vector2 position)
+GameObject* Instantiate(GameObject* gobj, Transform* parent, Vector2 position)
 {
     if (!position.isNull())
         gobj->transform->SetPosition(position);
+
+    if (parent != nullptr)
+        gobj->transform->SetParent(parent);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     GameObject::InsertTag(gobj);
@@ -300,7 +317,7 @@ GameObject* Instantiate(GameObject* gobj, Vector2 position)
     return gobj;
 }
 
-GameObject* InstantiateJSON(json jsonobj, Vector2 position)
+GameObject* InstantiateJSON(json jsonobj, Transform* parent, Vector2 position)
 {
     bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
     GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene);
@@ -311,6 +328,9 @@ GameObject* InstantiateJSON(json jsonobj, Vector2 position)
 
     if (!position.isNull())
         gobj->transform->SetPosition(position);
+
+    if (parent != nullptr)
+        gobj->transform->SetParent(parent);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     return gobj;

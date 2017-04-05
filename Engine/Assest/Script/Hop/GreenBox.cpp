@@ -73,7 +73,7 @@ void GreenBox::BoxON()
     pos = pos * Vector2I(1, BoxNum);
 
     this->gameObject->spriteRenderer->SetSourcePos(pos);
-    this->gameObject->collider->enable = true;
+    this->gameObject->collider->SetEnable(true);
 
     tick = 0;
 }
@@ -84,5 +84,5 @@ void GreenBox::BoxOff()
     pos = pos * Vector2I(0, BoxNum);
 
     this->gameObject->spriteRenderer->SetSourcePos(pos);
-    this->gameObject->collider->enable = false;
+    this->gameObject->collider->SetEnable(false);
 }

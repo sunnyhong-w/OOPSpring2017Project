@@ -1,17 +1,20 @@
 {
     "IncludePrefrab": {
         "MapReader": "Engine\\MapReader",
-        "Spring":"spring"
+        "Spring": "spring"
     },
     "GameObject": [
         {
             "include": "MapReader",
             "Component": {
                 "MapReader": {
-                    "load": "HeavyTest"
+                    "load": "Blue",
+                    "slicer": {
+                        "x": 15,
+                        "y": 10
+                    }
                 }
             }
         }
-
     ]
 }

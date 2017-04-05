@@ -33,6 +33,27 @@ bool Component::isBehavior()
     return this->isGameBehavior;
 }
 
+void Component::SetEnable(bool enable)
+{
+    if (this->enable ^ enable)
+    {
+        this->enable = enable;
+
+        if (this->isGameBehavior)
+        {
+            if (enable)
+                static_cast<GameBehaviour*>(this)->Awake();
+            else
+                static_cast<GameBehaviour*>(this)->Sleep();
+        }
+    }
+}
+
+bool Component::GetEnable()
+{
+    return this->enable;
+}
+
 //////////////////////////////////////////////////////////////////
 // Transform實作
 //////////////////////////////////////////////////////////////////
@@ -51,7 +72,6 @@ void Transform::SetZIndex(int z)
 {
     this->zindex = z;
     this->worldzindex = ((this->parent != nullptr) ? z + this->parent->worldzindex : z);
-    GameObject::UpdateRenderOrder(this->gameObject);
     UpdateWorldZIndex();
 }
 
@@ -64,12 +84,13 @@ void Transform::SetWorldZIndex(int z)
 {
     this->worldzindex = z;
     this->zindex = ((this->parent != nullptr) ? z - this->parent->worldzindex : z);
-    GameObject::UpdateRenderOrder(this->gameObject);
     UpdateWorldZIndex();
 }
 
 void Transform::UpdateWorldZIndex()
 {
+    GameObject::gameObjectRenderOrderUpdatePool.insert(this->gameObject);
+
     for (auto c : child)
     {
         c->worldzindex = this->worldzindex + c->zindex;
@@ -86,8 +107,6 @@ void Transform::SetPosition(Vector2 newpos)
 {
     this->position = newpos;
     this->worldposition = ((this->parent != nullptr) ? newpos + this->parent->worldposition : newpos);
-    if (gameObject->spriteRenderer != nullptr)
-        gameObject->spriteRenderer->UpdateRealRenderPostion();
     UpdateWorldPosition();
 }
 
@@ -100,13 +119,14 @@ void Transform::SetWorldPosition(Vector2 newpos)
 {
     this->worldposition = newpos;
     this->position = ((this->parent != nullptr) ? newpos - this->parent->worldposition : newpos);
-    if (gameObject->spriteRenderer != nullptr)
-        gameObject->spriteRenderer->UpdateRealRenderPostion();
     UpdateWorldPosition();
 }
 
 void Transform::UpdateWorldPosition()
 {
+    if (gameObject->spriteRenderer != nullptr)
+        gameObject->spriteRenderer->UpdateRealRenderPostion();
+
     for (auto c : child)
     {
         c->worldposition = this->worldposition + c->position;
@@ -464,17 +484,17 @@ void Collider::Update()
 
     for (auto c : OnEnter)
         for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
-            if ((*it)->enable)
+            if ((*it)->GetEnable())
                 (*it)->OnCollisionEnter(c);
 
 	for (auto c : OnStay)
         for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
-            if ((*it)->enable)
+            if ((*it)->GetEnable())
                 (*it)->OnCollisionStay(c);
 
 	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
         for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
-            if ((*it)->enable)
+            if ((*it)->GetEnable())
                 (*it)->OnCollisionEnter(c);
 
 	lastCollidedCollder = collidedCollider;
@@ -669,7 +689,7 @@ bool Rigidbody::DoCollision(Collider *collider, set<GameObject*>& gobjset, Vecto
 			continue;
 
         Collider* tgcollider = gobj->collider;
-        if (tgcollider != nullptr && tgcollider->enable)
+        if (tgcollider != nullptr && tgcollider->GetEnable())
         {
             if (collider->BoxCollision(tgcollider, tempVelocity, block))
             {
