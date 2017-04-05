@@ -23,6 +23,8 @@ class GameBehaviour : public Component
 
         virtual void ParseJSON(json j) {};
 
+        virtual void Awake() {};
+        virtual void Sleep() {};
         virtual void Start() {};
         virtual void Update() {};
         virtual void LateUpdate() {};

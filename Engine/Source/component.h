@@ -33,12 +33,14 @@ class Component
         virtual void ParseJSON(json j) {};
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
-        bool enable;
+        void SetEnable(bool enable);
+        bool GetEnable();
         GameObject* gameObject;
         Transform* transform;
     private:
         ///<summary>在Scene處理Object Component Triverse的時候，跳過這個Component</summary>
         const bool isGameBehavior = false;
+        bool enable;
 };
 
 

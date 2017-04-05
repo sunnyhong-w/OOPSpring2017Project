@@ -33,6 +33,27 @@ bool Component::isBehavior()
     return this->isGameBehavior;
 }
 
+void Component::SetEnable(bool enable)
+{
+    if (this->enable ^ enable)
+    {
+        this->enable = enable;
+
+        if (this->isGameBehavior)
+        {
+            if (enable)
+                static_cast<GameBehaviour*>(this)->Awake();
+            else
+                static_cast<GameBehaviour*>(this)->Sleep();
+        }
+    }
+}
+
+bool Component::GetEnable()
+{
+    return this->enable;
+}
+
 //////////////////////////////////////////////////////////////////
 // Transform實作
 //////////////////////////////////////////////////////////////////
@@ -463,17 +484,17 @@ void Collider::Update()
 
     for (auto c : OnEnter)
         for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
-            if ((*it)->enable)
+            if ((*it)->GetEnable())
                 (*it)->OnCollisionEnter(c);
 
 	for (auto c : OnStay)
         for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
-            if ((*it)->enable)
+            if ((*it)->GetEnable())
                 (*it)->OnCollisionStay(c);
 
 	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
         for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
-            if ((*it)->enable)
+            if ((*it)->GetEnable())
                 (*it)->OnCollisionEnter(c);
 
 	lastCollidedCollder = collidedCollider;
@@ -668,7 +689,7 @@ bool Rigidbody::DoCollision(Collider *collider, set<GameObject*>& gobjset, Vecto
 			continue;
 
         Collider* tgcollider = gobj->collider;
-        if (tgcollider != nullptr && tgcollider->enable)
+        if (tgcollider != nullptr && tgcollider->GetEnable())
         {
             if (collider->BoxCollision(tgcollider, tempVelocity, block))
             {

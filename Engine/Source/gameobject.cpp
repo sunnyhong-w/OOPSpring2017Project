@@ -258,6 +258,19 @@ void GameObject::UpdateEnable()
     this->enableIndex = enableIndex + (this->privateEnable ? 0 : 1);
     enable = this->enableIndex == 0;
 
+    if (enable)
+    {
+        for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+            if ((*it)->enable)
+                (*it)->Awake();
+    }
+    else
+    {
+        for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+            if ((*it)->enable)
+                (*it)->Sleep();
+    }
+
     for (auto ctrans : this->transform->GetChild())
         ctrans->gameObject->UpdateEnable();
 }
