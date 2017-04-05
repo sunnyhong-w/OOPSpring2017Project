@@ -67,6 +67,7 @@ public:
 	void LoadMap(string str);
 	void Draw(Vector2I campos) override;
 	void Update() override;
+    void LateUpdate() override;
 
 private:
     GameObject* GenerateTile(string fname, int tindex);

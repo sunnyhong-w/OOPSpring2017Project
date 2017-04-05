@@ -30,6 +30,50 @@ void MapReader::Update()
         this->transform->Translate(Vector2::right * 5);
 }
 
+void MapReader::LateUpdate()
+{
+    Vector2 pos = (GameScene::CameraPosition().GetV2() - this->transform->GetWorldPosition()) / (slicer * Vector2(tileMap.tileWidth, tileMap.tileHeight));
+    Vector2 fpos = pos.floorSpecial();
+    Vector2 cpos = pos.ceilSpecial();
+
+    vector<Vector2I> posVector;
+
+    posVector.push_back(fpos.GetV2I());
+    if (pos.x != fpos.x)
+        posVector.push_back(Vector2I(cpos.x, fpos.y));
+
+    if (pos.y != fpos.y)
+        posVector.push_back(Vector2I(fpos.x, cpos.y));
+
+    if(pos.x != fpos.x && pos.y != fpos.y)
+        posVector.push_back(cpos.GetV2I());
+
+    string name = this->gameObject->GetName();
+
+    for (auto ctrans : this->transform->GetChild())
+    {
+        string objname = ctrans->gameObject->GetName();
+
+        if (objname == name + " Objects")
+            continue;
+
+        bool find = false;
+
+        for (auto v : posVector)
+        {
+            if (objname == name + " Slice(" + to_string(v.x) + ", " + to_string(v.y) + ")")
+            {
+                ctrans->gameObject->SetEnable(true);
+                find = true;
+                continue;
+            }
+        }
+
+        if(!find)
+            ctrans->gameObject->SetEnable(false);
+    }
+}
+
 void MapReader::ParseJSON(json j)
 {
 
@@ -105,6 +149,8 @@ void MapReader::LoadMap(string fname)
         buffer << file.rdbuf();
         json jsondat = json::parse(buffer);
         tileMap = jsondat;
+
+        this->gameObject->SetName(fname);
 
         Vector2I tileSlice = (Vector2(tileMap.width, tileMap.height) / slicer).ceil().GetV2I();
         for (int sliceY = 0; sliceY < tileSlice.y; sliceY++)
