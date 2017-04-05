@@ -286,7 +286,7 @@ void Destroy(GameObject* gobj)
 
     auto childList = gobj->transform->GetChild();
     for (auto childTransform : childList)
-        Destroy(*(childTransform->gameObject));
+        Destroy(childTransform->gameObject);
 }
 
 GameObject* Instantiate(GameObject* gobj, Vector2 position)

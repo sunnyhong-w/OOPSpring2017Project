@@ -51,7 +51,6 @@ void Transform::SetZIndex(int z)
 {
     this->zindex = z;
     this->worldzindex = ((this->parent != nullptr) ? z + this->parent->worldzindex : z);
-    GameObject::UpdateRenderOrder(this->gameObject);
     UpdateWorldZIndex();
 }
 
@@ -64,12 +63,13 @@ void Transform::SetWorldZIndex(int z)
 {
     this->worldzindex = z;
     this->zindex = ((this->parent != nullptr) ? z - this->parent->worldzindex : z);
-    GameObject::UpdateRenderOrder(this->gameObject);
     UpdateWorldZIndex();
 }
 
 void Transform::UpdateWorldZIndex()
 {
+    GameObject::UpdateRenderOrder(this->gameObject);
+
     for (auto c : child)
     {
         c->worldzindex = this->worldzindex + c->zindex;
@@ -86,8 +86,6 @@ void Transform::SetPosition(Vector2 newpos)
 {
     this->position = newpos;
     this->worldposition = ((this->parent != nullptr) ? newpos + this->parent->worldposition : newpos);
-    if (gameObject->spriteRenderer != nullptr)
-        gameObject->spriteRenderer->UpdateRealRenderPostion();
     UpdateWorldPosition();
 }
 
@@ -100,13 +98,14 @@ void Transform::SetWorldPosition(Vector2 newpos)
 {
     this->worldposition = newpos;
     this->position = ((this->parent != nullptr) ? newpos - this->parent->worldposition : newpos);
-    if (gameObject->spriteRenderer != nullptr)
-        gameObject->spriteRenderer->UpdateRealRenderPostion();
     UpdateWorldPosition();
 }
 
 void Transform::UpdateWorldPosition()
 {
+    if (gameObject->spriteRenderer != nullptr)
+        gameObject->spriteRenderer->UpdateRealRenderPostion();
+
     for (auto c : child)
     {
         c->worldposition = this->worldposition + c->position;
