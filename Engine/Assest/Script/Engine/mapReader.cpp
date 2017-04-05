@@ -119,6 +119,12 @@ void MapReader::LoadMap(string fname)
             }
         }
 
+        GameObject* objParent = new GameObject();
+        Instantiate(objParent);
+        objParent->SetName(fname + " Objects");
+        objParent->transform->SetParent(this->transform);
+        objParent->transform->SetPosition(Vector2(0,0));
+
         int zindex = 0;
         for (json j : tileMap.layers)
         {
@@ -180,7 +186,7 @@ void MapReader::LoadMap(string fname)
 
                         Instantiate(gobj);
 
-                        gobj->transform->SetParent(this->transform);
+                        gobj->transform->SetParent(objParent->transform);
                         gobj->transform->SetPosition(obj);
                         gobj->transform->SetZIndex(zindex);
 
