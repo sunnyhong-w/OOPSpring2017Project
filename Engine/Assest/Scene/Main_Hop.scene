@@ -1,7 +1,9 @@
 {
+    
     "IncludePrefrab": {
         "MapReader": "Engine\\MapReader",
-        "Spring": "spring"
+        "Spring":"spring",
+        "YellowBox":"yellowBox"
     },
     "GameObject": [
         {
@@ -48,6 +50,9 @@
                     }
                 }
             }
+        },
+        {
+            "include":"YellowBox"
         }
     ]
 }

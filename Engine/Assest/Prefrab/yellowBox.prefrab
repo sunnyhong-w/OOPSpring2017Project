@@ -1,0 +1,10 @@
+{
+    "name": "YellowBox",
+    "Component": {
+        "Collider": {
+            "size": { "x": 300, "y": 300 }
+        },
+        "YellowBox": {}
+    },
+    "layer" : 1
+}
