@@ -1,17 +1,73 @@
 {
+    
     "IncludePrefrab": {
         "MapReader": "Engine\\MapReader",
-        "Spring":"spring"
+        "Spring":"spring",
+        "YellowBox":"yellowBox"
     },
     "GameObject": [
         {
             "include": "MapReader",
             "Component": {
+                "Transform":{
+                    "position" : {"x" : 0, "y" : 1664}
+                },
                 "MapReader": {
-                    "load": "temp"
+                    "load": "Blue",
+                    "slicer": {
+                        "x": 15,
+                        "y": 10
+                    }
                 }
             }
+        },
+        {
+            "include": "MapReader",
+            "Component": {
+                "Transform":{
+                    "position" : {"x" : 2624, "y" : 1664}
+                },
+                "MapReader": {
+                    "load": "Green",
+                    "slicer": {
+                        "x": 15,
+                        "y": 10
+                    }
+                }
+            }
+        },
+        {
+            "include": "MapReader",
+            "Component": {
+                "Transform":{
+                    "position" : {"x" : 1664, "y" : 2688}
+                },
+                "MapReader": {
+                    "load": "Red",
+                    "slicer": {
+                        "x": 15,
+                        "y": 10
+                    }
+                }
+            }
+        },
+                {
+            "include": "MapReader",
+            "Component": {
+                "Transform":{
+                    "position" : {"x" : -800, "y" : 3328}
+                },
+                "MapReader": {
+                    "load": "Yellow",
+                    "slicer": {
+                        "x": 15,
+                        "y": 10
+                    }
+                }
+            }
+        },
+        {
+            "include":"YellowBox"
         }
-
     ]
 }

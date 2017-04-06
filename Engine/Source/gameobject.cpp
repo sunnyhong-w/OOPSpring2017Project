@@ -44,6 +44,9 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(Player)
     RegisterComponent(SpawnPlayer)
 	RegisterComponent(Spring)
+	RegisterComponent(Button)
+    RegisterComponent(GreenBox)
+	RegisterComponent(YellowBox)
     else return nullptr;
 }
 
@@ -51,12 +54,20 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 
 #define FindJSON(str) j.find(str) != j.end()
 
-GameObject::GameObject(bool doNotDestoryOnChangeScene) : enable(true)
+GameObject::GameObject(bool doNotDestoryOnChangeScene)
 {
     this->doNOTDestoryOnChangeScene = doNOTDestoryOnChangeScene;
+    this->spriteRenderer = nullptr;
+    this->collider = nullptr;
+    this->rigidbody = nullptr;
+    this->animation = nullptr;
+    this->animationController = nullptr;
     this->transform = this->AddComponentOnce<Transform>();
 	this->SetTag(Tag::Untagged);
 	this->SetLayer(Layer::Default);
+    this->enableIndex = 0;
+    this->privateEnable = true;
+    this->enable = true;
 }
 
 GameObject::~GameObject()
@@ -80,7 +91,7 @@ void GameObject::ParseJSON(json j, bool noUpdateObjectPool)
     }
 
     if (FindJSON("enable"))
-        this->enable = j["enable"];
+        this->SetEnable(j["enable"]);
 
     if (FindJSON("name"))
         this->SetName(j["name"].get<string>());
@@ -100,51 +111,32 @@ void GameObject::ParseJSON(json j, bool noUpdateObjectPool)
 
 void GameObject::Start()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
-    {
-        if (it->second->isBehavior())
-        {
-            it->second->enable = true;
-            static_cast<GameBehaviour*>(it->second)->Start();
-        }
-    }
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+        if((*it)->enable)
+            (*it)->Start();
 
     isStarted = true;
 }
 
 void GameObject::Update()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
-    {
-        if (it->second->isBehavior())
-        {
-            GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-            if (gb->enable)
-                gb->Update();
-        }
-    }
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+        if ((*it)->enable)
+            (*it)->Update();
 }
 
 void GameObject::LateUpdate()
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
-    {
-        if (it->second->isBehavior())
-        {
-            GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-            if (gb->enable)
-                gb->LateUpdate();
-        }
-    }
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+        if ((*it)->enable)
+            (*it)->LateUpdate();
 }
 
 void GameObject::Draw(Vector2I cameraPos)
 {
     if (!this->renderByBehavior)
     {
-        SpriteRenderer* SR = this->GetComponent<SpriteRenderer>();
+        SpriteRenderer* SR = this->spriteRenderer;
 
         if (SR != nullptr && SR->enable)
         {
@@ -156,50 +148,36 @@ void GameObject::Draw(Vector2I cameraPos)
     }
     else
     {
-        for (auto comp : componentData)
+        for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
         {
-            if (comp.second->isBehavior())
+            if ((*it)->enable)
             {
-                GameBehaviour* gb = static_cast<GameBehaviour*>(comp.second);
-
-                if (gb->enable)
-                {
-                    if (this->isGUI)
-                        gb->Draw();
-                    else
-                        gb->Draw(cameraPos);
-                }
+                if (this->isGUI)
+                    (*it)->Draw();
+                else
+                    (*it)->Draw(cameraPos);
             }
         }
     }
 }
 
-void GameObject::OnRecivedBoardcast(json j)
+void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
-    for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
     {
-        if (it->second->isBehavior())
+        if ((*it)->enable)
         {
-            GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-            if (gb->enable)
-                gb->OnRecivedBoardcast(j);
+            if ((*it)->eventListener[BoardcastEvent::All] || (*it)->eventListener[bmd.event])
+                (*it)->OnRecivedBoardcast(bmd);
         }
     }
 }
 
 void GameObject::OnDrawGizmos(CDC * pDC)
 {
-	for (ComponentData::iterator it = componentData.begin(); it != componentData.end(); it++)
-	{
-		if (it->second->isBehavior())
-		{
-			GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-			if (gb->enable)
-				gb->OnDrawGizmos(pDC);
-		}
-	}
+    for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+        if ((*it)->enable)
+            (*it)->OnDrawGizmos(pDC);
 }
 
 void GameObject::SetName(string name)
@@ -223,27 +201,14 @@ void GameObject::SetTag(Tag tag)
 {
     if (!this->doNOTUpdateObjectPool)
     {
-        typedef multimap<Tag, GameObject*>::iterator iter;
-        std::pair<iter, iter> data = GameObject::objectsTag.equal_range(this->tag);
+        auto &tagSet = GameObject::objectsTag[this->tag];
+        auto it = tagSet.find(this);
 
-		bool find = false;
-        for (iter it = data.first; it != data.second; it++)
-        {
-            if (it->second == this)
-            {
-				find = true;
-                GameObject::objectsTag.erase(it);
-                this->tag = tag;
-                GameObject::UpdateTag(this);
-                break;
-            }
-        }
-	
-		if (!find)
-		{
-			this->tag = tag;
-			GameObject::UpdateTag(this);
-		}
+        if (it != tagSet.end())
+            tagSet.erase(it);
+
+        this->tag = tag;
+        GameObject::InsertTag(this);
     }
     else
         this->tag = tag;
@@ -253,29 +218,62 @@ void GameObject::SetLayer(Layer layer)
 {
     if (!this->doNOTUpdateObjectPool)
     {
-        typedef multimap<Layer, GameObject*>::iterator iter;
-        std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(this->layer);
+        auto &layerSet = GameObject::objectsLayer[this->layer];
+        auto it = layerSet.find(this);
 
-		bool find = false;
-        for (iter it = data.first; it != data.second; it++)
-        {
-            if (it->second == this)
-            {
-                GameObject::objectsLayer.erase(it);
-                this->layer = layer;
-                GameObject::UpdateLayer(this);
-				find = true;
-                break;
-            }
-        }
-		if (!find)
-		{
-			this->layer = layer;
-			GameObject::UpdateLayer(this);
-		}
+        if (it != layerSet.end())
+            layerSet.erase(it);
+
+        this->layer = layer;
+        GameObject::InsertLayer(this);
     }
     else
         this->layer = layer;
+}
+
+void GameObject::SetEnable(bool enable)
+{
+    if (privateEnable ^ enable)
+    {
+        privateEnable = enable;
+        UpdateEnable();
+    }
+}
+
+bool GameObject::GetEnable()
+{
+    return enable;
+}
+
+void GameObject::UpdateComponentPair()
+{
+    this->gamebehaviorSetBegin = gamebehaviorSet.begin();
+    this->gamebehaviorSetEnd = gamebehaviorSet.end();
+}
+
+void GameObject::UpdateEnable()
+{
+    auto *parent = this->transform->GetParent();
+    int enableIndex = (parent != nullptr ? parent->gameObject->enableIndex : 0);
+
+    this->enableIndex = enableIndex + (this->privateEnable ? 0 : 1);
+    enable = this->enableIndex == 0;
+
+    if (enable)
+    {
+        for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+            if ((*it)->enable)
+                (*it)->Awake();
+    }
+    else
+    {
+        for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
+            if ((*it)->enable)
+                (*it)->Sleep();
+    }
+
+    for (auto ctrans : this->transform->GetChild())
+        ctrans->gameObject->UpdateEnable();
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -284,11 +282,12 @@ void GameObject::SetLayer(Layer layer)
 
 vector<GameObject*> GameObject::gameObjects;
 vector<GameObject*> GameObject::gameObjectsWaitingPools;
+set<GameObject*> GameObject::gameObjectRenderOrderUpdatePool;
 map<string, json> GameObject::prefrabsData;
 map<string, GameObject*> GameObject::objectsName;
 map<string, int> GameObject::objectsNameCount;
-multimap<Tag, GameObject*> GameObject::objectsTag;
-multimap<Layer, GameObject*> GameObject::objectsLayer;
+map<Tag, set<GameObject*>> GameObject::objectsTag;
+map<Layer, set<GameObject*>> GameObject::objectsLayer;
 
 void Destroy(GameObject& gobj)
 {
@@ -302,21 +301,24 @@ void Destroy(GameObject* gobj)
 
     auto childList = gobj->transform->GetChild();
     for (auto childTransform : childList)
-        Destroy(*(childTransform->gameObject));
+        Destroy(childTransform->gameObject);
 }
 
-GameObject* Instantiate(GameObject* gobj, Vector2 position)
+GameObject* Instantiate(GameObject* gobj, Transform* parent, Vector2 position)
 {
     if (!position.isNull())
-        gobj->GetComponent<Transform>()->SetPosition(position);
+        gobj->transform->SetPosition(position);
+
+    if (parent != nullptr)
+        gobj->transform->SetParent(parent);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
-    GameObject::UpdateTag(gobj);
-    GameObject::UpdateLayer(gobj);
+    GameObject::InsertTag(gobj);
+    GameObject::InsertLayer(gobj);
     return gobj;
 }
 
-GameObject* InstantiateJSON(json jsonobj, Vector2 position)
+GameObject* InstantiateJSON(json jsonobj, Transform* parent, Vector2 position)
 {
     bool doNOTDestoryOnChangeScene = jsonobj.find("doNOTDestoryOnChangeScene") != jsonobj.end() ? jsonobj["doNOTDestoryOnChangeScene"] : false;
     GameObject* gobj = new GameObject(doNOTDestoryOnChangeScene);
@@ -326,7 +328,10 @@ GameObject* InstantiateJSON(json jsonobj, Vector2 position)
 	gobj->SetTag(gobj->tag);
 
     if (!position.isNull())
-        gobj->GetComponent<Transform>()->SetPosition(position);
+        gobj->transform->SetPosition(position);
+
+    if (parent != nullptr)
+        gobj->transform->SetParent(parent);
 
 	GameObject::gameObjectsWaitingPools.push_back(gobj);
     return gobj;
@@ -358,8 +363,10 @@ void GameObject::Insert(GameObject* gobj)
                 break;
         }
     }
-
-    GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid, gobj);
+    if (mid == GameObject::gameObjects.size())
+        GameObject::gameObjects.push_back(gobj);
+    else
+        GameObject::gameObjects.insert(GameObject::gameObjects.begin() + mid + 1, gobj);
 }
 
 void GameObject::UpdateName(GameObject* gobj)
@@ -378,14 +385,14 @@ void GameObject::UpdateName(GameObject* gobj)
     }
 }
 
-void GameObject::UpdateTag(GameObject* gobj)
+void GameObject::InsertTag(GameObject* gobj)
 {
-    GameObject::objectsTag.insert(multimap<Tag, GameObject*>::value_type(gobj->tag, gobj));
+    GameObject::objectsTag[gobj->tag].insert(gobj);
 }
 
-void GameObject::UpdateLayer(GameObject* gobj)
+void GameObject::InsertLayer(GameObject* gobj)
 {
-    GameObject::objectsLayer.insert(multimap<Layer, GameObject*>::value_type(gobj->layer, gobj));
+    GameObject::objectsLayer[gobj->layer].insert(gobj);
 }
 
 void GameObject::ResetObjectPool()
@@ -400,7 +407,7 @@ void GameObject::ResetObjectPool()
             it = GameObject::gameObjects.erase(it);
         }
         else
-            it++;
+            ++it;
     }
 }
 
@@ -463,28 +470,14 @@ GameObject* GameObject::findGameObjectByName(string name)
     return GameObject::objectsName[name];
 }
 
-vector<GameObject*> GameObject::findGameObjectsByTag(Tag tag)
+set<GameObject*>& GameObject::findGameObjectsByTag(Tag tag)
 {
-    vector<GameObject*> retdat;
-    typedef multimap<Tag, GameObject*>::iterator iter;
-    std::pair<iter, iter> data = GameObject::objectsTag.equal_range(tag);
-
-    for (iter it = data.first; it != data.second; it++)
-        retdat.push_back(it->second);
-
-    return retdat;
+    return GameObject::objectsTag[tag];
 }
 
-vector<GameObject*> GameObject::findGameObjectsByLayer(Layer layer)
+set<GameObject*>& GameObject::findGameObjectsByLayer(Layer layer)
 {
-    vector<GameObject*> retdat;
-    typedef multimap<Layer, GameObject*>::iterator iter;
-    std::pair<iter, iter> data = GameObject::objectsLayer.equal_range(layer);
-
-    for (iter it = data.first; it != data.second; it++)
-        retdat.push_back(it->second);
-
-    return retdat;
+    return GameObject::objectsLayer[layer];
 }
 
 json GameObject::GetPrefrabs(std::string file)

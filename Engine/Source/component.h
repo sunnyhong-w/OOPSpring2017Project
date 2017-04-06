@@ -33,12 +33,14 @@ class Component
         virtual void ParseJSON(json j) {};
         ///<summary>獲得skipTriverse的資料，確認這個Component能不能被Skip</summary>
         bool isBehavior();
-        bool enable;
+        void SetEnable(bool enable);
+        bool GetEnable();
         GameObject* gameObject;
         Transform* transform;
     private:
         ///<summary>在Scene處理Object Component Triverse的時候，跳過這個Component</summary>
         const bool isGameBehavior = false;
+        bool enable;
 };
 
 
@@ -56,6 +58,7 @@ class Transform : public Component
         void SetZIndex(int z);
         int  GetWorldZIndex();
         void SetWorldZIndex(int z);
+        void UpdateWorldZIndex();
         Vector2 GetPostion();
         void SetPosition(Vector2 newpos);
         Vector2 GetWorldPosition();
@@ -89,7 +92,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
 {
     public:
         SpriteRenderer(GameObject* gobj);
-        ~SpriteRenderer() {};
+        ~SpriteRenderer();
         void ParseJSON(json j) override;
         void Draw(Vector2I cameraPos = Vector2I::zero);
         ///<summary>設定Sprite的圖源剪位置</summary>
@@ -97,6 +100,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         ///<summary>取消Sprite的圖片裁剪功能</summary>
         void ResetSourcePos();
         ///<summary>設定Sprite的輸出大小</summary>
+        Vector2I GetSourcePos();
         void SetSize(Vector2I size);
         ///<summary>將Size重置成最後一次Load的圖片大小</summary>
         void ResetSize();
@@ -116,12 +120,15 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         SortingLayer GetSortingLayer();
         void SetSortingLayer(SortingLayer SL);
         inline Vector2I GetRealRenderPostion();
+        inline void UpdateRealRenderPostion();
     private:
+        bool CameraTest(Vector2I cameraPos);
+
         Vector2I size;
         Vector2I srcpos;
         Vector2I offset;
         Vector2 anchorRaito;
-
+        Vector2I realRenderPosition;
         SortingLayer sortingLayer;
         bool cutSrc = false;
         static map<string, unsigned int> fileInfo;
@@ -141,6 +148,7 @@ class Collider : public Component
 	friend class Rigidbody;
     public:
         Collider(GameObject* gobj, Vector2I dP = Vector2I::zero, Vector2I sz = Vector2I::zero);
+        ~Collider();
         void OnDrawGismos(CDC *pDC, Vector2I cameraPos);
         bool PointCollision(Vector2I point);
 		bool BoxCollision(Collider* box, Vector2 &velocityOffse, bool block = false);
@@ -149,14 +157,18 @@ class Collider : public Component
 		CollisionInfo collisionInfo;
 		vector<CollisionLayer> collisionLayer;
 	private:
-		vector<Collider*> collidedCollider;
-		vector<Collider*> lastCollidedCollder;
+		set<Collider*> collidedCollider;
+        set<Collider*> lastCollidedCollder;
+
+        vector<Collider*> OnEnter;
+        vector<Collider*> OnStay;
 };
 
 class Animation : public Component
 {
 public:
-    Animation(GameObject* gobj) : Component(gobj) {};
+    Animation(GameObject* gobj);
+    ~Animation();
     void LoadAnimation(json jsonobj);
     void ParseJSON(json j) override;
     void Update();
@@ -172,7 +184,8 @@ private:
 class AnimationController : public Component
 {
 public:
-    AnimationController(GameObject* gobj) : Component(gobj) {};
+    AnimationController(GameObject* gobj);
+    ~AnimationController();
     void ParseJSON(json j) override;
     void Update();
 	void JumpState(string state);
@@ -194,15 +207,18 @@ struct ColliderInfo
 class Rigidbody : public Component
 {
 public:
-	Rigidbody(GameObject* gobj) : Component(gobj) {};
+	Rigidbody(GameObject* gobj);
+    ~Rigidbody();
 	Vector2 velocity;
     ColliderInfo colliderInfo;
     bool TimeSliceCollision = false;
 	void ParseJSON(json j) override;
 	void Update();
 private:
+    typedef pair<multimap<Layer, GameObject*>::iterator, multimap<Layer, GameObject*>::iterator> LayerPair;
+
     void OnCollision(Collider *tgcollider);
-    bool DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block, bool resetVX = false);
+    bool DoCollision(Collider *collider, set<GameObject*>& gobjset, Vector2 &tempVelocity, bool block, bool resetVX = false);
     void CollisionDetection(Vector2& invelocity);
     void CollisionDetectionSlice(Vector2& invelocity);
 };

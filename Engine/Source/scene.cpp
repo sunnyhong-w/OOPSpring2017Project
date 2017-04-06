@@ -43,42 +43,32 @@ void GameScene::OnMove()
         debug = !debug;
     }
 
+    bool updateGameObjectIter = false;
+
     //Destroy Dectechtion
     for (vector<GameObject*>::iterator it = GameObject::gameObjects.begin(); it != GameObject::gameObjects.end(); )
     {
         if ((*it)->destoryFlag)
         {
-            typedef multimap<Tag, GameObject*>::iterator iter_tag;
-            std::pair<iter_tag, iter_tag> data_t = GameObject::objectsTag.equal_range((*it)->tag);
+            auto &gobjTagSet = GameObject::objectsTag[(*it)->tag];
+            auto itTagSet = gobjTagSet.find((*it));
+            if (itTagSet != gobjTagSet.end())
+                gobjTagSet.erase(itTagSet);
 
-            for (iter_tag tit = data_t.first; tit != data_t.second; tit++)
-            {
-                if (tit->second == (*it))
-                {
-                    GameObject::objectsTag.erase(tit);
-                    break;
-                }
-            }
-
-            typedef multimap<Layer, GameObject*>::iterator iter_layer;
-            std::pair<iter_layer, iter_layer> data_l = GameObject::objectsLayer.equal_range((*it)->layer);
-
-            for (iter_layer tit = data_l.first; tit != data_l.second; tit++)
-            {
-                if (tit->second == (*it))
-                {
-                    GameObject::objectsLayer.erase(tit);
-                    break;
-                }
-            }
+            auto &gobjLayerSet = GameObject::objectsLayer[(*it)->layer];
+            auto itLayerSet = gobjLayerSet.find((*it));
+            if (itLayerSet != gobjLayerSet.end())
+                gobjLayerSet.erase(itLayerSet);
 
             GameObject::objectsName.erase((*it)->name);
 
             delete (*it);
             it = GameObject::gameObjects.erase(it);
+
+            updateGameObjectIter = true;
         }
         else
-            it++;
+            ++it;
     }
 
 
@@ -87,70 +77,101 @@ void GameScene::OnMove()
         auto ptr = GameObject::gameObjectsWaitingPools[i];
         GameObject::Insert(ptr);
         ptr->Start();
+        updateGameObjectIter = true;
     }
     GameObject::gameObjectsWaitingPools.clear();
 
+    if (updateGameObjectIter)
+    {
+        gameobjectVectorBegin = GameObject::gameObjects.begin();
+        gameobjectVectorEnd = GameObject::gameObjects.end();
+    }
+
     //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
 
-	for (GameObject* gobj : GameObject::gameObjects)
+	for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
 	{
-		Collider* collider = gobj->GetComponent<Collider>();
-		if (collider != nullptr && collider->enable)
-			collider->Update();
+        if ((*it)->enable)
+        {
+            Collider* collider = (*it)->collider;
+            if (collider != nullptr && collider->GetEnable())
+                collider->Update();
+        }
 	}
 
-    for (GameObject* gobj : GameObject::gameObjects)
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
     {
-        Rigidbody* rigidbody = gobj->GetComponent<Rigidbody>();
-        if (rigidbody != nullptr && rigidbody->enable)
-            rigidbody->Update();
+        if ((*it)->enable)
+        {
+            Rigidbody* rigidbody = (*it)->rigidbody;
+            if (rigidbody != nullptr && rigidbody->GetEnable())
+                rigidbody->Update();
+        }
     }
 
     //Windows File Transmission
     while (TDPQueue.size() != 0)
     {
-        for (GameObject* gobj : GameObject::gameObjects)
-            if (gobj->enable)
-                gobj->OnRecivedBoardcast(TDPQueue[0]);
+        for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
+            if ((*it)->enable)
+                (*it)->OnRecivedBoardcast(TDPQueue[0]);
 
         TDPQueue.erase(TDPQueue.begin());
     }
 
     //GameBehavior Update Cycle
-    for (GameObject* gobj : GameObject::gameObjects)
-        if (gobj->enable)
-            gobj->Update();
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
+        if ((*it)->enable)
+            (*it)->Update();
 
     //Animator Update Workout Here
-    for (GameObject* gobj : GameObject::gameObjects)
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
     {
-        AnimationController* anic = gobj->GetComponent<AnimationController>();
-        if (anic != nullptr && anic->enable)
-            anic->Update();
+        if ((*it)->enable)
+        {
+            AnimationController* anic = (*it)->animationController;
+            if (anic != nullptr && anic->GetEnable())
+                anic->Update();
+        }
     }
 
     //Animation Update
-    for (GameObject* gobj : GameObject::gameObjects)
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
     {
-        Animation* ani = gobj->GetComponent<Animation>();
-        if (ani != nullptr && ani->enable)
-            ani->Update();
+        if ((*it)->enable)
+        {
+            Animation* ani = (*it)->animation;
+            if (ani != nullptr && ani->GetEnable())
+                ani->Update();
+        }
     }
 
     //GameBehavior LateUpdate Cycle
-    for (GameObject* gobj : GameObject::gameObjects)
-        if (gobj->enable)
-            gobj->LateUpdate();
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
+        if ((*it)->enable)
+            (*it)->LateUpdate();
 
+
+    // Update Render Order
+    for (auto gobj : GameObject::gameObjectRenderOrderUpdatePool)
+        GameObject::UpdateRenderOrder(gobj);
+    
+    if (GameObject::gameObjectRenderOrderUpdatePool.size() != 0)
+    {
+        gameobjectVectorBegin = GameObject::gameObjects.begin();
+        gameobjectVectorEnd = GameObject::gameObjects.end();
+    }
+
+    GameObject::gameObjectRenderOrderUpdatePool.clear();
 }
 
 void GameScene::OnShow()
 {
     if (loadname == "")
     {
-        for (GameObject* gobj : GameObject::gameObjects)
-            if (gobj->enable)
-                gobj->Draw(cameraPosition);
+        for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
+            if ((*it)->enable)
+                (*it)->Draw(cameraPosition);
 
         //Draw Superve GUI thing after gameobject drawn
 
@@ -160,13 +181,13 @@ void GameScene::OnShow()
         {
             CDC *pDC = game_framework::CDDraw::GetBackCDC();
             pDC->SetBkMode(TRANSPARENT);
-            for (GameObject* gobj : GameObject::gameObjects)
+            for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
             {
-                Collider* collider = gobj->GetComponent<Collider>();
-                if (collider != nullptr)
+                Collider* collider = (*it)->collider;
+                if (collider != nullptr && collider->GetEnable())
                     collider->OnDrawGismos(pDC, cameraPosition);
 
-                gobj->OnDrawGizmos(pDC);
+                (*it)->OnDrawGizmos(pDC);
 
                 //SpriteRenderer *SR = gobj->GetComponent<SpriteRenderer>();
                 //if (SR != nullptr)
@@ -217,7 +238,7 @@ void GameScene::IncludePrefrabs(string filename, json prefrabObject)
 {
     prefrabmap[filename] = prefrabObject;
 
-    for (json::iterator it = prefrabObject.begin(); it != prefrabObject.end(); it++)
+    for (json::iterator it = prefrabObject.begin(); it != prefrabObject.end(); ++it)
         ReadPrefrab(filename, it.value());
 }
 
@@ -349,6 +370,14 @@ GameScene * GameScene::NowScene()
 Vector2I & GameScene::WindowPosition()
 {
 	return game_framework::CGame::Instance()->windowPosition;
+}
+
+void GameScene::Boardcast(BoardcastEvent event, json data, string windowName)
+{
+	BoardcastMessageData bmd;
+	bmd.event = event;
+	bmd.data = data;
+	game_framework::CGame::Instance()->BoardcastMessage(bmd, windowName);
 }
 
 void GameScene::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)

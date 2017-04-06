@@ -13,13 +13,9 @@ void Spring::Start()
 
 void Spring::Update()
 {
-	json j;
-	j["pressed"] = pressed;
-	if (lastState != pressed)
-		game_framework::CGame::Instance()->BoardcastMessage(j);
 }
 
-void Spring::OnRecivedBoardcast(json j)
+void Spring::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
 }
 
@@ -41,11 +37,10 @@ void Spring::OnCollisionStay(Collider * c)
 	pressed = true;
 	lastState = pressed;
 	Player* pl = c->gameObject->GetComponent<Player>();
-	if (pl->gameObject->GetComponent<Rigidbody>()->colliderInfo.bottom)
+	if (pl->gameObject->rigidbody->colliderInfo.bottom)
 	{
 		pl->bounce = true;
 	}
-	TRACE("\n---------why----------\n");
 }
 
 void Spring::OnCollisionExit(Collider * c)

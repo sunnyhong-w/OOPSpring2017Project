@@ -11,7 +11,7 @@ class TextRenderer : public GameBehaviour
         void ParseJSON(json j) override;
         void Start() override;
         void Update() override;
-        void OnRecivedBoardcast(json j) override;
+		void OnRecivedBoardcast(BoardcastMessageData bmd) override;
         void Draw(Vector2I cameraPos) override;
         void SetPosition(Vector2I pos = Vector2I::zero);
         void LoadText(string fileName);

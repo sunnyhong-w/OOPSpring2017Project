@@ -15,15 +15,17 @@ struct TileSet
 	int firstgid;
 	int tilecount;
 	int columns;
+    string tileSetName;
 	vector<Tile> tiles;
 };
 
 
 struct TileObject
 {
-	TileObject(string imgname, json inproperties);
+	TileObject(string imgname, json inproperties, vector<CollisionInfo> incollision);
 	string image;
 	json properties;
+    vector<CollisionInfo> collision;
 };
 
 struct ObjectSet
@@ -66,7 +68,11 @@ public:
 	void LoadMap(string str);
 	void Draw(Vector2I campos) override;
 	void Update() override;
+    void LateUpdate() override;
 
 private:
+    GameObject* GenerateTile(string fname, int tindex);
+
 	TileMap tileMap;
+    Vector2 slicer;
 };

@@ -781,14 +781,40 @@ void CGame::OnCopyData(json reciveddata)
     gameState->OnCopyData(reciveddata);
 }
 
-void CGame::BoardcastMessage(json boardcastdata)
+BOOL CALLBACK EnumWindowsProc(_In_ HWND hWnd, _In_ LPARAM lParam)
 {
-    //RECT rect;
-    //AfxGetMainWnd()->GetWindowRect(&rect);
+    int size = GetWindowTextLength(hWnd);
 
-	boardcastdata["posision"] = windowPosition;
-    boardcastdata["size"] = { { "w" , SIZE_X } ,{ "h" , SIZE_Y } };
-    boardcastdata["sender"] = WINDOW_NAME;
+    if (size++ > 0)
+    {
+        LPTSTR s = new TCHAR[size];
+
+        GetWindowText(hWnd, s, size);
+
+        for (auto ts : CGame::Instance()->targetwindow)
+        {
+            if (ts.Compare(s) == 0)
+            {
+                CGame::Instance()->windowList.push_back(hWnd);
+                CGame::Instance()->windowNameList.push_back(ts);
+                delete[] s;
+                return true;
+            }
+        }
+
+        delete[] s;
+    }
+
+    return true;
+}
+
+void CGame::BoardcastMessage(game_engine::BoardcastMessageData bmd, string windowName)
+{
+	bmd.position = windowPosition;
+	bmd.size = Vector2I(SIZE_X, SIZE_Y);
+	bmd.sender = WINDOW_NAME;
+
+	json boardcastdata = bmd;
 
     string strdata = boardcastdata.dump();
 
@@ -797,18 +823,28 @@ void CGame::BoardcastMessage(json boardcastdata)
     data.dwData = 0;
     data.lpData = (LPVOID)strdata.c_str();
     
-    for (CString key : targetwindow)
-    {
-        if (key == WINDOW_NAME)
-            continue;
-        else
+    windowList.clear();
+    windowNameList.clear();
+    EnumWindows(EnumWindowsProc, 0);
+    HWND me = AfxGetMainWnd()->GetSafeHwnd();
+
+	if (windowName == "")
+	{
+        for (auto hWnd : windowList)
         {
-            CWnd* targetWin = CWnd::FindWindow(NULL, key);
-    
-            if (targetWin)
-                SendMessage(targetWin->GetSafeHwnd(), WM_COPYDATA, 0, (LPARAM)&data);
+            if(hWnd != me)
+               SendMessage(hWnd, WM_COPYDATA, 0, (LPARAM)&data);
         }
-    }
+	}
+	else
+	{
+        int size = windowList.size();
+        for (int i = 0; i < size; i++)
+        {
+            if (windowList[i] != me && windowNameList[i].Compare(windowName.c_str()) == 0)
+                SendMessage(windowList[i], WM_COPYDATA, 0, (LPARAM)&data);
+        }
+	}
 }
 
 CGameState* CGame::GetState()

@@ -5,7 +5,7 @@
 void Player::ParseJSON(json j)
 {
     MinJumpHeight = .5f;
-    MaxJumpHeight = 4;
+    MaxJumpHeight = 3;
     jumpTimeApex = .4f;
     tiledPixel = 32;
 }
@@ -21,7 +21,7 @@ void Player::Start()
 
 void Player::Update()
 {
-    Rigidbody *rb = gameObject->GetComponent<Rigidbody>();
+    Rigidbody *rb = gameObject->rigidbody;
     rb->TimeSliceCollision = true;
 	
 	int speed = 5;
@@ -30,11 +30,6 @@ void Player::Update()
         vel.y = 0;
 
     vel.x = 0;
-
-
-    if (Input::GetKeyClick(VK_LBUTTON))
-        this->transform->SetWorldPosition(Input::GetMouseWorldPos());
-
 
 	if (Input::GetKeyPressing('A') || Input::GetKeyPressing(VK_LEFT))
         vel.x += -1 * speed;
@@ -54,11 +49,11 @@ void Player::Update()
 
 	if (bounce && rb->colliderInfo.bottom)
 	{
-		vel.y += MaxJumpVelocity * 1.2;
+		vel.y += MaxJumpVelocity * 1.5;
 		isBouncing = true;
 	}
 
-	if (Input::GetKeyDown('W') || Input::GetKeyDown(VK_SPACE))
+	if (Input::GetKeyDown('W') || Input::GetKeyDown(VK_UP) || Input::GetKeyDown(VK_SPACE))
 	{
 		Jump(vel);
 	}
@@ -88,21 +83,30 @@ void Player::Update()
 		//GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 	}
 
-    if (Input::GetKeyDown(VK_F5))
-        GameScene::NowScene()->LoadScene("Main");
 	Vector2 size = Vector2((float)SIZE_X / 2, (float)SIZE_Y / 2);
-	GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
+	
+    if (!Input::GetKeyPressing(VK_F5))
+        GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
+
+    if (Input::GetKeyDown(VK_F4))
+    {
+        auto gobj = GameObject::findGameObjectByName("YellowBox");
+        if(gobj != nullptr)
+        { 
+            gobj->collider->SetEnable(!gobj->collider->GetEnable());
+        }
+    }
 
 	bounce = false;
 }
 
-void Player::OnRecivedBoardcast(json j)
+void Player::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
 }
 
 void Player::OnDrawGizmos(CDC * pDC)
 {
-	Rigidbody *rb = this->gameObject->GetComponent<Rigidbody>();
+	Rigidbody *rb = this->gameObject->rigidbody;
 	pDC->TextOutA(0, 20, ("colliderINFO : " + rb->colliderInfo.toString()).c_str());
 	pDC->TextOutA(0, 40, ("Can Jump : " + to_string(canJump)).c_str());
 	pDC->TextOutA(0, 60, ("velocity : " + rb->velocity.toString()).c_str());

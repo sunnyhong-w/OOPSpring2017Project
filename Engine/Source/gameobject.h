@@ -28,20 +28,27 @@ class GameObject;
 //一些Public的最高權限Function
 void Destroy(GameObject& gobj);
 void Destroy(GameObject* gobj);
-GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision = Vector2::null);
-GameObject* InstantiateJSON(json prefrabJSON, Vector2 posision = Vector2::null);
+GameObject* Instantiate(GameObject* objectPrefrabs, Transform* parent = nullptr, Vector2 posision = Vector2::null);
+GameObject* InstantiateJSON(json prefrabJSON, Transform* parent = nullptr, Vector2 posision = Vector2::null);
+
+typedef pair<multimap<Tag, GameObject*>::iterator, multimap<Tag, GameObject*>::iterator> TagPair;
+typedef pair<multimap<Layer, GameObject*>::iterator, multimap<Layer, GameObject*>::iterator> LayerPair;
 
 class GameObject
 {
         friend void Destroy(GameObject* gobj);
-        friend GameObject* Instantiate(GameObject* objectPrefrabs, Vector2 posision);
-        friend GameObject* InstantiateJSON(json jsonobj, Vector2 posision);
+        friend GameObject* Instantiate(GameObject* objectPrefrabs, Transform* parent, Vector2 posision);
+        friend GameObject* InstantiateJSON(json jsonobj, Transform* parent, Vector2 posision);
         friend class GameScene;
         friend class Transform;
         friend class SpriteRenderer;
         friend class game_framework::CGame;
 		friend class Collider;
+        friend class Rigidbody;
         friend class MapReader;
+        friend class GameBehaviour;
+        friend class GameScene;
+
     public:
         GameObject(bool doNotDestoryOnChangeScene = false);
         ~GameObject();
@@ -50,16 +57,22 @@ class GameObject
         void Update();
         void LateUpdate();
         void Draw(Vector2I cameraPos);
-        void OnRecivedBoardcast(json j);
+        void OnRecivedBoardcast(BoardcastMessageData bmd);
 		void OnDrawGizmos(CDC* pDC);
         void SetName(string name);
         string GetName();
         void SetTag(Tag tag);
         void SetLayer(Layer layer);
+        void SetEnable(bool enable);
+        bool GetEnable();
 
         bool isGUI = false;
-        bool enable = true;
         Transform* transform;
+        SpriteRenderer* spriteRenderer;
+        Collider* collider;
+        Rigidbody* rigidbody;
+        Animation* animation;
+        AnimationController* animationController;
 
         //處理Component的Template
         //加入指定型別的物件，如果成功加入，會回傳對應指標
@@ -90,8 +103,8 @@ class GameObject
         static json GetPrefrabs(std::string file);
         static json InsertPrefrabs(string file, json prefrabJSON);
         static GameObject* findGameObjectByName(string name);
-        static vector<GameObject*> findGameObjectsByTag(Tag tag);
-        static vector<GameObject*> findGameObjectsByLayer(Layer layer);
+        static set<GameObject*>& findGameObjectsByTag(Tag tag);
+        static set<GameObject*>& findGameObjectsByLayer(Layer layer);
 
         static vector<GameObject*> gameObjects;
 
@@ -99,20 +112,28 @@ class GameObject
         //GameObjectManagement
         static void Insert(GameObject* gobj);
         static void UpdateName(GameObject* gobj);
-        static void UpdateTag(GameObject* gobj);
-        static void UpdateLayer(GameObject* gobj);
+        static void InsertTag(GameObject* gobj);
+        static void InsertLayer(GameObject* gobj);
         static void ResetObjectPool();
         static void UpdateRenderOrder(GameObject* gobj);
         static std::map<std::string, json> prefrabsData;
         static std::map<std::string, GameObject*> objectsName;
         static std::map<std::string, int> objectsNameCount;
-        static std::multimap<Tag, GameObject*> objectsTag;
-        static std::multimap<Layer, GameObject*> objectsLayer;
+        static std::map<Tag, set<GameObject*>> objectsTag;
+        static std::map<Layer, set<GameObject*>> objectsLayer;
 		static std::vector<GameObject*> gameObjectsWaitingPools;
+        static std::set<GameObject*> gameObjectRenderOrderUpdatePool;
 
         //GameObject
+        void UpdateComponentPair();
+        void UpdateEnable();
+
         typedef std::multimap<std::type_index, Component*> ComponentData;
         ComponentData componentData;
+        set<GameBehaviour*> gamebehaviorSet;
+        set<GameBehaviour*>::iterator gamebehaviorSetBegin;
+        set<GameBehaviour*>::iterator gamebehaviorSetEnd;
+
         std::string name = "GameObject";
         Tag tag;
         Layer layer;
@@ -121,6 +142,9 @@ class GameObject
         bool renderByBehavior = false;
         bool doNOTDestoryOnChangeScene = false;
         bool doNOTUpdateObjectPool = false;
+        bool enable;
+        bool privateEnable;
+        int enableIndex; // 等於0時enable為true，否則為flase
 };
 
 //由於Template分離的話編譯器會找不到進入點，所以必須將Template的實作在gameobject.h中
@@ -130,6 +154,7 @@ template<class T> inline T* GameObject::AddComponent()
 {
     T* TPointer = new T(this);
     componentData.insert(ComponentData::value_type(std::type_index(typeid(T)), TPointer));
+    UpdateComponentPair();
     return TPointer;
 }
 
@@ -141,6 +166,7 @@ template<class T> inline T* GameObject::AddComponentOnce()
     {
         T* TPointer = new T(this);
         componentData.insert(ComponentData::value_type(std::type_index(typeid(T)), TPointer));
+        UpdateComponentPair();
         return TPointer;
     }
     else
@@ -162,7 +188,7 @@ template<class T> inline const std::vector<T*> GameObject::GetComponents()
     std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(std::type_index(typeid(T)));
     std::vector<T*> retval;
 
-    for (ComponentData::iterator it = data.first; it != data.second; it++)
+    for (ComponentData::iterator it = data.first; it != data.second; ++it)
         retval.push_back(static_cast<T*>(it->second));
 
     return retval;
@@ -175,6 +201,7 @@ template<class T> inline void GameObject::RemoveComponent()
     {
         delete data.first->second;
         componentData.erase(data.first);
+        UpdateComponentPair();
     }
 }
 
@@ -182,12 +209,13 @@ template<class T> inline void GameObject::RemoveComponent(T* comp)
 {
     std::pair<ComponentData::iterator, ComponentData::iterator> data = componentData.equal_range(std::type_index(typeid(T)));
 
-    for (ComponentData::iterator it = data.first; it != data.second; it++)
+    for (ComponentData::iterator it = data.first; it != data.second; ++it)
     {
         if (it->second == comp)
         {
             delete comp;
             componentData.erase(it);
+            UpdateComponentPair();
             break;
         }
     }
@@ -201,6 +229,7 @@ template<class T> inline void GameObject::RemoveComponents()
         delete tempcomp;
 
     componentData.erase(std::type_index(typeid(T)));
+    UpdateComponentPair();
 }
 
 }

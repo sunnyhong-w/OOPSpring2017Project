@@ -166,6 +166,10 @@ void CMainFrame::OnExitSizeMove()
 void CMainFrame::OnMoving(UINT nSide, LPRECT lpRect)
 {
 	game_framework::CGame::Instance()->windowPosition = game_engine::Vector2I(lpRect->left, lpRect->top);
+
+    game_engine::BoardcastMessageData bmd;
+    bmd.event = game_engine::BoardcastEvent::UpdateWindowPosition;
+    game_framework::CGame::Instance()->BoardcastMessage(bmd);
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)

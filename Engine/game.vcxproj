@@ -129,6 +129,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <Profile>true</Profile>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -162,8 +163,9 @@
       <ObjectFileName>.\Release/</ObjectFileName>
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assest;$(ProjectDir)Source</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -184,6 +186,9 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>.\Release/game.bsc</OutputFile>
     </Bscmake>
+    <PreBuildEvent>
+      <Command>call $(ProjectDir)preBuild.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">
     <Midl>
@@ -265,6 +270,9 @@
     <ClCompile Include="Assest\Script\Engine\mapReader.cpp" />
     <ClCompile Include="Assest\Script\Engine\textRenderer.cpp" />
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp" />
+    <ClCompile Include="Assest\Script\Hop\Button.cpp" />
+    <ClCompile Include="Assest\Script\Hop\GreenBox.cpp" />
+    <ClCompile Include="Assest\Script\Hop\YellowBox.cpp" />
     <ClCompile Include="Assest\Script\Slide\BoxParent.cpp" />
     <ClCompile Include="Assest\Script\Slide\slide.cpp" />
     <ClCompile Include="Assest\Script\tutorial.cpp" />
@@ -275,6 +283,7 @@
     <ClCompile Include="Source\component.cpp" />
     <ClCompile Include="Source\easing.cpp" />
     <ClCompile Include="Source\enginelib.cpp" />
+    <ClCompile Include="Source\gamebehavior.cpp" />
     <ClCompile Include="Source\gameobject.cpp" />
     <ClCompile Include="Source\game.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -319,6 +328,9 @@
     <ClInclude Include="Assest\Script\Engine\mapReader.h" />
     <ClInclude Include="Assest\Script\Engine\textRenderer.h" />
     <ClInclude Include="Assest\Script\Engine\textStamp.h" />
+    <ClInclude Include="Assest\Script\Hop\Button.h" />
+    <ClInclude Include="Assest\Script\Hop\GreenBox.h" />
+    <ClInclude Include="Assest\Script\Hop\YellowBox.h" />
     <ClInclude Include="Assest\Script\Slide\BoxParent.h" />
     <ClInclude Include="Assest\Script\Slide\slide.h" />
     <ClInclude Include="Assest\Script\tutorial.h" />

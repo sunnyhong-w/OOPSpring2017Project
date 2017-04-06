@@ -27,7 +27,7 @@ public:
 	void ParseJSON(json j) override;
 	void Start() override;
 	void Update() override;
-	void OnRecivedBoardcast(json j) override;
+	void OnRecivedBoardcast(BoardcastMessageData bmd) override;
 	void OnDrawGizmos(CDC* pDC) override;
 
     vector<SlideBoxSetting> boxdata;
@@ -35,8 +35,6 @@ private:
 	void SendData();
 
 	bool locked;
-	Collider* collider;
-	Rigidbody* rigidbody;
 	Vector2 oWorldPos;
 	Vector2 clickPos;
     Vector2 targetPos;

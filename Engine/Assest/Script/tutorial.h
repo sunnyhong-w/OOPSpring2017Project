@@ -10,7 +10,7 @@ class Tutorial : public GameBehaviour
         void ParseJSON(json j) override;
         void Start() override;
         void Update() override;
-        void OnRecivedBoardcast(json j) override;
+        void OnRecivedBoardcast(BoardcastMessageData bmd) override;
 		void OnDrawGizmos(CDC* pDC) override;
 
         int speed;

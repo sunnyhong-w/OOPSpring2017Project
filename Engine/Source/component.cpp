@@ -25,12 +25,33 @@ namespace game_engine
 Component::Component(GameObject* gobj, bool isGB) : isGameBehavior(isGB) , enable(true)
 {
     this->gameObject = gobj;
-    this->transform = gobj->GetComponent<Transform>();
+    this->transform = gobj->transform;
 }
 
 bool Component::isBehavior()
 {
     return this->isGameBehavior;
+}
+
+void Component::SetEnable(bool enable)
+{
+    if (this->enable ^ enable)
+    {
+        this->enable = enable;
+
+        if (this->isGameBehavior)
+        {
+            if (enable)
+                static_cast<GameBehaviour*>(this)->Awake();
+            else
+                static_cast<GameBehaviour*>(this)->Sleep();
+        }
+    }
+}
+
+bool Component::GetEnable()
+{
+    return this->enable;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -50,7 +71,8 @@ Transform::Transform(GameObject* gobj, Vector2 v2, int z) : Component(gobj)
 void Transform::SetZIndex(int z)
 {
     this->zindex = z;
-    GameObject::UpdateRenderOrder(this->gameObject);
+    this->worldzindex = ((this->parent != nullptr) ? z + this->parent->worldzindex : z);
+    UpdateWorldZIndex();
 }
 
 int Transform::GetWorldZIndex()
@@ -62,6 +84,18 @@ void Transform::SetWorldZIndex(int z)
 {
     this->worldzindex = z;
     this->zindex = ((this->parent != nullptr) ? z - this->parent->worldzindex : z);
+    UpdateWorldZIndex();
+}
+
+void Transform::UpdateWorldZIndex()
+{
+    GameObject::gameObjectRenderOrderUpdatePool.insert(this->gameObject);
+
+    for (auto c : child)
+    {
+        c->worldzindex = this->worldzindex + c->zindex;
+        c->UpdateWorldZIndex();
+    }
 }
 
 Vector2 Transform::GetPostion()
@@ -90,6 +124,9 @@ void Transform::SetWorldPosition(Vector2 newpos)
 
 void Transform::UpdateWorldPosition()
 {
+    if (gameObject->spriteRenderer != nullptr)
+        gameObject->spriteRenderer->UpdateRealRenderPostion();
+
     for (auto c : child)
     {
         c->worldposition = this->worldposition + c->position;
@@ -109,7 +146,7 @@ int Transform::GetZIndex()
 
 int Transform::GetSortingLayer()
 {
-    SpriteRenderer *SR = this->gameObject->GetComponent<SpriteRenderer>();
+    SpriteRenderer *SR = this->gameObject->spriteRenderer;
     if (SR == nullptr)
         return -1;
     else
@@ -126,6 +163,7 @@ void Transform::SetParent(Transform *target)
 
 	this->parent = target;
 	this->SetPosition(position);
+    this->gameObject->UpdateEnable();
 }
 
 void Transform::SetParentAbsolute(Transform* target)
@@ -139,6 +177,7 @@ void Transform::SetParentAbsolute(Transform* target)
 	Vector2 myPos = GetWorldPosition();
 	this->parent = target;
 	this->SetWorldPosition(myPos);
+    this->gameObject->UpdateEnable();
 }
 
 Transform* Transform::GetParent()
@@ -175,8 +214,7 @@ void Transform::ParseJSON(json j)
 
     if (j.find("zindex") != j.end())
     {
-        this->zindex = j["zindex"];
-        GameObject::UpdateRenderOrder(this->gameObject);
+        this->SetZIndex(j["zindex"]);
     }
 }
 
@@ -187,11 +225,19 @@ void Transform::ParseJSON(json j)
 map<string, unsigned int> SpriteRenderer::fileInfo;
 SpriteRenderer::SpriteRenderer(GameObject* gobj) : Component(gobj)
 {
+    this->gameObject->spriteRenderer = this;
+
     srcpos = Vector2I::null;
     size = Vector2I::null;
     offset = Vector2I::zero;
     anchorRaito = Vector2::zero;
 	sortingLayer = SortingLayer::Default;
+    realRenderPosition = Vector2I::zero;
+}
+
+SpriteRenderer::~SpriteRenderer()
+{
+    this->gameObject->spriteRenderer = nullptr;
 }
 
 void SpriteRenderer::ParseJSON(json j)
@@ -199,8 +245,8 @@ void SpriteRenderer::ParseJSON(json j)
     if (j.find("Bitmap") != j.end())
     {
         int r, g, b;
-        r = g = 255;
-        b = 0;
+        r = b = 255;
+        g = 0;
 
         if (j["Bitmap"].find("colorkey") != j["Bitmap"].end())
         {
@@ -234,7 +280,8 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    this->ShowBitmap(this->GetRealRenderPostion() - cameraPos, transform->scale, srcpos, size, cutSrc);
+    if(CameraTest(cameraPos))
+        this->ShowBitmap(this->GetRealRenderPostion() - cameraPos, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -247,6 +294,11 @@ void SpriteRenderer::ResetSourcePos()
 {
     this->srcpos = Vector2I(-1, -1);
     this->cutSrc = false;
+}
+
+Vector2I SpriteRenderer::GetSourcePos()
+{
+    return this->srcpos;
 }
 
 void SpriteRenderer::SetSize(Vector2I size)
@@ -313,11 +365,13 @@ void SpriteRenderer::Reset()
 void SpriteRenderer::SetAnchorRaito(Vector2 pos)
 {
     this->anchorRaito = pos;
+    UpdateRealRenderPostion();
 }
 
 void SpriteRenderer::SetOffset(Vector2I dp)
 {
     this->offset = offset;
+    UpdateRealRenderPostion();
 }
 
 Vector2I SpriteRenderer::GetAnchorPoint()
@@ -338,7 +392,18 @@ void SpriteRenderer::SetSortingLayer(SortingLayer SL)
 
 inline Vector2I SpriteRenderer::GetRealRenderPostion()
 {
-    return transform->GetWorldPosition().round().GetV2I() - GetAnchorPoint() + offset;
+    return realRenderPosition;
+}
+
+inline void SpriteRenderer::UpdateRealRenderPostion()
+{
+    realRenderPosition = transform->GetWorldPosition().round().GetV2I() - GetAnchorPoint() + offset;
+}
+
+bool SpriteRenderer::CameraTest(Vector2I cameraPos)
+{
+    Vector2 aw = (this->size.GetV2() - Vector2::one) / 2, bw = (Vector2(SIZE_X, SIZE_Y) - Vector2::one) / 2;
+    return ((aw + GetRealRenderPostion()) - (bw + cameraPos)).abs() <= aw + bw;
 }
 
 
@@ -349,14 +414,21 @@ inline Vector2I SpriteRenderer::GetRealRenderPostion()
 //////////////////////////////////////////////////////////////////
 Collider::Collider(GameObject* gobj, Vector2I dP, Vector2I sz) : Component(gobj)
 {
+    this->gameObject->collider = this;
+
     this->collisionInfo.offset = dP;
     this->collisionInfo.size = sz;
+}
+
+Collider::~Collider()
+{
+    this->gameObject = nullptr;
 }
 
 void Collider::OnDrawGismos(CDC *pDC, Vector2I cameraPos)
 {
 	Vector2I w = collisionInfo.size;
-	SpriteRenderer *SR = gameObject->GetComponent<SpriteRenderer>();
+	SpriteRenderer *SR = gameObject->spriteRenderer;
 	Vector2 SpriteOffset = SR != nullptr ? SR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 pos = transform->GetWorldPosition() + collisionInfo.offset.GetV2()- SpriteOffset;
     game_framework::CDDraw::DrawRect(pDC, pos.GetV2I() - cameraPos, w, RGB(0, 255, 0));
@@ -371,7 +443,7 @@ bool Collider::PointCollision(Vector2I point)
 bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
 {
     Vector2 aw = (collisionInfo.size.GetV2() - Vector2::one) / 2, bw = (box->collisionInfo.size.GetV2() - Vector2::one) / 2;
-	SpriteRenderer *aSR = gameObject->GetComponent<SpriteRenderer>(), *bSR = box->gameObject->GetComponent<SpriteRenderer>();
+	SpriteRenderer *aSR = gameObject->spriteRenderer, *bSR = box->gameObject->spriteRenderer;
 	Vector2 aSpriteOffset = aSR != nullptr ? aSR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 bSpriteOffset = bSR != nullptr ? bSR->GetAnchorPoint().GetV2() : Vector2::zero;
 	Vector2 apos = transform->GetWorldPosition() + collisionInfo.offset.GetV2() + velocityOffset - aSpriteOffset;
@@ -393,69 +465,37 @@ bool Collider::BoxCollision(Collider* box, Vector2 &velocityOffset, bool block)
 
 void Collider::Update()
 {
-	sort(collidedCollider.begin(), collidedCollider.end(), less<Collider*>());
-	sort(lastCollidedCollder.begin(), lastCollidedCollder.end(), less<Collider*>());
+	OnEnter.clear();
+	OnStay.clear();
 
-	vector<Collider*> OnEnter;
-	vector<Collider*> OnStay;
-	vector<Collider*> OnExit;
+    for (auto c : collidedCollider)
+    {
+        auto it = lastCollidedCollder.find(c);
+        if (it == lastCollidedCollder.end())
+        {
+            OnEnter.push_back(c);
+        }
+        else
+        {
+            OnStay.push_back(c);
+            lastCollidedCollder.erase(it);
+        }
+    }
 
-	//OnEnter
-	set_difference(collidedCollider.begin(), collidedCollider.end(),
-		lastCollidedCollder.begin(), lastCollidedCollder.end(),
-		std::back_inserter(OnEnter));
-
-	//OnStay
-	set_intersection(collidedCollider.begin(), collidedCollider.end(),
-		lastCollidedCollder.begin(), lastCollidedCollder.end(),
-		std::back_inserter(OnStay));
-
-	//OnExit
-	set_difference(lastCollidedCollder.begin(), lastCollidedCollder.end(), 
-		collidedCollider.begin(), collidedCollider.end(),
-		std::back_inserter(OnExit));
-
-	for (auto c : OnEnter)
-	{
-		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
-		{
-			if (it->second->isBehavior())
-			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-				if (gb->enable)
-					gb->OnCollisionEnter(c);
-			}
-		}
-	}
+    for (auto c : OnEnter)
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->GetEnable())
+                (*it)->OnCollisionEnter(c);
 
 	for (auto c : OnStay)
-	{
-		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
-		{
-			if (it->second->isBehavior())
-			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->GetEnable())
+                (*it)->OnCollisionStay(c);
 
-				if (gb->enable)
-					gb->OnCollisionStay(c);
-			}
-		}
-	}
-
-	for (auto c : OnExit)
-	{
-		for (GameObject::ComponentData::iterator it = gameObject->componentData.begin(); it != gameObject->componentData.end(); it++)
-		{
-			if (it->second->isBehavior())
-			{
-				GameBehaviour* gb = static_cast<GameBehaviour*>(it->second);
-
-				if (gb->enable)
-					gb->OnCollisionExit(c);
-			}
-		}
-	}
+	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->GetEnable())
+                (*it)->OnCollisionEnter(c);
 
 	lastCollidedCollder = collidedCollider;
 	collidedCollider.clear();
@@ -481,6 +521,15 @@ void Collider::ParseJSON(json j)
 		
 }
 
+Animation::Animation(GameObject * gobj) : Component(gobj)
+{
+    this->gameObject->animation = this;
+}
+
+Animation::~Animation()
+{
+    this->gameObject->animation = nullptr;
+}
 
 void Animation::LoadAnimation(json jsonobj)
 {
@@ -535,6 +584,16 @@ void Animation::ResetAnimation()
     this->animateCount = this->animationInfo.size() - 1;
     this->timeStamp = clock();
     this->duration = 0;
+}
+
+AnimationController::AnimationController(GameObject * gobj) : Component(gobj)
+{
+    this->gameObject->animationController = this;
+}
+
+AnimationController::~AnimationController()
+{
+    this->gameObject->animationController = nullptr;
 }
 
 void AnimationController::ParseJSON(json j)
@@ -596,6 +655,16 @@ void AnimationController::JumpState(string state)
 	jumpState = state;
 }
 
+Rigidbody::Rigidbody(GameObject * gobj) : Component(gobj)
+{
+    this->gameObject->rigidbody = this;
+}
+
+Rigidbody::~Rigidbody()
+{
+    this->gameObject->rigidbody = nullptr;
+}
+
 void Rigidbody::ParseJSON(json j)
 {
     if (j.find("TimeSliceCollision") != j.end())
@@ -604,23 +673,23 @@ void Rigidbody::ParseJSON(json j)
 
 void Rigidbody::OnCollision(Collider *tgcollider)
 {
-	Collider* c = this->gameObject->GetComponent<Collider>();
+	Collider* c = this->gameObject->collider;
 
-	tgcollider->collidedCollider.push_back(c);
-	c->collidedCollider.push_back(tgcollider);
+	tgcollider->collidedCollider.insert(c);
+	c->collidedCollider.insert(tgcollider);
 }
 
-bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vector2 &tempVelocity, bool block, bool resetVX)
+bool Rigidbody::DoCollision(Collider *collider, set<GameObject*>& gobjset, Vector2 &tempVelocity, bool block, bool resetVX)
 {
 	float vx = tempVelocity.x;
     bool ret = false;
-    for (auto gobj : gobjvec)
+    for (auto gobj : gobjset)
     {
-		if (gobj == this->gameObject)
+		if (gobj == this->gameObject || !gobj->enable)
 			continue;
 
-        Collider* tgcollider = gobj->GetComponent<Collider>();
-        if (tgcollider != nullptr && tgcollider->enable != false)
+        Collider* tgcollider = gobj->collider;
+        if (tgcollider != nullptr && tgcollider->GetEnable())
         {
             if (collider->BoxCollision(tgcollider, tempVelocity, block))
             {
@@ -636,7 +705,7 @@ bool Rigidbody::DoCollision(Collider *collider, vector<GameObject*> gobjvec, Vec
 
 void Rigidbody::CollisionDetection(Vector2& invelocity)
 {
-    Collider* collider = this->gameObject->GetComponent<Collider>();
+    Collider* collider = this->gameObject->collider;
     if (collider != nullptr)
     {
         for (CollisionLayer cl : collider->collisionLayer)
@@ -663,7 +732,7 @@ void Rigidbody::CollisionDetection(Vector2& invelocity)
 
 void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
 {
-    Collider* collider = this->gameObject->GetComponent<Collider>();
+    Collider* collider = this->gameObject->collider;
     if (collider != nullptr)
     {
         for (CollisionLayer cl : collider->collisionLayer)
@@ -673,8 +742,7 @@ void Rigidbody::CollisionDetectionSlice(Vector2 & invelocity)
             Vector2 vslicenum = invelocity / sliceUnit;
             vslicenum = vslicenum.abs();
 
-
-            auto gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
+            auto &gobjvec = GameObject::findGameObjectsByLayer(cl.layer);
 
             if (cl.block)
             {

@@ -13,30 +13,28 @@ void Slide::ParseJSON(json j)
 void Slide::Start()
 {
 	locked = false;
-	collider = this->gameObject->GetComponent<Collider>();
-	rigidbody = this->gameObject->GetComponent<Rigidbody>();
-	rigidbody->TimeSliceCollision = true;
+    this->gameObject->rigidbody->TimeSliceCollision = true;
 	vel = Vector2::zero;
     targetPos = this->transform->GetPostion();
 }
 
 void Slide::Update()
 {
-	bool collided = collider->PointCollision(Input::GetMouseWorldPos().GetV2I());
-    rigidbody->velocity = Vector2::zero;
+	bool collided = this->gameObject->collider->PointCollision(Input::GetMouseWorldPos().GetV2I());
+    this->gameObject->rigidbody->velocity = Vector2::zero;
 
 
 	if (Input::GetKeyDown(VK_LBUTTON) && collided)
 	{
 		locked = true;
-		clickPos = Input::GetMouseWorldPos();
+		clickPos = this->transform->GetParent()->GetWorldPosition() + this->transform->GetPostion().sliceRound(Vector2(64, 64)) + Vector2(32, 32);
 		oWorldPos = this->transform->GetWorldPosition();
 	}
 
 	if (Input::GetKeyUp(VK_LBUTTON))
 	{
 		locked = false;
-		rigidbody->velocity = Vector2::zero;
+        this->gameObject->rigidbody->velocity = Vector2::zero;
 		//vel = Vector2::zero;
 		clickPos = Vector2::zero;
 
@@ -56,7 +54,7 @@ void Slide::Update()
         if (wpos != tpos)
         {
             Vector2 newpos = Vector2::Damp(wpos, tpos, vel, 0.003f, 2, 1.0f);
-            rigidbody->velocity = (newpos - wpos).floorSpecial();
+            this->gameObject->rigidbody->velocity = (newpos - wpos).floorSpecial();
         }
 	}
     else
@@ -64,18 +62,18 @@ void Slide::Update()
         if (this->transform->GetPostion() != targetPos)
         {
             Vector2 wpos = this->transform->GetPostion();
-            rigidbody->velocity = Vector2::Damp(wpos, targetPos, vel, 0.003f, 16, 1.0f) - wpos;
+            this->gameObject->rigidbody->velocity = Vector2::Damp(wpos, targetPos, vel, 0.003f, 16, 1.0f) - wpos;
         }
     }
 }
 
-void Slide::OnRecivedBoardcast(json j)
+void Slide::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
 }
 
 void Slide::OnDrawGizmos(CDC * pDC)
 {
-	Rigidbody *rb = this->gameObject->GetComponent<Rigidbody>();
+	Rigidbody *rb = this->gameObject->rigidbody;
 	//pDC->TextOutA(0, 20, ("colliderINFO : " + rb->colliderInfo.toString()).c_str());
 	//pDC->TextOutA(0, 40, ("Can Jump : " + to_string(canJump)).c_str());
 	//pDC->TextOutA(0, 60, ("velocity : " + rb->velocity.toString()).c_str());

@@ -11,6 +11,20 @@ void BoxParent::Start()
             boxdata[x][y] = "";
         }
     }
+
+    button1 = false;
+    button2 = false;
+    isSended = false;
+}
+
+void BoxParent::Update()
+{
+    if (!isSended && button1 && button2)
+    {
+        json data;
+        GameScene::Boardcast(BoardcastEvent::RedRoomFinish, data, "Hop");
+        isSended = true;
+    }
 }
 
 void BoxParent::CheckData()
@@ -50,11 +64,7 @@ void BoxParent::CheckData()
 
     if (!Same)
     {
-        json send;
-        send["data"] = sendData;
-        send["event"] = "UpdateBoxPostion";
-
-        game_framework::CGame::Instance()->BoardcastMessage(send);
+		GameScene::Boardcast(BoardcastEvent::UpdateBoxPosition, sendData);
 
         for (int x = 0; x < 4; x++)
         {
@@ -66,7 +76,20 @@ void BoxParent::CheckData()
     }
 }
 
-void BoxParent::OnRecivedBoardcast(json j)
+void BoxParent::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
-    //AfxMessageBox(j.dump(4).c_str());
+    if (bmd.event == BoardcastEvent::ButtonPressed)
+    {
+        if (bmd.data["name"] == "Button1")
+            button1 = true;
+        else if (bmd.data["name"] == "Button2")
+            button2 = true;
+    }
+    else if (bmd.event == BoardcastEvent::ButtonRelease)
+    {
+        if (bmd.data["name"] == "Button1")
+            button1 = false;
+        else if (bmd.data["name"] == "Button2")
+            button2 = false;
+    }
 }

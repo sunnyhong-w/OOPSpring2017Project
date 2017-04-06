@@ -18,9 +18,13 @@ class GameBehaviour : public Component
 {
 
     public:
-        GameBehaviour(GameObject* gobj) : Component(gobj, true) {};
+        GameBehaviour(GameObject* gobj);
+        ~GameBehaviour();
+
         virtual void ParseJSON(json j) {};
 
+        virtual void Awake() {};
+        virtual void Sleep() {};
         virtual void Start() {};
         virtual void Update() {};
         virtual void LateUpdate() {};
@@ -31,7 +35,9 @@ class GameBehaviour : public Component
         virtual void OnCollisionExit (Collider* c) {};
         virtual void OnCollisionStay (Collider* c) {};
 
-        virtual void OnRecivedBoardcast(json j) {};
+        virtual void OnRecivedBoardcast(BoardcastMessageData bmd) {};
 		virtual void OnDrawGizmos(CDC *pDC) {};
+
+		map<BoardcastEvent, bool> eventListener;
 };
 }
