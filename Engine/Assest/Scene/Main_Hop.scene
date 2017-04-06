@@ -51,6 +51,21 @@
                 }
             }
         },
+                {
+            "include": "MapReader",
+            "Component": {
+                "Transform":{
+                    "position" : {"x" : -800, "y" : 3328}
+                },
+                "MapReader": {
+                    "load": "Yellow",
+                    "slicer": {
+                        "x": 15,
+                        "y": 10
+                    }
+                }
+            }
+        },
         {
             "include":"YellowBox"
         }
