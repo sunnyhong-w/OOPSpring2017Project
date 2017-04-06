@@ -10,8 +10,13 @@ void YellowBox::Start()
 	this->transform->SetWorldPosition(Vector2(-1000, -1000));
 }
 
+void YellowBox::Update()
+{
+    Vector2I worldPos = GameScene::CameraPosition() + (hoppos - GameScene::WindowPosition());
+    this->gameObject->transform->SetWorldPosition(worldPos.GetV2());
+}
+
 void YellowBox::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
-	Vector2I worldPos = GameScene::CameraPosition() + (bmd.position - GameScene::WindowPosition());
-	this->gameObject->transform->SetWorldPosition(worldPos.GetV2());
+    hoppos = bmd.position;
 }
