@@ -117,6 +117,7 @@ void MapReader::ParseProperties(GameObject * gobj, string filename, json prop)
         }
         else if (j.key() == "GreenBox")
         {
+            gobj->renderByBehavior = true;
             GreenBox* gb = gobj->AddComponentOnce<GreenBox>();
             string tmp = "";
             string jstr = j.value();
@@ -225,10 +226,17 @@ void MapReader::LoadMap(string fname)
                         int tileindex = tindex - tmp.firstgid;
 
                         ParseProperties(gobj, fname, tmp.objects[tileindex].properties);
+                        ParseProperties(gobj, fname, obj["properties"]);
 
                         SpriteRenderer* SR = gobj->AddComponentOnce<SpriteRenderer>();
                         SR->LoadBitmapData(tmp.objects[tileindex].image);
                         SR->SetAnchorRaito(Vector2::down);
+
+                        if (tmp.objects[tileindex].collision.size() != 0)
+                        {
+                            Collider* cr = gobj->AddComponentOnce<Collider>();
+                            cr->collisionInfo = tmp.objects[tileindex].collision[0]; //先當他只會有一個collider
+                        }
 
                         Instantiate(gobj, objParent->transform, obj);
                         gobj->transform->SetZIndex(zindex);
@@ -345,7 +353,37 @@ void from_json(const json & j, ObjectSet & os)
             }
         }
 
-		os.objects.push_back(TileObject(imgname, prop));
+        vector<CollisionInfo> co;
+        if (j["tiles"][to_string(i)].find("objectgroup") != j["tiles"][to_string(i)].end())
+        {
+            if (j["tiles"][to_string(i)]["objectgroup"].find("objects") != j["tiles"][to_string(i)]["objectgroup"].end())
+            {
+                for (json jobj : j["tiles"][to_string(i)]["objectgroup"]["objects"])
+                {
+                    Vector2I max = Vector2I::zero;
+                    Vector2I min = Vector2I::one * 9999;
+                    for (Vector2I v : jobj["polygon"])
+                    {
+                        if (v.x > max.x)
+                            max.x = v.x;
+                        if (v.y > max.y)
+                            max.y = v.y;
+                        if (v.x < min.x)
+                            min.x = v.x;
+                        if (v.y < min.y)
+                            min.y = v.y;
+                    }
+
+                    CollisionInfo ci;
+                    ci.size = max - min;
+                    ci.offset = min;
+
+                    co.push_back(ci);
+                }
+            }
+        }
+
+		os.objects.push_back(TileObject(imgname, prop, co));
 	}
 }
 
@@ -429,8 +467,9 @@ void from_json(const json& j, Tile& to)
 	}
 }
 
-TileObject::TileObject(string imgname, json inproperties)
+TileObject::TileObject(string imgname, json inproperties, vector<CollisionInfo> incollision)
 {
-	image = imgname;
-	properties = inproperties;
+	this->image = imgname;
+    this->properties = inproperties;
+    this->collision = incollision;
 }

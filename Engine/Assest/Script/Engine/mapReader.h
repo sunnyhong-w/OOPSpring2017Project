@@ -22,9 +22,10 @@ struct TileSet
 
 struct TileObject
 {
-	TileObject(string imgname, json inproperties);
+	TileObject(string imgname, json inproperties, vector<CollisionInfo> incollision);
 	string image;
 	json properties;
+    vector<CollisionInfo> collision;
 };
 
 struct ObjectSet

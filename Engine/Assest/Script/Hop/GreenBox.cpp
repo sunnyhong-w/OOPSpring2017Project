@@ -27,10 +27,20 @@ void GreenBox::OnRecivedBoardcast(BoardcastMessageData bmd)
     {
         for (int x = 0; x < 4; x++)
         {
-            if (target[x][y] != 'x' && target[x][y] != newstate[x][y])
+            char c = target[x][y];
+
+            if (c != 'x')
             {
-                boxState = false;
-                break;
+                if (c >= 'A' && c <= 'Z' && c != newstate[x][y])
+                {
+                    boxState = false;
+                    break;
+                }
+                else if (c >= 'a' && c <= 'z' && c + ('A' - 'a') == newstate[x][y])
+                {
+                    boxState = false;
+                    break;
+                }
             }
         }
     }
@@ -43,7 +53,26 @@ void GreenBox::OnRecivedBoardcast(BoardcastMessageData bmd)
 
 void GreenBox::Start()
 {
-    BoxNum = this->gameObject->spriteRenderer->GetSourcePos().y / 64;
+    this->gameObject->SetLayer(Layer::Tile);
+
+    spritemap['W'] = 0;
+    spritemap['B'] = 8;
+    spritemap['G'] = 16;
+    spritemap['R'] = 24;
+    spritemap['Y'] = 32;
+    spritemap['w'] = 0;
+    spritemap['b'] = 8;
+    spritemap['g'] = 16;
+    spritemap['r'] = 24;
+    spritemap['y'] = 32;
+
+    this->gameObject->spriteRenderer->LoadBitmapData("GreenSprite");
+    dotSurfaceID = this->gameObject->spriteRenderer->GetSurfaceID();
+
+    this->gameObject->spriteRenderer->LoadBitmapData("GreenBox");
+    boxSurfaceID = this->gameObject->spriteRenderer->GetSurfaceID();
+    this->gameObject->spriteRenderer->SetSize(Vector2I(64, 64));
+
     BoxOff();
 }
 
@@ -54,6 +83,42 @@ void GreenBox::Update()
 
     if (tick > 0)
         tick--;
+}
+
+void GreenBox::Draw(Vector2I v2)
+{
+    if(sw)
+        this->gameObject->spriteRenderer->SetSourcePos(Vector2I(64, 0));
+    else
+        this->gameObject->spriteRenderer->SetSourcePos(Vector2I(0, 0));
+
+    this->gameObject->spriteRenderer->Draw(v2);
+
+    this->gameObject->spriteRenderer->UnsafeSetSurfaceID(dotSurfaceID);
+    this->gameObject->spriteRenderer->SetSize(Vector2I(8, 8));
+
+    for (int y = 0; y < 4; y++)
+    {
+        for (int x = 0; x < 4; x++)
+        {
+            char c = target[x][y];
+
+            if (c != 'x')
+            {
+                this->gameObject->spriteRenderer->SetSourcePos(Vector2I(spritemap[c], 0));
+                this->gameObject->spriteRenderer->Draw(v2 - Vector2I(16,16) - Vector2I(8, 8) * Vector2I(x , y));
+
+                if (c >= 'a' && c <= 'z')
+                {
+                    this->gameObject->spriteRenderer->SetSourcePos(Vector2I(40, 0));
+                    this->gameObject->spriteRenderer->Draw(v2 - Vector2I(16, 16) - Vector2I(8, 8) * Vector2I(x, y));
+                }
+            }
+        }
+    }
+
+    this->gameObject->spriteRenderer->UnsafeSetSurfaceID(boxSurfaceID);
+    this->gameObject->spriteRenderer->SetSize(Vector2I(64, 64));
 }
 
 void GreenBox::SetData(string dt)
@@ -69,20 +134,13 @@ void GreenBox::SetData(string dt)
 
 void GreenBox::BoxON()
 {
-    Vector2I pos(64, 64);
-    pos = pos * Vector2I(1, BoxNum);
-
-    this->gameObject->spriteRenderer->SetSourcePos(pos);
     this->gameObject->collider->SetEnable(true);
-
     tick = 0;
+    sw = true;
 }
 
 void GreenBox::BoxOff()
 {
-    Vector2I pos(64, 64);
-    pos = pos * Vector2I(0, BoxNum);
-
-    this->gameObject->spriteRenderer->SetSourcePos(pos);
     this->gameObject->collider->SetEnable(false);
+    sw = false;
 }

@@ -14,6 +14,7 @@ class GreenBox : public GameBehaviour
         void OnRecivedBoardcast(BoardcastMessageData bmd) override;
         void Start() override;
         void Update() override;
+        void Draw(Vector2I v2 = Vector2I::zero) override;
 
         void SetData(string dt);
 
@@ -21,7 +22,11 @@ class GreenBox : public GameBehaviour
         void BoxON();
         void BoxOff();
 
+        int boxSurfaceID;
+        int dotSurfaceID;
+        map<char, int> spritemap;
+
         int tick = 0;
-        int BoxNum = 0;
         char target[4][4];
+        bool sw;
 };
