@@ -7,8 +7,26 @@
         {
             "include": "MapReader",
             "Component": {
+                "Transform":{
+                    "position" : {"x" : 0, "y" : 1664}
+                },
                 "MapReader": {
                     "load": "Blue",
+                    "slicer": {
+                        "x": 15,
+                        "y": 10
+                    }
+                }
+            }
+        },
+        {
+            "include": "MapReader",
+            "Component": {
+                "Transform":{
+                    "position" : {"x" : 2496, "y" : 1664}
+                },
+                "MapReader": {
+                    "load": "Green",
                     "slicer": {
                         "x": 15,
                         "y": 10
