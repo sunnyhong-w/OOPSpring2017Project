@@ -2,16 +2,16 @@
 #include "Engine.h"
 #include "YellowBox.h" //Include you header
 
+
+
 void YellowBox::Start()
 {
+	eventListener[BoardcastEvent::UpdateWindowPosition] = true;
+	this->transform->SetWorldPosition(Vector2(-1000, -1000));
 }
 
-void YellowBox::Update()
+void YellowBox::OnRecivedBoardcast(BoardcastMessageData bmd)
 {
-	this->gameObject->transform->SetPosition(GetWorldPos(Vector2(500,500)));
-}
-
-Vector2 YellowBox::GetWorldPos(Vector2 screenPos)
-{
-	return GameScene::CameraPosition().GetV2() + (screenPos - GameScene::WindowPosition().GetV2());
+	Vector2I worldPos = GameScene::CameraPosition() + (bmd.position - GameScene::WindowPosition());
+	this->gameObject->transform->SetWorldPosition(worldPos.GetV2());
 }
