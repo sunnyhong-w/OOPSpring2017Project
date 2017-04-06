@@ -83,10 +83,10 @@ void Player::Update()
 		//GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 	}
 
-    if (Input::GetKeyDown(VK_F5))
-        GameScene::NowScene()->LoadScene("Main");
 	Vector2 size = Vector2((float)SIZE_X / 2, (float)SIZE_Y / 2);
-	GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
+	
+    if (!Input::GetKeyPressing(VK_F5))
+        GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 
 	bounce = false;
 }
