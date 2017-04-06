@@ -8,6 +8,8 @@ void YellowBox::Start()
 {
 	eventListener[BoardcastEvent::UpdateWindowPosition] = true;
 	this->transform->SetWorldPosition(Vector2(-1000, -1000));
+
+    this->gameObject->collider->SetEnable(false);
 }
 
 void YellowBox::Update()

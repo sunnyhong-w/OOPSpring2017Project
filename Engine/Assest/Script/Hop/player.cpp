@@ -88,6 +88,15 @@ void Player::Update()
     if (!Input::GetKeyPressing(VK_F5))
         GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 
+    if (Input::GetKeyDown(VK_F4))
+    {
+        auto gobj = GameObject::findGameObjectByName("YellowBox");
+        if(gobj != nullptr)
+        { 
+            gobj->collider->SetEnable(!gobj->collider->GetEnable());
+        }
+    }
+
 	bounce = false;
 }
 
