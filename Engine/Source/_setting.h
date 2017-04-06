@@ -29,7 +29,8 @@ enum class BoardcastEvent
     UpdateBoxPosition,
     ButtonPressed,
     ButtonRelease,
-    RedRoomFinish
+    RedRoomFinish,
+    UpdateWindowPosition
 };
 
 void from_json(const json& j, BoardcastEvent& be);
