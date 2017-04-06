@@ -267,6 +267,7 @@
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp" />
     <ClCompile Include="Assest\Script\Hop\Button.cpp" />
     <ClCompile Include="Assest\Script\Hop\GreenBox.cpp" />
+    <ClCompile Include="Assest\Script\Hop\YellowBox.cpp" />
     <ClCompile Include="Assest\Script\Slide\BoxParent.cpp" />
     <ClCompile Include="Assest\Script\Slide\slide.cpp" />
     <ClCompile Include="Assest\Script\tutorial.cpp" />
@@ -323,6 +324,7 @@
     <ClInclude Include="Assest\Script\Engine\textStamp.h" />
     <ClInclude Include="Assest\Script\Hop\Button.h" />
     <ClInclude Include="Assest\Script\Hop\GreenBox.h" />
+    <ClInclude Include="Assest\Script\Hop\YellowBox.h" />
     <ClInclude Include="Assest\Script\Slide\BoxParent.h" />
     <ClInclude Include="Assest\Script\Slide\slide.h" />
     <ClInclude Include="Assest\Script\tutorial.h" />

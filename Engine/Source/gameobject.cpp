@@ -46,6 +46,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 	RegisterComponent(Spring)
 	RegisterComponent(Button)
     RegisterComponent(GreenBox)
+	RegisterComponent(YellowBox)
     else return nullptr;
 }
 
