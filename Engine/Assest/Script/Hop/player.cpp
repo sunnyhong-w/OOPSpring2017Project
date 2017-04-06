@@ -49,7 +49,7 @@ void Player::Update()
 
 	if (bounce && rb->colliderInfo.bottom)
 	{
-		vel.y += MaxJumpVelocity * 1.2;
+		vel.y += MaxJumpVelocity * 1.5;
 		isBouncing = true;
 	}
 
