@@ -172,6 +172,8 @@ void MapReader::LoadMap(string fname)
         objParent->transform->SetParent(this->transform);
         objParent->transform->SetPosition(Vector2(0,0));
 
+		CreateMapEdge(objParent->transform, Vector2(tileMap.width, tileMap.height), fname, Vector2I(tileMap.tileWidth, tileMap.tileHeight));
+
         int zindex = 0;
         for (json j : tileMap.layers)
         {
@@ -306,6 +308,47 @@ GameObject* MapReader::GenerateTile(string fname, int tindex)
     }
 
     return nullptr;
+}
+
+void MapReader::CreateMapEdge(Transform * parent, Vector2 mapSize, string filename, Vector2I tileSize)
+{
+	string type[2] = { "Map" , "Camera" };
+	
+	Vector2 opos = (tileSize * -1).GetV2();
+	Vector2I HCollider((mapSize.x + 2) * tileSize.x, tileSize.y);
+	Vector2I VCollider(tileSize.x, (mapSize.y + 2) * tileSize.y);
+
+	string way[4] = { "Left", "Right", "Top", "Bottom"};
+	Vector2I colliderSize[4] = { HCollider,HCollider,VCollider,VCollider };
+	Vector2 position[4] = { opos,Vector2(tileSize.x * -1 , 0) + Vector2::down * mapSize * tileSize.GetV2(), 
+							opos,Vector2(0 , tileSize.y * -1) + Vector2::right * mapSize * tileSize.GetV2() };
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (auto str : type)
+		{
+			CreateEdgeObj(parent, filename, way[i], str, position[i], colliderSize[i]);
+		}
+	}
+}
+
+void MapReader::CreateEdgeObj(Transform * parent, string filename, string way, string type, Vector2 position, Vector2I colliderSize)
+{
+	GameObject* obj = new GameObject();
+	Instantiate(obj);
+	obj->SetName(filename + way + type + "Edge");
+	obj->transform->SetParent(parent);
+	obj->transform->SetPosition(position);
+
+	auto collider = obj->AddComponentOnce<Collider>();
+	CollisionInfo ci;
+	ci.size = colliderSize;
+	collider->collisionInfo = ci;
+	
+	if (type == "Camera")
+		obj->SetLayer(Layer::CameraEdge);
+	else if(type == "Map")
+		obj->AddComponentOnce<MapEdge>();
 }
 
 TileSet::TileSet()

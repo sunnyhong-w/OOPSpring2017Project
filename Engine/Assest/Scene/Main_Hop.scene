@@ -10,7 +10,7 @@
             "include": "MapReader",
             "Component": {
                 "Transform":{
-                    "position" : {"x" : 0, "y" : 1664}
+                    "position" : {"x" : 0, "y" : 0}
                 },
                 "MapReader": {
                     "load": "Blue",
@@ -25,7 +25,7 @@
             "include": "MapReader",
             "Component": {
                 "Transform":{
-                    "position" : {"x" : 2624, "y" : 1664}
+                    "position" : {"x" : 2000, "y" : 0}
                 },
                 "MapReader": {
                     "load": "Green",
@@ -40,7 +40,7 @@
             "include": "MapReader",
             "Component": {
                 "Transform":{
-                    "position" : {"x" : 1664, "y" : 2688}
+                    "position" : {"x" : 4000, "y" : 0}
                 },
                 "MapReader": {
                     "load": "Red",
@@ -55,7 +55,7 @@
             "include": "MapReader",
             "Component": {
                 "Transform":{
-                    "position" : {"x" : -800, "y" : 3328}
+                    "position" : {"x" : 6000, "y" : 0}
                 },
                 "MapReader": {
                     "load": "Yellow",

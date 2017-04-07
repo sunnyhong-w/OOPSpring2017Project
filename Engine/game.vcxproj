@@ -267,6 +267,7 @@
     <None Include="res\Toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Assest\Script\Engine\MapEdge.cpp" />
     <ClCompile Include="Assest\Script\Engine\mapReader.cpp" />
     <ClCompile Include="Assest\Script\Engine\textRenderer.cpp" />
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp" />
@@ -325,6 +326,7 @@
     <ClCompile Include="Source\_setting.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assest\Script\Engine\MapEdge.h" />
     <ClInclude Include="Assest\Script\Engine\mapReader.h" />
     <ClInclude Include="Assest\Script\Engine\textRenderer.h" />
     <ClInclude Include="Assest\Script\Engine\textStamp.h" />

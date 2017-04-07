@@ -72,6 +72,8 @@ public:
 
 private:
     GameObject* GenerateTile(string fname, int tindex);
+	void CreateMapEdge(Transform* parent, Vector2 mapSize, string filename, Vector2I tileSize);
+	void CreateEdgeObj(Transform* parent, string filename, string way, string type, Vector2 position, Vector2I colliderSize);
 
 	TileMap tileMap;
     Vector2 slicer;
