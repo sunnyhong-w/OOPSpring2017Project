@@ -1,0 +1,30 @@
+{
+	"name":"Camera",
+    "renderByBehavior": true,
+	"Component":{
+		"SpriteRenderer":{
+			"SrcSize":{
+				"x":480,
+				"y":360
+			},
+			"AnchorRaito":{
+				"x":0.5,
+				"y":0.5
+			}
+		},
+		"Collider": {
+            "size": {
+                "x": 480,
+                "y": 360
+            },
+            "collisionLayer": [
+                {
+                    "Block": true,
+                    "Layer": 3
+                }
+            ]
+        },
+        "Rigidbody":{},
+        "Camera":{}
+	}
+}

@@ -1,3 +1,4 @@
+
 /*  gameobject.cpp: 本檔案儲存遊戲引擎所使用的GameObject的interface的實作
 Copyright (C) 2017 Guo Xiang, Hong <sunnyhong.w@gmail.com>
 
@@ -48,6 +49,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(GreenBox)
 	RegisterComponent(YellowBox)
 	RegisterComponent(MapEdge)
+	RegisterComponent(Camera)
     else return nullptr;
 }
 
