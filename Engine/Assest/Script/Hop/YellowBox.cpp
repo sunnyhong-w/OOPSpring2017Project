@@ -12,7 +12,7 @@ void YellowBox::Start()
     this->gameObject->collider->SetEnable(false);
 }
 
-void YellowBox::Update()
+void YellowBox::LateUpdate()
 {
     Vector2I worldPos = GameScene::CameraPosition() + (hoppos - GameScene::WindowPosition());
     this->gameObject->transform->SetWorldPosition(worldPos.GetV2());
