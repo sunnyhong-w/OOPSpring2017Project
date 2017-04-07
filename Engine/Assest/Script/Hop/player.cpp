@@ -17,6 +17,8 @@ void Player::Start()
     MinJumpVelocity = sqrt(2 * abs(gravity) * MinJumpHeight);
 	bounce = false;
 	isBouncing = false;
+
+	GameObject::findGameObjectByName("Camera")->transform->SetWorldPosition(this->transform->GetWorldPosition());
 }
 
 void Player::Update()
@@ -85,8 +87,8 @@ void Player::Update()
 
 	Vector2 size = Vector2((float)SIZE_X / 2, (float)SIZE_Y / 2);
 	
-    if (!Input::GetKeyPressing(VK_F5))
-        GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
+    //if (!Input::GetKeyPressing(VK_F5))
+     //   GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 
     if (Input::GetKeyDown(VK_F4))
     {

@@ -270,6 +270,9 @@ void SpriteRenderer::ParseJSON(json j)
     if (j.find("SrcSize") != j.end())
         this->SetSize(j["SrcSize"]);
 
+	if (j.find("AnchorRaito") != j.end())
+		this->SetAnchorRaito(j["AnchorRaito"]);
+
     if (j.find("SortingLayer") != j.end())
     {
         this->sortingLayer = j["SortingLayer"];
