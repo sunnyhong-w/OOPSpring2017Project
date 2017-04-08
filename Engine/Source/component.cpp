@@ -139,6 +139,11 @@ void Transform::Translate(Vector2 dpos)
     SetPosition(position + dpos);
 }
 
+void Transform::Translate(float dx, float dy)
+{
+    SetPosition(position + Vector2(dx, dy));
+}
+
 int Transform::GetZIndex()
 {
     return zindex;

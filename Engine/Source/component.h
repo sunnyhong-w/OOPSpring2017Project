@@ -65,6 +65,7 @@ class Transform : public Component
         void SetWorldPosition(Vector2 newpos);
         void UpdateWorldPosition();
         void Translate(Vector2 dpos);
+        void Translate(float dx,float dy);
 
         Vector2 scale;
 

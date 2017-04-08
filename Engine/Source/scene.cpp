@@ -89,16 +89,6 @@ void GameScene::OnMove()
 
     //COLLISION DECTECTION WORK OUT HERE ----> BUT NO. I'm NOT GONNA DO THIS.
 
-	for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
-	{
-        if ((*it)->enable)
-        {
-            Collider* collider = (*it)->collider;
-            if (collider != nullptr && collider->GetEnable())
-                collider->Update();
-        }
-	}
-
     for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
     {
         if ((*it)->enable)
@@ -106,6 +96,16 @@ void GameScene::OnMove()
             Rigidbody* rigidbody = (*it)->rigidbody;
             if (rigidbody != nullptr && rigidbody->GetEnable())
                 rigidbody->Update();
+        }
+    }
+
+    for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
+    {
+        if ((*it)->enable)
+        {
+            Collider* collider = (*it)->collider;
+            if (collider != nullptr && collider->GetEnable())
+                collider->Update();
         }
     }
 
