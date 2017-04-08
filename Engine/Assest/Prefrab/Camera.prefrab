@@ -5,7 +5,7 @@
 		"SpriteRenderer":{
 			"SrcSize":{
 				"x":480,
-				"y":360
+				"y":320
 			},
 			"AnchorRaito":{
 				"x":0.5,
@@ -15,7 +15,7 @@
 		"Collider": {
             "size": {
                 "x": 480,
-                "y": 360
+                "y": 320
             },
             "collisionLayer": [
                 {
