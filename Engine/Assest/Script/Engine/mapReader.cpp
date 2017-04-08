@@ -318,7 +318,7 @@ void MapReader::CreateMapEdge(Transform * parent, Vector2 mapSize, string filena
 	Vector2I HCollider((mapSize.x + 2) * tileSize.x, tileSize.y);
 	Vector2I VCollider(tileSize.x, (mapSize.y + 2) * tileSize.y);
 
-	string way[4] = { "Left", "Right", "Top", "Bottom"};
+	string way[4] = { "Top", "Bottom", "Left", "Right"};
 	Vector2I colliderSize[4] = { HCollider,HCollider,VCollider,VCollider };
 	Vector2 position[4] = { opos,Vector2(tileSize.x * -1 , 0) + Vector2::down * mapSize * tileSize.GetV2(), 
 							opos,Vector2(0 , tileSize.y * -1) + Vector2::right * mapSize * tileSize.GetV2() };
@@ -347,8 +347,11 @@ void MapReader::CreateEdgeObj(Transform * parent, string filename, string way, s
 	
 	if (type == "Camera")
 		obj->SetLayer(Layer::CameraEdge);
-	else if(type == "Map")
-		obj->AddComponentOnce<MapEdge>();
+    else if (type == "Map")
+    {
+        obj->AddComponentOnce<MapEdge>();
+        obj->SetLayer(Layer::Tile);
+    }
 }
 
 TileSet::TileSet()

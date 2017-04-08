@@ -17,8 +17,6 @@ void Player::Start()
     MinJumpVelocity = sqrt(2 * abs(gravity) * MinJumpHeight);
 	bounce = false;
 	isBouncing = false;
-
-	GameObject::findGameObjectByName("Camera")->transform->SetWorldPosition(this->transform->GetWorldPosition());
 }
 
 void Player::Update()
@@ -65,30 +63,8 @@ void Player::Update()
 			vel = Vector2::up * 9;
 	}
 	
-
-
 	vel.y += gravity * Time::deltaTime;
 	rb->velocity = vel * tiledPixel * Time::deltaTime;
-
-
-
-    if (Input::GetKeyPressing(VK_NUMPAD8))
-        GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::up * 10;
-    if (Input::GetKeyPressing(VK_NUMPAD6))
-        GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::right * 10;
-    if (Input::GetKeyPressing(VK_NUMPAD4))
-        GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::left * 10;
-    if (Input::GetKeyPressing(VK_NUMPAD2))
-        GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::down * 10;
-	if (Input::GetKeyDown(VK_NUMPAD5))
-	{
-		//GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
-	}
-
-	Vector2 size = Vector2((float)SIZE_X / 2, (float)SIZE_Y / 2);
-	
-    //if (!Input::GetKeyPressing(VK_F5))
-     //   GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 
     if (Input::GetKeyDown(VK_F4))
     {
