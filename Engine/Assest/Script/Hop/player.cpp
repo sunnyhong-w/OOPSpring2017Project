@@ -57,7 +57,7 @@ void Player::Update()
 	{
 		Jump(vel);
 	}
-	else if (Input::GetKeyUp(VK_SPACE) && !isBouncing)
+	else if ((Input::GetKeyUp(VK_SPACE) || Input::GetKeyUp('W') || Input::GetKeyUp(VK_UP)) && !isBouncing)
 	{
 		if (vel.y < -9)
 			vel = Vector2::up * 9;
