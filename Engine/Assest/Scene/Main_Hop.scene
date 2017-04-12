@@ -101,6 +101,12 @@
         },
         {
             "include": "Camera"
+        },
+        {
+            "name": "TransportController",
+            "Component": {
+                "TransportController": {}
+            }
         }
     ]
 }

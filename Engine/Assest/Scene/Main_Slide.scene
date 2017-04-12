@@ -27,7 +27,7 @@
             },
             "Child": [
                 {
-                    "name": "RedBlock",
+                    "name": "Red",
                     "Component": {
                         "Transform": {
                             "position": {
@@ -87,7 +87,7 @@
                     "layer": 1
                 },
                 {
-                    "name": "YellowBlock",
+                    "name": "Yellow",
                     "Component": {
                         "Transform": {
                             "position": {
@@ -144,7 +144,7 @@
                     "layer": 1
                 },
                 {
-                    "name": "WhiteBlock",
+                    "name": "White",
                     "Component": {
                         "Transform": {
                             "position": {
@@ -195,7 +195,7 @@
                     "layer": 1
                 },
                 {
-                    "name": "GreenBlock",
+                    "name": "Green",
                     "Component": {
                         "Transform": {
                             "position": {
@@ -252,7 +252,7 @@
                     "layer": 1
                 },
                 {
-                    "name": "BlueBlock",
+                    "name": "Blue",
                     "Component": {
                         "Transform": {
                             "position": {

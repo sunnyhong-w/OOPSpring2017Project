@@ -19,7 +19,6 @@
             },
             "collisionLayer": [
                 {
-                    "Block": true,
                     "Layer": 3
                 }
             ]

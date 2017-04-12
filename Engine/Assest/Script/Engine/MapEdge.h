@@ -7,6 +7,6 @@ class MapEdge : public GameBehaviour
 {
     public:
     	MapEdge(GameObject* gobj) : GameBehaviour(gobj){};
-    protected:
-    private:
+        void OnCollisionStay(Collider* c) override;
+        Vector2 targetPosition;
 };

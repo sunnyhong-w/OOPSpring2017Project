@@ -125,3 +125,9 @@ void to_json(json & j, const SlideBoxSetting & sbs)
     j["position"] = sbs.position;
     j["state"] = sbs.state;
 }
+
+SlideBoxSetting::SlideBoxSetting()
+{
+    position == Vector2I::null;
+    state.bottom = state.left = state.right = state.top = false;
+}
