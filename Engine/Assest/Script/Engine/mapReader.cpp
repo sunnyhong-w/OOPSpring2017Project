@@ -129,6 +129,11 @@ void MapReader::ParseProperties(GameObject * gobj, string filename, json prop)
 
             gb->SetData(tmp);
         }
+        else if (j.key() == "Transporter")
+        {
+            gobj->SetName(filename + j.value().get<string>() + "Transporter");
+            gobj->AddComponentOnce<SpriteRenderer>()->SetEnable(false);
+        }
     }
 }
 

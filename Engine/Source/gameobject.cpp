@@ -201,6 +201,11 @@ string GameObject::GetName()
     return this->name;
 }
 
+Tag GameObject::GetTag()
+{
+    return tag;
+}
+
 void GameObject::SetTag(Tag tag)
 {
     if (!this->doNOTUpdateObjectPool)
@@ -216,6 +221,11 @@ void GameObject::SetTag(Tag tag)
     }
     else
         this->tag = tag;
+}
+
+Layer GameObject::GetLayer()
+{
+    return layer;
 }
 
 void GameObject::SetLayer(Layer layer)

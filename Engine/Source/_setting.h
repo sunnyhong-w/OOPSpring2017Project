@@ -5,7 +5,7 @@ namespace game_engine
 ///////////////////////////////////
 //      Object Layer define      //
 ///////////////////////////////////
-enum class Layer : int { Default, Tile, Button, CameraEdge };
+enum class Layer : int { Default, Tile, Button, CameraEdge, MapEdge };
 ///////////////////////////////////
 //      Object  Tag  define      //
 ///////////////////////////////////
