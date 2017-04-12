@@ -61,11 +61,14 @@ struct Tile
 class MapReader : public GameBehaviour
 {
 public:
-	~MapReader();
+    static vector<MapReader*> readerList;
+
+    ~MapReader() {};
 	MapReader(GameObject* gobj) : GameBehaviour(gobj) {}
 	void ParseJSON(json j) override;
     void ParseProperties(GameObject* gobj, string filename, json prop);
 	void LoadMap(string str);
+    void Start() override;
 	void Draw(Vector2I campos) override;
 	void Update() override;
     void LateUpdate() override;

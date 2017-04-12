@@ -7,10 +7,7 @@ using namespace std;
 
 using namespace game_engine;
 
-MapReader::~MapReader()
-{
-
-}
+vector<MapReader*> MapReader::readerList;
 
 void MapReader::Update()
 {
@@ -268,6 +265,11 @@ void MapReader::LoadMap(string fname)
     }
 
     file.close();
+}
+
+void MapReader::Start()
+{
+    readerList.push_back(this);
 }
 
 void MapReader::Draw(Vector2I campos)

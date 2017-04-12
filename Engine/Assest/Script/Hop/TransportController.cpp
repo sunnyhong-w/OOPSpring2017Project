@@ -69,12 +69,12 @@ void TransportController::OnRecivedBoardcast(BoardcastMessageData bmd)
                 auto transobj2 = GameObject::findGameObjectByName(boxName[x][y + 1] + "Top" + "Transporter");
 
                 if (transobj2 != nullptr)
-                    edgecomp1->targetPosition = transobj2->transform->GetWorldPosition();
+                    edgecomp1->targetPosition = transobj2->spriteRenderer->GetRealRenderPostion().GetV2();
                 else
                     edgecomp1->targetPosition = Vector2::null;
 
                 if (transobj1 != nullptr)
-                    edgecomp2->targetPosition = transobj1->transform->GetWorldPosition();
+                    edgecomp2->targetPosition = transobj1->spriteRenderer->GetRealRenderPostion().GetV2();
                 else
                     edgecomp2->targetPosition = Vector2::null;
             }
@@ -94,12 +94,12 @@ void TransportController::OnRecivedBoardcast(BoardcastMessageData bmd)
                 auto transobj2 = GameObject::findGameObjectByName(boxName[x + 1][y] + "Left" + "Transporter");
 
                 if (transobj2 != nullptr)
-                    edgecomp1->targetPosition = transobj2->transform->GetWorldPosition();
+                    edgecomp1->targetPosition = transobj2->spriteRenderer->GetRealRenderPostion().GetV2();
                 else
                     edgecomp1->targetPosition = Vector2::null;
 
                 if (transobj1 != nullptr)
-                    edgecomp2->targetPosition = transobj1->transform->GetWorldPosition();
+                    edgecomp2->targetPosition = transobj1->spriteRenderer->GetRealRenderPostion().GetV2();
                 else
                     edgecomp2->targetPosition = Vector2::null;
             }
