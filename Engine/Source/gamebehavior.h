@@ -39,5 +39,8 @@ class GameBehaviour : public Component
 		virtual void OnDrawGizmos(CDC *pDC) {};
 
 		map<BoardcastEvent, bool> eventListener;
+
+    protected:
+         void RegisterEvent(BoardcastEvent e);
 };
 }
