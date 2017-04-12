@@ -1,17 +1,19 @@
 {
-    
     "IncludePrefrab": {
         "MapReader": "Engine\\MapReader",
-        "Spring":"spring",
-        "YellowBox":"yellowBox",
-        "Camera":"Camera"
+        "Spring": "spring",
+        "YellowBox": "yellowBox",
+        "Camera": "Camera"
     },
     "GameObject": [
         {
             "include": "MapReader",
             "Component": {
-                "Transform":{
-                    "position" : {"x" : 0, "y" : 0}
+                "Transform": {
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    }
                 },
                 "MapReader": {
                     "load": "Blue",
@@ -25,8 +27,11 @@
         {
             "include": "MapReader",
             "Component": {
-                "Transform":{
-                    "position" : {"x" : 2000, "y" : 0}
+                "Transform": {
+                    "position": {
+                        "x": 2000,
+                        "y": 0
+                    }
                 },
                 "MapReader": {
                     "load": "Green",
@@ -40,8 +45,11 @@
         {
             "include": "MapReader",
             "Component": {
-                "Transform":{
-                    "position" : {"x" : 4000, "y" : 0}
+                "Transform": {
+                    "position": {
+                        "x": 4000,
+                        "y": 0
+                    }
                 },
                 "MapReader": {
                     "load": "Red",
@@ -52,11 +60,14 @@
                 }
             }
         },
-                {
+        {
             "include": "MapReader",
             "Component": {
-                "Transform":{
-                    "position" : {"x" : 6000, "y" : 0}
+                "Transform": {
+                    "position": {
+                        "x": 6000,
+                        "y": 0
+                    }
                 },
                 "MapReader": {
                     "load": "Yellow",
@@ -68,10 +79,16 @@
             }
         },
         {
-            "include":"YellowBox"
+            "include": "YellowBox"
         },
         {
-            "include":"Camera"
+            "include": "Camera"
+        },
+        {
+            "name": "TransportController",
+            "Component": {
+                "TransportController": {}
+            }
         }
     ]
 }

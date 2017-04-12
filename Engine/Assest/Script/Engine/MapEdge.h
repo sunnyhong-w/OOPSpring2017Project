@@ -7,6 +7,4 @@ class MapEdge : public GameBehaviour
 {
     public:
     	MapEdge(GameObject* gobj) : GameBehaviour(gobj){};
-    protected:
-    private:
 };

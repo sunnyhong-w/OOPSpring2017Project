@@ -13,6 +13,7 @@ void to_json(json& j, const PassState& ps);
 
 struct SlideBoxSetting 
 {
+    SlideBoxSetting();
     Vector2I position;
     PassState state;
 };

@@ -50,6 +50,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 	RegisterComponent(YellowBox)
 	RegisterComponent(MapEdge)
 	RegisterComponent(Camera)
+    RegisterComponent(TransportController)
     else return nullptr;
 }
 
