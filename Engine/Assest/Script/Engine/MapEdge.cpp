@@ -18,6 +18,7 @@ void MapEdge::OnCollisionStay(Collider * c)
             }
 
             c->gameObject->transform->SetWorldPosition(targetPosition);
+			c->gameObject->GetComponent<Player>()->roomName = targetRoom;
         }
     }
 }

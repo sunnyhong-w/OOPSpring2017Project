@@ -9,4 +9,5 @@ class MapEdge : public GameBehaviour
     	MapEdge(GameObject* gobj) : GameBehaviour(gobj){};
         void OnCollisionStay(Collider* c) override;
         Vector2 targetPosition;
+		string targetRoom;
 };

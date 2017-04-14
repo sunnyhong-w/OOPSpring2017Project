@@ -56,52 +56,82 @@ void TransportController::OnRecivedBoardcast(BoardcastMessageData bmd)
         {
             if (y + 1 < 4 && boxMapping[x][y].state.bottom && boxMapping[x][y + 1].state.top)
             {
-                auto obj1 = edgeMapGameObject[boxName[x][y]]["Bottom"];
+				auto objname1 = boxName[x][y];
+				auto objname2 = boxName[x][y + 1];
+
+                auto obj1 = edgeMapGameObject[objname1]["Bottom"];
                 obj1->SetLayer(Layer::MapEdge);
                 
-                auto obj2 = edgeMapGameObject[boxName[x][y + 1]]["Top"];
+                auto obj2 = edgeMapGameObject[objname2]["Top"];
                 obj2->SetLayer(Layer::MapEdge);
                 
                 auto edgecomp1 = obj1->GetComponent<MapEdge>();
                 auto edgecomp2 = obj2->GetComponent<MapEdge>();
 
-                auto transobj1 = GameObject::findGameObjectByName(boxName[x][y] + "Bottom" + "Transporter");
-                auto transobj2 = GameObject::findGameObjectByName(boxName[x][y + 1] + "Top" + "Transporter");
+                auto transobj1 = GameObject::findGameObjectByName(objname1 + "Bottom" + "Transporter");
+                auto transobj2 = GameObject::findGameObjectByName(objname2 + "Top" + "Transporter");
 
-                if (transobj2 != nullptr)
-                    edgecomp1->targetPosition = transobj2->spriteRenderer->GetRealRenderPostion().GetV2();
-                else
-                    edgecomp1->targetPosition = Vector2::null;
+				if (transobj2 != nullptr)
+				{
+					edgecomp1->targetPosition = transobj2->spriteRenderer->GetRealRenderPostion().GetV2();
+					edgecomp1->targetRoom = objname2;
+				}
+				else
+				{
+					edgecomp1->targetPosition = Vector2::null;
+					edgecomp1->targetRoom = "";
+				}
 
-                if (transobj1 != nullptr)
-                    edgecomp2->targetPosition = transobj1->spriteRenderer->GetRealRenderPostion().GetV2();
-                else
-                    edgecomp2->targetPosition = Vector2::null;
+				if (transobj1 != nullptr)
+				{
+					edgecomp2->targetPosition = transobj1->spriteRenderer->GetRealRenderPostion().GetV2();
+					edgecomp2->targetRoom = objname1;
+				}
+				else
+				{
+					edgecomp2->targetPosition = Vector2::null;
+					edgecomp2->targetRoom = "";
+				}
             }
 
             if (x + 1 < 4 && boxMapping[x][y].state.right && boxMapping[x + 1][y].state.left)
             {
-                auto obj1 = edgeMapGameObject[boxName[x][y]]["Right"];
+				auto objname1 = boxName[x][y];
+				auto objname2 = boxName[x + 1][y];
+
+                auto obj1 = edgeMapGameObject[objname1]["Right"];
                 obj1->SetLayer(Layer::MapEdge);
 
-                auto obj2 = edgeMapGameObject[boxName[x + 1][y]]["Left"];
+                auto obj2 = edgeMapGameObject[objname2]["Left"];
                 obj2->SetLayer(Layer::MapEdge);
 
                 auto edgecomp1 = obj1->GetComponent<MapEdge>();
                 auto edgecomp2 = obj2->GetComponent<MapEdge>();
 
-                auto transobj1 = GameObject::findGameObjectByName(boxName[x][y] + "Right" + "Transporter");
-                auto transobj2 = GameObject::findGameObjectByName(boxName[x + 1][y] + "Left" + "Transporter");
+                auto transobj1 = GameObject::findGameObjectByName(objname1 + "Right" + "Transporter");
+                auto transobj2 = GameObject::findGameObjectByName(objname2 + "Left" + "Transporter");
 
-                if (transobj2 != nullptr)
-                    edgecomp1->targetPosition = transobj2->spriteRenderer->GetRealRenderPostion().GetV2();
-                else
-                    edgecomp1->targetPosition = Vector2::null;
+				if (transobj2 != nullptr)
+				{
+					edgecomp1->targetPosition = transobj2->spriteRenderer->GetRealRenderPostion().GetV2();
+					edgecomp1->targetRoom = objname2;
+				}
+				else
+				{
+					edgecomp1->targetPosition = Vector2::null;
+					edgecomp1->targetRoom = "";
+				}
 
-                if (transobj1 != nullptr)
-                    edgecomp2->targetPosition = transobj1->spriteRenderer->GetRealRenderPostion().GetV2();
-                else
-                    edgecomp2->targetPosition = Vector2::null;
+				if (transobj1 != nullptr)
+				{
+					edgecomp2->targetPosition = transobj1->spriteRenderer->GetRealRenderPostion().GetV2();
+					edgecomp2->targetRoom = objname1;
+				}
+				else
+				{
+					edgecomp2->targetPosition = Vector2::null;
+					edgecomp2->targetRoom = "";
+				}
             }
         }
     }

@@ -84,11 +84,12 @@ void Player::OnRecivedBoardcast(BoardcastMessageData bmd)
 
 void Player::OnDrawGizmos(CDC * pDC)
 {
-	Rigidbody *rb = this->gameObject->rigidbody;
-	pDC->TextOutA(0, 20, ("colliderINFO : " + rb->colliderInfo.toString()).c_str());
-	pDC->TextOutA(0, 40, ("Can Jump : " + to_string(canJump)).c_str());
-	pDC->TextOutA(0, 60, ("velocity : " + rb->velocity.toString()).c_str());
-	pDC->TextOutA(0, 80, ("vel y : " + to_string(vel.y)).c_str());
+	pDC->TextOutA(0, 20, ("Now Room : " + roomName).c_str());
+}
+
+string Player::GetRoomName()
+{
+	return roomName;
 }
 
 void Player::Jump(Vector2 & velocity)
