@@ -33,7 +33,6 @@ void Spring::OnCollisionEnter(Collider * c)
 
 void Spring::OnCollisionStay(Collider * c)
 {
-	int maxHeight = 5;
 	pressed = true;
 	lastState = pressed;
 	Player* pl = c->gameObject->GetComponent<Player>();

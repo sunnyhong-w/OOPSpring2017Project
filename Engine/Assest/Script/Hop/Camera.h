@@ -9,6 +9,7 @@ class Camera : public GameBehaviour
 		Camera(GameObject* gobj) : GameBehaviour(gobj) {}
 		void Start() override;
 		void LateUpdate() override;
+		void OnDrawGizmos(CDC *pDC) override;
     protected:
     private:
 		Vector2 playerPos;

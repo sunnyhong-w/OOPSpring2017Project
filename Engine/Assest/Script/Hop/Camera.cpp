@@ -39,8 +39,29 @@ void Camera::LateUpdate()
         {
             GameScene::CameraPosition() = this->gameObject->spriteRenderer->GetRealRenderPostion();
             playerPos = player->transform->GetWorldPosition() + (player->collider->collisionInfo.size / 2);
+			float playerCamerPosY = player->transform->GetWorldPosition().y - GameScene::CameraPosition().y;
+			if (playerCamerPosY + player->collider->collisionInfo.size.y > 250)
+			{
+				this->gameObject->rigidbody->velocity.y =player->rigidbody->velocity.y;
+			}
+			else if(playerCamerPosY  <= 60)
+			{
+				if (player->rigidbody->velocity.y < 0)
+				{
+					this->gameObject->rigidbody->velocity = player->rigidbody->velocity;
+				}
+			}
+			else
+			{
             Vector2::Damp(this->transform->GetWorldPosition(), playerPos, velocity, 0.0001f, 1, 0.5f);
             this->gameObject->rigidbody->velocity = (velocity * Time::deltaTime * 8).floorSpecial();
+			}
         }
     }
+}
+
+void Camera::OnDrawGizmos(CDC * pDC)
+{
+	game_framework::CDDraw::DrawLine(pDC, Vector2I(0, 250), Vector2I(480, 250), RGB(255,0,0));
+
 }

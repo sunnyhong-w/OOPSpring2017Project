@@ -92,6 +92,8 @@ class Transform : public Component
 class SpriteRenderer : public Component, private game_framework::CMovingBitmap
 {
     public:
+		friend class GameScene;
+
         SpriteRenderer(GameObject* gobj);
         ~SpriteRenderer();
         void ParseJSON(json j) override;

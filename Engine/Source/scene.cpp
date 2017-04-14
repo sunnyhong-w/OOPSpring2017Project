@@ -184,7 +184,8 @@ void GameScene::OnShow()
             for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
             {
                 Collider* collider = (*it)->collider;
-                if (collider != nullptr && collider->GetEnable())
+				SpriteRenderer* spriteRenderer = (*it)->spriteRenderer;
+                if (collider != nullptr && collider->GetEnable() && (spriteRenderer != nullptr ? spriteRenderer->CameraTest(cameraPosition) : true))
                     collider->OnDrawGismos(pDC, cameraPosition);
 
                 (*it)->OnDrawGizmos(pDC);
