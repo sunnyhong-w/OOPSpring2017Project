@@ -65,6 +65,7 @@ class Transform : public Component
         void SetWorldPosition(Vector2 newpos);
         void UpdateWorldPosition();
         void Translate(Vector2 dpos);
+        void Translate(float dx,float dy);
 
         Vector2 scale;
 
@@ -91,6 +92,8 @@ class Transform : public Component
 class SpriteRenderer : public Component, private game_framework::CMovingBitmap
 {
     public:
+		friend class GameScene;
+
         SpriteRenderer(GameObject* gobj);
         ~SpriteRenderer();
         void ParseJSON(json j) override;

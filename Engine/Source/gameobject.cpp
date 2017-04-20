@@ -1,3 +1,4 @@
+
 /*  gameobject.cpp: 本檔案儲存遊戲引擎所使用的GameObject的interface的實作
 Copyright (C) 2017 Guo Xiang, Hong <sunnyhong.w@gmail.com>
 
@@ -47,6 +48,9 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 	RegisterComponent(Button)
     RegisterComponent(GreenBox)
 	RegisterComponent(YellowBox)
+	RegisterComponent(MapEdge)
+	RegisterComponent(Camera)
+    RegisterComponent(TransportController)
     else return nullptr;
 }
 
@@ -197,6 +201,11 @@ string GameObject::GetName()
     return this->name;
 }
 
+Tag GameObject::GetTag()
+{
+    return tag;
+}
+
 void GameObject::SetTag(Tag tag)
 {
     if (!this->doNOTUpdateObjectPool)
@@ -212,6 +221,11 @@ void GameObject::SetTag(Tag tag)
     }
     else
         this->tag = tag;
+}
+
+Layer GameObject::GetLayer()
+{
+    return layer;
 }
 
 void GameObject::SetLayer(Layer layer)

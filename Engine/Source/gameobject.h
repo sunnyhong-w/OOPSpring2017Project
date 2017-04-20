@@ -61,7 +61,9 @@ class GameObject
 		void OnDrawGizmos(CDC* pDC);
         void SetName(string name);
         string GetName();
+        Tag GetTag();
         void SetTag(Tag tag);
+        Layer GetLayer();
         void SetLayer(Layer layer);
         void SetEnable(bool enable);
         bool GetEnable();

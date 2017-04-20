@@ -139,6 +139,11 @@ void Transform::Translate(Vector2 dpos)
     SetPosition(position + dpos);
 }
 
+void Transform::Translate(float dx, float dy)
+{
+    SetPosition(position + Vector2(dx, dy));
+}
+
 int Transform::GetZIndex()
 {
     return zindex;
@@ -269,6 +274,9 @@ void SpriteRenderer::ParseJSON(json j)
 
     if (j.find("SrcSize") != j.end())
         this->SetSize(j["SrcSize"]);
+
+	if (j.find("AnchorRaito") != j.end())
+		this->SetAnchorRaito(j["AnchorRaito"]);
 
     if (j.find("SortingLayer") != j.end())
     {
@@ -495,7 +503,7 @@ void Collider::Update()
 	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
         for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
             if ((*it)->GetEnable())
-                (*it)->OnCollisionEnter(c);
+                (*it)->OnCollisionExit(c);
 
 	lastCollidedCollder = collidedCollider;
 	collidedCollider.clear();

@@ -190,6 +190,15 @@
     <ClCompile Include="Assest\Script\Hop\YellowBox.cpp">
       <Filter>GameScript\Hop</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\Camera.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\TransportController.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Engine\MapEdge.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -281,6 +290,15 @@
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Hop\YellowBox.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\Camera.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\TransportController.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine\MapEdge.h">
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
   </ItemGroup>

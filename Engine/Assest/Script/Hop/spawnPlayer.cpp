@@ -14,6 +14,7 @@ void SpawnPlayer::ParseJSON(json j)
 
 void SpawnPlayer::Start()
 {
+	pos = this->gameObject->spriteRenderer->GetRealRenderPostion().GetV2();
     this->gameObject->RemoveComponent<SpriteRenderer>();
 }
 
@@ -22,7 +23,7 @@ void SpawnPlayer::Update()
     if (count == target)
     {
         GameObject* gobj = GameScene::CreateGameObject("spawnPlayer", { { "include" , "player" } });
-        gobj->transform->SetWorldPosition(this->transform->GetWorldPosition());
+        gobj->transform->SetWorldPosition(pos);
         Destroy(this->gameObject);
     }
 

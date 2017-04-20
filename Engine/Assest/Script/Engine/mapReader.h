@@ -61,17 +61,22 @@ struct Tile
 class MapReader : public GameBehaviour
 {
 public:
-	~MapReader();
+    static vector<MapReader*> readerList;
+
+    ~MapReader() {};
 	MapReader(GameObject* gobj) : GameBehaviour(gobj) {}
 	void ParseJSON(json j) override;
     void ParseProperties(GameObject* gobj, string filename, json prop);
 	void LoadMap(string str);
+    void Start() override;
 	void Draw(Vector2I campos) override;
 	void Update() override;
     void LateUpdate() override;
 
 private:
     GameObject* GenerateTile(string fname, int tindex);
+	void CreateMapEdge(Transform* parent, Vector2 mapSize, string filename, Vector2I tileSize);
+	void CreateEdgeObj(Transform* parent, string filename, string way, string type, Vector2 position, Vector2I colliderSize);
 
 	TileMap tileMap;
     Vector2 slicer;

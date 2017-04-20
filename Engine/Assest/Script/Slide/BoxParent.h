@@ -8,8 +8,8 @@ class BoxParent : public GameBehaviour
     public:
 		BoxParent(GameObject* gobj) : GameBehaviour(gobj)
 		{
-			eventListener[BoardcastEvent::ButtonPressed] = true;
-			eventListener[BoardcastEvent::ButtonRelease] = true;
+            RegisterEvent(BoardcastEvent::ButtonPressed);
+            RegisterEvent(BoardcastEvent::ButtonRelease);
 		}
 
         void Start() override;
