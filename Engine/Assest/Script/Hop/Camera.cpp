@@ -5,7 +5,6 @@
 void Camera::Start()
 {
 	player = nullptr;
-	//GameScene::CameraPosition() = GameObject::findGameObjectByName("Player")->transform->GetPostion().GetV2I();
 }
 
 void Camera::LateUpdate()
@@ -30,7 +29,8 @@ void Camera::LateUpdate()
             player = GameObject::findGameObjectByName("Player");
             if (player != nullptr)
             {
-                this->transform->SetPosition(player->transform->GetWorldPosition());
+				playerPos = player->transform->GetWorldPosition() + (player->collider->collisionInfo.size / 2);
+                this->transform->SetPosition(playerPos);
                 GameScene::CameraPosition() = this->gameObject->spriteRenderer->GetRealRenderPostion();
                 this->gameObject->rigidbody->velocity = Vector2::zero;
             }
@@ -46,7 +46,7 @@ void Camera::LateUpdate()
 
 			if (playerCamerPosY + player->collider->collisionInfo.size.y > 250)
 			{
-				this->gameObject->rigidbody->velocity.y =player->rigidbody->velocity.y;
+				this->gameObject->rigidbody->velocity.y = player->rigidbody->velocity.y;
 			}
 			else if(playerCamerPosY  <= 60)
 			{
@@ -62,5 +62,40 @@ void Camera::LateUpdate()
 void Camera::OnDrawGizmos(CDC * pDC)
 {
 	game_framework::CDDraw::DrawLine(pDC, Vector2I(200, 250), Vector2I(280, 250), RGB(255,0,0));
+}
 
+void Camera::OnCollisionEnter(Collider * c)
+{
+	if (!Input::GetKeyPressing(VK_F5))
+	{
+		string cname = c->gameObject->GetName();
+
+		auto position = this->gameObject->spriteRenderer->GetRealRenderPostion();
+
+		if (cname.find("Top") != string::npos)
+		{
+			int dy = (c->transform->GetWorldPosition().y + c->collisionInfo.size.y) - position.y;
+			this->transform->Translate(0, dy);
+		}
+		else if (cname.find("Bottom") != string::npos)
+		{
+			int dy = c->transform->GetWorldPosition().y - position.y - this->gameObject->collider->collisionInfo.size.y;
+			this->transform->Translate(0, dy);
+		}
+		else if (cname.find("Right") != string::npos)
+		{
+			int dx = c->transform->GetWorldPosition().x - position.x - this->gameObject->collider->collisionInfo.size.x;
+			this->transform->Translate(dx, 0);
+		}
+		else if (cname.find("Left") != string::npos)
+		{
+			int dx = (c->transform->GetWorldPosition().x + c->collisionInfo.size.x) - position.x;
+			this->transform->Translate(dx, 0);
+		}
+	}
+}
+
+void Camera::OnCollisionStay(Collider * c)
+{
+	OnCollisionEnter(c);
 }

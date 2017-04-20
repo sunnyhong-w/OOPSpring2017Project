@@ -10,6 +10,9 @@ class Camera : public GameBehaviour
 		void Start() override;
 		void LateUpdate() override;
 		void OnDrawGizmos(CDC *pDC) override;
+		void OnCollisionEnter(Collider* c);
+		void OnCollisionStay(Collider* c);
+
     protected:
     private:
 		Vector2 playerPos;

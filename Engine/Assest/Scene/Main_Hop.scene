@@ -29,7 +29,7 @@
             "Component": {
                 "Transform": {
                     "position": {
-                        "x": 2000,
+                        "x": 3000,
                         "y": 0
                     }
                 },
@@ -47,7 +47,7 @@
             "Component": {
                 "Transform": {
                     "position": {
-                        "x": 4000,
+                        "x": 6000,
                         "y": 0
                     }
                 },
@@ -65,7 +65,7 @@
             "Component": {
                 "Transform": {
                     "position": {
-                        "x": 6000,
+                        "x": 9000,
                         "y": 0
                     }
                 },
@@ -83,7 +83,7 @@
             "Component": {
                 "Transform": {
                     "position": {
-                        "x": 8000,
+                        "x": 12000,
                         "y": 0
                     }
                 },

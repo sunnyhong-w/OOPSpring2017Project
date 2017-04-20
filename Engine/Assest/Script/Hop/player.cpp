@@ -85,6 +85,7 @@ void Player::OnRecivedBoardcast(BoardcastMessageData bmd)
 void Player::OnDrawGizmos(CDC * pDC)
 {
 	pDC->TextOutA(0, 20, ("Now Room : " + roomName).c_str());
+	pDC->TextOutA(0, 40, ("Player Pos : " + this->transform->GetWorldPosition().toString()).c_str());
 }
 
 string Player::GetRoomName()

@@ -17,4 +17,5 @@ class SpawnPlayer : public GameBehaviour
     private:
         int count;
         int target;
+		Vector2 pos;
 };
