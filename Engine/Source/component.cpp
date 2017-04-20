@@ -503,7 +503,7 @@ void Collider::Update()
 	for (auto c : lastCollidedCollder) //最後剩在lastCollidedCollder的就是OnExit的Collider
         for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
             if ((*it)->GetEnable())
-                (*it)->OnCollisionEnter(c);
+                (*it)->OnCollisionExit(c);
 
 	lastCollidedCollder = collidedCollider;
 	collidedCollider.clear();
