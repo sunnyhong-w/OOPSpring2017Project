@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "Engine.h"
 #include "mapReader.h"
-
 #include<fstream>
 using namespace std;
 

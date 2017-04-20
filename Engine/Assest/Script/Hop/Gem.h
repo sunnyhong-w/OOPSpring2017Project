@@ -7,8 +7,9 @@ class Gem : public GameBehaviour
 {
     public:
 		Gem(GameObject* gobj) : GameBehaviour(gobj) {
-			GameStatus::status[to_string((int)StatusName::Gem)] = 0;
+
 		}
+		void Start() override;
 		void OnCollisionEnter(Collider* c) override;
     private:
 };

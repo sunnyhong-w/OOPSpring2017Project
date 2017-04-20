@@ -8,9 +8,9 @@ enum class StatusName
 class GameStatus
 {
 	public:
-		GameStatus();
 		static json  status;
-		static void MakeSaveFile();
+		static void LoadFile();
+		static void SaveFile();
     protected:
     private:
 };
