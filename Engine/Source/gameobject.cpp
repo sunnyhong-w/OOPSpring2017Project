@@ -51,6 +51,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 	RegisterComponent(MapEdge)
 	RegisterComponent(Camera)
     RegisterComponent(TransportController)
+	RegisterComponent(Gem)
     else return nullptr;
 }
 
