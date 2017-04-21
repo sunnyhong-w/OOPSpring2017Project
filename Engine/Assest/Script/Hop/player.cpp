@@ -88,6 +88,20 @@ void Player::OnDrawGizmos(CDC * pDC)
 	pDC->TextOutA(0, 40, ("Player Pos : " + this->transform->GetWorldPosition().toString()).c_str());
 }
 
+void Player::SetRoomName(string name)
+{
+	roomName = name;
+
+	auto gobj = GameObject::findGameObjectByName("YellowBox");
+	if (gobj != nullptr)
+	{
+		if (name == "Yellow")
+			gobj->collider->SetEnable(true);
+		else
+			gobj->collider->SetEnable(false);
+	}
+}
+
 string Player::GetRoomName()
 {
 	return roomName;

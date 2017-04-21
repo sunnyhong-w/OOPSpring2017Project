@@ -6,7 +6,6 @@ using namespace game_engine;
 class Player : public GameBehaviour
 {
     public:
-		friend class MapEdge;
 
 		Player(GameObject* gobj) : GameBehaviour(gobj) 
 		{ 
@@ -18,6 +17,7 @@ class Player : public GameBehaviour
         void Update() override;
 		void OnRecivedBoardcast(BoardcastMessageData bmd) override;
 		void OnDrawGizmos(CDC* pDC) override;
+		void SetRoomName(string name);
 		string GetRoomName();
 
         int speed;
