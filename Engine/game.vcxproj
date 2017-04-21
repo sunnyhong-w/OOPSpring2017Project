@@ -267,12 +267,14 @@
     <None Include="res\Toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Assest\Script\Engine\GameStatus.cpp" />
     <ClCompile Include="Assest\Script\Engine\MapEdge.cpp" />
     <ClCompile Include="Assest\Script\Engine\mapReader.cpp" />
     <ClCompile Include="Assest\Script\Engine\textRenderer.cpp" />
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp" />
     <ClCompile Include="Assest\Script\Hop\Button.cpp" />
     <ClCompile Include="Assest\Script\Hop\Camera.cpp" />
+    <ClCompile Include="Assest\Script\Hop\Gem.cpp" />
     <ClCompile Include="Assest\Script\Hop\GreenBox.cpp" />
     <ClCompile Include="Assest\Script\Hop\TransportController.cpp" />
     <ClCompile Include="Assest\Script\Hop\YellowBox.cpp" />
@@ -328,12 +330,14 @@
     <ClCompile Include="Source\_setting.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assest\Script\Engine\GameStatus.h" />
     <ClInclude Include="Assest\Script\Engine\MapEdge.h" />
     <ClInclude Include="Assest\Script\Engine\mapReader.h" />
     <ClInclude Include="Assest\Script\Engine\textRenderer.h" />
     <ClInclude Include="Assest\Script\Engine\textStamp.h" />
     <ClInclude Include="Assest\Script\Hop\Button.h" />
     <ClInclude Include="Assest\Script\Hop\Camera.h" />
+    <ClInclude Include="Assest\Script\Hop\Gem.h" />
     <ClInclude Include="Assest\Script\Hop\GreenBox.h" />
     <ClInclude Include="Assest\Script\Hop\TransportController.h" />
     <ClInclude Include="Assest\Script\Hop\YellowBox.h" />
