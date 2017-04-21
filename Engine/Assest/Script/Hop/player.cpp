@@ -98,13 +98,13 @@ void Player::SetRoomName(string name)
 	{
 		if (name == "Yellow")
 		{
-			this->gameObject->collider->SetEnable(true);
-			this->gameObject->spriteRenderer->SetEnable(true);
+			gobj->collider->SetEnable(true);
+			gobj->spriteRenderer->SetEnable(true);
 		}
 		else
 		{
-			this->gameObject->collider->SetEnable(false);
-			this->gameObject->spriteRenderer->SetEnable(false);
+			gobj->collider->SetEnable(false);
+			gobj->spriteRenderer->SetEnable(false);
 		}
 	}
 }
