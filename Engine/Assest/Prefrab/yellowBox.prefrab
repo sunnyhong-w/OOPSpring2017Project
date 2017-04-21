@@ -2,9 +2,18 @@
     "name": "YellowBox",
     "Component": {
         "Collider": {
-            "size": { "x": 300, "y": 300 }
+            "size": {
+                "x": 300,
+                "y": 300
+            }
+        },
+        "SpriteRenderer": {
+            "Bitmap": {
+                "name": "GameObject\\Yellow"
+            },
+            "SortingLayer": 1
         },
         "YellowBox": {}
     },
-    "layer" : 1
+    "layer": 1
 }
