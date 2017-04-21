@@ -72,6 +72,7 @@ void Player::Update()
         if(gobj != nullptr)
         { 
             gobj->collider->SetEnable(!gobj->collider->GetEnable());
+			gobj->spriteRenderer->SetEnable(!gobj->spriteRenderer->GetEnable());
         }
     }
 
@@ -96,9 +97,15 @@ void Player::SetRoomName(string name)
 	if (gobj != nullptr)
 	{
 		if (name == "Yellow")
-			gobj->collider->SetEnable(true);
+		{
+			this->gameObject->collider->SetEnable(true);
+			this->gameObject->spriteRenderer->SetEnable(true);
+		}
 		else
-			gobj->collider->SetEnable(false);
+		{
+			this->gameObject->collider->SetEnable(false);
+			this->gameObject->spriteRenderer->SetEnable(false);
+		}
 	}
 }
 

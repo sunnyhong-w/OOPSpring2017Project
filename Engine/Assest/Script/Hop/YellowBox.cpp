@@ -10,6 +10,7 @@ void YellowBox::Start()
 	this->transform->SetWorldPosition(Vector2(-1000, -1000));
 
     this->gameObject->collider->SetEnable(false);
+	this->gameObject->spriteRenderer->SetEnable(false);
 }
 
 void YellowBox::LateUpdate()
