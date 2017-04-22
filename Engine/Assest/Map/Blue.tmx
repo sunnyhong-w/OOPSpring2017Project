@@ -415,7 +415,7 @@
   <object id="27" gid="47" x="1632" y="1248" width="32" height="32"/>
   <object id="28" gid="45" x="368" y="1664" width="32" height="32"/>
   <object id="29" gid="46" x="0" y="384" width="32" height="32"/>
-  <object id="36" name="BlueGem" gid="50" x="1408" y="1056" width="32" height="32">
+  <object id="36" name="BlueGem" gid="50" x="224" y="256" width="32" height="32">
    <properties>
     <property name="include" value="Gem"/>
    </properties>
