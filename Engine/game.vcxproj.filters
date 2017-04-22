@@ -199,6 +199,15 @@
     <ClCompile Include="Assest\Script\Engine\MapEdge.cpp">
       <Filter>GameScript\Hop</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\Gem.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Engine\GameStatus.cpp">
+      <Filter>GameEngine\EngingScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\CollectedGem.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -267,9 +276,6 @@
     <ClInclude Include="Assest\Script\Engine\textStamp.h">
       <Filter>GameEngine\EngingScript</Filter>
     </ClInclude>
-    <ClInclude Include="Assest\Script\Slide\slide.h">
-      <Filter>GameScript\Slide</Filter>
-    </ClInclude>
     <ClInclude Include="Assest\Script\Hop\spawnPlayer.h">
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
@@ -299,6 +305,18 @@
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Engine\MapEdge.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\Gem.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Slide\slide.h">
+      <Filter>MFC</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine\GameStatus.h">
+      <Filter>GameEngine\EngingScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\CollectedGem.h">
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
   </ItemGroup>

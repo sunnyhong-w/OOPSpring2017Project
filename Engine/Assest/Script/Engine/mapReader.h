@@ -1,5 +1,5 @@
 #pragma once
-
+#include "GameStatus.h"
 #include "gamebehavior.h"
 
 using namespace game_engine;
@@ -64,7 +64,7 @@ public:
     static vector<MapReader*> readerList;
 
     ~MapReader() {};
-	MapReader(GameObject* gobj) : GameBehaviour(gobj) {}
+	MapReader(GameObject* gobj) : GameBehaviour(gobj) {  }
 	void ParseJSON(json j) override;
     void ParseProperties(GameObject* gobj, string filename, json prop);
 	void LoadMap(string str);

@@ -1,0 +1,10 @@
+{
+	"name":"Gem",
+	"Component": {
+        "Collider": {
+            "size": { "x": 32, "y": 32 }
+        },
+        "Gem":{}
+    },
+    "layer" : 5
+}

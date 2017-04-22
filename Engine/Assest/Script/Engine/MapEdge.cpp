@@ -17,7 +17,7 @@ void MapEdge::Update()
 		}
 
 		target->transform->SetWorldPosition(targetPosition);
-		target->GetComponent<Player>()->roomName = targetRoom;
+		target->GetComponent<Player>()->SetRoomName(targetRoom);
 	}
 
 	target = nullptr;
