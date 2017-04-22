@@ -274,6 +274,7 @@
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp" />
     <ClCompile Include="Assest\Script\Hop\Button.cpp" />
     <ClCompile Include="Assest\Script\Hop\Camera.cpp" />
+    <ClCompile Include="Assest\Script\Hop\CollectedGem.cpp" />
     <ClCompile Include="Assest\Script\Hop\Gem.cpp" />
     <ClCompile Include="Assest\Script\Hop\GreenBox.cpp" />
     <ClCompile Include="Assest\Script\Hop\TransportController.cpp" />
@@ -337,6 +338,7 @@
     <ClInclude Include="Assest\Script\Engine\textStamp.h" />
     <ClInclude Include="Assest\Script\Hop\Button.h" />
     <ClInclude Include="Assest\Script\Hop\Camera.h" />
+    <ClInclude Include="Assest\Script\Hop\CollectedGem.h" />
     <ClInclude Include="Assest\Script\Hop\Gem.h" />
     <ClInclude Include="Assest\Script\Hop\GreenBox.h" />
     <ClInclude Include="Assest\Script\Hop\TransportController.h" />

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="12" tilewidth="32" tileheight="32" nextobjectid="31">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="12" tilewidth="32" tileheight="32" nextobjectid="32">
  <tileset firstgid="1" name="Collision Ground" tilewidth="32" tileheight="32" tilecount="20" columns="5">
   <image source="../Bitmap/TileRed.bmp" width="160" height="128"/>
   <tile id="0">
@@ -146,7 +146,7 @@
  <tileset firstgid="21" name="No Collision Ground" tilewidth="32" tileheight="32" tilecount="20" columns="5">
   <image source="../Bitmap/TileRed.bmp" width="160" height="128"/>
  </tileset>
- <tileset firstgid="41" name="Obj" tilewidth="64" tileheight="64" tilecount="8" columns="0">
+ <tileset firstgid="41" name="Obj" tilewidth="64" tileheight="64" tilecount="9" columns="0">
   <tile id="0">
    <properties>
     <property name="include" value="spawnPlayer"/>
@@ -197,14 +197,17 @@
    </properties>
    <image width="32" height="32" source="../Bitmap/GameObject/TopIn.bmp"/>
   </tile>
+  <tile id="8">
+   <image width="32" height="32" source="../Bitmap/GameObject/Gem/Gem_Red.bmp"/>
+  </tile>
  </tileset>
- <tileset firstgid="49" name="Texure1" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+ <tileset firstgid="50" name="Texure1" tilewidth="32" tileheight="32" tilecount="9" columns="3">
   <image source="../Bitmap/texure1.bmp" trans="ff00ff" width="96" height="96"/>
  </tileset>
- <tileset firstgid="58" name="Texure2" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+ <tileset firstgid="59" name="Texure2" tilewidth="32" tileheight="32" tilecount="9" columns="3">
   <image source="../Bitmap/texure2.bmp" trans="ff00ff" width="96" height="96"/>
  </tileset>
- <tileset firstgid="67" name="Texure3" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+ <tileset firstgid="68" name="Texure3" tilewidth="32" tileheight="32" tilecount="9" columns="3">
   <image source="../Bitmap/texure3.bmp" trans="ff00ff" width="96" height="96"/>
  </tileset>
  <layer name="Texure" width="30" height="12">
@@ -216,9 +219,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,52,53,53,53,53,54,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,53,54,54,54,54,55,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,52,53,53,53,53,53,53,53,53,54,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,53,54,54,54,54,54,54,54,54,55,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
@@ -260,5 +263,10 @@
   <object id="28" name="Button1" gid="43" x="184" y="288" width="16" height="16"/>
   <object id="29" gid="46" x="0" y="224" width="32" height="32"/>
   <object id="30" gid="47" x="928" y="224" width="32" height="32"/>
+  <object id="31" name="RedGem" gid="49" x="464" y="160" width="32" height="32">
+   <properties>
+    <property name="include" value="Gem"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

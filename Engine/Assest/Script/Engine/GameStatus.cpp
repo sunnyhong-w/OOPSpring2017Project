@@ -10,13 +10,11 @@ void GameStatus::LoadFile()
 {
 	fstream load;
 	load.open("0.save", ios::in);
-	if (!load)
+	if (load)
 	{
-	//	load.close();
-		load.open("default.save", ios::in);
+		status << load;
 	}
-	status << load;
-	load.close();
+		load.close();
 }
 
 void GameStatus::SaveFile()

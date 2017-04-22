@@ -11,5 +11,6 @@ class Gem : public GameBehaviour
 		}
 		void Start() override;
 		void OnCollisionEnter(Collider* c) override;
+		void OnRecivedBoardcast(BoardcastMessageData bmd) override;
     private:
 };

@@ -26,6 +26,9 @@ void GameScene::OnBeginState()
     th.join();
     //After Loading Easing(Ex : Brighten the whole window)
     game_framework::CSpecialEffect::SetCurrentTime();
+
+	GameStatus::LoadFile();
+
 }
 
 void GameScene::OnMove()

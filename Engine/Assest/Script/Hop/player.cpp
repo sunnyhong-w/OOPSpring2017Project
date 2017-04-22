@@ -12,6 +12,7 @@ void Player::ParseJSON(json j)
 
 void Player::Start()
 {
+
     gravity =(2 * MaxJumpHeight) / pow(jumpTimeApex, 2);
     MaxJumpVelocity = -1 * gravity * jumpTimeApex;
     MinJumpVelocity = sqrt(2 * abs(gravity) * MinJumpHeight);
