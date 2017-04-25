@@ -91,7 +91,7 @@ void MapReader::ParseProperties(GameObject * gobj, string filename, json prop)
     {
         if (j.key() == "ParseJSON")
         {
-            gobj->ParseJSON(j.value());
+            gobj->ParseJSON(json::parse(j.value().get<string>().c_str()));
         }
         else if (j.key() == "include")
         {
