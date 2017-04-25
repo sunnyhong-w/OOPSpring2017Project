@@ -77,6 +77,15 @@ void Player::Update()
         }
     }
 
+    if (Input::GetKeyDown(VK_F3))
+    {
+        GameObject *gobj = GameObject::findGameObjectByName("Anim");
+        if (gobj != nullptr)
+        {
+            gobj->animationController->PlayOneShot("RightShine");
+        }
+    }
+
 	bounce = false;
 }
 
