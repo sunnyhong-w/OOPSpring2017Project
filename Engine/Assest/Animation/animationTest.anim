@@ -200,7 +200,8 @@
    { "name": "TopShine", "from": 0, "to": 5, "direction": "reverse" },
    { "name": "RightShine", "from": 5, "to": 10, "direction": "forward" },
    { "name": "BottomShine", "from": 10, "to": 15, "direction": "pingpong" },
-   { "name": "LeftShine", "from": 15, "to": 20, "direction": "forward" }
+   { "name": "LeftShine", "from": 15, "to": 20, "direction": "forward" },
+   { "name": "FullShine", "from": 0, "to": 19, "direction": "forward" }
   ]
  }
 }

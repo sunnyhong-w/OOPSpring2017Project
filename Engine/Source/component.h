@@ -206,16 +206,19 @@ public:
     void Update();
     void ResetAnimation();
     void SetAnimationPlaytype(AnimationPlaytype ap);
+
+    bool startAtReminder;
+
 private:
     void LoadAnimation(AnimationData newAnim);
     void PlayOneShot(AnimationData oneShot);
 
     int animateCount;
     int duration;
+    int frameRemider;
     DWORD timeStamp;
     AnimationData animationData;
     AnimationData animationOneShot;
-    bool duringOneShot;
 };
 
 struct ColliderInfo

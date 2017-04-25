@@ -540,6 +540,7 @@ Animation::Animation(GameObject * gobj) : Component(gobj)
 {
     this->gameObject->animation = this;
     this->gameObject->AddComponentOnce<SpriteRenderer>();
+    startAtReminder = true;
 }
 
 Animation::~Animation()
@@ -550,10 +551,15 @@ Animation::~Animation()
 void Animation::SetFrame(int i)
 {
     AnimationSetting data;
-    if (duringOneShot)
+    if (this->frameRemider != -1)
     {
         if (i == animationOneShot.frameList.size())
-            duringOneShot = false;
+        {
+            if(startAtReminder)
+                i = this->frameRemider;
+
+            this->frameRemider = -1;
+        }
         else
         {
             this->animateCount = i % animationOneShot.frameList.size();
@@ -561,7 +567,7 @@ void Animation::SetFrame(int i)
         }
     }
 
-    if (!duringOneShot)
+    if (this->frameRemider == -1)
     {
         this->animateCount = i % animationData.frameList.size();
         data = animationData.frameList[this->animateCount];
@@ -579,24 +585,24 @@ void Animation::LoadAnimation(AnimationData newAnim)
     this->animationData.frameList = newAnim.frameList;
     this->animationData.playtype = newAnim.playtype;
 
-    GAME_ASSERT(animationData.frameList.size() == 0, "Animation Size ERROR");
+    GAME_ASSERT(animationData.frameList.size() != 0, "Animation Size ERROR");
 
     SetFrame(0);
 }
 
 void Animation::PlayOneShot(AnimationData newAnim)
 {
-    if (duringOneShot) 
+    if (this->frameRemider != -1)
         this->animationOneShot.frameList.clear();
+    else
+        frameRemider = this->animateCount;
 
     this->animationOneShot.frameList = newAnim.frameList;
     this->animationOneShot.playtype = newAnim.playtype;
 
-    GAME_ASSERT(animationOneShot.frameList.size() == 0, "Animation Size ERROR");
+    GAME_ASSERT(animationOneShot.frameList.size() != 0, "Animation Size ERROR");
 
     SetFrame(0);
-    
-    duringOneShot = true;
 }
 
 void Animation::Update()
@@ -612,7 +618,7 @@ void Animation::ResetAnimation()
 
 void Animation::SetAnimationPlaytype(AnimationPlaytype ap)
 {
-    if (duringOneShot)
+    if (this->frameRemider != -1)
         animationOneShot.playtype = ap;
     else
         animationData.playtype = ap;
@@ -629,11 +635,41 @@ AnimationController::~AnimationController()
     this->gameObject->animationController = nullptr;
 }
 
-void ParseJSON(json j) 
+void AnimationController::ParseJSON(json j)
 {
     //animation name
     //init
+
+    if(j.find("animation") != j.end())
+    {
+        string name = R"(.\Assest\Animation\)" + j["animation"].get<string>() + ".anim";
+
+        ifstream file;
+        file.open(name);
+        if (file.good())
+        {
+            stringstream buffer;
+            buffer << file.rdbuf();
+            json aespriteJSONobj = json::parse(buffer);
+            this->ParseAespriteJSON(aespriteJSONobj);
+            file.close();
+        }
+        else
+        {
+            file.close();
+            string str = "ERROR : Animation NOT FOUND when parse Animation JSON :\n";
+            str += "GameObject : " + gameObject->GetName() + "\n";
+            str += "Animation : " + name + " => NOT FOUND";
+            GAME_ASSERT(false, str.c_str());
+        }
+    }
+
+    if (j.find("init") != j.end())
+        JumpState(j["init"].get<string>());
+    else
+        JumpState(0);
     
+    Update();
 }
 
 void AnimationController::ParseAespriteJSON(json j)
@@ -642,8 +678,14 @@ void AnimationController::ParseAespriteJSON(json j)
     this->animationData.clear();
     this->frames.clear();
 
+    string filename = j["meta"]["image"];
+
+    filename = filename.substr(filename.find(R"(Assest\Bitmap\)") + 14);
+    filename = filename.substr(0, filename.find(".bmp"));
+
     for (AnimationSetting as : j["frames"])
     {
+        as.filename = filename;
         this->frames.push_back(as);
     }
 
@@ -682,9 +724,6 @@ void AnimationController::ParseAespriteJSON(json j)
 
         this->animationData[jobj["name"]] = animationData;
     }
-
-    JumpState(0);
-	Update();
 }
 
 void AnimationController::Update()
@@ -709,7 +748,7 @@ bool AnimationController::JumpState(string state)
 
 bool AnimationController::JumpState(int state)
 {
-    if (state >= 0 && state < animationList.size())
+    if (state >= 0 && state < (int)animationList.size())
     {
         jumpState = animationList[state];
         return true;
@@ -726,7 +765,7 @@ void AnimationController::PlayOneShot(string state)
 
 void AnimationController::PlayOneShot(int state)
 {
-    if (state >= 0 && state < animationList.size())
+    if (state >= 0 && state < (int)animationList.size())
         this->gameObject->animation->PlayOneShot(animationData[animationList[state]]);
 }
 
