@@ -152,16 +152,30 @@ struct Vector2I
 void from_json(const json& j, Vector2I& v);
 void to_json(json& j, const Vector2I& v);
 
+struct Rect
+{
+    int x;
+    int y;
+    int w;
+    int h;
+    Rect();
+    Rect(int x, int y, int w, int h);
+};
+
+void from_json(const json& j, Rect& v);
+void to_json(json& j, const Rect& v);
+
 struct AnimationSetting
 {
 public:
     AnimationSetting();
-    bool Build(AnimationSetting newSetting);
     string filename;
-    Vector2I position;
-    Vector2I size;
-    Vector2 anchor;
     int duration;
+    bool rotated;
+    bool trimmed;
+    Rect frame;
+    Rect spriteSourceSize;
+    Vector2I sourceSize;
 };
 
 void from_json(const json& j, AnimationSetting& v);

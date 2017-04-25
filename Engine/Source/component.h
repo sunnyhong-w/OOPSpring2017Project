@@ -104,6 +104,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void ResetSourcePos();
         ///<summary>設定Sprite的輸出大小</summary>
         Vector2I GetSourcePos();
+        void SetSourceData(Rect src);
         void SetSize(Vector2I size);
         ///<summary>將Size重置成最後一次Load的圖片大小</summary>
         void ResetSize();
@@ -167,21 +168,11 @@ class Collider : public Component
         vector<Collider*> OnStay;
 };
 
-class Animation : public Component
-{
-public:
-    Animation(GameObject* gobj);
-    ~Animation();
-    void LoadAnimation(json jsonobj);
-    void ParseJSON(json j) override;
-    void Update();
-    void ResetAnimation();
-private:
-    int animateCount;
-    int duration;
-    DWORD timeStamp;
-    json animationInfo;
-    SpriteRenderer *SR;
+enum class AnimationPlaytype : int { Forward, Reverse, Pingpong };
+
+struct AnimationData {
+    vector<AnimationSetting> frameList;
+    AnimationPlaytype playtype;
 };
 
 class AnimationController : public Component
@@ -191,13 +182,40 @@ public:
     ~AnimationController();
     void ParseJSON(json j) override;
     void Update();
-	void JumpState(string state);
-    json varibleMap;
+    bool JumpState(string state);
+    bool JumpState(int state);
+    void PlayOneShot(string state);
+    void PlayOneShot(int state);
 private:
-	bool CheckCondition(json j);
-	string jumpState = "";
-	json data;
-	Animation* animation;
+    void ParseAespriteJSON(json j);
+
+    string jumpState = "";
+    map<string, AnimationData> animationData;
+    vector<string> animationList;
+    vector<AnimationSetting> frames;
+};
+
+class Animation : public Component
+{
+public:
+    friend class AnimationController;
+
+    Animation(GameObject* gobj);
+    ~Animation();
+    void SetFrame(int i);
+    void Update();
+    void ResetAnimation();
+    void SetAnimationPlaytype(AnimationPlaytype ap);
+private:
+    void LoadAnimation(AnimationData newAnim);
+    void PlayOneShot(AnimationData oneShot);
+
+    int animateCount;
+    int duration;
+    DWORD timeStamp;
+    AnimationData animationData;
+    AnimationData animationOneShot;
+    bool duringOneShot;
 };
 
 struct ColliderInfo
