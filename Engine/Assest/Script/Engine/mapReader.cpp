@@ -89,7 +89,11 @@ void MapReader::ParseProperties(GameObject * gobj, string filename, json prop)
 {
     for (json::iterator j = prop.begin(); j != prop.end(); j++)
     {
-        if (j.key() == "include")
+        if (j.key() == "ParseJSON")
+        {
+            gobj->ParseJSON(j.value());
+        }
+        else if (j.key() == "include")
         {
             string prefrabName = j.value();
             json prefrab = GameObject::GetPrefrabs(prefrabName);
