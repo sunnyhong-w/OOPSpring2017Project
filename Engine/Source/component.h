@@ -202,6 +202,7 @@ public:
 
     Animation(GameObject* gobj);
     ~Animation();
+	void NextFrame();
     void SetFrame(int i);
     void Update();
     void ResetAnimation();
@@ -213,6 +214,7 @@ private:
     void LoadAnimation(AnimationData newAnim);
     void PlayOneShot(AnimationData oneShot);
 
+	int animateFrame;
     int animateCount;
     int duration;
     int frameRemider;

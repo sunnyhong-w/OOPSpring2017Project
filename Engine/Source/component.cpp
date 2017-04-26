@@ -541,6 +541,7 @@ Animation::Animation(GameObject * gobj) : Component(gobj)
     this->gameObject->animation = this;
     this->gameObject->AddComponentOnce<SpriteRenderer>();
     startAtReminder = true;
+	frameRemider = -1;
 }
 
 Animation::~Animation()
@@ -548,29 +549,95 @@ Animation::~Animation()
     this->gameObject->animation = nullptr;
 }
 
+void Animation::NextFrame()
+{
+	int size = 0;
+	AnimationPlaytype ap;
+
+	if (this->frameRemider != -1)
+	{
+		size = animationOneShot.frameList.size();
+		ap = animationOneShot.playtype;
+
+		if (ap == AnimationPlaytype::Forward)
+		{
+			if (this->animateCount + 1 == size)
+			{
+				this->animateCount = this->frameRemider;
+				this->frameRemider = -1;
+			}
+			else
+			{
+				this->animateCount++;
+				SetFrame(this->animateCount);
+			}
+		}
+		else if (ap == AnimationPlaytype::Reverse)
+		{
+			if (this->animateCount - 1 == -1)
+			{
+				this->animateCount = this->frameRemider;
+				this->frameRemider = -1;
+			}
+			else
+			{
+				this->animateCount--;
+				SetFrame(this->animateCount);
+			}
+		}
+		else if (ap == AnimationPlaytype::Pingpong)
+		{
+			if (this->animateCount + 1 == (size - 1) * 2 + 1)
+			{
+				this->animateCount = this->frameRemider;
+				this->frameRemider = -1;
+			}
+			else
+			{
+				this->animateCount++;
+				SetFrame(size - 1 - abs(size - 1 - animateCount));
+			}
+		}
+	}
+
+	if (this->frameRemider == -1)
+	{
+		size = animationData.frameList.size();
+		ap = animationData.playtype;
+
+		if (ap == AnimationPlaytype::Forward)
+		{
+			this->animateCount++;
+			SetFrame(this->animateCount);
+		}
+		else if (ap == AnimationPlaytype::Reverse)
+		{
+			this->animateCount--;
+			SetFrame(this->animateCount);
+		}
+		else if (ap == AnimationPlaytype::Pingpong)
+		{
+			this->animateCount = (this->animateCount + 1) % ((size - 1) * 2);
+			SetFrame(size - 1 - abs(size - 1 - animateCount));
+		}
+	}
+
+}
+
 void Animation::SetFrame(int i)
 {
     AnimationSetting data;
-    if (this->frameRemider != -1)
+	if (this->frameRemider != -1)
+	{
+		int size = animationOneShot.frameList.size();
+		this->animateFrame = ((i % size) + size) % size;
+		data = animationOneShot.frameList[this->animateFrame];
+	}
+	else
     {
-        if (i == animationOneShot.frameList.size())
-        {
-            if(startAtReminder)
-                i = this->frameRemider;
-
-            this->frameRemider = -1;
-        }
-        else
-        {
-            this->animateCount = i % animationOneShot.frameList.size();
-            data = animationOneShot.frameList[this->animateCount];
-        }
-    }
-
-    if (this->frameRemider == -1)
-    {
-        this->animateCount = i % animationData.frameList.size();
-        data = animationData.frameList[this->animateCount];
+		int size = animationData.frameList.size();
+		this->animateFrame = ((i % size) + size) % size;
+        data = animationData.frameList[this->animateFrame];
     }
 
     this->gameObject->spriteRenderer->LoadBitmapData(data.filename, true);
@@ -587,7 +654,7 @@ void Animation::LoadAnimation(AnimationData newAnim)
 
     GAME_ASSERT(animationData.frameList.size() != 0, "Animation Size ERROR");
 
-    SetFrame(0);
+	ResetAnimation();
 }
 
 void Animation::PlayOneShot(AnimationData newAnim)
@@ -602,17 +669,18 @@ void Animation::PlayOneShot(AnimationData newAnim)
 
     GAME_ASSERT(animationOneShot.frameList.size() != 0, "Animation Size ERROR");
 
-    SetFrame(0);
+	ResetAnimation();
 }
 
 void Animation::Update()
 {
-    if (this->animateCount != -1 && clock() - this->timeStamp >= (DWORD)this->duration)
-        SetFrame(this->animateCount + 1);
+	if (this->animateCount != -1 && clock() - this->timeStamp >= (DWORD)this->duration)
+		NextFrame();
 }
 
 void Animation::ResetAnimation()
 {
+	this->animateCount = 0;
     SetFrame(0);
 }
 
