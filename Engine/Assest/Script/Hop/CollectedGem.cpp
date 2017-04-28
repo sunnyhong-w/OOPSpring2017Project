@@ -6,7 +6,18 @@ void CollectedGem::Start()
 {
 	this->gameObject->GetComponent<SpriteRenderer>()->SetEnable(false);
 	
-	
+	int index = 0;
+
+	if (this->name == "GreenGem")
+		index = 1;
+	else if (this->name == "RedGem")
+		index = 2;
+	else if (this->name == "WhiteGem")
+		index = 3;
+	else if (this->name == "YellowGem")
+		index = 4;
+
+	time = index * 0.2;
 }
 
 void CollectedGem::Update()
@@ -24,4 +35,8 @@ void CollectedGem::Update()
 			}
 		}
 	}
+
+	float d = 1;
+	this->gameObject->spriteRenderer->SetOffset(Vector2I(0, (int)Easing::easeFT(Easing::easeInOutSine, Easing::backForth(time, d, Time::deltaTime), -10, 10, d)));
+
 }
