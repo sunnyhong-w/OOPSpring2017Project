@@ -5,6 +5,9 @@
 void Camera::Start()
 {
 	player = nullptr;
+	this->RegisterEvent(BroadcastEvent::UpdateBoxPosition);
+	shouldShake = false;
+	time = 0;
 }
 
 void Camera::LateUpdate()
@@ -56,6 +59,17 @@ void Camera::LateUpdate()
 				}
 			}
         }
+		if (shouldShake) 
+		{		
+			time += Time::deltaTime;
+			Vector2I offset = this->gameObject->spriteRenderer->GetOffset();
+			this->gameObject->spriteRenderer->SetOffset(Vector2( sin((1-time)*30)*(1-time)*25, sin((1 - time) * 30)*(1 - time) * 25).GetV2I());
+			if (time > 1)
+			{
+				time = 0;
+				shouldShake = false;
+			}
+		}
     }
 }
 
@@ -97,5 +111,15 @@ void Camera::OnCollisionEnter(Collider * c)
 
 void Camera::OnCollisionStay(Collider * c)
 {
+	
 	OnCollisionEnter(c);
+}
+
+void Camera::OnRecivedBroadcast(BroadcastMessageData bmd)
+{
+	if (bmd.event == BroadcastEvent::UpdateBoxPosition) 
+	{
+		this->gameObject->spriteRenderer->SetOffset(Vector2I(10, 10));
+		shouldShake = true;
+	}
 }
