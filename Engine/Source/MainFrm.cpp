@@ -169,7 +169,7 @@ void CMainFrame::OnMoving(UINT nSide, LPRECT lpRect)
 
     game_engine::BroadcastMessageData bmd;
     bmd.event = game_engine::BroadcastEvent::UpdateWindowPosition;
-    game_framework::CGame::Instance()->BoardcastMessage(bmd);
+    game_framework::CGame::Instance()->BroadcastMessage(bmd);
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)

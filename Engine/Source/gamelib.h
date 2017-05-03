@@ -350,7 +350,7 @@ public:
 	void OnSetFocus();								// 處理Focus
 	void OnSuspend();								// 處理「待命」的動作
     void OnCopyData(json reciveddata);             // 處理視窗間的資料傳遞
-	void BoardcastMessage(game_engine::BroadcastMessageData bmd, string windowName = "");      //廣播要發送給其他視窗的訊息
+	void BroadcastMessage(game_engine::BroadcastMessageData bmd, string windowName = "");      //廣播要發送給其他視窗的訊息
     CGameState* GetState();
     void EnterScene(CGameState *gs);
     void ExitScene();
@@ -367,7 +367,7 @@ private:
 	static CGame	instance;			// 遊戲唯一的instance
     vector<HWND> windowList;
     vector<CString> windowNameList;
-    const CString targetwindow[2] = { "Hop" , "Slide" }; //Boardcast清單
+    const CString targetwindow[2] = { "Hop" , "Slide" }; //Broadcast清單
 };
 
 }

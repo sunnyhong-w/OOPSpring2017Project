@@ -73,7 +73,7 @@ void Tutorial::Update()
 	GameScene::CameraPosition() = (this->transform->GetPostion() - size).GetV2I();
 }
 
-void Tutorial::OnRecivedBroadcast(BoardcastMessageData bmd)
+void Tutorial::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
 }
 

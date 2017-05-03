@@ -22,7 +22,7 @@ void BoxParent::Update()
     if (!isSended && button1 && button2)
     {
         json data;
-        GameScene::Boardcast(BroadcastEvent::RedRoomFinish, data, "Hop");
+        GameScene::Broadcast(BroadcastEvent::RedRoomFinish, data, "Hop");
         isSended = true;
     }
 }
@@ -64,7 +64,7 @@ void BoxParent::CheckData()
 
     if (!Same)
     {
-		GameScene::Boardcast(BroadcastEvent::UpdateBoxPosition, sendData);
+		GameScene::Broadcast(BroadcastEvent::UpdateBoxPosition, sendData);
 
         for (int x = 0; x < 4; x++)
         {

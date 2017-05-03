@@ -18,7 +18,7 @@ void TextStamp::Update()
     shake();
 }
 
-void TextStamp::OnRecivedBoardcast(BoardcastMessageData bmd)
+void TextStamp::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
 }
 

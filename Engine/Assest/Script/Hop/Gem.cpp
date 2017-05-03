@@ -8,7 +8,7 @@ void Gem::Start()
 	{	
 		this->gameObject->spriteRenderer->SetEnable(false);
 		this->gameObject->collider->SetEnable(false);
-		this->RegisterEvent(BoardcastEvent::RedRoomFinish);
+		this->RegisterEvent(BroadcastEvent::RedRoomFinish);
 	}
 
 	if (GameStatus::status.find("0") !=GameStatus::status.end())
@@ -30,9 +30,9 @@ void Gem::OnCollisionEnter(Collider * c)
 	Destroy(this->gameObject);
 }
 
-void Gem::OnRecivedBroadcast(BoardcastMessageData bmd)
+void Gem::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
-	if (bmd.event == BoardcastEvent::RedRoomFinish)
+	if (bmd.event == BroadcastEvent::RedRoomFinish)
 	{
 		this->gameObject->spriteRenderer->SetEnable(true);
 		this->gameObject->collider->SetEnable(true);

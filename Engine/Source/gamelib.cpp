@@ -809,7 +809,7 @@ BOOL CALLBACK EnumWindowsProc(_In_ HWND hWnd, _In_ LPARAM lParam)
     return true;
 }
 
-void CGame::BoardcastMessage(game_engine::BroadcastMessageData bmd, string windowName)
+void CGame::BroadcastMessage(game_engine::BroadcastMessageData bmd, string windowName)
 {
 	bmd.position = windowPosition;
 	bmd.size = Vector2I(SIZE_X, SIZE_Y);

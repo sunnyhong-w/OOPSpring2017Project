@@ -37,7 +37,7 @@ class GameScene : public game_framework::CGameState
         static GameScene* NowScene();
 		static Vector2I& WindowPosition();
 
-		static void Boardcast(BroadcastEvent event, json data, string windowName = "");
+		static void Broadcast(BroadcastEvent event, json data, string windowName = "");
 
         static void IncludePrefrabs(string filename, json prefrabObject);
         static void ReadPrefrab(string filename, string includename);

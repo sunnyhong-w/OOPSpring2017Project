@@ -19,7 +19,7 @@ void Button::Update()
 		json data;
 		data["room"] = "red";
 		data["name"] = this->gameObject->GetName();
-		GameScene::Boardcast(BoardcastEvent::ButtonRelease, data);
+		GameScene::Broadcast(BroadcastEvent::ButtonRelease, data);
 		ticker--;
 	}
 	else
@@ -36,7 +36,7 @@ void Button::OnCollisionEnter(Collider * c)
 		json data;
 		data["room"] = "red";
 		data["name"] = this->gameObject->GetName();
-		GameScene::Boardcast(BoardcastEvent::ButtonPressed, data);
+		GameScene::Broadcast(BroadcastEvent::ButtonPressed, data);
 	}
 	isPressing = true;
 	ticker = 60;

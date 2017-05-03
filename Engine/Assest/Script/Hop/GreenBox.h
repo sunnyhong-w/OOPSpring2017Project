@@ -8,10 +8,10 @@ class GreenBox : public GameBehaviour
     public:
     	GreenBox(GameObject* gobj) : GameBehaviour(gobj)
         {
-            eventListener[BoardcastEvent::UpdateBoxPosition] = true;
+            eventListener[BroadcastEvent::UpdateBoxPosition] = true;
         };
 
-        void OnRecivedBroadcast(BoardcastMessageData bmd) override;
+        void OnRecivedBroadcast(BroadcastMessageData bmd) override;
         void Start() override;
         void Update() override;
         void Draw(Vector2I v2 = Vector2I::zero) override;
