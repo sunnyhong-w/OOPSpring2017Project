@@ -167,14 +167,14 @@ void GameObject::Draw(Vector2I cameraPos)
     }
 }
 
-void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
+void GameObject::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
     for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
     {
         if ((*it)->enable)
         {
-            if ((*it)->eventListener[BoardcastEvent::All] || (*it)->eventListener[bmd.event])
-                (*it)->OnRecivedBoardcast(bmd);
+            if ((*it)->eventListener[BroadcastEvent::All] || (*it)->eventListener[bmd.event])
+                (*it)->OnRecivedBroadcast(bmd);
         }
     }
 }

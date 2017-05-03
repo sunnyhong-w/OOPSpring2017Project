@@ -117,7 +117,7 @@ void GameScene::OnMove()
     {
         for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
             if ((*it)->enable)
-                (*it)->OnRecivedBoardcast(TDPQueue[0]);
+                (*it)->OnRecivedBroadcast(TDPQueue[0]);
 
         TDPQueue.erase(TDPQueue.begin());
     }

@@ -10,7 +10,7 @@ class TextStamp: public GameBehaviour
         void ParseJSON(json j) override;
         void Start() override;
         void Update() override;
-		void OnRecivedBoardcast(BoardcastMessageData bmd) override;
+		void OnRecivedBroadcast(BoardcastMessageData bmd) override;
         void Stamp();
         void Setfont(UINT surfaceID, Vector2I size, Vector2I bitmapPos);
         void shake();

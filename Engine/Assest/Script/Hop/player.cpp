@@ -89,7 +89,7 @@ void Player::Update()
 	bounce = false;
 }
 
-void Player::OnRecivedBoardcast(BoardcastMessageData bmd)
+void Player::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
 }
 

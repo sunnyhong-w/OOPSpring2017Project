@@ -2,7 +2,7 @@
 #include "Engine.h"
 #include "TransportController.h" //Include you header
 
-void TransportController::OnRecivedBoardcast(BoardcastMessageData bmd)
+void TransportController::OnRecivedBroadcast(BoardcastMessageData bmd)
 {
     set<string> mapNameSet;
 

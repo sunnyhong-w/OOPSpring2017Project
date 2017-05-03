@@ -120,6 +120,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void Reset();
         void SetAnchorRaito(Vector2 pos);
         void SetOffset(Vector2I offset);
+		Vector2I GetOffset();
         Vector2I GetAnchorPoint();
         SortingLayer GetSortingLayer();
         void SetSortingLayer(SortingLayer SL);

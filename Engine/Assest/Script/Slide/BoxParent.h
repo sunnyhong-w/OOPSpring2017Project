@@ -8,14 +8,14 @@ class BoxParent : public GameBehaviour
     public:
 		BoxParent(GameObject* gobj) : GameBehaviour(gobj)
 		{
-            RegisterEvent(BoardcastEvent::ButtonPressed);
-            RegisterEvent(BoardcastEvent::ButtonRelease);
+            RegisterEvent(BroadcastEvent::ButtonPressed);
+            RegisterEvent(BroadcastEvent::ButtonRelease);
 		}
 
         void Start() override;
         void Update() override;
         void CheckData();
-        void OnRecivedBoardcast(BoardcastMessageData bmd) override;
+        void OnRecivedBroadcast(BroadcastMessageData bmd) override;
     private:
         string boxdata[4][4];
 

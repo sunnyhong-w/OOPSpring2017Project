@@ -11,7 +11,7 @@ class GreenBox : public GameBehaviour
             eventListener[BoardcastEvent::UpdateBoxPosition] = true;
         };
 
-        void OnRecivedBoardcast(BoardcastMessageData bmd) override;
+        void OnRecivedBroadcast(BoardcastMessageData bmd) override;
         void Start() override;
         void Update() override;
         void Draw(Vector2I v2 = Vector2I::zero) override;

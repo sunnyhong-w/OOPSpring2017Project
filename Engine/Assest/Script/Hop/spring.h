@@ -10,7 +10,7 @@ public:
 	void ParseJSON(json j) override;
 	void Start() override;
 	void Update() override;
-	void OnRecivedBoardcast(BoardcastMessageData bmd) override;
+	void OnRecivedBroadcast(BroadcastMessageData bmd) override;
 	void OnDrawGizmos(CDC *pDC) override;
 
 	void OnCollisionEnter(Collider* c) override;

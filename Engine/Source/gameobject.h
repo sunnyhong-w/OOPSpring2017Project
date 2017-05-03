@@ -57,7 +57,7 @@ class GameObject
         void Update();
         void LateUpdate();
         void Draw(Vector2I cameraPos);
-        void OnRecivedBoardcast(BoardcastMessageData bmd);
+        void OnRecivedBroadcast(BroadcastMessageData bmd);
 		void OnDrawGizmos(CDC* pDC);
         void SetName(string name);
         string GetName();

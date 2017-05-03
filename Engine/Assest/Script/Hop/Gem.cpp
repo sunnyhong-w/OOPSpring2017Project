@@ -30,7 +30,7 @@ void Gem::OnCollisionEnter(Collider * c)
 	Destroy(this->gameObject);
 }
 
-void Gem::OnRecivedBoardcast(BoardcastMessageData bmd)
+void Gem::OnRecivedBroadcast(BoardcastMessageData bmd)
 {
 	if (bmd.event == BoardcastEvent::RedRoomFinish)
 	{

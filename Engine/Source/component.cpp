@@ -389,6 +389,11 @@ void SpriteRenderer::SetOffset(Vector2I dp)
     UpdateRealRenderPostion();
 }
 
+Vector2I SpriteRenderer::GetOffset()
+{
+	return offset;
+}
+
 Vector2I SpriteRenderer::GetAnchorPoint()
 {
     return (this->size.GetV2() * this->anchorRaito).GetV2I();

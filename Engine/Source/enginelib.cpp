@@ -459,17 +459,17 @@ void Time::Update()
 }
 
 
-void from_json(const json & j, BoardcastEvent & be)
+void from_json(const json & j, BroadcastEvent & be)
 {
-	be = (BoardcastEvent)j.get<int>();
+	be = (BroadcastEvent)j.get<int>();
 }
 
-void to_json(json & j, const BoardcastEvent & be)
+void to_json(json & j, const BroadcastEvent & be)
 {
 	j = (int)be;
 }
 
-void from_json(const json & j, BoardcastMessageData & bmd)
+void from_json(const json & j, BroadcastMessageData & bmd)
 {
 	bmd.event = j["event"];
 	bmd.data = j["data"];
@@ -478,7 +478,7 @@ void from_json(const json & j, BoardcastMessageData & bmd)
 	bmd.sender = j["sender"].get<string>();
 }
 
-void to_json(json & j, const BoardcastMessageData & bmd)
+void to_json(json & j, const BroadcastMessageData & bmd)
 {
 	j["event"] = bmd.event;
 	j["data"] = bmd.data;
