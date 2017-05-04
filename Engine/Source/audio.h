@@ -14,7 +14,7 @@ namespace game_engine
         // Pointer to the FMOD instance
         static SoundSystemClass* instance;
         static FMOD::System *m_pSystem;
-        map<string, SoundClass> soundmap;
+        static map<string, SoundClass> soundmap;
 
         static SoundSystemClass* Instance()
         {

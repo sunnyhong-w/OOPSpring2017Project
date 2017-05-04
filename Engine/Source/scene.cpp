@@ -1,5 +1,6 @@
 #include"StdAfx.h"
 #include<ddraw.h>
+#include"audio.h"
 #include"gameobject.h"
 #include"scene.h"
 #include"component.h"
@@ -35,6 +36,8 @@ void GameScene::OnMove()
 {
     while (loadname != "")
         OnBeginState();
+
+    SoundSystemClass::m_pSystem->update();
 
     Time::Update();
 

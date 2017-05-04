@@ -5,6 +5,7 @@ namespace game_engine
 {
     SoundSystemClass* SoundSystemClass::instance;
     FMOD::System *SoundSystemClass::m_pSystem;
+    map<string, SoundSystemClass::SoundClass> SoundSystemClass::soundmap;
 
     SoundSystemClass::SoundSystemClass()
     {
@@ -30,7 +31,7 @@ namespace game_engine
     void SoundSystemClass::insSound(string name)
     {
         SoundClass sc;
-        string path = R"(Assest\Sounds\)" + name;
+        string path = R"(.\Assest\Sounds\)" + name;
         createSound(&sc, path.c_str());
         soundmap[name] = sc;
     }
@@ -49,7 +50,12 @@ namespace game_engine
 
     void SoundSystemClass::createSound(SoundClass * pSound, const char * pFile)
     {
-        m_pSystem->createSound(pFile, FMOD_DEFAULT, 0, pSound);
+        FMOD_RESULT fr = m_pSystem->createSound(pFile, FMOD_OPENMEMORY, nullptr, pSound);
+
+        if (fr != FMOD_RESULT::FMOD_OK)
+        {
+            TRACE("123");
+        }
     }
 
     void SoundSystemClass::playSound(SoundClass pSound, bool bLoop)
@@ -62,7 +68,10 @@ namespace game_engine
             pSound->setLoopCount(-1);
         }
 
-        m_pSystem->playSound(pSound, nullptr, false, 0);
+        FMOD::Channel *channel;
+        m_pSystem->getChannel(0, &channel);
+
+        m_pSystem->playSound(pSound, nullptr, false, &channel);
     }
 
     void SoundSystemClass::releaseSound(SoundClass pSound)
