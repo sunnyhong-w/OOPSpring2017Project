@@ -18,6 +18,8 @@ void Player::Start()
     MinJumpVelocity = sqrt(2 * abs(gravity) * MinJumpHeight);
 	bounce = false;
 	isBouncing = false;
+
+    SoundSystemClass::Instance()->insSound("Jump.wav");
 }
 
 void Player::Update()
@@ -84,6 +86,8 @@ void Player::Update()
         {
             gobj->animationController->PlayOneShot("RightShine");
         }
+
+        SoundSystemClass::Instance()->play("Jump.wav");
     }
 
 	bounce = false;

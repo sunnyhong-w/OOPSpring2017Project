@@ -111,9 +111,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\audio.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
     <ClCompile Include="Source\game.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
@@ -208,11 +205,11 @@
     <ClCompile Include="Assest\Script\Hop\CollectedGem.cpp">
       <Filter>GameScript\Hop</Filter>
     </ClCompile>
+    <ClCompile Include="Source\audio.cpp">
+      <Filter>GameEngine\EngineLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\audio.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
     <ClInclude Include="Source\game.h">
       <Filter>MFC</Filter>
     </ClInclude>
@@ -318,6 +315,9 @@
     </ClInclude>
     <ClInclude Include="Assest\Script\Hop\CollectedGem.h">
       <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\audio.h">
+      <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

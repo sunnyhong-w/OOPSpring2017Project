@@ -561,16 +561,10 @@ void  CGame::OnFilePause()
 {
     if (ENABLE_GAME_PAUSE)
     {
-        if (running)
-            CAudio::Instance()->Pause();
-        else
-            CAudio::Instance()->Resume();
-
         running = !running;
     }
     else
     {
-        CAudio::Instance()->Resume();
         running = true;
     }
 }
@@ -665,12 +659,6 @@ void CGame::OnInit()	// OnInit() 只在程式一開始時執行一次
     CDDraw::Init(SIZE_X, SIZE_Y);							// 設定遊戲解析度
 
     //
-    // 開啟DirectX音效介面
-    //
-    if (!CAudio::Instance()->Open())						// 開啟音效介面
-        AfxMessageBox("Audio Interface Failed (muted)");	// 無音效介面
-
-    //
     // Switch to the first state
     //
     AfxGetMainWnd()->SetWindowTextA(WINDOW_NAME);
@@ -713,9 +701,6 @@ void CGame::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGame::OnKillFocus()
 {
-    if (ENABLE_AUDIO_PAUSE_WHEN_KILL_FOCUS)
-        CAudio::Instance()->Pause();
-
     if (ENABLE_GAME_PAUSE)
         running = false;
     else if (CDDraw::IsFullScreen())
@@ -763,7 +748,6 @@ void CGame::OnSetFocus()
 {
     if (!ENABLE_GAME_PAUSE)
     {
-        CAudio::Instance()->Resume();
         running = true;
     }
 }
@@ -774,7 +758,6 @@ void CGame::OnSuspend()
     // Note: the suspend message is not synchronized with the other messages
     //
     suspended = true;
-    CAudio::Instance()->SetPowerResume();
 }
 
 void CGame::OnCopyData(json reciveddata)
