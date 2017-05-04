@@ -59,18 +59,10 @@ void Camera::LateUpdate()
 				}
 			}
         }
-		if (shouldShake) 
-		{		
-			time += Time::deltaTime;
-			Vector2I offset = this->gameObject->spriteRenderer->GetOffset();
-			this->gameObject->spriteRenderer->SetOffset(Vector2( sin((1-time)*30)*(1-time)*25, sin((1 - time) * 30)*(1 - time) * 25).GetV2I());
-			if (time > 1)
-			{
-				time = 0;
-				shouldShake = false;
-			}
-		}
-    }
+		
+    }	
+	ShakeF();
+
 }
 
 void Camera::OnDrawGizmos(CDC * pDC)
@@ -111,7 +103,6 @@ void Camera::OnCollisionEnter(Collider * c)
 
 void Camera::OnCollisionStay(Collider * c)
 {
-	
 	OnCollisionEnter(c);
 }
 
@@ -119,7 +110,33 @@ void Camera::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
 	if (bmd.event == BroadcastEvent::UpdateBoxPosition) 
 	{
-		this->gameObject->spriteRenderer->SetOffset(Vector2I(10, 10));
-		shouldShake = true;
+		Shake(2, 30, 15);
+		
+	}
+}
+
+void Camera::Shake(double t, double f, double s)
+{
+	f = f*(rand() % 2 == 0 ? 1 : -1);
+	totalTime = t;
+	frequency = f;
+	strength = s;
+	time = 0;
+	shouldShake = true;
+}
+
+void Camera::ShakeF()
+{
+	if (shouldShake)
+	{
+		time += Time::deltaTime;
+		Vector2I offset = this->gameObject->spriteRenderer->GetOffset();
+		this->gameObject->spriteRenderer->SetOffset(Vector2(sin((totalTime - time) * frequency )*(totalTime - time) * strength,
+			sin((totalTime - time) * frequency + 1)*(totalTime - time) * strength).GetV2I());
+		if (time > totalTime)
+		{
+			time = 0;
+			shouldShake = false;
+		}
 	}
 }
