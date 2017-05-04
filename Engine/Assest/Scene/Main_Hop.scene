@@ -3,7 +3,9 @@
         "MapReader": "Engine\\MapReader",
         "Spring": "spring",
         "YellowBox": "yellowBox",
-        "Camera": "Camera"
+        "Camera": "Camera",
+        "Background":"Background"
+
     },
     "GameObject": [
         {
@@ -101,6 +103,9 @@
         },
         {
             "include": "Camera"
+        },
+        {
+        	"include":"Background"
         },
         {
             "name": "TransportController",
