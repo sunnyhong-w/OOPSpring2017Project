@@ -3,8 +3,8 @@
 
 namespace game_engine
 {
-    SoundSystemClass* SoundSystemClass::instance;
-    FMOD::System *SoundSystemClass::m_pSystem;
+    SoundSystemClass* SoundSystemClass::instance = new SoundSystemClass();
+    FMOD::System* SoundSystemClass::m_pSystem;
     map<string, SoundSystemClass::SoundClass> SoundSystemClass::soundmap;
 
     SoundSystemClass::SoundSystemClass()
@@ -50,11 +50,11 @@ namespace game_engine
 
     void SoundSystemClass::createSound(SoundClass * pSound, const char * pFile)
     {
-        FMOD_RESULT fr = m_pSystem->createSound(pFile, FMOD_OPENMEMORY, nullptr, pSound);
+        FMOD_RESULT fr = m_pSystem->createSound(pFile, FMOD_DEFAULT, 0, pSound);
 
         if (fr != FMOD_RESULT::FMOD_OK)
         {
-            TRACE("123");
+            AfxMessageBox("FMOD INIT ERROR");
         }
     }
 

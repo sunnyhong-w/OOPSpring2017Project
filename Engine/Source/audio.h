@@ -23,6 +23,14 @@ namespace game_engine
 
         SoundSystemClass();
 
+        ~SoundSystemClass()
+        {
+            for (auto pair : soundmap)
+                releaseSound(pair.second);
+
+            m_pSystem->close();
+        }
+
         void insSound(string name);
         void rmSound(string name);
         void play(string name, bool bLoop = false);
