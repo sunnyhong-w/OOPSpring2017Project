@@ -8,6 +8,7 @@ void Camera::Start()
 	this->RegisterEvent(BroadcastEvent::UpdateBoxPosition);
 	shouldShake = false;
 	time = 0;
+	
 }
 
 void Camera::LateUpdate()
@@ -49,6 +50,7 @@ void Camera::LateUpdate()
 
 			if (playerCamerPosY + player->collider->collisionInfo.size.y > 250)
 			{
+				if(player->rigidbody->velocity.y > 0)
 				this->gameObject->rigidbody->velocity.y = player->rigidbody->velocity.y;
 			}
 			else if(playerCamerPosY  <= 60)
