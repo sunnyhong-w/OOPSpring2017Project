@@ -566,11 +566,12 @@ void Animation::NextFrame()
 
 		if (ap == AnimationPlaytype::Forward)
 		{
-			if (this->animateCount + 1 == size)
-			{
-				this->animateCount = this->frameRemider;
-				this->frameRemider = -1;
-			}
+            if (this->animateCount + 1 == size)
+            {
+                this->animateCount = this->frameRemider;
+                EndAnimation();
+                this->frameRemider = -1;
+            }
 			else
 			{
 				this->animateCount++;
@@ -582,6 +583,7 @@ void Animation::NextFrame()
 			if (this->animateCount - 1 == -1)
 			{
 				this->animateCount = this->frameRemider;
+                EndAnimation();
 				this->frameRemider = -1;
 			}
 			else
@@ -595,6 +597,7 @@ void Animation::NextFrame()
 			if (this->animateCount + 1 == (size - 1) * 2 + 1)
 			{
 				this->animateCount = this->frameRemider;
+                EndAnimation();
 				this->frameRemider = -1;
 			}
 			else
@@ -612,21 +615,29 @@ void Animation::NextFrame()
 
 		if (ap == AnimationPlaytype::Forward)
 		{
+            if (this->animateFrame + 1 == size)
+                EndAnimation();
+
 			this->animateCount++;
 			SetFrame(this->animateCount);
 		}
 		else if (ap == AnimationPlaytype::Reverse)
 		{
+            if (this->animateFrame - 1 == -1)
+                EndAnimation();
+
 			this->animateCount--;
 			SetFrame(this->animateCount);
 		}
 		else if (ap == AnimationPlaytype::Pingpong)
 		{
+            if (this->animateCount + 1 == (size - 1) * 2)
+                EndAnimation();
+
 			this->animateCount = (this->animateCount + 1) % ((size - 1) * 2);
 			SetFrame(size - 1 - abs(size - 1 - animateCount));
 		}
 	}
-
 }
 
 void Animation::SetFrame(int i)
@@ -675,6 +686,22 @@ void Animation::PlayOneShot(AnimationData newAnim)
     GAME_ASSERT(animationOneShot.frameList.size() != 0, "Animation Size ERROR");
 
 	ResetAnimation();
+}
+
+void Animation::EndAnimation()
+{
+    if (this->frameRemider != -1)
+    {
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->GetEnable())
+                (*it)->OnAnimationEnd(animationOneShot);
+    }
+    else
+    {
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->GetEnable())
+                (*it)->OnAnimationEnd(animationData);
+    }
 }
 
 void Animation::Update()
@@ -795,6 +822,7 @@ void AnimationController::ParseAespriteJSON(json j)
             }
         }
 
+        animationData.name = jobj["name"].get<string>();
         this->animationData[jobj["name"]] = animationData;
     }
 }

@@ -44,6 +44,7 @@ class GameObject
         friend class SpriteRenderer;
         friend class game_framework::CGame;
 		friend class Collider;
+        friend class Animation;
         friend class Rigidbody;
         friend class MapReader;
         friend class GameBehaviour;

@@ -174,6 +174,7 @@ enum class AnimationPlaytype : int { Forward, Reverse, Pingpong };
 struct AnimationData {
     vector<AnimationSetting> frameList;
     AnimationPlaytype playtype;
+    string name;
 };
 
 class AnimationController : public Component
@@ -214,6 +215,7 @@ public:
 private:
     void LoadAnimation(AnimationData newAnim);
     void PlayOneShot(AnimationData oneShot);
+    void EndAnimation();
 
 	int animateFrame;
     int animateCount;

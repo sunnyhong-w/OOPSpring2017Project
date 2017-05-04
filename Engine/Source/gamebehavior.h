@@ -35,6 +35,8 @@ class GameBehaviour : public Component
         virtual void OnCollisionExit (Collider* c) {};
         virtual void OnCollisionStay (Collider* c) {};
 
+        virtual void OnAnimationEnd(AnimationData ad) {};
+
         virtual void OnRecivedBroadcast(BroadcastMessageData bmd) {};
 		virtual void OnDrawGizmos(CDC *pDC) {};
 
