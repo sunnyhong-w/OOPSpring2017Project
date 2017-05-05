@@ -112,7 +112,7 @@ void Camera::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
 	if (bmd.event == BroadcastEvent::UpdateBoxPosition) 
 	{
-		Shake(2, 30, 15);
+		Shake(0.75, 30, 15);
 		
 	}
 }
