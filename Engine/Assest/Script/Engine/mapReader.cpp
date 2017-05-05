@@ -240,9 +240,13 @@ void MapReader::LoadMap(string fname)
                         ParseProperties(gobj, fname, tmp.objects[tileindex].properties);
                         ParseProperties(gobj, fname, obj["properties"]);
 
-                        SpriteRenderer* SR = gobj->AddComponentOnce<SpriteRenderer>();
-                        SR->LoadBitmapData(tmp.objects[tileindex].image);
-                        SR->SetAnchorRaito(Vector2::down);
+						if (gobj->animationController == nullptr)
+						{
+							SpriteRenderer* SR = gobj->AddComponentOnce<SpriteRenderer>();
+							SR->LoadBitmapData(tmp.objects[tileindex].image);
+						}
+
+						gobj->spriteRenderer->SetAnchorRaito(Vector2::down);
 
                         if (tmp.objects[tileindex].collision.size() != 0)
                         {
