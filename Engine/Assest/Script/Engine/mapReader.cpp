@@ -534,3 +534,8 @@ TileObject::TileObject(string imgname, json inproperties, vector<CollisionInfo> 
     this->properties = inproperties;
     this->collision = incollision;
 }
+
+Vector2I TileMap::GetMapSize()
+{
+	return Vector2I(width*tileWidth,height*tileHeight);
+}

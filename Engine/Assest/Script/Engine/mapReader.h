@@ -43,6 +43,7 @@ struct TileMap
 	int height;
 	int tileHeight;
 	int tileWidth;
+	Vector2I GetMapSize();
 	vector<TileSet> tileSetList;
 	vector<ObjectSet> objectSetList;
 	json layers;
@@ -72,12 +73,12 @@ public:
 	void Draw(Vector2I campos) override;
 	void Update() override;
     void LateUpdate() override;
+	TileMap tileMap;
 
 private:
     GameObject* GenerateTile(string fname, int tindex);
 	void CreateMapEdge(Transform* parent, Vector2 mapSize, string filename, Vector2I tileSize);
 	void CreateEdgeObj(Transform* parent, string filename, string way, string type, Vector2 position, Vector2I colliderSize);
 
-	TileMap tileMap;
     Vector2 slicer;
 };

@@ -11,8 +11,10 @@
 		},
         "SpriteRenderer": {
             "Bitmap": {
-                "name": "GameObject\\background"
+                "name": "Background\\Blue"
             }
-        }
+        },
+        "Background":{}
+
     }
 }

@@ -54,6 +54,7 @@ Component* GameObject::AddComponentOnce(string ComponentName)
 	RegisterComponent(Gem)
 	RegisterComponent(CollectedGem)
 	RegisterComponent(Smoke)
+	RegisterComponent(Background)
     else return nullptr;
 }
 

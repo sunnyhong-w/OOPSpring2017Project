@@ -321,6 +321,11 @@ void SpriteRenderer::SetSize(Vector2I size)
     this->size = size;
 }
 
+Vector2I SpriteRenderer::GetSize()
+{
+	return size;
+}
+
 void SpriteRenderer::ResetSize()
 {
     this->size = Vector2I(this->Width(), this->Height());

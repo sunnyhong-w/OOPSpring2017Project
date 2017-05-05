@@ -106,6 +106,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         Vector2I GetSourcePos();
         void SetSourceData(Rect src);
         void SetSize(Vector2I size);
+		Vector2I GetSize();
         ///<summary>將Size重置成最後一次Load的圖片大小</summary>
         void ResetSize();
         ///<summary>取代原本的LoadBitmap機能，注意在讀檔之後會重置Size和SrcPos的參數</summary>

@@ -18,6 +18,9 @@ void MapEdge::Update()
 
 		target->transform->SetWorldPosition(targetPosition);
 		target->GetComponent<Player>()->SetRoomName(targetRoom);
+
+		Background *bg = GameObject::findGameObjectByName("Background")->GetComponent<Background>();
+		bg->SetBackground(targetRoom);
 	}
 
 	target = nullptr;
