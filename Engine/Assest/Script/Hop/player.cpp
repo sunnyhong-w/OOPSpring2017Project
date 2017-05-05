@@ -136,7 +136,7 @@ void Player::Jump(Vector2 & velocity)
 {
 	if (canJump)
 	{
-		AudioPlayer::GetSource("Jump")->PlayOneShot(0);
+		AudioPlayer::GetSource("Jump")->PlayOneShot();
 		velocity.y = MaxJumpVelocity;
 		canJump = false;
 	}

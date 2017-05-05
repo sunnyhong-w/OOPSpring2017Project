@@ -667,11 +667,12 @@ void Animation::SetFrame(int i)
     this->timeStamp = clock();
 }
 
-void Animation::LoadAnimation(AnimationData newAnim)
+void Animation::Play(AnimationData newAnim)
 {
     this->animationData.frameList.clear();
     this->animationData.frameList = newAnim.frameList;
     this->animationData.playtype = newAnim.playtype;
+	this->animationData.name = newAnim.name;
 
     GAME_ASSERT(animationData.frameList.size() != 0, "Animation Size ERROR");
 
@@ -687,6 +688,7 @@ void Animation::PlayOneShot(AnimationData newAnim)
 
     this->animationOneShot.frameList = newAnim.frameList;
     this->animationOneShot.playtype = newAnim.playtype;
+	this->animationOneShot.name = newAnim.name;
 
     GAME_ASSERT(animationOneShot.frameList.size() != 0, "Animation Size ERROR");
 
@@ -836,7 +838,7 @@ void AnimationController::Update()
 {
 	if (jumpState != "")
 	{
-        this->gameObject->animation->LoadAnimation(animationData[jumpState]);
+        this->gameObject->animation->Play(animationData[jumpState]);
 		jumpState = "";
 	}
 }

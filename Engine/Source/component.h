@@ -214,7 +214,7 @@ public:
     bool startAtReminder;
 
 private:
-    void LoadAnimation(AnimationData newAnim);
+    void Play(AnimationData newAnim);
     void PlayOneShot(AnimationData oneShot);
     void EndAnimation();
 
