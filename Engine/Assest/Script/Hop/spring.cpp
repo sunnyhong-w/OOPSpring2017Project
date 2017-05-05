@@ -2,48 +2,32 @@
 #include "Engine.h"
 #include "spring.h"
 
-void Spring::ParseJSON(json j)
-{
-}
-
 void Spring::Start()
 {
 	pressed = false;
+	canBounce = true;
 }
 
-void Spring::Update()
+void Spring::OnAnimationEnd(AnimationData ad)
 {
-}
-
-void Spring::OnRecivedBroadcast(BroadcastMessageData bmd)
-{
-}
-
-void Spring::OnDrawGizmos(CDC * pDC)
-{     
-	pDC->TextOutA(0,100,("pressed : "+to_string(pressed)).c_str());
-}
-
-
-
-void Spring::OnCollisionEnter(Collider * c)
-{
-	
+	if (ad.name == "Push")
+		canBounce = true;
 }
 
 void Spring::OnCollisionStay(Collider * c)
 {
 	pressed = true;
-	lastState = pressed;
+
 	Player* pl = c->gameObject->GetComponent<Player>();
-	if (pl->gameObject->rigidbody->colliderInfo.bottom)
+	if (pl->gameObject->rigidbody->colliderInfo.bottom && canBounce)
 	{
 		pl->bounce = true;
+		canBounce = false;
+		this->gameObject->animationController->PlayOneShot(1);
 	}
 }
 
 void Spring::OnCollisionExit(Collider * c)
 {
 	pressed = false;
-	lastState = pressed;
 }

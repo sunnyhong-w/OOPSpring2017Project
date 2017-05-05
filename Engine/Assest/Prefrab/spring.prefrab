@@ -8,6 +8,9 @@
                 "y": 16
             }
         },
-        "Spring": {}
+        "Spring": {},
+        "AnimationController" : {
+            "animation" : "Spring"
+        }
     }
 }

@@ -7,17 +7,12 @@ class Spring : public GameBehaviour
 {
 public:
 	Spring(GameObject* gobj) : GameBehaviour(gobj) {}
-	void ParseJSON(json j) override;
 	void Start() override;
-	void Update() override;
-	void OnRecivedBroadcast(BroadcastMessageData bmd) override;
-	void OnDrawGizmos(CDC *pDC) override;
-
-	void OnCollisionEnter(Collider* c) override;
+	void OnAnimationEnd(AnimationData ad) override;
 	void OnCollisionStay(Collider* c) override;
 	void OnCollisionExit(Collider* c) override;
 	int speed;
 private:
 	bool pressed;
-	bool lastState;
+	bool canBounce;
 };
