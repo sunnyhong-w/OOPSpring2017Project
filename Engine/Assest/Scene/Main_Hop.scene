@@ -4,8 +4,14 @@
         "Spring": "spring",
         "YellowBox": "yellowBox",
         "Camera": "Camera",
-        "Background":"Background",
-        "Smoke":"Smoke"
+        "Background": "Background",
+        "Smoke": "Smoke"
+    },
+    "Sound": {
+        "Jump": "Jump.wav"
+    },
+    "Music": {
+        "RSIC": "R.S.I.C._OSTVer.mp3"
     },
     "GameObject": [
         {
@@ -105,7 +111,7 @@
             "include": "Camera"
         },
         {
-        	"include":"Background"
+            "include": "Background"
         },
         {
             "name": "TransportController",

@@ -19,6 +19,7 @@ void Player::Start()
 	bounce = false;
 	isBouncing = false;
 	waitSmoke = 0;
+	AudioPlayer::GetSource("RSIC")->Play(1);
 }
 
 void Player::Update()
@@ -135,6 +136,7 @@ void Player::Jump(Vector2 & velocity)
 {
 	if (canJump)
 	{
+		AudioPlayer::GetSource("Jump")->PlayOneShot(0);
 		velocity.y = MaxJumpVelocity;
 		canJump = false;
 	}
