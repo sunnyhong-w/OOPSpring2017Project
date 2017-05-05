@@ -1,81 +1,130 @@
 #include "StdAfx.h"
 #include "audio.h"
+#include <vector>
 
 namespace game_engine
 {
-    SoundSystemClass* SoundSystemClass::instance = new SoundSystemClass();
-    FMOD::System* SoundSystemClass::m_pSystem;
-    map<string, SoundSystemClass::SoundClass> SoundSystemClass::soundmap;
+	AudioPlayer* AudioPlayer::instance = new AudioPlayer();
 
-    SoundSystemClass::SoundSystemClass()
-    {
-        if (FMOD::System_Create(&m_pSystem) != FMOD_OK)
-        {
-            // Report Error
-            return;
-        }
+	AudioPlayer::AudioPlayer()
+	{
+		if (FMOD::System_Create(&m_pSystem) != FMOD_OK)
+		{
+			// Report Error
+			return;
+		}
 
-        int driverCount = 0;
-        m_pSystem->getNumDrivers(&driverCount);
+		int driverCount = 0;
+		m_pSystem->getNumDrivers(&driverCount);
 
-        if (driverCount == 0)
-        {
-            // Report Error
-            return;
-        }
+		if (driverCount == 0)
+		{
+			// Report Error
+			return;
+		}
 
-        // Initialize our Instance with 36 Channels
-        m_pSystem->init(36, FMOD_INIT_NORMAL, nullptr);
-    }
+		// Initialize our Instance with 36 Channels
+		m_pSystem->init(36, FMOD_INIT_NORMAL, nullptr);
+		instance = this;
+	}
 
-    void SoundSystemClass::insSound(string name)
-    {
-        SoundClass sc;
-        string path = R"(.\Assest\Sounds\)" + name;
-        createSound(&sc, path.c_str());
-        soundmap[name] = sc;
-    }
+	AudioPlayer::~AudioPlayer()
+	{
+		ReleaseBuffer();
+		instance->m_pSystem->release();
+	}
 
-    void SoundSystemClass::rmSound(string name)
-    {
-        releaseSound(soundmap[name]);
-        soundmap.erase(name);
-    }
+	void AudioPlayer::ParseSoundJSON(json j)
+	{
+		for (json::iterator it = j.begin(); it != j.end(); it++)
+			initSound(it.key(),it.value());
+	}
 
-    void SoundSystemClass::play(string name, bool bLoop)
-    {
-        if (soundmap.find(name) != soundmap.end())
-            playSound(soundmap[name], bLoop);
-    }
+	void AudioPlayer::ParseMusicJSON(json j)
+	{
+		for (json::iterator it = j.begin(); it != j.end(); it++)
+			initStream(it.key(), it.value());
+	}
 
-    void SoundSystemClass::createSound(SoundClass * pSound, const char * pFile)
-    {
-        FMOD_RESULT fr = m_pSystem->createSound(pFile, FMOD_DEFAULT, 0, pSound);
+	void AudioPlayer::initSound(string name, string filename)
+	{
+		AudioSource *audioSource = new AudioSource();
 
-        if (fr != FMOD_RESULT::FMOD_OK)
-        {
-            AfxMessageBox("FMOD INIT ERROR");
-        }
-    }
+		auto rstate = instance->m_pSystem->createSound((R"(.\Assest\Sound\)" + filename).c_str(), FMOD_DEFAULT, 0, &audioSource->soundSource);
 
-    void SoundSystemClass::playSound(SoundClass pSound, bool bLoop)
-    {
-        if (!bLoop)
-            pSound->setMode(FMOD_LOOP_OFF);
-        else
-        {
-            pSound->setMode(FMOD_LOOP_NORMAL);
-            pSound->setLoopCount(-1);
-        }
+		GAME_LOG(rstate == FMOD_RESULT::FMOD_OK, "FMOD : Init Sound ERROR");
 
-        FMOD::Channel *channel;
-        m_pSystem->getChannel(0, &channel);
+		audioSource->sourceMode = AudioMode::Sound;
 
-        m_pSystem->playSound(pSound, nullptr, false, &channel);
-    }
+		fileMap[name] = filename;
+		sourceMap[filename] = audioSource;
+	}
 
-    void SoundSystemClass::releaseSound(SoundClass pSound)
-    {
-        pSound->release();
-    }
+	void AudioPlayer::initStream(string name, string filename)
+	{
+		AudioSource *audioSource = new AudioSource();
+
+		auto rstate = instance->m_pSystem->createStream((R"(.\Assest\Music\)" + filename).c_str(), FMOD_DEFAULT, 0, &audioSource->soundSource);
+
+		GAME_LOG(rstate == FMOD_RESULT::FMOD_OK, "FMOD : Init Stream ERROR");
+
+		audioSource->sourceMode = AudioMode::Stream;
+
+		fileMap[name] = filename;
+		sourceMap[filename] = audioSource;
+	}
+
+	void AudioPlayer::Play(AudioSource* sound, bool repeat, int channelid)
+	{
+		if (!repeat)
+			sound->soundSource->setMode(FMOD_LOOP_OFF);
+		else
+		{
+			sound->soundSource->setMode(FMOD_LOOP_NORMAL);
+			sound->soundSource->setLoopCount(-1);
+		}
+
+		FMOD::Channel* channel;
+		instance->m_pSystem->getChannel(channelid, &channel);
+		instance->m_pSystem->playSound(sound->soundSource, nullptr, false, &channel);
+	}
+
+	void AudioPlayer::ReleaseSound(string name)
+	{
+		string filename = fileMap[name];
+		auto rstate = sourceMap[filename]->soundSource->release();
+
+		GAME_LOG(rstate == FMOD_RESULT::FMOD_OK, "FMOD RELEASE ERROR");
+
+		delete sourceMap[filename];
+		sourceMap.erase(filename);
+		fileMap.erase(name);
+	}
+
+	void AudioPlayer::ReleaseBuffer()
+	{
+		vector<string> namelist;
+
+		for (auto pair : fileMap)
+			namelist.push_back(pair.first);
+
+		for (auto name : namelist)
+			ReleaseSound(name);
+	}
+
+	AudioSource* AudioPlayer::GetSource(string name)
+	{
+		GAME_LOG(instance->fileMap.find(name) != instance->fileMap.end(), "Sound File Not Found : " + name);
+		return instance->sourceMap[instance->fileMap[name]];
+	}
+
+	void AudioSource::Play(int channelID)
+	{
+		AudioPlayer::instance->Play(this, true, channelID);
+	}
+
+	void AudioSource::PlayOneShot(int channelID)
+	{
+		AudioPlayer::instance->Play(this, false, channelID);
+	}
 }

@@ -527,7 +527,7 @@ CGame::~CGame()
     for (GameObject* gobj : GameObject::gameObjects)
         delete gobj;
 
-    delete SoundSystemClass::instance;
+    delete AudioPlayer::instance;
 }
 
 CGame* CGame::Instance()

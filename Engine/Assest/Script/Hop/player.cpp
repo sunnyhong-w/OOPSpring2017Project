@@ -19,7 +19,7 @@ void Player::Start()
 	bounce = false;
 	isBouncing = false;
 
-    SoundSystemClass::Instance()->insSound("Jump.wav");
+	AudioPlayer::GetSource("RSIC")->Play(1);
 }
 
 void Player::Update()
@@ -86,8 +86,6 @@ void Player::Update()
         {
             gobj->animationController->PlayOneShot("RightShine");
         }
-
-        SoundSystemClass::Instance()->play("Jump.wav");
     }
 
 	bounce = false;
@@ -132,6 +130,7 @@ void Player::Jump(Vector2 & velocity)
 {
 	if (canJump)
 	{
+		AudioPlayer::GetSource("Jump")->PlayOneShot(0);
 		velocity.y = MaxJumpVelocity;
 		canJump = false;
 	}

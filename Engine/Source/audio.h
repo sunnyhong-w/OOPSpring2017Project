@@ -1,43 +1,67 @@
 #pragma once
 
 #include<fmod.hpp>
+#include"json_include.h"
 #include<map>
 
 using namespace std;
 namespace game_engine
 {
-    class SoundSystemClass
-    {
-        typedef FMOD::Sound* SoundClass;
+	class AudioPlayer
+	{
+	public:
+		friend class AudioSource;
 
-    public:
-        // Pointer to the FMOD instance
-        static SoundSystemClass* instance;
-        static FMOD::System *m_pSystem;
-        static map<string, SoundClass> soundmap;
+		typedef FMOD::Sound* FMODSound;
 
-        static SoundSystemClass* Instance()
-        {
-            return instance;
-        }
+		static AudioPlayer* instance;
+		static AudioSource* GetSource(string name);
 
-        SoundSystemClass();
+		FMOD::System *m_pSystem;
 
-        ~SoundSystemClass()
-        {
-            for (auto pair : soundmap)
-                releaseSound(pair.second);
+		AudioPlayer();
+		~AudioPlayer();
 
-            m_pSystem->close();
-        }
+		void ParseSoundJSON(json j);
+		void ParseMusicJSON(json j);
+		void ReleaseBuffer();
 
-        void insSound(string name);
-        void rmSound(string name);
-        void play(string name, bool bLoop = false);
 
-        void createSound(SoundClass *pSound, const char* pFile);
-        void playSound(SoundClass pSound, bool bLoop = false);
-        void releaseSound(SoundClass pSound);
-    };
+	private:
+		void initSound(string name, string filename);
+		void initStream(string name, string filename);
+		void Play(AudioSource *sound, bool repeat = false, int channelid = 0);
+		void ReleaseSound(string name);
+		static void GAME_LOG(bool boolexp,string str)
+		{
+			if (!(boolexp)) {
+				int id;
+				char s[300] = "";
+				sprintf(s, "Game fatal error:\n\n%s\n\nFile: %s\n\nLine: %d"
+					"\n\n(Press Retry to debug the application, "
+					"if it is executed in debug mode.)"
+					"\n(Press Cancel otherwise.)",
+					str.c_str(), __FILE__, __LINE__);
+				id = AfxMessageBox(s, MB_RETRYCANCEL);
+				if (id == IDCANCEL)
+					exit(1);
+				AfxDebugBreak();
+			}
+		}
 
+		map<string, string> fileMap;
+		map<string, AudioSource*> sourceMap;
+
+	};
+
+	enum class  AudioMode : int { Sound, Stream };
+
+	class AudioSource
+	{
+	public:
+		FMOD::Sound* soundSource;
+		AudioMode sourceMode;
+		void Play(int channelID = 0);
+		void PlayOneShot(int channelID = 0);
+	};
 }

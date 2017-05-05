@@ -29,7 +29,6 @@ void GameScene::OnBeginState()
     game_framework::CSpecialEffect::SetCurrentTime();
 
 	GameStatus::LoadFile();
-
 }
 
 void GameScene::OnMove()
@@ -37,8 +36,10 @@ void GameScene::OnMove()
     while (loadname != "")
         OnBeginState();
 
-    SoundSystemClass::m_pSystem->update();
+	//FMOD Audio Update 
+    AudioPlayer::instance->m_pSystem->update();
 
+	//Time Update
     Time::Update();
 
     //INPUT WORKOUT HERE
@@ -238,7 +239,15 @@ void GameScene::ParseJSON(json j)
         IncludePrefrabs(filename + ".scene", j["IncludePrefrab"]);
     
     if (FindJSON("GameObject"))
-        InstantiateGameObject(filename + ".scene", j["GameObject"]);    
+        InstantiateGameObject(filename + ".scene", j["GameObject"]);
+
+	AudioPlayer::instance->ReleaseBuffer();
+
+	if (FindJSON("Sound"))
+		AudioPlayer::instance->ParseSoundJSON(j["Sound"]);
+
+	if (FindJSON("Music"))
+		AudioPlayer::instance->ParseMusicJSON(j["Music"]);
 }
 
 void GameScene::IncludePrefrabs(string filename, json prefrabObject)
