@@ -566,7 +566,7 @@ void Animation::NextFrame()
 
 		if (ap == AnimationPlaytype::Forward)
 		{
-            if (this->animateCount + 1 == size)
+            if (this->animateFrame + 1 == size)
             {
                 this->animateCount = this->frameRemider;
                 EndAnimation();
@@ -580,7 +580,7 @@ void Animation::NextFrame()
 		}
 		else if (ap == AnimationPlaytype::Reverse)
 		{
-			if (this->animateCount - 1 == -1)
+			if (this->animateFrame - 1 == -1)
 			{
 				this->animateCount = this->frameRemider;
                 EndAnimation();
@@ -588,8 +588,8 @@ void Animation::NextFrame()
 			}
 			else
 			{
-				this->animateCount--;
-				SetFrame(this->animateCount);
+				this->animateCount++;
+				SetFrame(size - this->animateCount - 1);
 			}
 		}
 		else if (ap == AnimationPlaytype::Pingpong)
@@ -626,8 +626,8 @@ void Animation::NextFrame()
             if (this->animateFrame - 1 == -1)
                 EndAnimation();
 
-			this->animateCount--;
-			SetFrame(this->animateCount);
+			this->animateCount++;
+			SetFrame(size - this->animateCount - 1);
 		}
 		else if (ap == AnimationPlaytype::Pingpong)
 		{
