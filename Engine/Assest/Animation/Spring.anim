@@ -1,0 +1,33 @@
+{ "frames": [
+   {
+    "filename": "Spring 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "Spring 1.aseprite",
+    "frame": { "x": 16, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 300
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.9",
+  "image": "D:\\_School\\104OOP_Spring\\Game\\Engine\\Assest\\Bitmap\\GameObject\\Spring.bmp",
+  "format": "RGBA8888",
+  "size": { "w": 32, "h": 16 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Bottom", "from": 0, "to": 0, "direction": "forward" },
+   { "name": "Push", "from": 1, "to": 1, "direction": "forward" }
+  ]
+ }
+}
