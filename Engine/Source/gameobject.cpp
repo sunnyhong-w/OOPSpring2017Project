@@ -315,6 +315,9 @@ void Destroy(GameObject* gobj)
     gobj->destoryFlag = true;
     gobj->transform->SetParent(nullptr);
 
+	if (gobj->spriteRenderer != nullptr)
+		gobj->spriteRenderer->SetEnable(false);
+
     auto childList = gobj->transform->GetChild();
     for (auto childTransform : childList)
         Destroy(childTransform->gameObject);
