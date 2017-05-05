@@ -309,9 +309,21 @@ Vector2I SpriteRenderer::GetSourcePos()
     return this->srcpos;
 }
 
+void SpriteRenderer::SetSourceData(Rect src)
+{
+    this->size = Vector2I(src.w, src.h);
+    this->srcpos = Vector2I(src.x, src.y);
+    this->cutSrc = true;
+}
+
 void SpriteRenderer::SetSize(Vector2I size)
 {
     this->size = size;
+}
+
+Vector2I SpriteRenderer::GetSize()
+{
+	return size;
 }
 
 void SpriteRenderer::ResetSize()
@@ -378,8 +390,13 @@ void SpriteRenderer::SetAnchorRaito(Vector2 pos)
 
 void SpriteRenderer::SetOffset(Vector2I dp)
 {
-    this->offset = offset;
+    this->offset = dp;
     UpdateRealRenderPostion();
+}
+
+Vector2I SpriteRenderer::GetOffset()
+{
+	return offset;
 }
 
 Vector2I SpriteRenderer::GetAnchorPoint()
@@ -532,6 +549,9 @@ void Collider::ParseJSON(json j)
 Animation::Animation(GameObject * gobj) : Component(gobj)
 {
     this->gameObject->animation = this;
+    this->gameObject->AddComponentOnce<SpriteRenderer>();
+    startAtReminder = true;
+	frameRemider = -1;
 }
 
 Animation::~Animation()
@@ -539,64 +559,180 @@ Animation::~Animation()
     this->gameObject->animation = nullptr;
 }
 
-void Animation::LoadAnimation(json jsonobj)
+void Animation::NextFrame()
 {
-    this->animationInfo.clear();
+	int size = 0;
+	AnimationPlaytype ap;
 
-    Vector2 gAnchor = Vector2::one * -1;
-    int gDuration = -1;
+	if (this->frameRemider != -1)
+	{
+		size = animationOneShot.frameList.size();
+		ap = animationOneShot.playtype;
 
-    AnimationSetting global;
+		if (ap == AnimationPlaytype::Forward)
+		{
+            if (this->animateFrame + 1 == size)
+            {
+                this->animateCount = this->frameRemider;
+                EndAnimation();
+                this->frameRemider = -1;
+            }
+			else
+			{
+				this->animateCount++;
+				SetFrame(this->animateCount);
+			}
+		}
+		else if (ap == AnimationPlaytype::Reverse)
+		{
+			if (this->animateFrame - 1 == -1)
+			{
+				this->animateCount = this->frameRemider;
+                EndAnimation();
+				this->frameRemider = -1;
+			}
+			else
+			{
+				this->animateCount++;
+				SetFrame(size - this->animateCount - 1);
+			}
+		}
+		else if (ap == AnimationPlaytype::Pingpong)
+		{
+			if (this->animateCount + 1 == (size - 1) * 2 + 1)
+			{
+				this->animateCount = this->frameRemider;
+                EndAnimation();
+				this->frameRemider = -1;
+			}
+			else
+			{
+				this->animateCount++;
+				SetFrame(size - 1 - abs(size - 1 - animateCount));
+			}
+		}
+	}
 
-    if (jsonobj.find("setting") != jsonobj.end())
-        global = jsonobj["setting"];
-    
+	if (this->frameRemider == -1)
+	{
+		size = animationData.frameList.size();
+		ap = animationData.playtype;
 
-    for (AnimationSetting data : jsonobj["data"])
+		if (ap == AnimationPlaytype::Forward)
+		{
+            if (this->animateFrame + 1 == size)
+                EndAnimation();
+
+			this->animateCount++;
+			SetFrame(this->animateCount);
+		}
+		else if (ap == AnimationPlaytype::Reverse)
+		{
+            if (this->animateFrame - 1 == -1)
+                EndAnimation();
+
+			this->animateCount++;
+			SetFrame(size - this->animateCount - 1);
+		}
+		else if (ap == AnimationPlaytype::Pingpong)
+		{
+            if (this->animateCount + 1 == (size - 1) * 2)
+                EndAnimation();
+
+			this->animateCount = (this->animateCount + 1) % ((size - 1) * 2);
+			SetFrame(size - 1 - abs(size - 1 - animateCount));
+		}
+	}
+}
+
+void Animation::SetFrame(int i)
+{
+    AnimationSetting data;
+	if (this->frameRemider != -1)
+	{
+		int size = animationOneShot.frameList.size();
+		this->animateFrame = ((i % size) + size) % size;
+		data = animationOneShot.frameList[this->animateFrame];
+	}
+	else
     {
-        AnimationSetting setting(global);
-        bool safe = setting.Build(data);
-        GAME_ASSERT(!safe, ("Animation Building ERROR : \n Animation : " + jsonobj["filename"].get<string>()).c_str());
-        
-        json j = setting;
-        this->animationInfo.push_back(j);
+		int size = animationData.frameList.size();
+		this->animateFrame = ((i % size) + size) % size;
+        data = animationData.frameList[this->animateFrame];
+    }
 
-        SR->LoadBitmapData(setting.filename);
+    this->gameObject->spriteRenderer->LoadBitmapData(data.filename, true);
+    this->gameObject->spriteRenderer->SetSourceData(data.frame);
+    this->duration = data.duration;
+    this->timeStamp = clock();
+}
+
+void Animation::LoadAnimation(AnimationData newAnim)
+{
+    this->animationData.frameList.clear();
+    this->animationData.frameList = newAnim.frameList;
+    this->animationData.playtype = newAnim.playtype;
+
+    GAME_ASSERT(animationData.frameList.size() != 0, "Animation Size ERROR");
+
+	ResetAnimation();
+}
+
+void Animation::PlayOneShot(AnimationData newAnim)
+{
+    if (this->frameRemider != -1)
+        this->animationOneShot.frameList.clear();
+    else
+        frameRemider = this->animateCount;
+
+    this->animationOneShot.frameList = newAnim.frameList;
+    this->animationOneShot.playtype = newAnim.playtype;
+
+    GAME_ASSERT(animationOneShot.frameList.size() != 0, "Animation Size ERROR");
+
+	ResetAnimation();
+}
+
+void Animation::EndAnimation()
+{
+    if (this->frameRemider != -1)
+    {
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->GetEnable())
+                (*it)->OnAnimationEnd(animationOneShot);
+    }
+    else
+    {
+        for (auto it = gameObject->gamebehaviorSetBegin; it != gameObject->gamebehaviorSetEnd; ++it)
+            if ((*it)->GetEnable())
+                (*it)->OnAnimationEnd(animationData);
     }
 }
 
-void Animation::ParseJSON(json j)
-{
-    this->SR = gameObject->AddComponentOnce<SpriteRenderer>(); //Sprite Renderer Require
-	json empty;
-	SR->ParseJSON(empty);
-} 
-
 void Animation::Update()
 {
-    if (this->animateCount != -1 && clock() - this->timeStamp >= (DWORD)this->duration)
-    {
-        this->animateCount = (this->animateCount + 1) % this->animationInfo.size();
-        AnimationSetting data = this->animationInfo[this->animateCount];
-        SR->LoadBitmapData(data.filename, true);
-        SR->SetSize(data.size);
-        SR->SetSourcePos(data.position);
-        SR->SetAnchorRaito(data.anchor);
-        this->duration = data.duration;
-        this->timeStamp = clock();
-    }
+	if (this->animateCount != -1 && clock() - this->timeStamp >= (DWORD)this->duration)
+		NextFrame();
 }
 
 void Animation::ResetAnimation()
 {
-    this->animateCount = this->animationInfo.size() - 1;
-    this->timeStamp = clock();
-    this->duration = 0;
+	this->animateCount = 0;
+    SetFrame(0);
+}
+
+void Animation::SetAnimationPlaytype(AnimationPlaytype ap)
+{
+    if (this->frameRemider != -1)
+        animationOneShot.playtype = ap;
+    else
+        animationData.playtype = ap;
 }
 
 AnimationController::AnimationController(GameObject * gobj) : Component(gobj)
 {
     this->gameObject->animationController = this;
+    this->gameObject->AddComponentOnce<Animation>();
 }
 
 AnimationController::~AnimationController()
@@ -606,61 +742,137 @@ AnimationController::~AnimationController()
 
 void AnimationController::ParseJSON(json j)
 {
-	animation = this->gameObject->AddComponentOnce<Animation>(); //Animation require
-	json empty;
-	animation->ParseJSON(empty);
+    //animation name
+    //init
 
-	GAME_ASSERT(j.find("init") != j.end(), ("Animation State Init Not Found! | \nGameObject : " + gameObject->GetName()).c_str());
-	JumpState(j["init"]);
+    if(j.find("animation") != j.end())
+    {
+        string name = R"(.\Assest\Animation\)" + j["animation"].get<string>() + ".anim";
 
-	GAME_ASSERT(j.find("state") != j.end(), ("Animation State Data Not Found! | \nGameObject : " + gameObject->GetName()).c_str());
+        ifstream file;
+        file.open(name);
+        if (file.good())
+        {
+            stringstream buffer;
+            buffer << file.rdbuf();
+            json aespriteJSONobj = json::parse(buffer);
+            this->ParseAespriteJSON(aespriteJSONobj);
+            file.close();
+        }
+        else
+        {
+            file.close();
+            string str = "ERROR : Animation NOT FOUND when parse Animation JSON :\n";
+            str += "GameObject : " + gameObject->GetName() + "\n";
+            str += "Animation : " + name + " => NOT FOUND";
+            GAME_ASSERT(false, str.c_str());
+        }
+    }
 
-	for (auto &jdat : j["state"])
-	{
-		string name = R"(.\Assest\Animation\)" + jdat.get<string>() + ".anim";
+    if (j.find("init") != j.end())
+        JumpState(j["init"].get<string>());
+    else
+        JumpState(0);
+    
+    Update();
+}
 
-		ifstream file;
-		file.open(name);
-		if (file.good())
-		{
-			stringstream buffer;
-			buffer << file.rdbuf();
-			json jsonobj = json::parse(buffer);
-			jsonobj["filename"] = name;
-			animation->LoadAnimation(jsonobj);
-			jdat = jsonobj;
-			file.close();
-		}
-		else
-		{
-			file.close();
-			string str = "ERROR : Animation NOT FOUND when parse Animation JSON :\n";
-			str += "GameObject : " + gameObject->GetName() + "\n";
-			str += "Animation : " + name + " => NOT FOUND";
-			GAME_ASSERT(false, str.c_str());
-		}
-	}
+void AnimationController::ParseAespriteJSON(json j)
+{
+    this->animationList.clear();
+    this->animationData.clear();
+    this->frames.clear();
 
-	data = j;
+    string filename = j["meta"]["image"];
 
-	Update();
+    filename = filename.substr(filename.find(R"(Assest\Bitmap\)") + 14);
+    filename = filename.substr(0, filename.find(".bmp"));
+
+    for (AnimationSetting as : j["frames"])
+    {
+        as.filename = filename;
+        this->frames.push_back(as);
+    }
+
+    for (auto jobj : j["meta"]["frameTags"])
+    {
+        this->animationList.push_back(jobj["name"]);
+
+        AnimationData animationData;
+        
+        string direction = jobj["direction"];
+
+        if(direction == "forward")
+            animationData.playtype = AnimationPlaytype::Forward;
+        else if (direction == "reverse")
+            animationData.playtype = AnimationPlaytype::Reverse;
+        else if (direction == "pingpong")
+            animationData.playtype = AnimationPlaytype::Pingpong;
+
+        if (jobj.find("from") != jobj.end() && jobj.find("to") != jobj.end())
+        {
+            int from = jobj["from"];
+            int to = jobj["to"];
+
+            for (int i = from; i <= to; i++)
+            {
+                animationData.frameList.push_back(frames[i]);
+            }
+        }
+        else if (jobj.find("list") != jobj.end())
+        {
+            for (int i : jobj["list"])
+            {
+                animationData.frameList.push_back(frames[i]);
+            }
+        }
+
+        animationData.name = jobj["name"].get<string>();
+        this->animationData[jobj["name"]] = animationData;
+    }
 }
 
 void AnimationController::Update()
 {
 	if (jumpState != "")
 	{
-		GAME_ASSERT(data["state"].find(jumpState) != data["state"].end(), ("Animation State Define Not Found! | \nGameObject : " 
-																			+ gameObject->GetName() + "\nAnimationState : " + jumpState).c_str());
-		animation->LoadAnimation(data["state"][jumpState]);
-		animation->ResetAnimation();
+        this->gameObject->animation->LoadAnimation(animationData[jumpState]);
 		jumpState = "";
 	}
 }
 
-void AnimationController::JumpState(string state)
+bool AnimationController::JumpState(string state)
 {
-	jumpState = state;
+    if (animationData.find(state) != animationData.end())
+    {
+        jumpState = state;
+        return true;
+    }
+
+    return false;
+}
+
+bool AnimationController::JumpState(int state)
+{
+    if (state >= 0 && state < (int)animationList.size())
+    {
+        jumpState = animationList[state];
+        return true;
+    }
+
+    return false;
+}
+
+void AnimationController::PlayOneShot(string state)
+{
+    if (animationData.find(state) != animationData.end())
+        this->gameObject->animation->PlayOneShot(animationData[state]);
+}
+
+void AnimationController::PlayOneShot(int state)
+{
+    if (state >= 0 && state < (int)animationList.size())
+        this->gameObject->animation->PlayOneShot(animationData[animationList[state]]);
 }
 
 Rigidbody::Rigidbody(GameObject * gobj) : Component(gobj)

@@ -2,7 +2,7 @@
 #include "Engine.h"
 #include "GreenBox.h" //Include you header
 
-void GreenBox::OnRecivedBoardcast(BoardcastMessageData bmd)
+void GreenBox::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
     char newstate[4][4];
 

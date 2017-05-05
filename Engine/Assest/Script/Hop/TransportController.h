@@ -8,9 +8,9 @@ class TransportController : public GameBehaviour
     public:
         TransportController(GameObject* gobj) : GameBehaviour(gobj) 
         {
-            RegisterEvent(BoardcastEvent::UpdateBoxPosition);
+            RegisterEvent(BroadcastEvent::UpdateBoxPosition);
         };
-        void OnRecivedBoardcast(BoardcastMessageData bmd) override;
+        void OnRecivedBroadcast(BroadcastMessageData bmd) override;
     protected:
     private:
         map <string, map<string, GameObject*>> edgeMapGameObject;

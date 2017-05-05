@@ -15,7 +15,7 @@ class Player : public GameBehaviour
         void ParseJSON(json j) override;
         void Start() override;
         void Update() override;
-		void OnRecivedBoardcast(BoardcastMessageData bmd) override;
+		void OnRecivedBroadcast(BroadcastMessageData bmd) override;
 		void OnDrawGizmos(CDC* pDC) override;
 		void SetRoomName(string name);
 		string GetRoomName();
@@ -28,6 +28,7 @@ class Player : public GameBehaviour
         Vector2I textPos = Vector2I::zero;
 		Vector2I winpos = Vector2I::zero;
 		bool isBouncing;
+		float waitSmoke;
 
         float gravity;
         int tiledPixel;
@@ -40,4 +41,6 @@ class Player : public GameBehaviour
         void Jump(Vector2 &velocity);
 
 		string roomName;
+
+
 };

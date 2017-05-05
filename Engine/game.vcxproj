@@ -82,7 +82,7 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'" />
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files\Microsoft DirectX SDK %28February 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)lib;C:\Program Files\Microsoft DirectX SDK %28February 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files\Microsoft DirectX SDK %28February 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -119,7 +119,7 @@
       <Culture>0x0404</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ddraw.lib;dxguid.lib;winmm.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fmodL_vc.lib;ddraw.lib;dxguid.lib;winmm.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Debug/game.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -172,7 +172,7 @@
       <Culture>0x0404</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>winmm.lib;ddraw.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fmod_vc.lib;winmm.lib;ddraw.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Release/game.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>.\Release/game.pdb</ProgramDatabaseFile>
@@ -272,11 +272,13 @@
     <ClCompile Include="Assest\Script\Engine\mapReader.cpp" />
     <ClCompile Include="Assest\Script\Engine\textRenderer.cpp" />
     <ClCompile Include="Assest\Script\Engine\textStamp.cpp" />
+    <ClCompile Include="Assest\Script\Hop\Background.cpp" />
     <ClCompile Include="Assest\Script\Hop\Button.cpp" />
     <ClCompile Include="Assest\Script\Hop\Camera.cpp" />
     <ClCompile Include="Assest\Script\Hop\CollectedGem.cpp" />
     <ClCompile Include="Assest\Script\Hop\Gem.cpp" />
     <ClCompile Include="Assest\Script\Hop\GreenBox.cpp" />
+    <ClCompile Include="Assest\Script\Hop\Smoke.cpp" />
     <ClCompile Include="Assest\Script\Hop\TransportController.cpp" />
     <ClCompile Include="Assest\Script\Hop\YellowBox.cpp" />
     <ClCompile Include="Assest\Script\Slide\BoxParent.cpp" />
@@ -336,11 +338,13 @@
     <ClInclude Include="Assest\Script\Engine\mapReader.h" />
     <ClInclude Include="Assest\Script\Engine\textRenderer.h" />
     <ClInclude Include="Assest\Script\Engine\textStamp.h" />
+    <ClInclude Include="Assest\Script\Hop\Background.h" />
     <ClInclude Include="Assest\Script\Hop\Button.h" />
     <ClInclude Include="Assest\Script\Hop\Camera.h" />
     <ClInclude Include="Assest\Script\Hop\CollectedGem.h" />
     <ClInclude Include="Assest\Script\Hop\Gem.h" />
     <ClInclude Include="Assest\Script\Hop\GreenBox.h" />
+    <ClInclude Include="Assest\Script\Hop\Smoke.h" />
     <ClInclude Include="Assest\Script\Hop\TransportController.h" />
     <ClInclude Include="Assest\Script\Hop\YellowBox.h" />
     <ClInclude Include="Assest\Script\Slide\BoxParent.h" />
@@ -386,5 +390,8 @@
   </ProjectExtensions>
   <PropertyGroup>
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
 </Project>

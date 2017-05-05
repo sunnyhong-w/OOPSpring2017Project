@@ -13,7 +13,7 @@ game_engine::GameBehaviour::~GameBehaviour()
     this->gameObject->gamebehaviorSet.erase(this->gameObject->gamebehaviorSet.find(this));
 }
 
-void game_engine::GameBehaviour::RegisterEvent(BoardcastEvent e)
+void game_engine::GameBehaviour::RegisterEvent(BroadcastEvent e)
 {
     eventListener[e] = true;
 }

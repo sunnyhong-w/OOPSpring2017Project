@@ -35,12 +35,14 @@ class GameBehaviour : public Component
         virtual void OnCollisionExit (Collider* c) {};
         virtual void OnCollisionStay (Collider* c) {};
 
-        virtual void OnRecivedBoardcast(BoardcastMessageData bmd) {};
+        virtual void OnAnimationEnd(AnimationData ad) {};
+
+        virtual void OnRecivedBroadcast(BroadcastMessageData bmd) {};
 		virtual void OnDrawGizmos(CDC *pDC) {};
 
-		map<BoardcastEvent, bool> eventListener;
+		map<BroadcastEvent, bool> eventListener;
 
     protected:
-         void RegisterEvent(BoardcastEvent e);
+         void RegisterEvent(BroadcastEvent e);
 };
 }

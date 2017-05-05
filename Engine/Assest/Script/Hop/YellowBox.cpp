@@ -6,7 +6,7 @@
 
 void YellowBox::Start()
 {
-	eventListener[BoardcastEvent::UpdateWindowPosition] = true;
+	eventListener[BroadcastEvent::UpdateWindowPosition] = true;
 	this->transform->SetWorldPosition(Vector2(-1000, -1000));
 
     this->gameObject->collider->SetEnable(false);
@@ -19,7 +19,7 @@ void YellowBox::LateUpdate()
     this->gameObject->transform->SetWorldPosition(worldPos.GetV2());
 }
 
-void YellowBox::OnRecivedBoardcast(BoardcastMessageData bmd)
+void YellowBox::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
     hoppos = bmd.position;
 }

@@ -377,63 +377,74 @@ void to_json(json& j, const Vector2I& v) {
     j = json{ { "x", v.x },{ "y", v.y } };
 }
 
+void from_json(const json & j, Rect & v)
+{
+    if (j.find("x") != j.end())
+        v.x = j["x"];
 
+    if (j.find("y") != j.end())
+        v.y = j["y"];
+
+    if (j.find("w") != j.end())
+        v.w = j["h"];
+
+    if (j.find("w") != j.end())
+        v.h = j["h"];
+}
+
+void to_json(json & j, const Rect & v)
+{
+    j = json{ { "x", v.x },{ "y", v.y },{ "w", v.w },{ "h", v.h } };
+}
+
+Rect::Rect()
+{
+    this->x = 0;
+    this->y = 0;
+    this->w = 0;
+    this->h = 0;
+}             
+
+Rect::Rect(int x, int y, int w, int h)
+{
+    this->x = x;
+    this->y = y;
+    this->w = w;
+    this->h = h;
+}
 
 AnimationSetting::AnimationSetting()
 {
-    this->anchor = Vector2::null;
-    this->size = Vector2I::null;
-    this->position = Vector2I::null;
     this->filename = "";
     this->duration = -1;
-}
-
-bool AnimationSetting::Build(AnimationSetting newSetting)
-{
-    //Build Data With newSetting
-    if (newSetting.anchor != Vector2::null)
-        this->anchor = newSetting.anchor;
-    if(newSetting.duration != -1)
-        this->duration = newSetting.duration;
-    if (newSetting.filename != "")
-        this->filename = newSetting.filename;
-    if (newSetting.position != Vector2I::null)
-        this->position = newSetting.position;
-    if (newSetting.size != Vector2I::null)
-        this->size = newSetting.size;
-
-    //Fix Data without setting
-    bool safe = this->anchor == Vector2::null
-        || this->duration == -1
-        || this->position == Vector2I::null
-        || this->size == Vector2I::null
-        || this->filename == "";
-
-    return safe;
+    this->rotated = false;
+    this->trimmed = false;
+    this->frame = Rect(0, 0, 0, 0);
+    this->sourceSize = Vector2I(0, 0);
+    this->spriteSourceSize = Rect(0, 0, 0, 0);
 }
 
 void from_json(const json & j, AnimationSetting & as)
 {
-    if (j.find("anchor") != j.end())
-        as.anchor = j["anchor"];
-    if (j.find("size") != j.end())
-        as.size = j["size"];
-    if (j.find("position") != j.end())
-        as.position = j["position"];
-    if (j.find("filename") != j.end())
-        as.filename = j["filename"].get<string>();
-    if (j.find("duration") != j.end())
-        as.duration = j["duration"];
+    as.filename = j["filename"].get<string>();
+    as.duration = j["duration"];
+    as.rotated = j["rotated"];
+    as.trimmed = j["trimmed"];
+    as.frame = j["frame"];
+    as.sourceSize = j["sourceSize"];
+    as.spriteSourceSize = j["spriteSourceSize"];
 }
 
 void to_json(json & j, const AnimationSetting & as)
 {
     j = json{
-        { "anchor"   ,as.anchor   },
-        { "size"     ,as.size     },
-        { "position" ,as.position },
-        { "filename" ,as.filename },
-        { "duration" ,as.duration }
+        { "filename" , as.filename },
+        { "duration" , as.duration },
+        { "rotated" , as.rotated },
+        { "trimmed" , as.trimmed },
+        { "fram" , as.frame },
+        { "sourceSiz" , as.sourceSize },
+        { "spriteSourceSize" , as.spriteSourceSize }
     };
 }
 
@@ -448,17 +459,17 @@ void Time::Update()
 }
 
 
-void from_json(const json & j, BoardcastEvent & be)
+void from_json(const json & j, BroadcastEvent & be)
 {
-	be = (BoardcastEvent)j.get<int>();
+	be = (BroadcastEvent)j.get<int>();
 }
 
-void to_json(json & j, const BoardcastEvent & be)
+void to_json(json & j, const BroadcastEvent & be)
 {
 	j = (int)be;
 }
 
-void from_json(const json & j, BoardcastMessageData & bmd)
+void from_json(const json & j, BroadcastMessageData & bmd)
 {
 	bmd.event = j["event"];
 	bmd.data = j["data"];
@@ -467,7 +478,7 @@ void from_json(const json & j, BoardcastMessageData & bmd)
 	bmd.sender = j["sender"].get<string>();
 }
 
-void to_json(json & j, const BoardcastMessageData & bmd)
+void to_json(json & j, const BroadcastMessageData & bmd)
 {
 	j["event"] = bmd.event;
 	j["data"] = bmd.data;

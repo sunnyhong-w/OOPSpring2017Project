@@ -1,0 +1,20 @@
+{
+	"name":"Background",
+	"Component": {
+		"Transform":{
+			"position":
+			{
+				"x":0,
+				"y":0
+			},
+			"zindex":-1000
+		},
+        "SpriteRenderer": {
+            "Bitmap": {
+                "name": "Background\\Blue"
+            }
+        },
+        "Background":{}
+
+    }
+}

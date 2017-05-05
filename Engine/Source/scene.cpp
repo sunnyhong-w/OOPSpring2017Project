@@ -1,5 +1,6 @@
 #include"StdAfx.h"
 #include<ddraw.h>
+#include"audio.h"
 #include"gameobject.h"
 #include"scene.h"
 #include"component.h"
@@ -28,7 +29,6 @@ void GameScene::OnBeginState()
     game_framework::CSpecialEffect::SetCurrentTime();
 
 	GameStatus::LoadFile();
-
 }
 
 void GameScene::OnMove()
@@ -36,6 +36,10 @@ void GameScene::OnMove()
     while (loadname != "")
         OnBeginState();
 
+	//FMOD Audio Update 
+    AudioPlayer::instance->m_pSystem->update();
+
+	//Time Update
     Time::Update();
 
     //INPUT WORKOUT HERE
@@ -117,7 +121,7 @@ void GameScene::OnMove()
     {
         for (auto it = gameobjectVectorBegin; it != gameobjectVectorEnd; ++it)
             if ((*it)->enable)
-                (*it)->OnRecivedBoardcast(TDPQueue[0]);
+                (*it)->OnRecivedBroadcast(TDPQueue[0]);
 
         TDPQueue.erase(TDPQueue.begin());
     }
@@ -235,7 +239,15 @@ void GameScene::ParseJSON(json j)
         IncludePrefrabs(filename + ".scene", j["IncludePrefrab"]);
     
     if (FindJSON("GameObject"))
-        InstantiateGameObject(filename + ".scene", j["GameObject"]);    
+        InstantiateGameObject(filename + ".scene", j["GameObject"]);
+
+	AudioPlayer::instance->ReleaseBuffer();
+
+	if (FindJSON("Sound"))
+		AudioPlayer::instance->ParseSoundJSON(j["Sound"]);
+
+	if (FindJSON("Music"))
+		AudioPlayer::instance->ParseMusicJSON(j["Music"]);
 }
 
 void GameScene::IncludePrefrabs(string filename, json prefrabObject)
@@ -376,12 +388,12 @@ Vector2I & GameScene::WindowPosition()
 	return game_framework::CGame::Instance()->windowPosition;
 }
 
-void GameScene::Boardcast(BoardcastEvent event, json data, string windowName)
+void GameScene::Broadcast(BroadcastEvent event, json data, string windowName)
 {
-	BoardcastMessageData bmd;
+	BroadcastMessageData bmd;
 	bmd.event = event;
 	bmd.data = data;
-	game_framework::CGame::Instance()->BoardcastMessage(bmd, windowName);
+	game_framework::CGame::Instance()->BroadcastMessage(bmd, windowName);
 }
 
 void GameScene::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)

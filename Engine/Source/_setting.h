@@ -23,7 +23,7 @@ void from_json(const json &j, Layer &l);
 void from_json(const json &j, Tag &t);
 void from_json(const json &j, SortingLayer &l);
 
-enum class BoardcastEvent
+enum class BroadcastEvent
 {
     All,
     UpdateBoxPosition,
@@ -33,6 +33,6 @@ enum class BoardcastEvent
     UpdateWindowPosition
 };
 
-void from_json(const json& j, BoardcastEvent& be);
-void to_json(json& j, const BoardcastEvent& be);
+void from_json(const json& j, BroadcastEvent& be);
+void to_json(json& j, const BroadcastEvent& be);
 }

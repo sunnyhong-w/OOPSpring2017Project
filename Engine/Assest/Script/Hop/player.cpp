@@ -18,6 +18,8 @@ void Player::Start()
     MinJumpVelocity = sqrt(2 * abs(gravity) * MinJumpHeight);
 	bounce = false;
 	isBouncing = false;
+	waitSmoke = 0;
+	AudioPlayer::GetSource("RSIC")->Play(1);
 }
 
 void Player::Update()
@@ -77,10 +79,25 @@ void Player::Update()
         }
     }
 
+    if (Input::GetKeyDown(VK_F3))
+    {
+        GameObject *gobj = GameObject::findGameObjectByName("Anim");
+        if (gobj != nullptr)
+        {
+            gobj->animationController->PlayOneShot("RightShine");
+        }
+    }
+	if (this->gameObject->rigidbody->velocity.x!= 0 && waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
+	{
+		waitSmoke = 0.1f;
+		GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
+		gobj->transform->SetWorldPosition(this->transform->GetWorldPosition()+Vector2(0,12));
+	}
 	bounce = false;
+	waitSmoke -= Time::deltaTime;
 }
 
-void Player::OnRecivedBoardcast(BoardcastMessageData bmd)
+void Player::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
 }
 
@@ -119,6 +136,7 @@ void Player::Jump(Vector2 & velocity)
 {
 	if (canJump)
 	{
+		AudioPlayer::GetSource("Jump")->PlayOneShot(0);
 		velocity.y = MaxJumpVelocity;
 		canJump = false;
 	}

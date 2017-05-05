@@ -3,7 +3,15 @@
         "MapReader": "Engine\\MapReader",
         "Spring": "spring",
         "YellowBox": "yellowBox",
-        "Camera": "Camera"
+        "Camera": "Camera",
+        "Background": "Background",
+        "Smoke": "Smoke"
+    },
+    "Sound": {
+        "Jump": "Jump.wav"
+    },
+    "Music": {
+        "RSIC": "R.S.I.C._OSTVer.mp3"
     },
     "GameObject": [
         {
@@ -101,6 +109,9 @@
         },
         {
             "include": "Camera"
+        },
+        {
+            "include": "Background"
         },
         {
             "name": "TransportController",

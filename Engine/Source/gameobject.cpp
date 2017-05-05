@@ -53,6 +53,8 @@ Component* GameObject::AddComponentOnce(string ComponentName)
     RegisterComponent(TransportController)
 	RegisterComponent(Gem)
 	RegisterComponent(CollectedGem)
+	RegisterComponent(Smoke)
+	RegisterComponent(Background)
     else return nullptr;
 }
 
@@ -167,14 +169,14 @@ void GameObject::Draw(Vector2I cameraPos)
     }
 }
 
-void GameObject::OnRecivedBoardcast(BoardcastMessageData bmd)
+void GameObject::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
     for (auto it = gamebehaviorSetBegin; it != gamebehaviorSetEnd; ++it)
     {
         if ((*it)->enable)
         {
-            if ((*it)->eventListener[BoardcastEvent::All] || (*it)->eventListener[bmd.event])
-                (*it)->OnRecivedBoardcast(bmd);
+            if ((*it)->eventListener[BroadcastEvent::All] || (*it)->eventListener[bmd.event])
+                (*it)->OnRecivedBroadcast(bmd);
         }
     }
 }
@@ -314,6 +316,8 @@ void Destroy(GameObject* gobj)
 {
     gobj->destoryFlag = true;
     gobj->transform->SetParent(nullptr);
+	gobj->SetEnable(false);
+
 
     auto childList = gobj->transform->GetChild();
     for (auto childTransform : childList)

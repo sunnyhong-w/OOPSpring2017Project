@@ -5,6 +5,10 @@
 void Camera::Start()
 {
 	player = nullptr;
+	this->RegisterEvent(BroadcastEvent::UpdateBoxPosition);
+	shouldShake = false;
+	time = 0;
+	
 }
 
 void Camera::LateUpdate()
@@ -46,6 +50,7 @@ void Camera::LateUpdate()
 
 			if (playerCamerPosY + player->collider->collisionInfo.size.y > 250)
 			{
+				if(player->rigidbody->velocity.y > 0)
 				this->gameObject->rigidbody->velocity.y = player->rigidbody->velocity.y;
 			}
 			else if(playerCamerPosY  <= 60)
@@ -56,7 +61,10 @@ void Camera::LateUpdate()
 				}
 			}
         }
-    }
+		
+    }	
+	ShakeF();
+
 }
 
 void Camera::OnDrawGizmos(CDC * pDC)
@@ -98,4 +106,39 @@ void Camera::OnCollisionEnter(Collider * c)
 void Camera::OnCollisionStay(Collider * c)
 {
 	OnCollisionEnter(c);
+}
+
+void Camera::OnRecivedBroadcast(BroadcastMessageData bmd)
+{
+	if (bmd.event == BroadcastEvent::UpdateBoxPosition) 
+	{
+		Shake(0.75, 30, 15);
+		
+	}
+}
+
+void Camera::Shake(double t, double f, double s)
+{
+	f = f*(rand() % 2 == 0 ? 1 : -1);
+	totalTime = t;
+	frequency = f;
+	strength = s;
+	time = 0;
+	shouldShake = true;
+}
+
+void Camera::ShakeF()
+{
+	if (shouldShake)
+	{
+		time += Time::deltaTime;
+		Vector2I offset = this->gameObject->spriteRenderer->GetOffset();
+		this->gameObject->spriteRenderer->SetOffset(Vector2(sin((totalTime - time) * frequency )*(totalTime - time) * strength,
+			sin((totalTime - time) * frequency + 1)*(totalTime - time) * strength).GetV2I());
+		if (time > totalTime)
+		{
+			time = 0;
+			shouldShake = false;
+		}
+	}
 }

@@ -104,7 +104,9 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void ResetSourcePos();
         ///<summary>設定Sprite的輸出大小</summary>
         Vector2I GetSourcePos();
+        void SetSourceData(Rect src);
         void SetSize(Vector2I size);
+		Vector2I GetSize();
         ///<summary>將Size重置成最後一次Load的圖片大小</summary>
         void ResetSize();
         ///<summary>取代原本的LoadBitmap機能，注意在讀檔之後會重置Size和SrcPos的參數</summary>
@@ -119,6 +121,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void Reset();
         void SetAnchorRaito(Vector2 pos);
         void SetOffset(Vector2I offset);
+		Vector2I GetOffset();
         Vector2I GetAnchorPoint();
         SortingLayer GetSortingLayer();
         void SetSortingLayer(SortingLayer SL);
@@ -167,21 +170,12 @@ class Collider : public Component
         vector<Collider*> OnStay;
 };
 
-class Animation : public Component
-{
-public:
-    Animation(GameObject* gobj);
-    ~Animation();
-    void LoadAnimation(json jsonobj);
-    void ParseJSON(json j) override;
-    void Update();
-    void ResetAnimation();
-private:
-    int animateCount;
-    int duration;
-    DWORD timeStamp;
-    json animationInfo;
-    SpriteRenderer *SR;
+enum class AnimationPlaytype : int { Forward, Reverse, Pingpong };
+
+struct AnimationData {
+    vector<AnimationSetting> frameList;
+    AnimationPlaytype playtype;
+    string name;
 };
 
 class AnimationController : public Component
@@ -191,13 +185,46 @@ public:
     ~AnimationController();
     void ParseJSON(json j) override;
     void Update();
-	void JumpState(string state);
-    json varibleMap;
+    bool JumpState(string state);
+    bool JumpState(int state);
+    void PlayOneShot(string state);
+    void PlayOneShot(int state);
 private:
-	bool CheckCondition(json j);
-	string jumpState = "";
-	json data;
-	Animation* animation;
+    void ParseAespriteJSON(json j);
+
+    string jumpState = "";
+    map<string, AnimationData> animationData;
+    vector<string> animationList;
+    vector<AnimationSetting> frames;
+};
+
+class Animation : public Component
+{
+public:
+    friend class AnimationController;
+
+    Animation(GameObject* gobj);
+    ~Animation();
+	void NextFrame();
+    void SetFrame(int i);
+    void Update();
+    void ResetAnimation();
+    void SetAnimationPlaytype(AnimationPlaytype ap);
+
+    bool startAtReminder;
+
+private:
+    void LoadAnimation(AnimationData newAnim);
+    void PlayOneShot(AnimationData oneShot);
+    void EndAnimation();
+
+	int animateFrame;
+    int animateCount;
+    int duration;
+    int frameRemider;
+    DWORD timeStamp;
+    AnimationData animationData;
+    AnimationData animationOneShot;
 };
 
 struct ColliderInfo

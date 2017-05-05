@@ -67,7 +67,7 @@ void Slide::Update()
     }
 }
 
-void Slide::OnRecivedBoardcast(BoardcastMessageData bmd)
+void Slide::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
 }
 

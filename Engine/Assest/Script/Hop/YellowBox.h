@@ -9,7 +9,7 @@ class YellowBox : public GameBehaviour
 		YellowBox(GameObject* gobj) : GameBehaviour(gobj) {}
 		void Start() override;
         void LateUpdate() override;
-		void OnRecivedBoardcast(BoardcastMessageData bmd) override;
+		void OnRecivedBroadcast(BroadcastMessageData bmd) override;
     private:
         Vector2I hoppos;
 };

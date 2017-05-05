@@ -152,16 +152,30 @@ struct Vector2I
 void from_json(const json& j, Vector2I& v);
 void to_json(json& j, const Vector2I& v);
 
+struct Rect
+{
+    int x;
+    int y;
+    int w;
+    int h;
+    Rect();
+    Rect(int x, int y, int w, int h);
+};
+
+void from_json(const json& j, Rect& v);
+void to_json(json& j, const Rect& v);
+
 struct AnimationSetting
 {
 public:
     AnimationSetting();
-    bool Build(AnimationSetting newSetting);
     string filename;
-    Vector2I position;
-    Vector2I size;
-    Vector2 anchor;
     int duration;
+    bool rotated;
+    bool trimmed;
+    Rect frame;
+    Rect spriteSourceSize;
+    Vector2I sourceSize;
 };
 
 void from_json(const json& j, AnimationSetting& v);
@@ -182,16 +196,16 @@ struct CollisionInfo
 	Vector2I offset = Vector2I::zero;
 };
 
-struct BoardcastMessageData
+struct BroadcastMessageData
 {
-    BoardcastEvent event;
+    BroadcastEvent event;
     json data;
     Vector2I position;
     Vector2I size;
     string sender;
 };
 
-void from_json(const json& j, BoardcastMessageData& bmd);
-void to_json(json& j, const BoardcastMessageData& bmd);
+void from_json(const json& j, BroadcastMessageData& bmd);
+void to_json(json& j, const BroadcastMessageData& bmd);
 
 }

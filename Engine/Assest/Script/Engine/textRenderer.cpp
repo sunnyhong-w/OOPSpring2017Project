@@ -97,7 +97,7 @@ void TextRenderer::Update()
     }
 }
 
-void TextRenderer::OnRecivedBoardcast(BoardcastMessageData bmd)
+void TextRenderer::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
 }
 
