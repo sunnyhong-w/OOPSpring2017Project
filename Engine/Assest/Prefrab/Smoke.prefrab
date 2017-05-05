@@ -1,0 +1,10 @@
+{
+	"name":"Smoke",
+	"Component":{
+		"AnimationController" : {
+			"animation" : "Smoke",
+			"init" : "Smoke"
+		},
+		"Smoke":{}
+	}
+}

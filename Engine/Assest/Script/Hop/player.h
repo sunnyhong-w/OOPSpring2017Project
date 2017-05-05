@@ -28,6 +28,7 @@ class Player : public GameBehaviour
         Vector2I textPos = Vector2I::zero;
 		Vector2I winpos = Vector2I::zero;
 		bool isBouncing;
+		float waitSmoke;
 
         float gravity;
         int tiledPixel;

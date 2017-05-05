@@ -4,8 +4,8 @@
         "Spring": "spring",
         "YellowBox": "yellowBox",
         "Camera": "Camera",
-        "Background":"Background"
-
+        "Background":"Background",
+        "Smoke":"Smoke"
     },
     "GameObject": [
         {

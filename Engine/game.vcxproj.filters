@@ -208,6 +208,9 @@
     <ClCompile Include="Assest\Script\Hop\CollectedGem.cpp">
       <Filter>GameScript\Hop</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Hop\Smoke.cpp">
+      <Filter>GameScript\Hop</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -317,6 +320,9 @@
       <Filter>GameEngine\EngingScript</Filter>
     </ClInclude>
     <ClInclude Include="Assest\Script\Hop\CollectedGem.h">
+      <Filter>GameScript\Hop</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Hop\Smoke.h">
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
   </ItemGroup>

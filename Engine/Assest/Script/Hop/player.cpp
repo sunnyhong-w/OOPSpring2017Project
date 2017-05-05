@@ -18,6 +18,7 @@ void Player::Start()
     MinJumpVelocity = sqrt(2 * abs(gravity) * MinJumpHeight);
 	bounce = false;
 	isBouncing = false;
+	waitSmoke = 0;
 }
 
 void Player::Update()
@@ -85,8 +86,14 @@ void Player::Update()
             gobj->animationController->PlayOneShot("RightShine");
         }
     }
-
+	if (this->gameObject->rigidbody->velocity.x!= 0 && waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
+	{
+		waitSmoke = 0.1f;
+		GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
+		gobj->transform->SetWorldPosition(this->transform->GetWorldPosition()+Vector2(0,12));
+	}
 	bounce = false;
+	waitSmoke -= Time::deltaTime;
 }
 
 void Player::OnRecivedBroadcast(BroadcastMessageData bmd)
