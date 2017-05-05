@@ -1,5 +1,6 @@
 #pragma once
 #include <ddraw.h>
+#include "audio.h"
 #include "gameobject.h"
 #include "component.h"
 #include "_setting.h"

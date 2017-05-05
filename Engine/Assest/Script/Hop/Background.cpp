@@ -16,9 +16,6 @@ void Background::Update()
 	Vector2 cameraMapRelatePos = cameraPos - map->transform->GetWorldPosition();
 	Vector2 cameraMoveRange = tm.GetMapSize().GetV2() - camera->spriteRenderer->GetSize();
 	this->transform->SetPosition(map->transform->GetPostion() + (bgMoveRange * ( cameraMapRelatePos / cameraMoveRange ) ));
-	TRACE(("\n cmpos " + cameraMapRelatePos.toString() + "\n").c_str());
-	TRACE(("\n cmr" + cameraMoveRange.toString() + "\n").c_str());
-	TRACE(this->transform->GetPostion().toString().c_str());
 }
 
 void Background::SetBackground(string roomName)
