@@ -327,6 +327,7 @@
     </ClInclude>
     <ClInclude Include="Assest\Script\Hop\Background.h">
       <Filter>GameScript\Hop</Filter>
+    </ClInclude>
     <ClInclude Include="Source\audio.h">
       <Filter>GameEngine\EngineLib</Filter>
     </ClInclude>
