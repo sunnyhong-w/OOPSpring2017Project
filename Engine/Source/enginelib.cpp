@@ -105,6 +105,11 @@ Vector2 Vector2::Damp(Vector2 currentPosition, Vector2 target, Vector2 & current
 	return currentPosition;
 }
 
+float clamp(float in, float min, float max)
+{
+    return (in > max ? max : (in < min ? min : in));
+}
+
 Vector2 operator*(Vector2 multiplied, Vector2 multiplier)
 {
     return Vector2(multiplied.x * multiplier.x, multiplied.y * multiplier.y);

@@ -70,6 +70,7 @@ namespace game_engine
 		void PlayOneShot();
 		void Pause();
 		void Stop();
+        void Fade(float volumeStart, float volumeEnd, float time);
 		void SetVolume(float volume);
 		void SetPitch(float pitch);
 	};

@@ -19,7 +19,7 @@ void Player::Start()
 	bounce = false;
 	isBouncing = false;
 	waitSmoke = 0;
-	AudioPlayer::GetSource("RSIC")->Play(1);
+	AudioPlayer::GetSource("RSIC")->Play();
 }
 
 void Player::Update()

@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "audio.h"
+#include "enginelib.h"
 #include <vector>
 
 namespace game_engine
@@ -136,10 +137,19 @@ namespace game_engine
 		channel = nullptr;
 	}
 
+    void AudioSource::Fade(float volumeStart, float volumeEnd, float time)
+    {
+        int rate;
+        AudioPlayer::instance->m_pSystem->getSoftwareFormat(&rate, 0, 0);
+        unsigned long long dspclock;
+        channel->getDSPClock(0, &dspclock);
+        channel->addFadePoint(dspclock, clamp(volumeStart, 0, 1));
+        channel->addFadePoint(dspclock + rate * time, clamp(volumeEnd, 0, 1));
+    }
+
 	void AudioSource::SetVolume(float vol)
 	{
-		vol = (vol > 1 ? 1 : (vol < 0 ? 0 : vol));
-		channel->setVolume(vol);
+        channel->setVolume(clamp(vol, 0, 1));
 	}
 
 	void AudioSource::SetPitch(float pitch)
