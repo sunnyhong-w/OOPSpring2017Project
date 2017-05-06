@@ -16,6 +16,7 @@ namespace game_engine
 
 		static AudioPlayer* instance;
 		static AudioSource* GetSource(string name);
+        static void Crossfade(AudioSource *fadeoutSource, AudioSource *fadeinSource, float time, bool forcePlay = false);
 
 		FMOD::System *m_pSystem;
 
@@ -24,14 +25,14 @@ namespace game_engine
 
 		void ParseSoundJSON(json j);
 		void ParseMusicJSON(json j);
-		void ReleaseBuffer();
-
+        void ReleaseBuffer();
 
 	private:
 		void initSound(string name, string filename);
 		void initStream(string name, string filename);
 		void Play(AudioSource *sound, bool repeat);
 		void ReleaseSound(string name);
+
 		static void GAME_LOG(bool boolexp,string str)
 		{
 			if (!(boolexp)) {
@@ -52,6 +53,8 @@ namespace game_engine
 		map<string, string> fileMap;
 		map<string, AudioSource*> sourceMap;
 
+        float volumeMusic;
+        float volumeSound;
 	};
 
 	enum class  AudioMode : int { Sound, Stream };
@@ -66,8 +69,8 @@ namespace game_engine
 		FMOD::Channel* channel;
 		bool pause;
 
-		void Play();
-		void PlayOneShot();
+		void Play(bool forcePlay = false, float volume = -1);
+		void PlayOneShot(bool forcePlay = false, float volume = -1);
 		void Pause();
 		void Stop();
         void Fade(float volumeStart, float volumeEnd, float time);
