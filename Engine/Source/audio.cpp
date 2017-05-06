@@ -116,13 +116,10 @@ namespace game_engine
             ReleaseSound(name);
     }
 
-    void AudioPlayer::Crossfade(AudioSource *fadeoutSource, AudioSource *fadeinSource, float time, bool forcePlay)
+    void AudioPlayer::Crossfade(AudioSource *fadeoutSource, AudioSource *fadeinSource, float time, bool forcePlay, float volume)
     {
-        float ov = 0;
-        fadeoutSource->channel->getVolume(&ov);
-        fadeoutSource->Fade(ov, 0, time);
-        fadeinSource->Play(forcePlay, instance->volumeMusic);
-        fadeinSource->Fade(0, instance->volumeMusic, time);
+        fadeoutSource->FadeOut(time);
+        fadeinSource->FadeIn(time, forcePlay, volume == -1 ? AudioPlayer::instance->volumeMusic : volume);
     }
 
     AudioSource* AudioPlayer::GetSource(string name)
@@ -167,6 +164,18 @@ namespace game_engine
     void AudioSource::SetPitch(float pitch)
     {
         channel->setPitch(pitch);
+    }
+
+    void AudioSource::FadeIn(float time, bool forcePlay, float volume)
+    {
+        float iv = volume == -1 ? AudioPlayer::instance->volumeMusic : volume;
+        Play(forcePlay, iv);
+        Fade(0, 1, time);
+    }
+
+    void AudioSource::FadeOut(float time)
+    {
+        Fade(1, 0, time);
     }
 
     void AudioSource::Play(bool forcePlay, float volume)

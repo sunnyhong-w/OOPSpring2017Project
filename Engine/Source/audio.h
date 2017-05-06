@@ -16,7 +16,7 @@ namespace game_engine
 
 		static AudioPlayer* instance;
 		static AudioSource* GetSource(string name);
-        static void Crossfade(AudioSource *fadeoutSource, AudioSource *fadeinSource, float time, bool forcePlay = false);
+        static void Crossfade(AudioSource *fadeoutSource, AudioSource *fadeinSource, float time, bool forcePlay = false, float volume = -1);
 
 		FMOD::System *m_pSystem;
 
@@ -76,5 +76,7 @@ namespace game_engine
         void Fade(float volumeStart, float volumeEnd, float time);
 		void SetVolume(float volume);
 		void SetPitch(float pitch);
+        void FadeIn(float time, bool forcePlay = false, float volume = -1);
+        void FadeOut(float time);
 	};
 }
