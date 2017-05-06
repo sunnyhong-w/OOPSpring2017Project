@@ -1312,6 +1312,8 @@ void CDDraw::LoadBitmap(int i, int IDB_BITMAP)
 
 void CDDraw::LoadBitmap(int i, char* filename)
 {
+    DWORD tmp = clock();
+
     HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     GAME_ASSERT(hbitmap != NULL, "Load bitmap failed !!! Please check bitmap ID (IDB_XXX).");
     CBitmap* bmp = CBitmap::FromHandle(hbitmap ); // will be deleted automatically
@@ -1320,6 +1322,50 @@ void CDDraw::LoadBitmap(int i, char* filename)
     CBitmap* pOldBitmap = mDC.SelectObject(bmp);
     BITMAP bitmapSize;
     bmp->GetBitmap(&bitmapSize);
+
+    /* allocate your buffer here with something like
+    long *buffer = new long[i/4]; */
+
+    int nbyte = bitmapSize.bmBitsPixel / 8;
+    BYTE* pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
+    BYTE* d_pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
+
+    BITMAPINFO bi;
+    bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
+    bi.bmiHeader.biWidth = bitmapSize.bmWidth;
+    bi.bmiHeader.biHeight = -bitmapSize.bmHeight;
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = bitmapSize.bmBitsPixel;
+    bi.bmiHeader.biCompression = BI_RGB;
+    bi.bmiHeader.biSizeImage = bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte;
+    bi.bmiHeader.biClrUsed = 0;
+    bi.bmiHeader.biClrImportant = 0;
+
+    int iRet = GetDIBits(GetDC(NULL), hbitmap, 0, bitmapSize.bmHeight, pBits, &bi, DIB_RGB_COLORS);	// This sets the Dev Indep bits
+    for (int i = 0; i < bitmapSize.bmWidth; ++i)
+    {
+        for (int j = 0; j < bitmapSize.bmHeight; ++j)
+        {
+            BYTE r = pBits[i * nbyte + j * bitmapSize.bmWidthBytes + 2];
+            BYTE g = pBits[i * nbyte + j * bitmapSize.bmWidthBytes + 1];
+            BYTE b = pBits[i * nbyte + j * bitmapSize.bmWidthBytes + 0];
+
+            r = 1 - (1 - (float)r / 255) * (1 - 0.5);
+            g = 1 - (1 - (float)g / 255) * (1 - 0.5);
+            b = 1 - (1 - (float)b / 255) * (1 - 0.5);
+
+            d_pBits[(bitmapSize.bmWidth - i - 1) * nbyte + j * bitmapSize.bmWidthBytes + 2] = r;
+            d_pBits[(bitmapSize.bmWidth - i - 1) * nbyte + j * bitmapSize.bmWidthBytes + 1] = g;
+            d_pBits[(bitmapSize.bmWidth - i - 1) * nbyte + j * bitmapSize.bmWidthBytes + 0] = b;
+        }
+    }
+    SetDIBits(mDC.m_hDC, (HBITMAP)mDC.GetCurrentBitmap()->m_hObject, 0, bitmapSize.bmHeight, d_pBits, &bi, DIB_RGB_COLORS);
+
+    TRACE("\n\nSize[w : %d,h : %d,pixel:%d] , usetime: %d\n\n", bitmapSize.bmWidth, bitmapSize.bmHeight, bitmapSize.bmWidth * bitmapSize.bmHeight, clock() - tmp);
+
+    delete pBits;
+    delete d_pBits;
+
     DDSURFACEDESC ddsd;
     ZeroMemory(&ddsd, sizeof(ddsd));
     ddsd.dwSize = sizeof( ddsd );
