@@ -27,7 +27,7 @@ void Player::Update()
     Rigidbody *rb = gameObject->rigidbody;
     rb->TimeSliceCollision = true;
 	
-	int speed = 5;
+	int speed = 2;
 
     if (rb->colliderInfo.bottom || rb->colliderInfo.top)
         vel.y = 0;
@@ -35,10 +35,13 @@ void Player::Update()
     vel.x = 0;
 
 	if (Input::GetKeyPressing('A') || Input::GetKeyPressing(VK_LEFT))
-        vel.x += -1 * speed;
-	
+		vel.x += -1 * speed;
+
 	if (Input::GetKeyPressing('D') || Input::GetKeyPressing(VK_RIGHT))
-        vel.x +=  speed;
+		vel.x += speed;
+
+	if (Input::GetKeyDown('A') || Input::GetKeyDown(VK_LEFT) || Input::GetKeyDown('D') || Input::GetKeyDown(VK_RIGHT))
+		waitSmoke = 0.2f;
 
 	if (rb->colliderInfo.bottom)
 	{
@@ -89,10 +92,11 @@ void Player::Update()
     }
 	if (this->gameObject->rigidbody->velocity.x!= 0 && waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
 	{
-		waitSmoke = 0.1f;
+		waitSmoke = 0.15f;
 		GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
 		gobj->transform->SetWorldPosition(this->transform->GetWorldPosition()+Vector2(0,12));
 	}
+
 	bounce = false;
 	waitSmoke -= Time::deltaTime;
 }

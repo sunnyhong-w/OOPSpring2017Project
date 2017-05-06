@@ -6,7 +6,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 150
+    "duration": 100
    },
    {
     "filename": "Smoke 1.ase",
@@ -15,7 +15,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 150
+    "duration": 100
    },
    {
     "filename": "Smoke 2.ase",
@@ -24,7 +24,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 150
+    "duration": 100
    },
    {
     "filename": "Smoke 3.ase",
@@ -33,7 +33,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 150
+    "duration": 100
    },
    {
     "filename": "Smoke 4.ase",
@@ -42,18 +42,45 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 150
+    "duration": 100
+   },
+   {
+    "filename": "Smoke 5.ase",
+    "frame": { "x": 80, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "Smoke 6.ase",
+    "frame": { "x": 96, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "Smoke 7.ase",
+    "frame": { "x": 112, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
    }
  ],
  "meta": {
   "app": "http://www.aseprite.org/",
-  "version": "1.1.13",
-  "image": "D:\\NTUT\\OOPGame\\Engine\\Assest\\Bitmap\\GameObject\\Smoke.bmp",
+  "version": "1.1.9",
+  "image": "D:\\_School\\104OOP_Spring\\Game\\Engine\\Assest\\Bitmap\\GameObject\\Smoke.bmp",
   "format": "RGBA8888",
-  "size": { "w": 80, "h": 16 },
+  "size": { "w": 128, "h": 16 },
   "scale": "1",
   "frameTags": [
-   { "name": "Smoke", "from": 0, "to": 4, "direction": "forward" }
+   { "name": "Smoke", "from": 0, "to": 7, "direction": "forward" }
   ]
  }
 }
