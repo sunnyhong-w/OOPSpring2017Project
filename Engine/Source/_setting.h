@@ -19,6 +19,8 @@ enum class SortingLayer : int { Default, Player };
 ////////////////////////////
 //    FromJSON Declear    //
 ////////////////////////////
+// implement in enginelib.cpp
+
 void from_json(const json &j, Layer &l);
 void from_json(const json &j, Tag &t);
 void from_json(const json &j, SortingLayer &l);
@@ -33,6 +35,7 @@ enum class BroadcastEvent
     UpdateWindowPosition
 };
 
+// implement in enginelib.cpp
 void from_json(const json& j, BroadcastEvent& be);
 void to_json(json& j, const BroadcastEvent& be);
 }

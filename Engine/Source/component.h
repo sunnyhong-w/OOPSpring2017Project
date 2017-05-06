@@ -121,6 +121,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void Reset();
         void SetAnchorRaito(Vector2 pos);
         void SetOffset(Vector2I offset);
+        bool CameraTest(Vector2I cameraPos);
 		Vector2I GetOffset();
         Vector2I GetAnchorPoint();
         SortingLayer GetSortingLayer();
@@ -128,8 +129,6 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         inline Vector2I GetRealRenderPostion();
         inline void UpdateRealRenderPostion();
     private:
-        bool CameraTest(Vector2I cameraPos);
-
         Vector2I size;
         Vector2I srcpos;
         Vector2I offset;

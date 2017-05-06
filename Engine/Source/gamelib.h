@@ -158,14 +158,15 @@ public:
 	static bool  SetFullScreen(bool);		// 設定為全螢幕模式/視窗模式
 	static bool  IsFullScreen();			// 回答是否為全螢幕模式/視窗模式
 
-	static void  DrawLine(CDC *pDC, game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color);
-	static void  DrawRect(CDC *pDC, game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color);
-private:
-	CDDraw();								// private constructor
     static void  BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, bool cutSrc);
 	static void  BltBitmapToBack(unsigned SurfaceID, int x, int y);
 	static void  BltBitmapToBack(unsigned SurfaceID, int x, int y, double factor);
 	static void  BltBitmapToBitmap(unsigned SourceID, unsigned TargetID, int x, int y);
+
+	static void  DrawLine(CDC *pDC, game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color);
+	static void  DrawRect(CDC *pDC, game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color);
+private:
+	CDDraw();								// private constructor
 	static void	 CheckDDFail(char *s);
 	static bool  CreateSurface();
 	static bool  CreateSurfaceFullScreen();
