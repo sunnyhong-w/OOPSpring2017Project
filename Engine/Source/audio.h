@@ -30,7 +30,7 @@ namespace game_engine
 	private:
 		void initSound(string name, string filename);
 		void initStream(string name, string filename);
-		void Play(AudioSource *sound, bool repeat = false, int channelid = 0);
+		void Play(AudioSource *sound, bool repeat);
 		void ReleaseSound(string name);
 		static void GAME_LOG(bool boolexp,string str)
 		{
@@ -59,9 +59,18 @@ namespace game_engine
 	class AudioSource
 	{
 	public:
+		AudioSource();
+
 		FMOD::Sound* soundSource;
 		AudioMode sourceMode;
-		void Play(int channelID = 0);
-		void PlayOneShot(int channelID = 0);
+		FMOD::Channel* channel;
+		bool pause;
+
+		void Play();
+		void PlayOneShot();
+		void Pause();
+		void Stop();
+		void SetVolume(float volume);
+		void SetPitch(float pitch);
 	};
 }

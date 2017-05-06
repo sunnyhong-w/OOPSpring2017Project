@@ -74,7 +74,7 @@ namespace game_engine
 		sourceMap[filename] = audioSource;
 	}
 
-	void AudioPlayer::Play(AudioSource* sound, bool repeat, int channelid)
+	void AudioPlayer::Play(AudioSource* sound, bool repeat)
 	{
 		if (!repeat)
 			sound->soundSource->setMode(FMOD_LOOP_OFF);
@@ -84,9 +84,9 @@ namespace game_engine
 			sound->soundSource->setLoopCount(-1);
 		}
 
-		FMOD::Channel* channel;
-		instance->m_pSystem->getChannel(channelid, &channel);
+		FMOD::Channel* channel = nullptr;
 		instance->m_pSystem->playSound(sound->soundSource, nullptr, false, &channel);
+		sound->channel = channel;
 	}
 
 	void AudioPlayer::ReleaseSound(string name)
@@ -118,13 +118,55 @@ namespace game_engine
 		return instance->sourceMap[instance->fileMap[name]];
 	}
 
-	void AudioSource::Play(int channelID)
+	AudioSource::AudioSource()
 	{
-		AudioPlayer::instance->Play(this, true, channelID);
+		pause = false;
+		channel = nullptr;
 	}
 
-	void AudioSource::PlayOneShot(int channelID)
+	void AudioSource::Pause()
 	{
-		AudioPlayer::instance->Play(this, false, channelID);
+		pause = true;
+		channel->setPaused(true);
+	}
+
+	void AudioSource::Stop()
+	{
+		channel->stop();
+		channel = nullptr;
+	}
+
+	void AudioSource::SetVolume(float vol)
+	{
+		vol = (vol > 1 ? 1 : (vol < 0 ? 0 : vol));
+		channel->setVolume(vol);
+	}
+
+	void AudioSource::SetPitch(float pitch)
+	{
+		channel->setPitch(pitch);
+	}
+
+	void AudioSource::Play()
+	{
+		if(channel == nullptr)
+			AudioPlayer::instance->Play(this, true);
+		else
+		{
+			pause = false;
+			channel->setPaused(false);
+		}
+	}
+
+	void AudioSource::PlayOneShot()
+	{
+		if (channel == nullptr)
+			AudioPlayer::instance->Play(this, false);
+		else
+		{
+			pause = false;
+			channel->setPaused(false);
+		}
+
 	}
 }
