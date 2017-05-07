@@ -341,7 +341,7 @@ CMovingBitmap::CMovingBitmap()
 int CMovingBitmap::Height()
 {
     GAME_ASSERT(isBitmapLoaded, "A bitmap must be loaded before Height() is called !!!");
-    return CDDraw::BitmapRect[SurfaceID].bottom;
+    return CDDraw::BitmapRect[SurfaceID / 4].bottom;
 }
 
 int CMovingBitmap::Left()
@@ -429,12 +429,12 @@ int CMovingBitmap::Top()
 int CMovingBitmap::Width()
 {
     GAME_ASSERT(isBitmapLoaded, "A bitmap must be loaded before Width() is called !!!");
-    return  CDDraw::BitmapRect[SurfaceID].right;
+    return  CDDraw::BitmapRect[SurfaceID / 4].right;
 }
 
 bool CMovingBitmap::CheckExist(unsigned SID)
 {
-    return SID < CDDraw::BitmapRect.size();
+    return SID < CDDraw::lpDDS.size();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1046,7 +1046,7 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceR
     GAME_ASSERT(lpDDSBack && (SurfaceID < lpDDS.size()) && lpDDS[SurfaceID], "Internal Error: Incorrect SurfaceID in BltBitmapToBack");
     int blt_flag;
 
-    if (BitmapColorKey[SurfaceID] != CLR_INVALID)
+    if (BitmapColorKey[SurfaceID / 4] != CLR_INVALID)
         blt_flag = DDBLT_WAIT | DDBLT_KEYSRC;
     else
         blt_flag = DDBLT_WAIT;
@@ -1228,6 +1228,28 @@ bool CDDraw::CreateSurfaceWindowed()
     return true;
 }
 
+void CDDraw::CreateSurface(CDC * mDC, int i, int width, int height)
+{
+    DDSURFACEDESC ddsd;
+    ZeroMemory(&ddsd, sizeof(ddsd));
+    ddsd.dwSize = sizeof(ddsd);
+    ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
+    ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+    ddsd.dwHeight = height;
+    ddsd.dwWidth = width;
+
+    ddrval = lpDD->CreateSurface(&ddsd, &lpDDS[i], NULL);
+    CheckDDFail("Create Bitmap Surface Failed");
+    HDC hdc;
+    ddrval = lpDDS[i]->GetDC(&hdc);
+    CheckDDFail("Get surface HDC failed");
+    CDC cdc;
+    cdc.Attach(hdc);
+    cdc.BitBlt(0, 0, width, height, mDC, 0, 0, SRCCOPY);
+    cdc.Detach();
+    lpDDS[i]->ReleaseDC(hdc);
+}
+
 void CDDraw::DrawLine(CDC *pDC, game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color)
 {
 	CPen pen;
@@ -1323,12 +1345,17 @@ void CDDraw::LoadBitmap(int i, char* filename)
     BITMAP bitmapSize;
     bmp->GetBitmap(&bitmapSize);
 
+    BitmapRect[i / 4].bottom = bitmapSize.bmHeight;
+    BitmapRect[i / 4].right = bitmapSize.bmWidth;
+
     /* allocate your buffer here with something like
     long *buffer = new long[i/4]; */
 
     int nbyte = bitmapSize.bmBitsPixel / 8;
     BYTE* pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
-    BYTE* d_pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
+    BYTE* h_pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
+    BYTE* v_pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
+    BYTE* hv_pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
 
     BITMAPINFO bi;
     bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
@@ -1342,47 +1369,42 @@ void CDDraw::LoadBitmap(int i, char* filename)
     bi.bmiHeader.biClrImportant = 0;
 
     int iRet = GetDIBits(GetDC(NULL), hbitmap, 0, bitmapSize.bmHeight, pBits, &bi, DIB_RGB_COLORS);	// This sets the Dev Indep bits
-    for (int i = 0; i < bitmapSize.bmWidth; ++i)
+    for (int x = 0; x < bitmapSize.bmWidth; ++x)
     {
-        for (int j = 0; j < bitmapSize.bmHeight; ++j)
+        for (int y = 0; y < bitmapSize.bmHeight; ++y)
         {
-            BYTE r = pBits[i * nbyte + j * bitmapSize.bmWidthBytes + 2];
-            BYTE g = pBits[i * nbyte + j * bitmapSize.bmWidthBytes + 1];
-            BYTE b = pBits[i * nbyte + j * bitmapSize.bmWidthBytes + 0];
+            BYTE r = pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 2];
+            BYTE g = pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 1];
+            BYTE b = pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 0];
 
-            r = 1 - (1 - (float)r / 255) * (1 - 0.5);
-            g = 1 - (1 - (float)g / 255) * (1 - 0.5);
-            b = 1 - (1 - (float)b / 255) * (1 - 0.5);
+            h_pBits[(bitmapSize.bmWidth - x - 1) * nbyte + y * bitmapSize.bmWidthBytes + 2] = r;
+            h_pBits[(bitmapSize.bmWidth - x - 1) * nbyte + y * bitmapSize.bmWidthBytes + 1] = g;
+            h_pBits[(bitmapSize.bmWidth - x - 1) * nbyte + y * bitmapSize.bmWidthBytes + 0] = b;
 
-            d_pBits[(bitmapSize.bmWidth - i - 1) * nbyte + j * bitmapSize.bmWidthBytes + 2] = r;
-            d_pBits[(bitmapSize.bmWidth - i - 1) * nbyte + j * bitmapSize.bmWidthBytes + 1] = g;
-            d_pBits[(bitmapSize.bmWidth - i - 1) * nbyte + j * bitmapSize.bmWidthBytes + 0] = b;
+            v_pBits[x * nbyte + (bitmapSize.bmHeight - y - 1) * bitmapSize.bmWidthBytes + 2] = r;
+            v_pBits[x * nbyte + (bitmapSize.bmHeight - y - 1) * bitmapSize.bmWidthBytes + 1] = g;
+            v_pBits[x * nbyte + (bitmapSize.bmHeight - y - 1) * bitmapSize.bmWidthBytes + 0] = b;
+
+            hv_pBits[(bitmapSize.bmWidth - x - 1) * nbyte + (bitmapSize.bmHeight - y - 1) * bitmapSize.bmWidthBytes + 2] = r;
+            hv_pBits[(bitmapSize.bmWidth - x - 1) * nbyte + (bitmapSize.bmHeight - y - 1) * bitmapSize.bmWidthBytes + 1] = g;
+            hv_pBits[(bitmapSize.bmWidth - x - 1) * nbyte + (bitmapSize.bmHeight - y - 1) * bitmapSize.bmWidthBytes + 0] = b;
         }
     }
-    SetDIBits(mDC.m_hDC, (HBITMAP)mDC.GetCurrentBitmap()->m_hObject, 0, bitmapSize.bmHeight, d_pBits, &bi, DIB_RGB_COLORS);
+
+    CreateSurface(&mDC, i, bitmapSize.bmWidth, bitmapSize.bmHeight);
+    SetDIBits(mDC.m_hDC, (HBITMAP)mDC.GetCurrentBitmap()->m_hObject, 0, bitmapSize.bmHeight, h_pBits, &bi, DIB_RGB_COLORS);
+    CreateSurface(&mDC, i + 1, bitmapSize.bmWidth, bitmapSize.bmHeight);
+    SetDIBits(mDC.m_hDC, (HBITMAP)mDC.GetCurrentBitmap()->m_hObject, 0, bitmapSize.bmHeight, v_pBits, &bi, DIB_RGB_COLORS);
+    CreateSurface(&mDC, i + 2, bitmapSize.bmWidth, bitmapSize.bmHeight);
+    SetDIBits(mDC.m_hDC, (HBITMAP)mDC.GetCurrentBitmap()->m_hObject, 0, bitmapSize.bmHeight, hv_pBits, &bi, DIB_RGB_COLORS);
+    CreateSurface(&mDC, i + 3, bitmapSize.bmWidth, bitmapSize.bmHeight);
 
     TRACE("\n\nSize[w : %d,h : %d,pixel:%d] , usetime: %d\n\n", bitmapSize.bmWidth, bitmapSize.bmHeight, bitmapSize.bmWidth * bitmapSize.bmHeight, clock() - tmp);
 
     delete pBits;
-    delete d_pBits;
-
-    DDSURFACEDESC ddsd;
-    ZeroMemory(&ddsd, sizeof(ddsd));
-    ddsd.dwSize = sizeof( ddsd );
-    ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
-    ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
-    BitmapRect[i].bottom = ddsd.dwHeight = bitmapSize.bmHeight;
-    BitmapRect[i].right = ddsd.dwWidth = bitmapSize.bmWidth;
-    ddrval = lpDD->CreateSurface(&ddsd, &lpDDS[i], NULL);
-    CheckDDFail("Create Bitmap Surface Failed");
-    HDC hdc;
-    ddrval = lpDDS[i]->GetDC(&hdc);
-    CheckDDFail("Get surface HDC failed");
-    CDC cdc;
-    cdc.Attach(hdc);
-    cdc.BitBlt(0, 0, bitmapSize.bmWidth, bitmapSize.bmHeight, &mDC, 0, 0, SRCCOPY);
-    cdc.Detach();
-    lpDDS[i]->ReleaseDC(hdc);
+    delete h_pBits;
+    delete v_pBits;
+    delete hv_pBits;
     // avoid memory leak
     // According to spec, mDC should delete itself automatically.  However,
     // it appears that we have to do it explictly.
@@ -1469,9 +1491,9 @@ int CDDraw::RegisterBitmap(char* filename, COLORREF ColorKey)
 {
     unsigned i;
 
-    for (i = 0; i < lpDDS.size(); i++)
+    for (i = 0; i < BitmapName.size(); i++)
         if (BitmapName[i].compare(filename) == 0)
-            return i;
+            return i * 4;
 
     //
     // Enlarge the size of vectors
@@ -1481,9 +1503,12 @@ int CDDraw::RegisterBitmap(char* filename, COLORREF ColorKey)
     BitmapColorKey.push_back(ColorKey);
     BitmapRect.push_back(CRect(0, 0, 0, 0));
     lpDDS.push_back(NULL);
-    LoadBitmap(i, filename);
-    SetColorKey(i, ColorKey);
-    return i;
+    lpDDS.push_back(NULL);
+    lpDDS.push_back(NULL);
+    lpDDS.push_back(NULL);
+    LoadBitmap(i * 4, filename);
+    SetColorKey(i * 4, ColorKey);
+    return i * 4;
 }
 
 void CDDraw::ReleaseBackCDC()
@@ -1545,6 +1570,21 @@ void CDDraw::SetColorKey(unsigned SurfaceID, COLORREF color)
         ddck.dwColorSpaceLowValue  = MatchColorKey(lpDDS[SurfaceID], color);
         ddck.dwColorSpaceHighValue = ddck.dwColorSpaceLowValue;
         ddrval = lpDDS[SurfaceID]->SetColorKey(DDCKEY_SRCBLT, &ddck);
+        CheckDDFail("Can not Set Color Key");
+
+        ddck.dwColorSpaceLowValue = MatchColorKey(lpDDS[SurfaceID + 1], color);
+        ddck.dwColorSpaceHighValue = ddck.dwColorSpaceLowValue;
+        ddrval = lpDDS[SurfaceID + 1]->SetColorKey(DDCKEY_SRCBLT, &ddck);
+        CheckDDFail("Can not Set Color Key");
+
+        ddck.dwColorSpaceLowValue = MatchColorKey(lpDDS[SurfaceID + 2], color);
+        ddck.dwColorSpaceHighValue = ddck.dwColorSpaceLowValue;
+        ddrval = lpDDS[SurfaceID + 2]->SetColorKey(DDCKEY_SRCBLT, &ddck);
+        CheckDDFail("Can not Set Color Key");
+
+        ddck.dwColorSpaceLowValue = MatchColorKey(lpDDS[SurfaceID + 3], color);
+        ddck.dwColorSpaceHighValue = ddck.dwColorSpaceLowValue;
+        ddrval = lpDDS[SurfaceID + 3]->SetColorKey(DDCKEY_SRCBLT, &ddck);
         CheckDDFail("Can not Set Color Key");
     }
 }

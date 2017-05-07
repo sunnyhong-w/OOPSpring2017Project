@@ -171,6 +171,7 @@ private:
 	static bool  CreateSurface();
 	static bool  CreateSurfaceFullScreen();
 	static bool  CreateSurfaceWindowed();
+    static void  CreateSurface(CDC* mDC, int sid, int width, int height);
 	static void  LoadBitmap(int i, int IDB_BITMAP);
 	static void  LoadBitmap(int i, char *filename);
 	static DWORD MatchColorKey(LPDIRECTDRAWSURFACE lpDDSurface, COLORREF color);
