@@ -129,9 +129,6 @@
     <ClCompile Include="Source\StdAfx.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
-    <ClCompile Include="Source\_setting.cpp">
-      <Filter>GameEngine\EngineLib</Filter>
-    </ClCompile>
     <ClCompile Include="Source\component.cpp">
       <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
@@ -212,6 +209,9 @@
       <Filter>GameScript\Hop</Filter>
     </ClCompile>
     <ClCompile Include="Source\audio.cpp">
+      <Filter>GameEngine\EngineLib</Filter>
+    </ClCompile>
+    <ClCompile Include="_componentRegister.cpp">
       <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
   </ItemGroup>
@@ -313,9 +313,6 @@
     <ClInclude Include="Assest\Script\Hop\Gem.h">
       <Filter>GameScript\Hop</Filter>
     </ClInclude>
-    <ClInclude Include="Assest\Script\Slide\slide.h">
-      <Filter>MFC</Filter>
-    </ClInclude>
     <ClInclude Include="Assest\Script\Engine\GameStatus.h">
       <Filter>GameEngine\EngingScript</Filter>
     </ClInclude>
@@ -330,6 +327,9 @@
     </ClInclude>
     <ClInclude Include="Source\audio.h">
       <Filter>GameEngine\EngineLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Slide\slide.h">
+      <Filter>GameScript\Slide</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

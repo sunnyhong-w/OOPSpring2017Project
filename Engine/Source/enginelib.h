@@ -13,8 +13,10 @@ using namespace std;
 
 namespace game_engine
 {
-struct Vector2I;
 
+    float clamp(float in, float min, float max);
+
+struct Vector2I;
 struct Vector2
 {
     public:

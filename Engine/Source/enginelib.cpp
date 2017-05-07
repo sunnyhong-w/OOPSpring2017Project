@@ -105,6 +105,11 @@ Vector2 Vector2::Damp(Vector2 currentPosition, Vector2 target, Vector2 & current
 	return currentPosition;
 }
 
+float clamp(float in, float min, float max)
+{
+    return (in > max ? max : (in < min ? min : in));
+}
+
 Vector2 operator*(Vector2 multiplied, Vector2 multiplier)
 {
     return Vector2(multiplied.x * multiplier.x, multiplied.y * multiplier.y);
@@ -458,6 +463,20 @@ void Time::Update()
 	Time::timeStamp = ts;
 }
 
+void from_json(const json &j, Layer &l)
+{
+    l = (Layer)j.get<int>();
+}
+
+void from_json(const json &j, Tag &t)
+{
+    t = (Tag)j.get<int>();
+}
+
+void from_json(const json &j, SortingLayer &rd)
+{
+    rd = (SortingLayer)j.get<int>();
+}
 
 void from_json(const json & j, BroadcastEvent & be)
 {

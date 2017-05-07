@@ -19,7 +19,7 @@ void Player::Start()
 	bounce = false;
 	isBouncing = false;
 	waitSmoke = 0;
-	AudioPlayer::GetSource("RSIC")->Play(1);
+	AudioPlayer::GetSource("RSIC")->Play();
 }
 
 void Player::Update()
@@ -27,7 +27,7 @@ void Player::Update()
     Rigidbody *rb = gameObject->rigidbody;
     rb->TimeSliceCollision = true;
 	
-	int speed = 5;
+	int speed = 2;
 
     if (rb->colliderInfo.bottom || rb->colliderInfo.top)
         vel.y = 0;
@@ -35,10 +35,13 @@ void Player::Update()
     vel.x = 0;
 
 	if (Input::GetKeyPressing('A') || Input::GetKeyPressing(VK_LEFT))
-        vel.x += -1 * speed;
-	
+		vel.x += -1 * speed;
+
 	if (Input::GetKeyPressing('D') || Input::GetKeyPressing(VK_RIGHT))
-        vel.x +=  speed;
+		vel.x += speed;
+
+	if (Input::GetKeyDown('A') || Input::GetKeyDown(VK_LEFT) || Input::GetKeyDown('D') || Input::GetKeyDown(VK_RIGHT))
+		waitSmoke = 0.2f;
 
 	if (rb->colliderInfo.bottom)
 	{
@@ -65,6 +68,16 @@ void Player::Update()
 		if (vel.y < -9)
 			vel = Vector2::up * 9;
 	}
+
+    if (Input::GetKeyDown('V'))
+        this->gameObject->spriteRenderer->SetFlipX(!this->gameObject->spriteRenderer->GetFlipX());
+
+    if (Input::GetKeyDown('H'))
+        this->gameObject->spriteRenderer->SetFlipY(!this->gameObject->spriteRenderer->GetFlipY());
+
+    if (Input::GetKeyDown('B'))
+        this->gameObject->spriteRenderer->SetFlip(!this->gameObject->spriteRenderer->GetFlipX(), !this->gameObject->spriteRenderer->GetFlipY());
+
 	
 	vel.y += gravity * Time::deltaTime;
 	rb->velocity = vel * tiledPixel * Time::deltaTime;
@@ -89,10 +102,11 @@ void Player::Update()
     }
 	if (this->gameObject->rigidbody->velocity.x!= 0 && waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
 	{
-		waitSmoke = 0.1f;
+		waitSmoke = 0.15f;
 		GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
 		gobj->transform->SetWorldPosition(this->transform->GetWorldPosition()+Vector2(0,12));
 	}
+
 	bounce = false;
 	waitSmoke -= Time::deltaTime;
 }

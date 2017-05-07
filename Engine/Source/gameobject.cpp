@@ -19,47 +19,6 @@ HISTORY :
 namespace game_engine
 {
 
-///// Add Component String Parser
-
-//Use define to make sure class won't have spelling mistake
-#define RegisterComponent(v) else if (ComponentName == #v) return this->AddComponentOnce<v>();
-
-Component* GameObject::AddComponentOnce(string ComponentName)
-{
-    if (ComponentName == "Component") return nullptr;
-
-    //Register Basic Component
-    RegisterComponent(Transform)
-    RegisterComponent(SpriteRenderer)
-    RegisterComponent(Collider)
-	RegisterComponent(Rigidbody)
-    RegisterComponent(Animation)
-	RegisterComponent(AnimationController)
-    //Register Script
-    RegisterComponent(Tutorial)
-    RegisterComponent(TextStamp)
-    RegisterComponent(TextRenderer)
-	RegisterComponent(MapReader)
-	RegisterComponent(Slide)
-    RegisterComponent(BoxParent)  
-    RegisterComponent(Player)
-    RegisterComponent(SpawnPlayer)
-	RegisterComponent(Spring)
-	RegisterComponent(Button)
-    RegisterComponent(GreenBox)
-	RegisterComponent(YellowBox)
-	RegisterComponent(MapEdge)
-	RegisterComponent(Camera)
-    RegisterComponent(TransportController)
-	RegisterComponent(Gem)
-	RegisterComponent(CollectedGem)
-	RegisterComponent(Smoke)
-	RegisterComponent(Background)
-    else return nullptr;
-}
-
-/////
-
 #define FindJSON(str) j.find(str) != j.end()
 
 GameObject::GameObject(bool doNotDestoryOnChangeScene)

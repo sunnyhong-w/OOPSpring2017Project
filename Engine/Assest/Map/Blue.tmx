@@ -463,6 +463,5 @@
     <property name="include" value="CollectedGem"/>
    </properties>
   </object>
-  <object id="47" name="Anim" gid="55" x="800" y="256" width="16" height="16"/>
  </objectgroup>
 </map>
