@@ -431,6 +431,31 @@ bool SpriteRenderer::CameraTest(Vector2I cameraPos)
     return ((aw + GetRealRenderPostion()) - (bw + cameraPos)).abs() <= aw + bw;
 }
 
+void SpriteRenderer::SetFlip(bool x, bool y)
+{
+    flipCode = (x == true ? 1 : 0) + (y == true ? 2 : 0);
+}
+
+void SpriteRenderer::SetFlipX(bool x)
+{
+    flipCode = (flipCode & 2) + (x == true ? 1 : 0);
+}
+
+void SpriteRenderer::SetFlipY(bool y)
+{
+    flipCode = (flipCode & 1) + (y == true ? 2 : 0);
+}
+
+bool SpriteRenderer::GetFlipX()
+{
+    return (flipCode & 1) == 1;
+}
+
+bool SpriteRenderer::GetFlipY()
+{
+    return (flipCode & 2) == 2;
+}
+
 
 
 

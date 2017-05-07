@@ -336,6 +336,7 @@ void CInteger::ShowBitmap()
 CMovingBitmap::CMovingBitmap()
 {
     isBitmapLoaded = false;
+    flipCode = 0;
 }
 
 int CMovingBitmap::Height()
@@ -414,7 +415,7 @@ void CMovingBitmap::ShowBitmap(CMovingBitmap& bm)
 
 void CMovingBitmap::ShowBitmap(game_engine::Vector2I pos, game_engine::Vector2 scale, game_engine::Vector2I srcpos, game_engine::Vector2I size, bool cutSrc)
 {
-    CDDraw::BltBitmapToBack(SurfaceID,
+    CDDraw::BltBitmapToBack(SurfaceID + flipCode,
                             CRect(CPoint(pos.x, pos.y), CSize((int)(size.x * scale.x), (int)(size.y * scale.y))),
                             CRect(CPoint(srcpos.x, srcpos.y), CSize(size.x, size.y)),
                             cutSrc);

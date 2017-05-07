@@ -122,6 +122,12 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void SetAnchorRaito(Vector2 pos);
         void SetOffset(Vector2I offset);
         bool CameraTest(Vector2I cameraPos);
+        void SetFlip(bool x, bool y);
+        void SetFlipX(bool x);
+        void SetFlipY(bool y);
+        bool GetFlipX();
+        bool GetFlipY();
+
 		Vector2I GetOffset();
         Vector2I GetAnchorPoint();
         SortingLayer GetSortingLayer();

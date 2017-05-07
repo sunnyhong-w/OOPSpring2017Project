@@ -223,6 +223,7 @@ protected:
 	bool     isBitmapLoaded;	// whether a bitmap has been loaded
 	unsigned SurfaceID;			// the surface id of this bitmap
     bool  CheckExist(unsigned SID);
+    int flipCode;
 };
 
 /////////////////////////////////////////////////////////////////////////////
