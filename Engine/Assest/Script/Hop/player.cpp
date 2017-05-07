@@ -68,6 +68,16 @@ void Player::Update()
 		if (vel.y < -9)
 			vel = Vector2::up * 9;
 	}
+
+    if (Input::GetKeyDown('V'))
+        this->gameObject->spriteRenderer->SetFlipX(!this->gameObject->spriteRenderer->GetFlipX());
+
+    if (Input::GetKeyDown('H'))
+        this->gameObject->spriteRenderer->SetFlipY(!this->gameObject->spriteRenderer->GetFlipY());
+
+    if (Input::GetKeyDown('B'))
+        this->gameObject->spriteRenderer->SetFlip(!this->gameObject->spriteRenderer->GetFlipX(), !this->gameObject->spriteRenderer->GetFlipY());
+
 	
 	vel.y += gravity * Time::deltaTime;
 	rb->velocity = vel * tiledPixel * Time::deltaTime;
