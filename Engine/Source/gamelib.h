@@ -224,6 +224,8 @@ protected:
 	unsigned SurfaceID;			// the surface id of this bitmap
     bool  CheckExist(unsigned SID);
     int flipCode;
+private:
+    game_engine::Vector2I bitmapsize;
 };
 
 /////////////////////////////////////////////////////////////////////////////

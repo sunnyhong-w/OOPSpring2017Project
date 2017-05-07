@@ -381,6 +381,9 @@ void CMovingBitmap::LoadBitmap(char* filename, COLORREF color)
     }
     SurfaceID = CDDraw::RegisterBitmap(filename, color);
     isBitmapLoaded = true;
+    bitmapsize = Vector2I::zero;
+    bitmapsize.x = Width();
+    bitmapsize.y = Height();
 }
 
 void CMovingBitmap::SetTopLeft(int x, int y)
@@ -415,6 +418,12 @@ void CMovingBitmap::ShowBitmap(CMovingBitmap& bm)
 
 void CMovingBitmap::ShowBitmap(game_engine::Vector2I pos, game_engine::Vector2 scale, game_engine::Vector2I srcpos, game_engine::Vector2I size, bool cutSrc)
 {
+    if ((flipCode & 1) == 1)
+        srcpos.x = bitmapsize.x - srcpos.x - size.x;
+
+    if ((flipCode & 2) == 2)
+        srcpos.y = bitmapsize.y - srcpos.y - size.y;
+
     CDDraw::BltBitmapToBack(SurfaceID + flipCode,
                             CRect(CPoint(pos.x, pos.y), CSize((int)(size.x * scale.x), (int)(size.y * scale.y))),
                             CRect(CPoint(srcpos.x, srcpos.y), CSize(size.x, size.y)),
