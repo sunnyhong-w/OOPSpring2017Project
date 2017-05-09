@@ -8,24 +8,6 @@ using namespace game_engine;
 
 vector<MapReader*> MapReader::readerList;
 
-void MapReader::Update()
-{
-    if (Input::GetKeyClick(VK_F8))
-    {
-        LoadMap("Blue");
-    }
-
-    if (Input::GetKeyClick(VK_F7))
-    {
-        vector<Transform*> objlist = transform->GetChild();
-        for (Transform* gobj : objlist)
-            Destroy(gobj->gameObject);
-    }
-
-    if (Input::GetKeyPressing(VK_F6))
-        this->transform->Translate(Vector2::right * 5);
-}
-
 void MapReader::LateUpdate()
 {
     Vector2 pos = (GameScene::CameraPosition().GetV2() - this->transform->GetWorldPosition()) / (slicer * Vector2(tileMap.tileWidth, tileMap.tileHeight));

@@ -156,12 +156,38 @@ namespace game_engine
 
     void AudioPlayer::SetMusicVolume(float v)
     {
+        v = clamp(v, 0, 1);
+        TRACE("\n\n%f\n\n", v);
         instance->volumeMusic = v;
+
+        for (auto as : AudioPlayer::instance->sourceMap)
+        {
+            if (as.second->sourceMode == AudioMode::Stream)
+                as.second->SetVolume(v);
+        }
     }
 
     void AudioPlayer::SetSoundVolume(float v)
     {
+        v = clamp(v, 0, 1);
+
         instance->volumeSound = v;
+
+        for (auto as : AudioPlayer::instance->sourceMap)
+        {
+            if (as.second->sourceMode == AudioMode::Sound)
+                as.second->SetVolume(v);
+        }
+    }
+
+    float AudioPlayer::GetMusicVolume()
+    {
+        return instance->volumeMusic;
+    }
+
+    float AudioPlayer::GetSoundVolume()
+    {
+        return instance->volumeSound;
     }
 
     void AudioPlayer::Crossfade(AudioSource *fadeoutSource, AudioSource *fadeinSource, float time, bool forcePlay, float volume)

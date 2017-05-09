@@ -92,25 +92,6 @@ void Player::Update()
 	vel.y += gravity * Time::deltaTime;
 	rb->velocity = vel * tiledPixel * Time::deltaTime;
 
-    if (Input::GetKeyDown(VK_F4))
-    {
-        auto gobj = GameObject::findGameObjectByName("YellowBox");
-        if(gobj != nullptr)
-        { 
-            gobj->collider->SetEnable(!gobj->collider->GetEnable());
-			gobj->spriteRenderer->SetEnable(!gobj->spriteRenderer->GetEnable());
-        }
-    }
-
-    if (Input::GetKeyDown(VK_F3))
-    {
-        GameObject *gobj = GameObject::findGameObjectByName("Anim");
-        if (gobj != nullptr)
-        {
-            gobj->animationController->PlayOneShot("RightShine");
-        }
-    }
-
     if (this->gameObject->rigidbody->colliderInfo.bottom == false)
     {
         //Jump Anim Holder
@@ -125,17 +106,29 @@ void Player::Update()
         this->gameObject->animationController->Play("Wait");
     }
 
+    if (Input::GetKeyPressing(VK_F5))
+        AudioPlayer::SetMusicVolume(AudioPlayer::GetMusicVolume() - 0.01f);
 
-    if (this->gameObject->rigidbody->velocity.x != 0 &&waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
+    if (Input::GetKeyPressing(VK_F6))
+        AudioPlayer::SetMusicVolume(AudioPlayer::GetMusicVolume() + 0.01f);
+
+    if (Input::GetKeyPressing(VK_F7))
+        AudioPlayer::SetSoundVolume(AudioPlayer::GetSoundVolume() - 0.01f);
+
+    if (Input::GetKeyPressing(VK_F8))
+        AudioPlayer::SetSoundVolume(AudioPlayer::GetSoundVolume() + 0.01f);
+
+
+    if (this->gameObject->rigidbody->velocity.x != 0 && waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
     {
-        waitSmoke = 0.15f;
+        waitSmoke = 0.30f;
         GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
         gobj->transform->SetWorldPosition(this->transform->GetWorldPosition() + Vector2(0, 12));
         gobj->spriteRenderer->SetFlipX(this->gameObject->rigidbody->velocity.x < 0);
+
+        AudioPlayer::GetSource("Walk")->PlayOneShot();
+        AudioPlayer::GetSource("Walk")->SetPitch((float)(rand() % 31 + 85) / 100);
     }
-    
-
-
 
 	bounce = false;
 	waitSmoke -= Time::deltaTime;

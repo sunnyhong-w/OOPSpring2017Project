@@ -13,7 +13,7 @@ void Camera::Start()
 
 void Camera::LateUpdate()
 {
-    if (Input::GetKeyPressing(VK_F5))
+    if (Input::GetKeyPressing(VK_F2))
     {
         if (Input::GetKeyPressing(VK_NUMPAD8))
             GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::up * 10;
@@ -62,9 +62,9 @@ void Camera::LateUpdate()
 			}
         }
 		
-    }	
-	ShakeF();
+    }
 
+	ShakeF();
 }
 
 void Camera::OnDrawGizmos(CDC * pDC)

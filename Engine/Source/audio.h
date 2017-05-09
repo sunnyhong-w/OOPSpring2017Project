@@ -29,6 +29,8 @@ namespace game_engine
 
         static void SetMusicVolume(float v);
         static void SetSoundVolume(float v);
+        static float GetMusicVolume();
+        static float GetSoundVolume();
 
 	private:
 		void initSound(string name, string filename);
