@@ -8,10 +8,11 @@
             }
         },
         "SpriteRenderer": {
-            "Bitmap": {
-                "name": "player"
-            },
             "SortingLayer": 1
+        },
+        "AnimationController": {
+            "animation" : "player",
+            "init" : "Run"
         },
         "Collider": {
             "size": {

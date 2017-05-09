@@ -34,11 +34,17 @@ void Player::Update()
 
     vel.x = 0;
 
-	if (Input::GetKeyPressing('A') || Input::GetKeyPressing(VK_LEFT))
-		vel.x += -1 * speed;
+    if (Input::GetKeyPressing('A') || Input::GetKeyPressing(VK_LEFT))
+    {
+        vel.x += -1 * speed;
+        this->gameObject->spriteRenderer->SetFlipX(true);
+    }
 
-	if (Input::GetKeyPressing('D') || Input::GetKeyPressing(VK_RIGHT))
-		vel.x += speed;
+    if (Input::GetKeyPressing('D') || Input::GetKeyPressing(VK_RIGHT))
+    {
+        vel.x += speed;
+        this->gameObject->spriteRenderer->SetFlipX(false);
+    }
 
 	if (Input::GetKeyDown('A') || Input::GetKeyDown(VK_LEFT) || Input::GetKeyDown('D') || Input::GetKeyDown(VK_RIGHT))
 		waitSmoke = 0.2f;
@@ -100,6 +106,7 @@ void Player::Update()
             gobj->animationController->PlayOneShot("RightShine");
         }
     }
+
 	if (this->gameObject->rigidbody->velocity.x!= 0 && waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
 	{
 		waitSmoke = 0.15f;
