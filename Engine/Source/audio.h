@@ -29,7 +29,7 @@ namespace game_engine
 
 	private:
 		void initSound(string name, string filename);
-		void initStream(string name, string filename);
+		void initStream(string name, string filename, unsigned int loopstart = -1, unsigned int loopend = -1);
 		void Play(AudioSource *sound, bool repeat);
 		void ReleaseSound(string name);
 

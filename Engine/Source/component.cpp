@@ -760,6 +760,8 @@ AnimationController::AnimationController(GameObject * gobj) : Component(gobj)
 {
     this->gameObject->animationController = this;
     this->gameObject->AddComponentOnce<Animation>();
+    jumpState = "";
+    laststate = "";
 }
 
 AnimationController::~AnimationController()
@@ -797,9 +799,9 @@ void AnimationController::ParseJSON(json j)
     }
 
     if (j.find("init") != j.end())
-        JumpState(j["init"].get<string>());
+        Play(j["init"].get<string>());
     else
-        JumpState(0);
+        Play(0);
     
     Update();
 }
@@ -864,30 +866,33 @@ void AnimationController::Update()
 	if (jumpState != "")
 	{
         this->gameObject->animation->Play(animationData[jumpState]);
+        laststate = jumpState;
 		jumpState = "";
 	}
 }
 
-bool AnimationController::JumpState(string state)
+bool AnimationController::Play(string state, bool force)
 {
     if (animationData.find(state) != animationData.end())
     {
-        jumpState = state;
-        return true;
+        if (state != laststate || force)
+        {
+            jumpState = state;
+            return true;
+        }
+        else
+            return false;
     }
-
-    return false;
+    else
+        return false;
 }
 
-bool AnimationController::JumpState(int state)
+bool AnimationController::Play(int state, bool force)
 {
     if (state >= 0 && state < (int)animationList.size())
-    {
-        jumpState = animationList[state];
-        return true;
-    }
-
-    return false;
+         return Play(animationList[state], force);
+    else
+        return false;
 }
 
 void AnimationController::PlayOneShot(string state)

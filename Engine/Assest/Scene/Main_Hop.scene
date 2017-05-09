@@ -11,7 +11,13 @@
         "Jump": "Jump.wav"
     },
     "Music": {
-        "RSIC": "R.S.I.C._OSTVer.mp3"
+        "RSIC": {
+            "name": "C1_V13_PLAY.ogg",
+            "loopsetting": {
+                "start": 23270,
+                "end":  139630
+            }
+        }
     },
     "GameObject": [
         {

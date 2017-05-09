@@ -70,6 +70,24 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 18, "h": 30 },
     "sourceSize": { "w": 18, "h": 30 },
     "duration": 100
+   },
+   {
+    "filename": "player 8.aseprite",
+    "frame": { "x": 144, "y": 0, "w": 18, "h": 30 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 18, "h": 30 },
+    "sourceSize": { "w": 18, "h": 30 },
+    "duration": 1000
+   },
+   {
+    "filename": "player 9.aseprite",
+    "frame": { "x": 162, "y": 0, "w": 18, "h": 30 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 18, "h": 30 },
+    "sourceSize": { "w": 18, "h": 30 },
+    "duration": 2000
    }
  ],
  "meta": {
@@ -77,10 +95,11 @@
   "version": "1.2-beta9",
   "image": "D:\\_School\\105_SPRINGOOP\\OOPProject\\Engine\\Assest\\Bitmap\\player.bmp",
   "format": "RGBA8888",
-  "size": { "w": 144, "h": 30 },
+  "size": { "w": 180, "h": 30 },
   "scale": "1",
   "frameTags": [
-   { "name": "Run", "from": 0, "to": 7, "direction": "forward" }
+   { "name": "Run", "from": 0, "to": 7, "direction": "forward" },
+   { "name": "Wait", "from": 8, "to": 9, "direction": "forward" }
   ]
  }
 }

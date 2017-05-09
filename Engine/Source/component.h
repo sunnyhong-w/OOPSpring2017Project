@@ -190,14 +190,15 @@ public:
     ~AnimationController();
     void ParseJSON(json j) override;
     void Update();
-    bool JumpState(string state);
-    bool JumpState(int state);
+    bool Play(string state, bool force = false);
+    bool Play(int state, bool force = false);
     void PlayOneShot(string state);
     void PlayOneShot(int state);
 private:
     void ParseAespriteJSON(json j);
 
     string jumpState = "";
+    string laststate;
     map<string, AnimationData> animationData;
     vector<string> animationList;
     vector<AnimationSetting> frames;

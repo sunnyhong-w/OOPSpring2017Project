@@ -26,6 +26,7 @@ namespace game_engine
 
         // Initialize our Instance with 36 Channels
         m_pSystem->init(36, FMOD_INIT_NORMAL, nullptr);
+
         instance = this;
 
         volumeMusic = 1;
@@ -47,7 +48,14 @@ namespace game_engine
     void AudioPlayer::ParseMusicJSON(json j)
     {
         for (json::iterator it = j.begin(); it != j.end(); it++)
-            initStream(it.key(), it.value());
+        {
+            json music = it.value();
+
+            if(music.find("loopsetting") == music.end())
+                initStream(it.key(), music["name"]);
+            else
+                initStream(it.key(), music["name"], music["loopsetting"]["start"], music["loopsetting"]["end"]);
+        }
     }
 
     void AudioPlayer::initSound(string name, string filename)
@@ -64,7 +72,7 @@ namespace game_engine
         sourceMap[filename] = audioSource;
     }
 
-    void AudioPlayer::initStream(string name, string filename)
+    void AudioPlayer::initStream(string name, string filename, unsigned int loopstart, unsigned int loopend)
     {
         AudioSource *audioSource = new AudioSource();
 
@@ -76,6 +84,11 @@ namespace game_engine
 
         fileMap[name] = filename;
         sourceMap[filename] = audioSource;
+
+        if (loopstart != loopend)
+        {        
+            audioSource->soundSource->setLoopPoints(loopstart, FMOD_TIMEUNIT_MS, loopend, FMOD_TIMEUNIT_MS);
+        }
     }
 
     void AudioPlayer::Play(AudioSource* sound, bool repeat)

@@ -69,6 +69,7 @@ void Player::Update()
 	{
 		Jump(vel);
 	}
+
 	else if ((Input::GetKeyUp(VK_SPACE) || Input::GetKeyUp('W') || Input::GetKeyUp(VK_UP)) && !isBouncing)
 	{
 		if (vel.y < -9)
@@ -107,12 +108,29 @@ void Player::Update()
         }
     }
 
-	if (this->gameObject->rigidbody->velocity.x!= 0 && waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
-	{
-		waitSmoke = 0.15f;
-		GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
-		gobj->transform->SetWorldPosition(this->transform->GetWorldPosition()+Vector2(0,12));
-	}
+    if (this->gameObject->rigidbody->colliderInfo.bottom == false)
+    {
+        //Jump Anim Holder
+    }
+    else if (this->gameObject->rigidbody->velocity.x != 0)
+    {
+        this->gameObject->animationController->Play("Run");
+    }
+    else
+    {
+        this->gameObject->animationController->Play("Wait");
+    }
+
+
+    if (this->gameObject->rigidbody->velocity.x != 0 &&waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
+    {
+        waitSmoke = 0.15f;
+        GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
+        gobj->transform->SetWorldPosition(this->transform->GetWorldPosition() + Vector2(0, 12));
+    }
+    
+
+
 
 	bounce = false;
 	waitSmoke -= Time::deltaTime;
