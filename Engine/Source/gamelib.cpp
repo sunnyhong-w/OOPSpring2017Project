@@ -852,6 +852,32 @@ void CGame::BroadcastMessage(game_engine::BroadcastMessageData bmd, string windo
 	}
 }
 
+void CGame::SendEvent(UINT msg, WPARAM wparam, LPARAM lparam, string name)
+{
+    windowList.clear();
+    windowNameList.clear();
+    EnumWindows(EnumWindowsProc, 0);
+    HWND me = AfxGetMainWnd()->GetSafeHwnd();
+
+    if (name == "")
+    {
+        for (auto hWnd : windowList)
+        {
+            if (hWnd != me)
+                SendMessage(hWnd, msg, wparam, lparam);
+        }
+    }
+    else
+    {
+        int size = windowList.size();
+        for (int i = 0; i < size; i++)
+        {
+            if (windowList[i] != me && windowNameList[i].Compare(name.c_str()) == 0)
+                SendMessage(windowList[i], msg, wparam, lparam);
+        }
+    }
+}
+
 CGameState* CGame::GetState()
 {
     return gameState;

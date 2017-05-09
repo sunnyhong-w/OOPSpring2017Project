@@ -5,7 +5,19 @@
         "Release": "SlideRelease.wav"
     },
     "Music": {
-        "RSIC": {
+        "Yellow": {
+            "name": "100_2.mp3"
+        },
+        "Red": {
+            "name": "Battle Enconter.mp3"
+        },
+        "Blue": {
+            "name": "test01.mp3"
+        },
+        "White": {
+            "name": "themev1.mp3"
+        },
+        "Green": {
             "name": "C1_V13_PLAY.ogg",
             "loopsetting": {
                 "start": "0:23:27",

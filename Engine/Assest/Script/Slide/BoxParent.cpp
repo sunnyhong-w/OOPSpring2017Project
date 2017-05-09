@@ -16,7 +16,8 @@ void BoxParent::Start()
     button2 = 0;
     isSended = false;
 
-    AudioPlayer::GetSource("RSIC")->Play();
+    lastroom = "Blue";
+    AudioPlayer::GetSource(lastroom)->Play();
 }
 
 void BoxParent::Update()
@@ -105,5 +106,14 @@ void BoxParent::OnRecivedBroadcast(BroadcastMessageData bmd)
             button1--;
         else if (bmd.data["name"] == "Button2")
             button2--;
+    }
+    else if (bmd.event == BroadcastEvent::ChangeRoom)
+    {
+        string newroom = bmd.data["name"].get<string>();
+
+        if(lastroom != newroom)
+            AudioPlayer::Crossfade(AudioPlayer::GetSource(lastroom), AudioPlayer::GetSource(newroom), 2, true);
+
+        lastroom = newroom;
     }
 }

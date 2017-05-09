@@ -4,7 +4,9 @@
 
 void Gem::Start()
 {	
-	if (this->gameObject->GetName() == "RedGem")
+    name = this->gameObject->GetName();
+
+	if (name == "RedGem")
 	{	
 		this->gameObject->spriteRenderer->SetEnable(false);
 		this->gameObject->collider->SetEnable(false);
@@ -25,8 +27,12 @@ void Gem::Start()
 
 void Gem::OnCollisionEnter(Collider * c)
 {
-	GameStatus::status[to_string((int)StatusName::Gem)][this->gameObject->GetName()] = 2;
+	GameStatus::status[to_string((int)StatusName::Gem)][name] = 2;
 	GameStatus::SaveFile();
+
+    if (name == "RedGem")
+        game_framework::CGame::Instance()->SendEvent(WM_CLOSE, 0, 0, "Hop");
+
 	Destroy(this->gameObject);
 }
 

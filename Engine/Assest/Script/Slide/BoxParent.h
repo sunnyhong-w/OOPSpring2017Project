@@ -10,6 +10,7 @@ class BoxParent : public GameBehaviour
 		{
             RegisterEvent(BroadcastEvent::ButtonPressed);
             RegisterEvent(BroadcastEvent::ButtonRelease);
+            RegisterEvent(BroadcastEvent::ChangeRoom);
 		}
 
         void Start() override;
@@ -22,4 +23,5 @@ class BoxParent : public GameBehaviour
         bool isSended;
         int button1;
         int button2;
+        string lastroom;
 };

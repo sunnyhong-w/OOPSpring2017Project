@@ -352,6 +352,7 @@ public:
 	void OnSuspend();								// 處理「待命」的動作
     void OnCopyData(json reciveddata);             // 處理視窗間的資料傳遞
 	void BroadcastMessage(game_engine::BroadcastMessageData bmd, string windowName = "");      //廣播要發送給其他視窗的訊息
+    void SendEvent(UINT msg, WPARAM wparam, LPARAM lparam, string name);
     CGameState* GetState();
     void EnterScene(CGameState *gs);
     void ExitScene();
