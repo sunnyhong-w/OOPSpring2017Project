@@ -1,5 +1,18 @@
 {
     "IncludePrefrab": {},
+    "Sound": {
+        "Select": "SlideSelect.wav",
+        "Release": "SlideRelease.wav"
+    },
+    "Music": {
+        "RSIC": {
+            "name": "C1_V13_PLAY.ogg",
+            "loopsetting": {
+                "start": "0:23:27",
+                "end": "2:19:63"
+            }
+        }
+    },
     "GameObject": [
         {
             "name": "Background",

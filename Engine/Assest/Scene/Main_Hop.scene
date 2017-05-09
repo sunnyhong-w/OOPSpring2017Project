@@ -12,15 +12,6 @@
         "Jump_Spring": "Jump_Spring.wav",
         "Walk": "Walk.wav"
     },
-    "Music": {
-        "RSIC": {
-            "name": "C1_V13_PLAY.ogg",
-            "loopsetting": {
-                "start": "0:23:27",
-                "end": "2:19:63"
-            }
-        }
-    },
     "GameObject": [
         {
             "include": "MapReader",

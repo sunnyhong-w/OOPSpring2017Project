@@ -157,7 +157,6 @@ namespace game_engine
     void AudioPlayer::SetMusicVolume(float v)
     {
         v = clamp(v, 0, 1);
-        TRACE("\n\n%f\n\n", v);
         instance->volumeMusic = v;
 
         for (auto as : AudioPlayer::instance->sourceMap)

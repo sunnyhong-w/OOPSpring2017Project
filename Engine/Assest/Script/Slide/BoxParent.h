@@ -20,6 +20,6 @@ class BoxParent : public GameBehaviour
         string boxdata[4][4];
 
         bool isSended;
-        bool button1;
-        bool button2;
+        int button1;
+        int button2;
 };
