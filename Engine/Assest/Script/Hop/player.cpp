@@ -127,6 +127,7 @@ void Player::Update()
         waitSmoke = 0.15f;
         GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
         gobj->transform->SetWorldPosition(this->transform->GetWorldPosition() + Vector2(0, 12));
+        gobj->spriteRenderer->SetFlipX(this->gameObject->rigidbody->velocity.x < 0);
     }
     
 
