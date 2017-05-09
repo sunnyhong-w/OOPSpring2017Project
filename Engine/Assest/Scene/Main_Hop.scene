@@ -14,8 +14,8 @@
         "RSIC": {
             "name": "C1_V13_PLAY.ogg",
             "loopsetting": {
-                "start": 23270,
-                "end":  139630
+                "start": "0:23:27",
+                "end": "2:19:63"
             }
         }
     },

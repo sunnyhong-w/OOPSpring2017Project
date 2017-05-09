@@ -54,7 +54,31 @@ namespace game_engine
             if(music.find("loopsetting") == music.end())
                 initStream(it.key(), music["name"]);
             else
-                initStream(it.key(), music["name"], music["loopsetting"]["start"], music["loopsetting"]["end"]);
+            {
+                int m, s, cs, fp, flp;
+                string temp;
+
+                temp = music["loopsetting"]["start"].get<string>();
+                fp = temp.find(':');
+                flp = temp.find_last_of(':');
+                m = stoi(temp.substr(0, fp));
+                s = stoi(temp.substr(fp + 1, flp - fp));
+                cs = stoi(temp.substr(flp + 1));
+                int start = (m * 60 + s + (float)cs / 100) * 1000;
+
+                m = s = cs = fp = flp = -1;
+
+                temp = music["loopsetting"]["end"].get<string>();
+                fp = temp.find(':');
+                flp = temp.find_last_of(':');
+                m = stoi(temp.substr(0, fp));
+                s = stoi(temp.substr(fp + 1, flp - fp));
+                cs = stoi(temp.substr(flp + 1));
+
+                int end = (m * 60 + s + (float)cs / 100) * 1000;
+
+                initStream(it.key(), music["name"], start, end);
+            }
         }
     }
 
