@@ -5,6 +5,7 @@
 #include"scene.h"
 #include"component.h"
 #include"input.h"
+#include"Script\Engine\GameSetting.h"
 #include<ctime>
 #include<fstream>
 #include<thread>
@@ -228,10 +229,8 @@ void GameScene::ParseJSON(json j)
 {
     if (FindJSON("LoadScene"))
     {
-        string SceneName = j["LoadScene"].get<string>();
-        if (SceneName != "")
-            this->loadname = SceneName;
-
+        json SceneLoadData = j["LoadScene"];
+        this->loadname = SceneLoadData[GameSetting::WindowName].get<string>();
         return;
     }
 

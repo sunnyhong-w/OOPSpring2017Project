@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "audio.h"
 #include "enginelib.h"
+#include "Script\Engine\GameSetting.h"
 #include <vector>
 
 namespace game_engine
@@ -29,7 +30,7 @@ namespace game_engine
 
         instance = this;
 
-        volumeMusic = .6f;
+        volumeMusic = 1;
         volumeSound = 1;
     }
 

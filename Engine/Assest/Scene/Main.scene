@@ -1,5 +1,8 @@
 {
-    "LoadScene" : "Main_Hop",
+    "LoadScene" : {
+    	"Hop": "Main_Hop",
+    	"Slide": "Main_Slide"
+    },
     "IncludePrefrab": {},
     "GameObject": []
 }

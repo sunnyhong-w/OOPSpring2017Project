@@ -24,7 +24,7 @@ void Camera::LateUpdate()
         if (Input::GetKeyPressing(VK_NUMPAD2))
             GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::down * 10;
         if (Input::GetKeyDown(VK_NUMPAD5))
-            GameScene::CameraPosition() = (this->transform->GetPostion() - Vector2(((float)SIZE_X / 2), ((float)SIZE_Y / 2))).GetV2I();
+            GameScene::CameraPosition() = (this->transform->GetPostion() - Vector2(((float)GameSetting::GetSizeX() / 2), ((float)GameSetting::GetSizeY() / 2))).GetV2I();
     }
     else
     {

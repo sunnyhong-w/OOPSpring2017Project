@@ -8,13 +8,14 @@ HISTORY :
 2017-02-09 v0.1.0
 */
 
-#include"stdafx.h"
+#include "stdafx.h"
 #include <ddraw.h>
-#include"component.h"
-#include"gameobject.h"
-#include"enginelib.h"
+#include "component.h"
+#include "gameobject.h"
+#include "enginelib.h"
 #include "gamebehavior.h"
-#include<fstream>
+#include "Script\Engine\GameSetting.h"
+#include <fstream>
 
 namespace game_engine
 {
@@ -427,7 +428,7 @@ inline void SpriteRenderer::UpdateRealRenderPostion()
 
 bool SpriteRenderer::CameraTest(Vector2I cameraPos)
 {
-    Vector2 aw = (this->size.GetV2() - Vector2::one) / 2, bw = (Vector2(SIZE_X, SIZE_Y) - Vector2::one) / 2;
+    Vector2 aw = (this->size.GetV2() - Vector2::one) / 2, bw = (Vector2(GameSetting::GetSizeX(), GameSetting::GetSizeY()) - Vector2::one) / 2;
     return ((aw + GetRealRenderPostion()) - (bw + cameraPos)).abs() <= aw + bw;
 }
 

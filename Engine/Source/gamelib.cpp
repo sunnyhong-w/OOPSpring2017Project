@@ -126,6 +126,7 @@
 #include "enginelib.h"
 #include "gameobject.h"
 #include "scene.h"
+#include "Script\Engine\GameSetting.h"
 
 using namespace game_engine;
 
@@ -465,11 +466,11 @@ void CGameState::ShowInitProgress(int percent)
     if (!SHOW_LOAD_PROGRESS)
         return;
 
-    const int bar_width = SIZE_X * 2 / 3;
-    const int bar_height = SIZE_Y / 20;
-    const int x1 = (SIZE_X - bar_width) / 2;
+    const int bar_width = GameSetting::GetSizeX() * 2 / 3;
+    const int bar_height = GameSetting::GetSizeY() / 20;
+    const int x1 = (GameSetting::GetSizeX() - bar_width) / 2;
     const int x2 = x1 + bar_width;
-    const int y1 = (SIZE_Y - bar_height) / 2;
+    const int y1 = (GameSetting::GetSizeY() - bar_height) / 2;
     const int y2 = y1 + bar_height;
     const int pen_width = bar_height / 8;
     const int progress_x1 = x1 + pen_width;
@@ -480,7 +481,7 @@ void CGameState::ShowInitProgress(int percent)
     CDDraw::BltBackColor(DEFAULT_BG_COLOR);		// 將 Back Plain 塗上預設的顏色
     CMovingBitmap loading;						// 貼上loading圖示
     loading.LoadBitmap(IDB_LOADING, RGB(0, 0, 0));
-    loading.SetTopLeft((SIZE_X - loading.Width()) / 2, y1 - 2 * loading.Height());
+    loading.SetTopLeft((GameSetting::GetSizeX() - loading.Width()) / 2, y1 - 2 * loading.Height());
     loading.ShowBitmap();
     //
     // 以下為CDC的用法
@@ -669,16 +670,20 @@ void CGame::OnInit()	// OnInit() 只在程式一開始時執行一次
     // 啟動亂數
     //
     srand((unsigned)time(NULL));
+
+    GameSetting::InitSetting();
+    AudioPlayer::SetMusicVolume(GameSetting::GetMusicVolume());
+    AudioPlayer::SetSoundVolume(GameSetting::GetSoundVolume());
+    AfxGetMainWnd()->SetWindowTextA(GameSetting::WindowName.c_str());
+
     //
     // 開啟DirectX繪圖介面
     //
-    CDDraw::Init(SIZE_X, SIZE_Y);							// 設定遊戲解析度
+    CDDraw::Init(GameSetting::GetSizeX(), GameSetting::GetSizeY());							// 設定遊戲解析度
 
     //
     // Switch to the first state
     //
-    AfxGetMainWnd()->SetWindowTextA(WINDOW_NAME);
-    //gameState = gameStateTable[GAME_STATE_INIT];
     gameState = SceneStack.back();
     gameState->OnBeginState();
     CSpecialEffect::SetCurrentTime();
@@ -811,8 +816,8 @@ BOOL CALLBACK EnumWindowsProc(_In_ HWND hWnd, _In_ LPARAM lParam)
 void CGame::BroadcastMessage(game_engine::BroadcastMessageData bmd, string windowName)
 {
 	bmd.position = windowPosition;
-	bmd.size = Vector2I(SIZE_X, SIZE_Y);
-	bmd.sender = WINDOW_NAME;
+	bmd.size = Vector2I(GameSetting::GetSizeX(), GameSetting::GetSizeY());
+	bmd.sender = GameSetting::WindowName;
 
 	json boardcastdata = bmd;
 
