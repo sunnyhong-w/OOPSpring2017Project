@@ -29,7 +29,7 @@ namespace game_engine
 
         instance = this;
 
-        volumeMusic = 1;
+        volumeMusic = .6f;
         volumeSound = 1;
     }
 
@@ -151,6 +151,16 @@ namespace game_engine
 
         for (auto name : namelist)
             ReleaseSound(name);
+    }
+
+    void AudioPlayer::SetMusicVolume(float v)
+    {
+        instance->volumeMusic = v;
+    }
+
+    void AudioPlayer::SetSoundVolume(float v)
+    {
+        instance->volumeSound = v;
     }
 
     void AudioPlayer::Crossfade(AudioSource *fadeoutSource, AudioSource *fadeinSource, float time, bool forcePlay, float volume)

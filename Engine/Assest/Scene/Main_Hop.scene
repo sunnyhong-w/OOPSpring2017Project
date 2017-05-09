@@ -8,7 +8,8 @@
         "Smoke": "Smoke"
     },
     "Sound": {
-        "Jump": "Jump.wav"
+        "Jump": "Jump.wav",
+        "Jump_Spring": "Jump_Spring.wav"
     },
     "Music": {
         "RSIC": {

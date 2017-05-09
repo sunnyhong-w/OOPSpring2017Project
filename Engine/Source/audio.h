@@ -27,6 +27,9 @@ namespace game_engine
 		void ParseMusicJSON(json j);
         void ReleaseBuffer();
 
+        static void SetMusicVolume(float v);
+        static void SetSoundVolume(float v);
+
 	private:
 		void initSound(string name, string filename);
 		void initStream(string name, string filename, unsigned int loopstart = -1, unsigned int loopend = -1);

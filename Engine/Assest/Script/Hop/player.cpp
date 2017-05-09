@@ -19,6 +19,9 @@ void Player::Start()
 	bounce = false;
 	isBouncing = false;
 	waitSmoke = 0;
+
+    AudioPlayer::SetMusicVolume(.6f);
+
 	AudioPlayer::GetSource("RSIC")->Play();
 }
 
@@ -111,6 +114,7 @@ void Player::Update()
     if (this->gameObject->rigidbody->colliderInfo.bottom == false)
     {
         //Jump Anim Holder
+        this->gameObject->animationController->Play("Run");
     }
     else if (this->gameObject->rigidbody->velocity.x != 0)
     {
