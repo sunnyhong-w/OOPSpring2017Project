@@ -134,13 +134,35 @@ void GreenBox::SetData(string dt)
 
 void GreenBox::BoxON()
 {
-    this->gameObject->collider->SetEnable(true);
-    tick = 0;
-    sw = true;
+    if (!sw)
+    {
+        this->gameObject->collider->SetEnable(true);
+        tick = 0;
+        sw = true;
+
+        auto cam = GameObject::findGameObjectByName("Camera");
+        auto player = GameObject::findGameObjectByName("Player");
+        if (cam != nullptr && player != nullptr && player->GetComponent<Player>()->GetRoomName() == "Green")
+        {
+            cam->GetComponent<Camera>()->Shake(1, 4, 10);
+            AudioPlayer::GetSource("GreenFit")->PlayOneShot();
+        }
+    }
 }
 
 void GreenBox::BoxOff()
 {
-    this->gameObject->collider->SetEnable(false);
-    sw = false;
+    if (sw)
+    {
+        this->gameObject->collider->SetEnable(false);
+        sw = false;
+
+        auto cam = GameObject::findGameObjectByName("Camera");
+        auto player = GameObject::findGameObjectByName("Player");
+        if (cam != nullptr && player != nullptr && player->GetComponent<Player>()->GetRoomName() == "Green")
+        {
+            cam->GetComponent<Camera>()->Shake(1, 4, 10);
+            AudioPlayer::GetSource("GreenFit")->PlayOneShot();
+        }
+    }
 }

@@ -211,11 +211,11 @@
     <ClCompile Include="Source\audio.cpp">
       <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
-    <ClCompile Include="_componentRegister.cpp">
-      <Filter>GameEngine\EngineLib</Filter>
-    </ClCompile>
     <ClCompile Include="Assest\Script\Engine\GameSetting.cpp">
       <Filter>GameEngine\EngingScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\_componentRegister.cpp">
+      <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

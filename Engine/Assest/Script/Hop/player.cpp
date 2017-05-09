@@ -12,13 +12,13 @@ void Player::ParseJSON(json j)
 
 void Player::Start()
 {
-
     gravity =(2 * MaxJumpHeight) / pow(jumpTimeApex, 2);
     MaxJumpVelocity = -1 * gravity * jumpTimeApex;
     MinJumpVelocity = sqrt(2 * abs(gravity) * MinJumpHeight);
 	bounce = false;
 	isBouncing = false;
 	waitSmoke = 0;
+    extreemSpeed = false;
 }
 
 void Player::Update()
@@ -26,7 +26,7 @@ void Player::Update()
     Rigidbody *rb = gameObject->rigidbody;
     rb->TimeSliceCollision = true;
 	
-	int speed = 2;
+	int speed = 2 * (extreemSpeed ? 5 : 1);
 
     if (rb->colliderInfo.bottom || rb->colliderInfo.top)
         vel.y = 0;
@@ -101,6 +101,9 @@ void Player::Update()
     {
         this->gameObject->animationController->Play("Wait");
     }
+
+    if (Input::GetKeyDown(VK_F3))
+        extreemSpeed = !extreemSpeed;
 
     if (Input::GetKeyPressing(VK_F5))
         AudioPlayer::SetMusicVolume(AudioPlayer::GetMusicVolume() - 0.01f);

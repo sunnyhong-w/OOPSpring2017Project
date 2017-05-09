@@ -10,7 +10,8 @@
     "Sound": {
         "Jump": "Jump.wav",
         "Jump_Spring": "Jump_Spring.wav",
-        "Walk": "Walk.wav"
+        "Walk": "Walk.wav",
+        "GreenFit": "GreenFit.wav"
     },
     "GameObject": [
         {

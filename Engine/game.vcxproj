@@ -331,7 +331,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">UnitTest/</ObjectFileName>
       <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">UnitTest/</ProgramDataBaseFileName>
     </ClCompile>
-    <ClCompile Include="_componentRegister.cpp" />
+    <ClCompile Include="Source\_componentRegister.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assest\Script\Engine\GameSetting.h" />
