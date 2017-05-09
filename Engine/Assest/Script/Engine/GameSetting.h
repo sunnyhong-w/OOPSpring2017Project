@@ -8,7 +8,7 @@ public:
     static void InitSetting();
     static int GetSizeX();
     static int GetSizeY();
-    static int GetMusicVolume();
-    static int GetSoundVolume();
+    static float GetMusicVolume();
+    static float GetSoundVolume();
     static void SaveSetting();
 };

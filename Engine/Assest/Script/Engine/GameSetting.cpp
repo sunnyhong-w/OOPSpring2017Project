@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////////////////
 //Compile Window Selection                                 //
 /////////////////////////////////////////////////////////////
-string GameSetting::WindowName = "Hop";
+string GameSetting::WindowName = "Slide";
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
@@ -32,12 +32,12 @@ int GameSetting::GetSizeY()
     return setting["window"][WindowName]["y"];
 }
 
-int GameSetting::GetMusicVolume()
+float GameSetting::GetMusicVolume()
 {
     return setting["audio"]["Music"];
 }
 
-int GameSetting::GetSoundVolume()
+float GameSetting::GetSoundVolume()
 {
     return setting["audio"]["Sound"];
 }
