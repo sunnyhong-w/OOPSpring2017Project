@@ -164,7 +164,7 @@ public:
 	static void  DrawRect(CDC *pDC, game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color);
 
     static void  CreateSurface(CDC* mDC, int sid, int width, int height);
-    static void  CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shadingfunc)(int, int, BYTE&, BYTE&, BYTE&, BYTE*) = nullptr);
+    static void  CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
     static LPDIRECTDRAWSURFACE GetBackSuface();
 
 private:

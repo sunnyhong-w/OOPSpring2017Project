@@ -31,9 +31,9 @@ void SlideScreenEffect::Draw(Vector2I v2)
     surface->Release();
 }
 
-void SlideScreenEffectShadingFunction(int x, int y, BYTE &r, BYTE &g, BYTE &b, BYTE *data)
+void SlideScreenEffectShadingFunction(int x, int y, float &r, float &g, float &b,BYTE *data)
 {
-    r = (1 - (1 - (float)r / 255) * (1 - 0.5)) * 255;
-    g = (1 - (1 - (float)g / 255) * (1 - 0.5)) * 255;
-    b = (1 - (1 - (float)b / 255) * (1 - 0.5)) * 255;
+    r = 1 - (1 - r) * (1 - 0.5);
+    g = 1 - (1 - g) * (1 - 0.5);
+    b = 1 - (1 - b) * (1 - 0.5);
 }

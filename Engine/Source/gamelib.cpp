@@ -1305,7 +1305,7 @@ void CDDraw::CreateSurface(CDC * mDC, int i, int width, int height)
     lpDDS[i]->ReleaseDC(hdc);
 }
 
-void CDDraw::CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shadingfunc)(int, int, BYTE&, BYTE&, BYTE&, BYTE*))
+void CDDraw::CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shadingfunc)(int, int, float&, float&, float&, BYTE*))
 {
     BITMAP bitmapSize;
     mDC->GetCurrentBitmap()->GetBitmap(&bitmapSize);
@@ -1338,9 +1338,15 @@ void CDDraw::CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shad
     DWORD time;
 
     time = clock();
+
+    BYTE* odata = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
     BYTE* pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
 
-    int iRet = GetDIBits(GetDC(NULL), (HBITMAP)mDC->GetCurrentBitmap()->m_hObject, 0, bitmapSize.bmHeight, pBits, &bi, DIB_RGB_COLORS);
+    int iRet = GetDIBits(GetDC(NULL), (HBITMAP)mDC->GetCurrentBitmap()->m_hObject, 0, bitmapSize.bmHeight, odata, &bi, DIB_RGB_COLORS);
+
+    //BITMAP bmp;
+    //GetObject((HBITMAP)mDC->GetCurrentBitmap()->m_hObject, sizeof(bmp), (LPVOID)&bmp);
+    //BYTE* odata = (BYTE*)bmp.bmBits;
 
     //about 20ms
     TRACE("\n CDC Surface : %d \n", clock() - time);
@@ -1356,17 +1362,23 @@ void CDDraw::CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shad
         {
             for (int y = 0; y < bitmapSize.bmHeight; ++y)
             {
-                (*shadingfunc)(x, y, 
-                               pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 2], 
-                               pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 1], 
-                               pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 0], 
-                               pBits);
+                float r, b, g;
+                r = (float)odata[x * nbyte + y * bitmapSize.bmWidthBytes + 2] / 255;
+                g = (float)odata[x * nbyte + y * bitmapSize.bmWidthBytes + 1] / 255;
+                b = (float)odata[x * nbyte + y * bitmapSize.bmWidthBytes + 0] / 255;
+
+                (*shadingfunc)(x, y, r, g, b, odata);
+
+                pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 2] = r * 255;
+                pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 1] = g * 255;
+                pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 0] = b * 255;
             }
         }
     }
     //about 20ms
     TRACE("\n CDC Shading : %d \n", clock() - time);
 
+    time = clock();
     //Set Pixel
     CBitmap bitmap;
     bitmap.CreateBitmap(bitmapSize.bmWidth, bitmapSize.bmHeight, bitmapSize.bmPlanes, bitmapSize.bmBitsPixel, pBits);
@@ -1381,6 +1393,8 @@ void CDDraw::CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shad
     cdc.Detach();
     (*p_surface)->ReleaseDC(hdc);
     delete pBits;
+    delete odata;
+    TRACE("\n CDC Set Pixel & End : %d \n", clock() - time);
 }
 
 LPDIRECTDRAWSURFACE CDDraw::GetBackSuface()

@@ -3,7 +3,7 @@
 
 using namespace game_engine;
 
-void SlideScreenEffectShadingFunction(int x, int y, BYTE &r, BYTE &g, BYTE &b, BYTE *data);
+void SlideScreenEffectShadingFunction(int x, int y, float &r, float &g, float &b, BYTE *data);
 
 class SlideScreenEffect : public GameBehaviour
 {
