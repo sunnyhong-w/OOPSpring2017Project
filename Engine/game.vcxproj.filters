@@ -217,6 +217,9 @@
     <ClCompile Include="Source\_componentRegister.cpp">
       <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
+    <ClCompile Include="Assest\Script\Slide\SlideScreenEffect.cpp">
+      <Filter>GameScript\Slide</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\game.h">
@@ -336,6 +339,9 @@
     </ClInclude>
     <ClInclude Include="Assest\Script\Engine\GameSetting.h">
       <Filter>GameEngine\EngingScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Slide\SlideScreenEffect.h">
+      <Filter>GameScript\Slide</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

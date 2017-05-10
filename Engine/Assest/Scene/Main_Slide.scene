@@ -461,6 +461,18 @@
                     "layer": 1
                 }
             ]
+        },
+        {
+            "name" : "ImageEffect",
+            "renderByBehavior" : true,
+            "Component" : {
+                "Transform": {
+                    "zindex": 10
+                },
+                "SlideScreenEffect" : {
+
+                }
+            }
         }
     ]
 }
