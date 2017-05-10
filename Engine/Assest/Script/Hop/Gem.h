@@ -10,8 +10,11 @@ class Gem : public GameBehaviour
 
 		}
 		void Start() override;
+		void Update() override;
 		void OnCollisionEnter(Collider* c) override;
 		void OnRecivedBroadcast(BroadcastMessageData bmd) override;
     private:
         string name;
+		Vector2 currentVelocity;
+		Vector2 radius;
 };

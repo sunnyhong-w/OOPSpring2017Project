@@ -389,6 +389,11 @@ void SpriteRenderer::SetAnchorRaito(Vector2 pos)
     UpdateRealRenderPostion();
 }
 
+Vector2 SpriteRenderer::GetAnchorRaito()
+{
+	return anchorRaito;
+}
+
 void SpriteRenderer::SetOffset(Vector2I dp)
 {
     this->offset = dp;

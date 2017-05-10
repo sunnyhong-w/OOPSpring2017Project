@@ -428,9 +428,9 @@ void CMovingBitmap::ShowBitmap(game_engine::Vector2I pos, game_engine::Vector2 s
 
     if ((flipCode & 2) == 2)
         srcpos.y = bitmapsize.y - srcpos.y - size.y;
-
+	Vector2I newSize = Vector2(size.x * scale.x, size.y*scale.y).ceil().GetV2I();
     CDDraw::BltBitmapToBack(SurfaceID + flipCode,
-                            CRect(CPoint(pos.x, pos.y), CSize((int)(size.x * scale.x), (int)(size.y * scale.y))),
+                            CRect(CPoint(pos.x, pos.y), CSize(newSize.x,newSize.y)),
                             CRect(CPoint(srcpos.x, srcpos.y), CSize(size.x, size.y)),
                             cutSrc);
 }
