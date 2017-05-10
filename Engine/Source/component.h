@@ -120,6 +120,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void UnsafeSetSurfaceID(int SID);
         void Reset();
         void SetAnchorRaito(Vector2 pos);
+		Vector2 GetAnchorRaito();
         void SetOffset(Vector2I offset);
         bool CameraTest(Vector2I cameraPos);
         void SetFlip(bool x, bool y);
