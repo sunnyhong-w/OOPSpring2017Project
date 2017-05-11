@@ -141,6 +141,17 @@ private:
 // 一般的遊戲並不需直接操作這個物件，因此可以不管這個class的使用方法
 /////////////////////////////////////////////////////////////////////////////
 
+class BitmapHandeler {
+public:
+    ~BitmapHandeler() {
+        for (auto b : BitmapList)
+            delete b.second;
+    }
+    static BitmapHandeler instance;
+    map<string, BYTE*>   BitmapList;
+    map<string, BITMAP>   BitmapSize;
+};
+
 class CDDraw {
 	friend class CMovingBitmap;
 public:
@@ -164,7 +175,8 @@ public:
 	static void  DrawRect(CDC *pDC, game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color);
 
     static void  CreateSurface(CDC* mDC, int sid, int width, int height);
-    static void  CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
+    static void  CreateSurface(CDC* mDC, string name, LPDIRECTDRAWSURFACE *p_surface, void (*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
+    static void  CreateSurface(string name, LPDIRECTDRAWSURFACE *p_surface, void(*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
     static LPDIRECTDRAWSURFACE GetBackSuface();
     static LPDIRECTDRAWSURFACE GetSurface(int i);
     static void  LoadBitmap(LPDIRECTDRAWSURFACE &surface, char *filename, void(*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
@@ -197,7 +209,7 @@ private:
 	static vector<string>		BitmapName;
 	static vector<CRect>		BitmapRect;
 	static vector<COLORREF>		BitmapColorKey;
-    static map<string, HBITMAP> BitmapList;
+    static map<string, BYTE*>   BitmapList;
 	static bool					fullscreen;
 	static CDDraw				ddraw;
 	static int					size_x, size_y;

@@ -26,7 +26,7 @@ void Player::Update()
     Rigidbody *rb = gameObject->rigidbody;
     rb->TimeSliceCollision = true;
 	
-	int speed = 2 * (extreemSpeed ? 5 : 1);
+	int speed = (extreemSpeed ? 8 : 3.5);
 
     if (rb->colliderInfo.bottom || rb->colliderInfo.top)
         vel.y = 0;
