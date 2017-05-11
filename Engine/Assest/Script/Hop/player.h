@@ -41,6 +41,6 @@ class Player : public GameBehaviour
         void Jump(Vector2 &velocity);
 
 		string roomName;
-
+        bool extreemSpeed;
 
 };

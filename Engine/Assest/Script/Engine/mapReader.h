@@ -71,7 +71,6 @@ public:
 	void LoadMap(string str);
     void Start() override;
 	void Draw(Vector2I campos) override;
-	void Update() override;
     void LateUpdate() override;
 	TileMap tileMap;
 

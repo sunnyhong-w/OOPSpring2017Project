@@ -32,7 +32,8 @@ enum class BroadcastEvent
     ButtonPressed,
     ButtonRelease,
     RedRoomFinish,
-    UpdateWindowPosition
+    UpdateWindowPosition,
+    ChangeRoom
 };
 
 // implement in enginelib.cpp

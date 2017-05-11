@@ -5,15 +5,13 @@
 void Camera::Start()
 {
 	player = nullptr;
-	this->RegisterEvent(BroadcastEvent::UpdateBoxPosition);
 	shouldShake = false;
 	time = 0;
-	
 }
 
 void Camera::LateUpdate()
 {
-    if (Input::GetKeyPressing(VK_F5))
+    if (Input::GetKeyPressing(VK_F2))
     {
         if (Input::GetKeyPressing(VK_NUMPAD8))
             GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::up * 10;
@@ -24,7 +22,7 @@ void Camera::LateUpdate()
         if (Input::GetKeyPressing(VK_NUMPAD2))
             GameScene::CameraPosition() = GameScene::CameraPosition() + Vector2I::down * 10;
         if (Input::GetKeyDown(VK_NUMPAD5))
-            GameScene::CameraPosition() = (this->transform->GetPostion() - Vector2(((float)SIZE_X / 2), ((float)SIZE_Y / 2))).GetV2I();
+            GameScene::CameraPosition() = (this->transform->GetPostion() - Vector2(((float)GameSetting::GetSizeX() / 2), ((float)GameSetting::GetSizeY() / 2))).GetV2I();
     }
     else
     {
@@ -62,9 +60,9 @@ void Camera::LateUpdate()
 			}
         }
 		
-    }	
-	ShakeF();
+    }
 
+	ShakeF();
 }
 
 void Camera::OnDrawGizmos(CDC * pDC)
@@ -108,23 +106,15 @@ void Camera::OnCollisionStay(Collider * c)
 	OnCollisionEnter(c);
 }
 
-void Camera::OnRecivedBroadcast(BroadcastMessageData bmd)
-{
-	if (bmd.event == BroadcastEvent::UpdateBoxPosition) 
-	{
-		Shake(0.75, 30, 15);
-		
-	}
-}
-
 void Camera::Shake(double t, double f, double s)
 {
-	f = f*(rand() % 2 == 0 ? 1 : -1);
-	totalTime = t;
-	frequency = f;
-	strength = s;
-	time = 0;
-	shouldShake = true;
+    totalTime = t;
+    frequency = f;
+    strength = s;
+    phaserand = (rand() % 360) * 3.1415926 / 180;
+    phaserandY = (rand() % 360) * 3.1415926 / 180;
+    time = 0;
+    shouldShake = true;
 }
 
 void Camera::ShakeF()
@@ -133,8 +123,10 @@ void Camera::ShakeF()
 	{
 		time += Time::deltaTime;
 		Vector2I offset = this->gameObject->spriteRenderer->GetOffset();
-		this->gameObject->spriteRenderer->SetOffset(Vector2(sin((totalTime - time) * frequency )*(totalTime - time) * strength,
-			sin((totalTime - time) * frequency + 1)*(totalTime - time) * strength).GetV2I());
+        this->gameObject->spriteRenderer->SetOffset(
+            Vector2I(sin(2 * 3.1415926 * (time / totalTime) * frequency + phaserand) * (totalTime - time) * strength,
+                     sin(2 * 3.1415926 * (time / totalTime) * frequency + phaserandY) * (totalTime - time) * strength));
+
 		if (time > totalTime)
 		{
 			time = 0;

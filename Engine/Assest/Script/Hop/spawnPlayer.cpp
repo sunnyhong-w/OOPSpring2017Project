@@ -16,6 +16,14 @@ void SpawnPlayer::Start()
 {
 	pos = this->gameObject->spriteRenderer->GetRealRenderPostion().GetV2();
     this->gameObject->RemoveComponent<SpriteRenderer>();
+
+    targetRoom = "Blue";
+
+    if (GameStatus::status.find("last") != GameStatus::status.end())
+    {
+        targetRoom = GameStatus::status["last"]["room"].get<string>();
+        pos = GameStatus::status["last"]["position"];
+    }
 }
 
 void SpawnPlayer::Update()
@@ -24,6 +32,15 @@ void SpawnPlayer::Update()
     {
         GameObject* gobj = GameScene::CreateGameObject("spawnPlayer", { { "include" , "player" } });
         gobj->transform->SetWorldPosition(pos);
+        gobj->GetComponent<Player>()->SetRoomName(targetRoom);
+
+        Background *bg = GameObject::findGameObjectByName("Background")->GetComponent<Background>();
+        bg->SetBackground(targetRoom);
+
+        json pass;
+        pass["name"] = targetRoom;
+        GameScene::Broadcast(BroadcastEvent::ChangeRoom, pass);
+
         Destroy(this->gameObject);
     }
 

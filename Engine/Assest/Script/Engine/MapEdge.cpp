@@ -21,6 +21,14 @@ void MapEdge::Update()
 
 		Background *bg = GameObject::findGameObjectByName("Background")->GetComponent<Background>();
 		bg->SetBackground(targetRoom);
+
+        json pass;
+        pass["name"] = targetRoom;
+        GameScene::Broadcast(BroadcastEvent::ChangeRoom, pass);
+
+        GameStatus::status["last"]["room"] = targetRoom;
+        GameStatus::status["last"]["position"] = targetPosition;
+        GameStatus::SaveFile();
 	}
 
 	target = nullptr;

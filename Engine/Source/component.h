@@ -120,6 +120,7 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         void UnsafeSetSurfaceID(int SID);
         void Reset();
         void SetAnchorRaito(Vector2 pos);
+		Vector2 GetAnchorRaito();
         void SetOffset(Vector2I offset);
         bool CameraTest(Vector2I cameraPos);
         void SetFlip(bool x, bool y);
@@ -190,14 +191,15 @@ public:
     ~AnimationController();
     void ParseJSON(json j) override;
     void Update();
-    bool JumpState(string state);
-    bool JumpState(int state);
+    bool Play(string state, bool force = false);
+    bool Play(int state, bool force = false);
     void PlayOneShot(string state);
     void PlayOneShot(int state);
 private:
     void ParseAespriteJSON(json j);
 
     string jumpState = "";
+    string laststate;
     map<string, AnimationData> animationData;
     vector<string> animationList;
     vector<AnimationSetting> frames;

@@ -29,10 +29,15 @@ void Slide::Update()
 		locked = true;
 		clickPos = this->transform->GetParent()->GetWorldPosition() + this->transform->GetPostion().sliceRound(Vector2(64, 64)) + Vector2(32, 32);
 		oWorldPos = this->transform->GetWorldPosition();
+
+        AudioPlayer::GetSource("Select")->PlayOneShot();
 	}
 
 	if (Input::GetKeyUp(VK_LBUTTON))
 	{
+        if(locked)
+            AudioPlayer::GetSource("Release")->PlayOneShot();
+
 		locked = false;
         this->gameObject->rigidbody->velocity = Vector2::zero;
 		//vel = Vector2::zero;

@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "audio.h"
 #include "enginelib.h"
+#include "Script\Engine\GameSetting.h"
 #include <vector>
 
 namespace game_engine
@@ -26,6 +27,7 @@ namespace game_engine
 
         // Initialize our Instance with 36 Channels
         m_pSystem->init(36, FMOD_INIT_NORMAL, nullptr);
+
         instance = this;
 
         volumeMusic = 1;
@@ -47,7 +49,38 @@ namespace game_engine
     void AudioPlayer::ParseMusicJSON(json j)
     {
         for (json::iterator it = j.begin(); it != j.end(); it++)
-            initStream(it.key(), it.value());
+        {
+            json music = it.value();
+
+            if(music.find("loopsetting") == music.end())
+                initStream(it.key(), music["name"]);
+            else
+            {
+                int m, s, cs, fp, flp;
+                string temp;
+
+                temp = music["loopsetting"]["start"].get<string>();
+                fp = temp.find(':');
+                flp = temp.find_last_of(':');
+                m = stoi(temp.substr(0, fp));
+                s = stoi(temp.substr(fp + 1, flp - fp));
+                cs = stoi(temp.substr(flp + 1));
+                int start = (m * 60 + s + (float)cs / 100) * 1000;
+
+                m = s = cs = fp = flp = -1;
+
+                temp = music["loopsetting"]["end"].get<string>();
+                fp = temp.find(':');
+                flp = temp.find_last_of(':');
+                m = stoi(temp.substr(0, fp));
+                s = stoi(temp.substr(fp + 1, flp - fp));
+                cs = stoi(temp.substr(flp + 1));
+
+                int end = (m * 60 + s + (float)cs / 100) * 1000;
+
+                initStream(it.key(), music["name"], start, end);
+            }
+        }
     }
 
     void AudioPlayer::initSound(string name, string filename)
@@ -64,7 +97,7 @@ namespace game_engine
         sourceMap[filename] = audioSource;
     }
 
-    void AudioPlayer::initStream(string name, string filename)
+    void AudioPlayer::initStream(string name, string filename, unsigned int loopstart, unsigned int loopend)
     {
         AudioSource *audioSource = new AudioSource();
 
@@ -76,6 +109,11 @@ namespace game_engine
 
         fileMap[name] = filename;
         sourceMap[filename] = audioSource;
+
+        if (loopstart != loopend)
+        {        
+            audioSource->soundSource->setLoopPoints(loopstart, FMOD_TIMEUNIT_MS, loopend, FMOD_TIMEUNIT_MS);
+        }
     }
 
     void AudioPlayer::Play(AudioSource* sound, bool repeat)
@@ -114,6 +152,41 @@ namespace game_engine
 
         for (auto name : namelist)
             ReleaseSound(name);
+    }
+
+    void AudioPlayer::SetMusicVolume(float v)
+    {
+        v = clamp(v, 0, 1);
+        instance->volumeMusic = v;
+
+        for (auto as : AudioPlayer::instance->sourceMap)
+        {
+            if (as.second->sourceMode == AudioMode::Stream)
+                as.second->SetVolume(v);
+        }
+    }
+
+    void AudioPlayer::SetSoundVolume(float v)
+    {
+        v = clamp(v, 0, 1);
+
+        instance->volumeSound = v;
+
+        for (auto as : AudioPlayer::instance->sourceMap)
+        {
+            if (as.second->sourceMode == AudioMode::Sound)
+                as.second->SetVolume(v);
+        }
+    }
+
+    float AudioPlayer::GetMusicVolume()
+    {
+        return instance->volumeMusic;
+    }
+
+    float AudioPlayer::GetSoundVolume()
+    {
+        return instance->volumeSound;
     }
 
     void AudioPlayer::Crossfade(AudioSource *fadeoutSource, AudioSource *fadeinSource, float time, bool forcePlay, float volume)

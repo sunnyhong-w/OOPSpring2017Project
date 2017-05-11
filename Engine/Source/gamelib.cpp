@@ -126,6 +126,7 @@
 #include "enginelib.h"
 #include "gameobject.h"
 #include "scene.h"
+#include "Script\Engine\GameSetting.h"
 
 using namespace game_engine;
 
@@ -337,6 +338,7 @@ CMovingBitmap::CMovingBitmap()
 {
     isBitmapLoaded = false;
     flipCode = 0;
+    bitmapsize = Vector2I::null;
 }
 
 int CMovingBitmap::Height()
@@ -381,9 +383,6 @@ void CMovingBitmap::LoadBitmap(char* filename, COLORREF color)
     }
     SurfaceID = CDDraw::RegisterBitmap(filename, color);
     isBitmapLoaded = true;
-    bitmapsize = Vector2I::zero;
-    bitmapsize.x = Width();
-    bitmapsize.y = Height();
 }
 
 void CMovingBitmap::SetTopLeft(int x, int y)
@@ -418,14 +417,20 @@ void CMovingBitmap::ShowBitmap(CMovingBitmap& bm)
 
 void CMovingBitmap::ShowBitmap(game_engine::Vector2I pos, game_engine::Vector2 scale, game_engine::Vector2I srcpos, game_engine::Vector2I size, bool cutSrc)
 {
+    if (bitmapsize.isNull())
+    {
+        bitmapsize.x = Width();
+        bitmapsize.y = Height();
+    }
+
     if ((flipCode & 1) == 1)
         srcpos.x = bitmapsize.x - srcpos.x - size.x;
 
     if ((flipCode & 2) == 2)
         srcpos.y = bitmapsize.y - srcpos.y - size.y;
-
+	Vector2I newSize = Vector2(size.x * scale.x, size.y*scale.y).ceil().GetV2I();
     CDDraw::BltBitmapToBack(SurfaceID + flipCode,
-                            CRect(CPoint(pos.x, pos.y), CSize((int)(size.x * scale.x), (int)(size.y * scale.y))),
+                            CRect(CPoint(pos.x, pos.y), CSize(newSize.x,newSize.y)),
                             CRect(CPoint(srcpos.x, srcpos.y), CSize(size.x, size.y)),
                             cutSrc);
 }
@@ -461,11 +466,11 @@ void CGameState::ShowInitProgress(int percent)
     if (!SHOW_LOAD_PROGRESS)
         return;
 
-    const int bar_width = SIZE_X * 2 / 3;
-    const int bar_height = SIZE_Y / 20;
-    const int x1 = (SIZE_X - bar_width) / 2;
+    const int bar_width = GameSetting::GetSizeX() * 2 / 3;
+    const int bar_height = GameSetting::GetSizeY() / 20;
+    const int x1 = (GameSetting::GetSizeX() - bar_width) / 2;
     const int x2 = x1 + bar_width;
-    const int y1 = (SIZE_Y - bar_height) / 2;
+    const int y1 = (GameSetting::GetSizeY() - bar_height) / 2;
     const int y2 = y1 + bar_height;
     const int pen_width = bar_height / 8;
     const int progress_x1 = x1 + pen_width;
@@ -476,7 +481,7 @@ void CGameState::ShowInitProgress(int percent)
     CDDraw::BltBackColor(DEFAULT_BG_COLOR);		// 將 Back Plain 塗上預設的顏色
     CMovingBitmap loading;						// 貼上loading圖示
     loading.LoadBitmap(IDB_LOADING, RGB(0, 0, 0));
-    loading.SetTopLeft((SIZE_X - loading.Width()) / 2, y1 - 2 * loading.Height());
+    loading.SetTopLeft((GameSetting::GetSizeX() - loading.Width()) / 2, y1 - 2 * loading.Height());
     loading.ShowBitmap();
     //
     // 以下為CDC的用法
@@ -665,16 +670,20 @@ void CGame::OnInit()	// OnInit() 只在程式一開始時執行一次
     // 啟動亂數
     //
     srand((unsigned)time(NULL));
+
+    GameSetting::InitSetting();
+    AudioPlayer::SetMusicVolume(GameSetting::GetMusicVolume());
+    AudioPlayer::SetSoundVolume(GameSetting::GetSoundVolume());
+    AfxGetMainWnd()->SetWindowTextA(GameSetting::WindowName.c_str());
+
     //
     // 開啟DirectX繪圖介面
     //
-    CDDraw::Init(SIZE_X, SIZE_Y);							// 設定遊戲解析度
+    CDDraw::Init(GameSetting::GetSizeX(), GameSetting::GetSizeY());							// 設定遊戲解析度
 
     //
     // Switch to the first state
     //
-    AfxGetMainWnd()->SetWindowTextA(WINDOW_NAME);
-    //gameState = gameStateTable[GAME_STATE_INIT];
     gameState = SceneStack.back();
     gameState->OnBeginState();
     CSpecialEffect::SetCurrentTime();
@@ -807,8 +816,8 @@ BOOL CALLBACK EnumWindowsProc(_In_ HWND hWnd, _In_ LPARAM lParam)
 void CGame::BroadcastMessage(game_engine::BroadcastMessageData bmd, string windowName)
 {
 	bmd.position = windowPosition;
-	bmd.size = Vector2I(SIZE_X, SIZE_Y);
-	bmd.sender = WINDOW_NAME;
+	bmd.size = Vector2I(GameSetting::GetSizeX(), GameSetting::GetSizeY());
+	bmd.sender = GameSetting::WindowName;
 
 	json boardcastdata = bmd;
 
@@ -841,6 +850,32 @@ void CGame::BroadcastMessage(game_engine::BroadcastMessageData bmd, string windo
                 SendMessage(windowList[i], WM_COPYDATA, 0, (LPARAM)&data);
         }
 	}
+}
+
+void CGame::SendEvent(UINT msg, WPARAM wparam, LPARAM lparam, string name)
+{
+    windowList.clear();
+    windowNameList.clear();
+    EnumWindows(EnumWindowsProc, 0);
+    HWND me = AfxGetMainWnd()->GetSafeHwnd();
+
+    if (name == "")
+    {
+        for (auto hWnd : windowList)
+        {
+            if (hWnd != me)
+                SendMessage(hWnd, msg, wparam, lparam);
+        }
+    }
+    else
+    {
+        int size = windowList.size();
+        for (int i = 0; i < size; i++)
+        {
+            if (windowList[i] != me && windowNameList[i].Compare(name.c_str()) == 0)
+                SendMessage(windowList[i], msg, wparam, lparam);
+        }
+    }
 }
 
 CGameState* CGame::GetState()
@@ -924,6 +959,7 @@ vector<string>				CDDraw::BitmapName;
 vector<CRect>				CDDraw::BitmapRect;
 vector<COLORREF>			CDDraw::BitmapColorKey;
 vector<LPDIRECTDRAWSURFACE>	CDDraw::lpDDS;
+BitmapHandeler              BitmapHandeler::instance;
 
 CDDraw::CDDraw()
 {
@@ -1061,16 +1097,21 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceR
     else
         blt_flag = DDBLT_WAIT;
 
+    BltBitmapToBack(lpDDS[SurfaceID], blt_flag, targetRect, sourceRect, cutSrc);
+}
+
+void CDDraw::BltBitmapToBack(LPDIRECTDRAWSURFACE surface, int blt_flag, CRect targetRect, CRect sourceRect, bool cutSrc)
+{
     if (lpDDSBack->IsLost())
         RestoreSurface();
 
-    if (lpDDS[SurfaceID]->IsLost())
+    if (surface->IsLost())
         RestoreSurface();
 
     if (cutSrc)
-        ddrval = lpDDSBack->Blt(targetRect, lpDDS[SurfaceID], sourceRect, blt_flag, NULL);
+        ddrval = lpDDSBack->Blt(targetRect, surface, sourceRect, blt_flag, NULL);
     else
-        ddrval = lpDDSBack->Blt(targetRect, lpDDS[SurfaceID], NULL, blt_flag, NULL);
+        ddrval = lpDDSBack->Blt(targetRect, surface, NULL, blt_flag, NULL);
 
     CheckDDFail("Blt Bitmap to Back Failed");
 }
@@ -1255,9 +1296,210 @@ void CDDraw::CreateSurface(CDC * mDC, int i, int width, int height)
     CheckDDFail("Get surface HDC failed");
     CDC cdc;
     cdc.Attach(hdc);
+
+    DWORD time;
+    time = clock();
     cdc.BitBlt(0, 0, width, height, mDC, 0, 0, SRCCOPY);
+    TRACE("\n CDC Surface : %d \n", clock() - time);
+
     cdc.Detach();
     lpDDS[i]->ReleaseDC(hdc);
+}
+
+void CDDraw::CreateSurface(CDC* mDC, string name, LPDIRECTDRAWSURFACE *p_surface, void (*shadingfunc)(int, int, float&, float&, float&, BYTE*))
+{
+    BITMAP bitmapSize;
+    mDC->GetCurrentBitmap()->GetBitmap(&bitmapSize);
+    int nbyte = bitmapSize.bmBitsPixel / 8;
+    BITMAPINFO bi;
+    bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
+    bi.bmiHeader.biWidth = bitmapSize.bmWidth;
+    bi.bmiHeader.biHeight = -bitmapSize.bmHeight;
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = bitmapSize.bmBitsPixel;
+    bi.bmiHeader.biCompression = BI_RGB;
+    bi.bmiHeader.biSizeImage = bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte;
+    bi.bmiHeader.biClrUsed = 0;
+    bi.bmiHeader.biClrImportant = 0;
+
+    DDSURFACEDESC ddsd;
+    ZeroMemory(&ddsd, sizeof(ddsd));
+    ddsd.dwSize = sizeof(ddsd);
+    ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
+    ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+    ddsd.dwHeight = bitmapSize.bmHeight;
+    ddsd.dwWidth = bitmapSize.bmWidth;
+
+    ddrval = lpDD->CreateSurface(&ddsd, p_surface, NULL);
+    CheckDDFail("Create Bitmap Surface Failed");
+    HDC hdc;
+    ddrval = (*p_surface)->GetDC(&hdc);
+    CheckDDFail("Get surface HDC failed");
+
+    DWORD time;
+
+    time = clock();
+
+    BYTE* odata = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
+    BYTE* pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
+
+    int iRet = GetDIBits(GetDC(NULL), (HBITMAP)mDC->GetCurrentBitmap()->m_hObject, 0, bitmapSize.bmHeight, odata, &bi, DIB_RGB_COLORS);
+
+    //BITMAP bmp;
+    //GetObject((HBITMAP)mDC->GetCurrentBitmap()->m_hObject, sizeof(bmp), (LPVOID)&bmp);
+    //BYTE* odata = (BYTE*)bmp.bmBits;
+
+    //about 20ms
+    TRACE("\n CDC Surface : %d \n", clock() - time);
+
+    CDC cdc;
+    cdc.Attach(hdc);
+
+    time = clock();
+    //Shading
+    if (shadingfunc != nullptr)
+    {
+        for (int x = 0; x < bitmapSize.bmWidth; ++x)
+        {
+            for (int y = 0; y < bitmapSize.bmHeight; ++y)
+            {
+                float r, b, g;
+                r = (float)odata[x * nbyte + y * bitmapSize.bmWidthBytes + 2] / 255;
+                g = (float)odata[x * nbyte + y * bitmapSize.bmWidthBytes + 1] / 255;
+                b = (float)odata[x * nbyte + y * bitmapSize.bmWidthBytes + 0] / 255;
+
+                (*shadingfunc)(x, y, r, g, b, odata);
+
+                pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 2] = r * 255;
+                pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 1] = g * 255;
+                pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 0] = b * 255;
+            }
+        }
+    }
+    //about 20ms
+    TRACE("\n CDC Shading : %d \n", clock() - time);
+
+    time = clock();
+    //Set Pixel
+    CBitmap bitmap;
+    bitmap.CreateBitmap(bitmapSize.bmWidth, bitmapSize.bmHeight, bitmapSize.bmPlanes, bitmapSize.bmBitsPixel, pBits);
+
+    CDC memDC;
+    memDC.CreateCompatibleDC(mDC);
+    memDC.SelectObject(&bitmap);
+    BOOL result = cdc.BitBlt(0, 0, bitmapSize.bmWidth, bitmapSize.bmHeight, &memDC, 0, 0, SRCCOPY);
+
+    bitmap.DeleteObject();
+    memDC.DeleteDC();
+    cdc.Detach();
+    (*p_surface)->ReleaseDC(hdc);
+    delete pBits;
+    BitmapHandeler::instance.BitmapList[name] = odata;
+    BitmapHandeler::instance.BitmapSize[name] = bitmapSize;
+    TRACE("\n CDC Set Pixel & End : %d \n", clock() - time);
+}
+
+void CDDraw::CreateSurface(string name, LPDIRECTDRAWSURFACE * p_surface, void(*shadingfunc)(int, int, float &, float &, float &, BYTE *))
+{
+    BITMAP bitmapSize = BitmapHandeler::instance.BitmapSize[name];
+    int nbyte = bitmapSize.bmBitsPixel / 8;
+
+    DDSURFACEDESC ddsd;
+    ZeroMemory(&ddsd, sizeof(ddsd));
+    ddsd.dwSize = sizeof(ddsd);
+    ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
+    ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+    ddsd.dwHeight = bitmapSize.bmHeight;
+    ddsd.dwWidth = bitmapSize.bmWidth;
+
+    ddrval = lpDD->CreateSurface(&ddsd, p_surface, NULL);
+    CheckDDFail("Create Bitmap Surface Failed");
+    HDC hdc;
+    ddrval = (*p_surface)->GetDC(&hdc);
+    CheckDDFail("Get surface HDC failed");
+
+    BYTE* odata = BitmapHandeler::instance.BitmapList[name];
+    BYTE* pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
+
+    if (shadingfunc != nullptr)
+    {
+        for (int x = 0; x < bitmapSize.bmWidth; ++x)
+        {
+            for (int y = 0; y < bitmapSize.bmHeight; ++y)
+            {
+                float r, b, g;
+                r = (float)odata[x * nbyte + y * bitmapSize.bmWidthBytes + 2] / 255;
+                g = (float)odata[x * nbyte + y * bitmapSize.bmWidthBytes + 1] / 255;
+                b = (float)odata[x * nbyte + y * bitmapSize.bmWidthBytes + 0] / 255;
+
+                (*shadingfunc)(x, y, r, g, b, odata);
+
+                pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 2] = r * 255;
+                pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 1] = g * 255;
+                pBits[x * nbyte + y * bitmapSize.bmWidthBytes + 0] = b * 255;
+            }
+        }
+    }
+    //Set Pixel
+    CBitmap bitmap;
+    bitmap.CreateBitmap(bitmapSize.bmWidth, bitmapSize.bmHeight, bitmapSize.bmPlanes, bitmapSize.bmBitsPixel, pBits);
+
+    CDC memDC;
+    memDC.CreateCompatibleDC(CDDraw::GetBackCDC());
+    memDC.SelectObject(&bitmap);
+    BOOL result = cdc.BitBlt(0, 0, bitmapSize.bmWidth, bitmapSize.bmHeight, &memDC, 0, 0, SRCCOPY);
+
+    bitmap.DeleteObject();
+    memDC.DeleteDC();
+    cdc.Detach();
+    (*p_surface)->ReleaseDC(hdc);
+    delete pBits;
+    CDDraw::ReleaseBackCDC();
+}
+
+LPDIRECTDRAWSURFACE CDDraw::GetBackSuface()
+{
+    return lpDDSBack;
+}
+
+LPDIRECTDRAWSURFACE CDDraw::GetSurface(int i)
+{
+    return lpDDS[i];
+}
+
+void CDDraw::LoadBitmap(LPDIRECTDRAWSURFACE & surface, char * filename, void(*shadingfunc)(int, int, float &, float &, float &, BYTE *))
+{
+    DWORD tmp = clock();
+
+    HBITMAP hbitmap;
+
+    if (BitmapHandeler::instance.BitmapList.find(filename) == BitmapHandeler::instance.BitmapList.end())
+    {
+        hbitmap = (HBITMAP)LoadImage(NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+        GAME_ASSERT(hbitmap != NULL, "Load bitmap failed !!! Please check bitmap ID (IDB_XXX).");
+
+        CBitmap* bmp = CBitmap::FromHandle(hbitmap); // will be deleted automatically
+        CDC mDC;
+        mDC.CreateCompatibleDC(NULL);
+        CBitmap* pOldBitmap = mDC.SelectObject(bmp);
+        BITMAP bitmapSize;
+        bmp->GetBitmap(&bitmapSize);
+
+        CreateSurface(&mDC, filename, &surface, shadingfunc);
+
+        // avoid memory leak
+        // According to spec, mDC should delete itself automatically.  However,
+        // it appears that we have to do it explictly.
+        mDC.SelectObject(&pOldBitmap);
+        mDC.DeleteDC();
+        bmp->DeleteObject();
+
+        TRACE("\n\nSize[w : %d,h : %d,pixel:%d] , usetime: %d\n\n", bitmapSize.bmWidth, bitmapSize.bmHeight, bitmapSize.bmWidth * bitmapSize.bmHeight, clock() - tmp);
+    }
+    else
+    {
+        CreateSurface(filename, &surface, shadingfunc);
+    }
 }
 
 void CDDraw::DrawLine(CDC *pDC, game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color)
@@ -1681,4 +1923,4 @@ void CDDraw::CheckDDFail(char* s)
     }
 }
 
-}
+};

@@ -12,19 +12,40 @@ void BoxParent::Start()
         }
     }
 
-    button1 = false;
-    button2 = false;
+    button1 = 0;
+    button2 = 0;
     isSended = false;
+
+    lastroom = "Blue";
+
+    if (GameStatus::status.find("last") != GameStatus::status.end())
+    {
+        lastroom = GameStatus::status["last"]["room"].get<string>();
+    }
+
+    AudioPlayer::GetSource(lastroom)->Play();
 }
 
 void BoxParent::Update()
 {
-    if (!isSended && button1 && button2)
+    if (!isSended && button1 > 0 && button2 > 0)
     {
         json data;
         GameScene::Broadcast(BroadcastEvent::RedRoomFinish, data, "Hop");
         isSended = true;
     }
+
+    if (Input::GetKeyPressing(VK_F5))
+        AudioPlayer::SetMusicVolume(AudioPlayer::GetMusicVolume() - 0.01f);
+
+    if (Input::GetKeyPressing(VK_F6))
+        AudioPlayer::SetMusicVolume(AudioPlayer::GetMusicVolume() + 0.01f);
+
+    if (Input::GetKeyPressing(VK_F7))
+        AudioPlayer::SetSoundVolume(AudioPlayer::GetSoundVolume() - 0.01f);
+
+    if (Input::GetKeyPressing(VK_F8))
+        AudioPlayer::SetSoundVolume(AudioPlayer::GetSoundVolume() + 0.01f);
 }
 
 void BoxParent::CheckData()
@@ -81,15 +102,24 @@ void BoxParent::OnRecivedBroadcast(BroadcastMessageData bmd)
     if (bmd.event == BroadcastEvent::ButtonPressed)
     {
         if (bmd.data["name"] == "Button1")
-            button1 = true;
+            button1++;
         else if (bmd.data["name"] == "Button2")
-            button2 = true;
+            button2++;
     }
     else if (bmd.event == BroadcastEvent::ButtonRelease)
     {
         if (bmd.data["name"] == "Button1")
-            button1 = false;
+            button1--;
         else if (bmd.data["name"] == "Button2")
-            button2 = false;
+            button2--;
+    }
+    else if (bmd.event == BroadcastEvent::ChangeRoom)
+    {
+        string newroom = bmd.data["name"].get<string>();
+
+        if(lastroom != newroom)
+            AudioPlayer::Crossfade(AudioPlayer::GetSource(lastroom), AudioPlayer::GetSource(newroom), 2, true);
+
+        lastroom = newroom;
     }
 }

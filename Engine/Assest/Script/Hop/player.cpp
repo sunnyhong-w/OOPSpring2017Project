@@ -12,14 +12,13 @@ void Player::ParseJSON(json j)
 
 void Player::Start()
 {
-
     gravity =(2 * MaxJumpHeight) / pow(jumpTimeApex, 2);
     MaxJumpVelocity = -1 * gravity * jumpTimeApex;
     MinJumpVelocity = sqrt(2 * abs(gravity) * MinJumpHeight);
 	bounce = false;
 	isBouncing = false;
 	waitSmoke = 0;
-	AudioPlayer::GetSource("RSIC")->Play();
+    extreemSpeed = false;
 }
 
 void Player::Update()
@@ -27,18 +26,24 @@ void Player::Update()
     Rigidbody *rb = gameObject->rigidbody;
     rb->TimeSliceCollision = true;
 	
-	int speed = 2;
+	int speed = (extreemSpeed ? 8 : 3.5);
 
     if (rb->colliderInfo.bottom || rb->colliderInfo.top)
         vel.y = 0;
 
     vel.x = 0;
 
-	if (Input::GetKeyPressing('A') || Input::GetKeyPressing(VK_LEFT))
-		vel.x += -1 * speed;
+    if (Input::GetKeyPressing('A') || Input::GetKeyPressing(VK_LEFT))
+    {
+        vel.x += -1 * speed;
+        this->gameObject->spriteRenderer->SetFlipX(true);
+    }
 
-	if (Input::GetKeyPressing('D') || Input::GetKeyPressing(VK_RIGHT))
-		vel.x += speed;
+    if (Input::GetKeyPressing('D') || Input::GetKeyPressing(VK_RIGHT))
+    {
+        vel.x += speed;
+        this->gameObject->spriteRenderer->SetFlipX(false);
+    }
 
 	if (Input::GetKeyDown('A') || Input::GetKeyDown(VK_LEFT) || Input::GetKeyDown('D') || Input::GetKeyDown(VK_RIGHT))
 		waitSmoke = 0.2f;
@@ -63,6 +68,7 @@ void Player::Update()
 	{
 		Jump(vel);
 	}
+
 	else if ((Input::GetKeyUp(VK_SPACE) || Input::GetKeyUp('W') || Input::GetKeyUp(VK_UP)) && !isBouncing)
 	{
 		if (vel.y < -9)
@@ -82,30 +88,46 @@ void Player::Update()
 	vel.y += gravity * Time::deltaTime;
 	rb->velocity = vel * tiledPixel * Time::deltaTime;
 
-    if (Input::GetKeyDown(VK_F4))
+    if (this->gameObject->rigidbody->colliderInfo.bottom == false)
     {
-        auto gobj = GameObject::findGameObjectByName("YellowBox");
-        if(gobj != nullptr)
-        { 
-            gobj->collider->SetEnable(!gobj->collider->GetEnable());
-			gobj->spriteRenderer->SetEnable(!gobj->spriteRenderer->GetEnable());
-        }
+        //Jump Anim Holder
+        this->gameObject->animationController->Play("Run");
+    }
+    else if (this->gameObject->rigidbody->velocity.x != 0)
+    {
+        this->gameObject->animationController->Play("Run");
+    }
+    else
+    {
+        this->gameObject->animationController->Play("Wait");
     }
 
     if (Input::GetKeyDown(VK_F3))
+        extreemSpeed = !extreemSpeed;
+
+    if (Input::GetKeyPressing(VK_F5))
+        AudioPlayer::SetMusicVolume(AudioPlayer::GetMusicVolume() - 0.01f);
+
+    if (Input::GetKeyPressing(VK_F6))
+        AudioPlayer::SetMusicVolume(AudioPlayer::GetMusicVolume() + 0.01f);
+
+    if (Input::GetKeyPressing(VK_F7))
+        AudioPlayer::SetSoundVolume(AudioPlayer::GetSoundVolume() - 0.01f);
+
+    if (Input::GetKeyPressing(VK_F8))
+        AudioPlayer::SetSoundVolume(AudioPlayer::GetSoundVolume() + 0.01f);
+
+
+    if (this->gameObject->rigidbody->velocity.x != 0 && waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
     {
-        GameObject *gobj = GameObject::findGameObjectByName("Anim");
-        if (gobj != nullptr)
-        {
-            gobj->animationController->PlayOneShot("RightShine");
-        }
+        waitSmoke = 0.30f;
+        GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
+        gobj->transform->SetWorldPosition(this->transform->GetWorldPosition() + Vector2(0, 12));
+        gobj->spriteRenderer->SetFlipX(this->gameObject->rigidbody->velocity.x < 0);
+
+        AudioPlayer::GetSource("Walk")->PlayOneShot();
+        AudioPlayer::GetSource("Walk")->SetPitch((float)(rand() % 31 + 85) / 100);
     }
-	if (this->gameObject->rigidbody->velocity.x!= 0 && waitSmoke < 0 && this->gameObject->rigidbody->colliderInfo.bottom == true)
-	{
-		waitSmoke = 0.15f;
-		GameObject* gobj = InstantiateJSON(GameObject::GetPrefrabs("Smoke"));
-		gobj->transform->SetWorldPosition(this->transform->GetWorldPosition()+Vector2(0,12));
-	}
 
 	bounce = false;
 	waitSmoke -= Time::deltaTime;

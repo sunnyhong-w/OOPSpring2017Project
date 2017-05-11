@@ -24,6 +24,7 @@ void Spring::OnCollisionStay(Collider * c)
 		pl->bounce = true;
 		canBounce = false;
 		this->gameObject->animationController->PlayOneShot(1);
+        AudioPlayer::GetSource("Jump_Spring")->PlayOneShot();
 	}
 }
 

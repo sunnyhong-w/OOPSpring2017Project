@@ -8,10 +8,11 @@
             }
         },
         "SpriteRenderer": {
-            "Bitmap": {
-                "name": "player"
-            },
             "SortingLayer": 1
+        },
+        "AnimationController": {
+            "animation" : "player",
+            "init" : "Wait"
         },
         "Collider": {
             "size": {
@@ -19,8 +20,8 @@
                 "y": 28
             },
             "offset": {
-                "x": 0,
-                "y": 0
+                "x": 1,
+                "y": 1
             },
             "collisionLayer": [
                 {

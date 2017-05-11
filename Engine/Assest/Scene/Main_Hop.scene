@@ -8,10 +8,11 @@
         "Smoke": "Smoke"
     },
     "Sound": {
-        "Jump": "Jump.wav"
-    },
-    "Music": {
-        "RSIC": "R.S.I.C._OSTVer.mp3"
+        "Jump": "Jump.wav",
+        "Jump_Spring": "Jump_Spring.wav",
+        "Walk": "Walk.wav",
+        "GreenFit": "GreenFit.wav",
+        "GetGem" : "COINS Collect Chime 02.ogg"
     },
     "GameObject": [
         {

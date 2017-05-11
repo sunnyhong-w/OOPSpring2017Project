@@ -18,4 +18,5 @@ class SpawnPlayer : public GameBehaviour
         int count;
         int target;
 		Vector2 pos;
+        string targetRoom;
 };

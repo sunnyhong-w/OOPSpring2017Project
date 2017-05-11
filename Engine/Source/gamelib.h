@@ -67,9 +67,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // 定義遊戲可設定的環境與條件
 /////////////////////////////////////////////////////////////////////////////
-
-#define SIZE_X				 480	                    	// 設定遊戲畫面的解析度為640x480
-#define SIZE_Y				 320	                    	// 註：若不使用標準的解析度，則不能切換到全螢幕
 #define OPEN_AS_FULLSCREEN	 false	                    	// 是否以全螢幕方式開啟遊戲
 #define SHOW_LOAD_PROGRESS   true		                    // 是否顯示loading(OnInit)的進度
 #define DEFAULT_BG_COLOR	 RGB(220,182,241)	                    // 遊戲畫面預設的背景顏色(黑色)
@@ -78,7 +75,6 @@
 #define ENABLE_GAME_PAUSE	 false	                       	// 是否允許以 Ctrl-Q 暫停遊戲
 #define ENABLE_AUDIO		 true		                    // 啟動音效介面
 #define ENABLE_AUDIO_PAUSE_WHEN_KILL_FOCUS	false		    // 啟動音效介面
-#define WINDOW_NAME          "Hop"                       // 視窗的名稱設定
 
 /////////////////////////////////////////////////////////////////////////////
 // 定義CGame及CGameState所使用的三個狀態常數
@@ -145,6 +141,17 @@ private:
 // 一般的遊戲並不需直接操作這個物件，因此可以不管這個class的使用方法
 /////////////////////////////////////////////////////////////////////////////
 
+class BitmapHandeler {
+public:
+    ~BitmapHandeler() {
+        for (auto b : BitmapList)
+            delete b.second;
+    }
+    static BitmapHandeler instance;
+    map<string, BYTE*>   BitmapList;
+    map<string, BITMAP>   BitmapSize;
+};
+
 class CDDraw {
 	friend class CMovingBitmap;
 public:
@@ -159,19 +166,27 @@ public:
 	static bool  IsFullScreen();			// 回答是否為全螢幕模式/視窗模式
 
     static void  BltBitmapToBack(unsigned SurfaceID, CRect targetRect, CRect sourceRect, bool cutSrc);
+    static void  BltBitmapToBack(LPDIRECTDRAWSURFACE surface,int blt_flag, CRect targetRect, CRect sourceRect, bool cutSrc);
 	static void  BltBitmapToBack(unsigned SurfaceID, int x, int y);
 	static void  BltBitmapToBack(unsigned SurfaceID, int x, int y, double factor);
 	static void  BltBitmapToBitmap(unsigned SourceID, unsigned TargetID, int x, int y);
 
 	static void  DrawLine(CDC *pDC, game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color);
 	static void  DrawRect(CDC *pDC, game_engine::Vector2I pos, game_engine::Vector2I size, COLORREF color);
+
+    static void  CreateSurface(CDC* mDC, int sid, int width, int height);
+    static void  CreateSurface(CDC* mDC, string name, LPDIRECTDRAWSURFACE *p_surface, void (*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
+    static void  CreateSurface(string name, LPDIRECTDRAWSURFACE *p_surface, void(*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
+    static LPDIRECTDRAWSURFACE GetBackSuface();
+    static LPDIRECTDRAWSURFACE GetSurface(int i);
+    static void  LoadBitmap(LPDIRECTDRAWSURFACE &surface, char *filename, void(*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
+
 private:
 	CDDraw();								// private constructor
 	static void	 CheckDDFail(char *s);
 	static bool  CreateSurface();
 	static bool  CreateSurfaceFullScreen();
 	static bool  CreateSurfaceWindowed();
-    static void  CreateSurface(CDC* mDC, int sid, int width, int height);
 	static void  LoadBitmap(int i, int IDB_BITMAP);
 	static void  LoadBitmap(int i, char *filename);
 	static DWORD MatchColorKey(LPDIRECTDRAWSURFACE lpDDSurface, COLORREF color);
@@ -194,6 +209,7 @@ private:
 	static vector<string>		BitmapName;
 	static vector<CRect>		BitmapRect;
 	static vector<COLORREF>		BitmapColorKey;
+    static map<string, BYTE*>   BitmapList;
 	static bool					fullscreen;
 	static CDDraw				ddraw;
 	static int					size_x, size_y;
@@ -356,6 +372,7 @@ public:
 	void OnSuspend();								// 處理「待命」的動作
     void OnCopyData(json reciveddata);             // 處理視窗間的資料傳遞
 	void BroadcastMessage(game_engine::BroadcastMessageData bmd, string windowName = "");      //廣播要發送給其他視窗的訊息
+    void SendEvent(UINT msg, WPARAM wparam, LPARAM lparam, string name);
     CGameState* GetState();
     void EnterScene(CGameState *gs);
     void ExitScene();

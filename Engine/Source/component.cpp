@@ -8,13 +8,14 @@ HISTORY :
 2017-02-09 v0.1.0
 */
 
-#include"stdafx.h"
+#include "stdafx.h"
 #include <ddraw.h>
-#include"component.h"
-#include"gameobject.h"
-#include"enginelib.h"
+#include "component.h"
+#include "gameobject.h"
+#include "enginelib.h"
 #include "gamebehavior.h"
-#include<fstream>
+#include "Script\Engine\GameSetting.h"
+#include <fstream>
 
 namespace game_engine
 {
@@ -288,8 +289,7 @@ void SpriteRenderer::ParseJSON(json j)
 void SpriteRenderer::Draw(Vector2I cameraPos)
 {
     GAME_ASSERT(transform != nullptr, "You need transform to render sprite. #[Engine]SpriteRenderer->Draw");
-    if(CameraTest(cameraPos))
-        this->ShowBitmap(this->GetRealRenderPostion() - cameraPos, transform->scale, srcpos, size, cutSrc);
+    this->ShowBitmap(this->GetRealRenderPostion() - cameraPos, transform->scale, srcpos, size, cutSrc);
 }
 
 void SpriteRenderer::SetSourcePos(Vector2I pos)
@@ -388,6 +388,11 @@ void SpriteRenderer::SetAnchorRaito(Vector2 pos)
     UpdateRealRenderPostion();
 }
 
+Vector2 SpriteRenderer::GetAnchorRaito()
+{
+	return anchorRaito;
+}
+
 void SpriteRenderer::SetOffset(Vector2I dp)
 {
     this->offset = dp;
@@ -427,7 +432,7 @@ inline void SpriteRenderer::UpdateRealRenderPostion()
 
 bool SpriteRenderer::CameraTest(Vector2I cameraPos)
 {
-    Vector2 aw = (this->size.GetV2() - Vector2::one) / 2, bw = (Vector2(SIZE_X, SIZE_Y) - Vector2::one) / 2;
+    Vector2 aw = (this->size.GetV2() - Vector2::one) / 2, bw = (Vector2(GameSetting::GetSizeX(), GameSetting::GetSizeY()) - Vector2::one) / 2;
     return ((aw + GetRealRenderPostion()) - (bw + cameraPos)).abs() <= aw + bw;
 }
 
@@ -760,6 +765,8 @@ AnimationController::AnimationController(GameObject * gobj) : Component(gobj)
 {
     this->gameObject->animationController = this;
     this->gameObject->AddComponentOnce<Animation>();
+    jumpState = "";
+    laststate = "";
 }
 
 AnimationController::~AnimationController()
@@ -797,9 +804,9 @@ void AnimationController::ParseJSON(json j)
     }
 
     if (j.find("init") != j.end())
-        JumpState(j["init"].get<string>());
+        Play(j["init"].get<string>());
     else
-        JumpState(0);
+        Play(0);
     
     Update();
 }
@@ -864,30 +871,33 @@ void AnimationController::Update()
 	if (jumpState != "")
 	{
         this->gameObject->animation->Play(animationData[jumpState]);
+        laststate = jumpState;
 		jumpState = "";
 	}
 }
 
-bool AnimationController::JumpState(string state)
+bool AnimationController::Play(string state, bool force)
 {
     if (animationData.find(state) != animationData.end())
     {
-        jumpState = state;
-        return true;
+        if (state != laststate || force)
+        {
+            jumpState = state;
+            return true;
+        }
+        else
+            return false;
     }
-
-    return false;
+    else
+        return false;
 }
 
-bool AnimationController::JumpState(int state)
+bool AnimationController::Play(int state, bool force)
 {
     if (state >= 0 && state < (int)animationList.size())
-    {
-        jumpState = animationList[state];
-        return true;
-    }
-
-    return false;
+         return Play(animationList[state], force);
+    else
+        return false;
 }
 
 void AnimationController::PlayOneShot(string state)

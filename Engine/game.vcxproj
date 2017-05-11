@@ -257,16 +257,15 @@
     <None Include="RES\eraser1.bmp" />
     <None Include="RES\eraser2.bmp" />
     <None Include="RES\eraser3.bmp" />
-    <None Include="res\game.ico" />
     <None Include="res\game.rc2" />
     <None Include="RES\gamecurs.cur" />
-    <None Include="res\gameDoc.ico" />
     <None Include="RES\help.bmp" />
     <None Include="RES\loading.bmp" />
     <None Include="RES\ntutcsie.bmp" />
     <None Include="res\Toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Assest\Script\Engine\GameSetting.cpp" />
     <ClCompile Include="Assest\Script\Engine\GameStatus.cpp" />
     <ClCompile Include="Assest\Script\Engine\MapEdge.cpp" />
     <ClCompile Include="Assest\Script\Engine\mapReader.cpp" />
@@ -283,6 +282,8 @@
     <ClCompile Include="Assest\Script\Hop\YellowBox.cpp" />
     <ClCompile Include="Assest\Script\Slide\BoxParent.cpp" />
     <ClCompile Include="Assest\Script\Slide\slide.cpp" />
+    <ClCompile Include="Assest\Script\Slide\SlideScreenEffect.cpp" />
+    <ClCompile Include="Assest\Script\Title\Title.cpp" />
     <ClCompile Include="Assest\Script\tutorial.cpp" />
     <ClCompile Include="Assest\Script\Hop\spring.cpp" />
     <ClCompile Include="Assest\Script\Hop\player.cpp" />
@@ -330,9 +331,10 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">UnitTest/</ObjectFileName>
       <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">UnitTest/</ProgramDataBaseFileName>
     </ClCompile>
-    <ClCompile Include="_componentRegister.cpp" />
+    <ClCompile Include="Source\_componentRegister.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assest\Script\Engine\GameSetting.h" />
     <ClInclude Include="Assest\Script\Engine\GameStatus.h" />
     <ClInclude Include="Assest\Script\Engine\MapEdge.h" />
     <ClInclude Include="Assest\Script\Engine\mapReader.h" />
@@ -349,6 +351,8 @@
     <ClInclude Include="Assest\Script\Hop\YellowBox.h" />
     <ClInclude Include="Assest\Script\Slide\BoxParent.h" />
     <ClInclude Include="Assest\Script\Slide\slide.h" />
+    <ClInclude Include="Assest\Script\Slide\SlideScreenEffect.h" />
+    <ClInclude Include="Assest\Script\Title\Title.h" />
     <ClInclude Include="Assest\Script\tutorial.h" />
     <ClInclude Include="Assest\Script\Hop\spring.h" />
     <ClInclude Include="Assest\Script\Hop\player.h" />

@@ -391,7 +391,7 @@ void from_json(const json & j, Rect & v)
         v.y = j["y"];
 
     if (j.find("w") != j.end())
-        v.w = j["h"];
+        v.w = j["w"];
 
     if (j.find("w") != j.end())
         v.h = j["h"];

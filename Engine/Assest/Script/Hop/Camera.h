@@ -12,15 +12,17 @@ class Camera : public GameBehaviour
 		void OnDrawGizmos(CDC *pDC) override;
 		void OnCollisionEnter(Collider* c);
 		void OnCollisionStay(Collider* c);
-		void OnRecivedBroadcast(BroadcastMessageData bmd);
 		void Shake(double t, double f, double s);
-		void ShakeF();
     protected:
     private:
+        void ShakeF();
+
 		double totalTime;
 		double frequency;
 		double strength;
 		double time;
+        int phaserand;
+        int phaserandY;
 		bool shouldShake;
 		Vector2 playerPos;
 		Vector2 velocity;

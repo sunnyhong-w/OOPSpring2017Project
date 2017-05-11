@@ -29,6 +29,9 @@
     <Filter Include="GameScript\Hop">
       <UniqueIdentifier>{d1484843-e62e-44ad-bee9-3c5cee4bfb6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameScript\Title">
+      <UniqueIdentifier>{00bc4778-9e9f-4ffe-94d6-cfd95eb3b041}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\ball.bmp">
@@ -85,16 +88,10 @@
     <None Include="RES\eraser3.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\game.ico">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="res\game.rc2">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="RES\gamecurs.cur">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\gameDoc.ico">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="RES\help.bmp">
@@ -211,8 +208,17 @@
     <ClCompile Include="Source\audio.cpp">
       <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
-    <ClCompile Include="_componentRegister.cpp">
+    <ClCompile Include="Assest\Script\Engine\GameSetting.cpp">
+      <Filter>GameEngine\EngingScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\_componentRegister.cpp">
       <Filter>GameEngine\EngineLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Slide\SlideScreenEffect.cpp">
+      <Filter>GameScript\Slide</Filter>
+    </ClCompile>
+    <ClCompile Include="Assest\Script\Title\Title.cpp">
+      <Filter>GameScript\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -330,6 +336,15 @@
     </ClInclude>
     <ClInclude Include="Assest\Script\Slide\slide.h">
       <Filter>GameScript\Slide</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Engine\GameSetting.h">
+      <Filter>GameEngine\EngingScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Slide\SlideScreenEffect.h">
+      <Filter>GameScript\Slide</Filter>
+    </ClInclude>
+    <ClInclude Include="Assest\Script\Title\Title.h">
+      <Filter>GameScript\Title</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
