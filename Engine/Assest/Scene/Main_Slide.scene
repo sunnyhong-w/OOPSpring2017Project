@@ -11,13 +11,13 @@
         "Red": {
             "name": "Battle Enconter.mp3"
         },
-        "Blue": {
-            "name": "test01.mp3"
+        "Green": {
+            "name": "fission.mp3"
         },
         "White": {
             "name": "themev1.mp3"
         },
-        "Green": {
+        "Blue": {
             "name": "C1_V13_PLAY.ogg",
             "loopsetting": {
                 "start": "0:23:27",
