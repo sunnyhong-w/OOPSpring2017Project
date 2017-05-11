@@ -257,10 +257,8 @@
     <None Include="RES\eraser1.bmp" />
     <None Include="RES\eraser2.bmp" />
     <None Include="RES\eraser3.bmp" />
-    <None Include="res\game.ico" />
     <None Include="res\game.rc2" />
     <None Include="RES\gamecurs.cur" />
-    <None Include="res\gameDoc.ico" />
     <None Include="RES\help.bmp" />
     <None Include="RES\loading.bmp" />
     <None Include="RES\ntutcsie.bmp" />

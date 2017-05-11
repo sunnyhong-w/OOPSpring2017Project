@@ -88,16 +88,10 @@
     <None Include="RES\eraser3.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="res\game.ico">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="res\game.rc2">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="RES\gamecurs.cur">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\gameDoc.ico">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="RES\help.bmp">
@@ -220,7 +214,6 @@
     <ClCompile Include="Source\_componentRegister.cpp">
       <Filter>GameEngine\EngineLib</Filter>
     </ClCompile>
-
     <ClCompile Include="Assest\Script\Slide\SlideScreenEffect.cpp">
       <Filter>GameScript\Slide</Filter>
     </ClCompile>
