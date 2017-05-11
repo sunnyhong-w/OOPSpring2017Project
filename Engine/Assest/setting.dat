@@ -4,7 +4,7 @@
 		"Slide": { "x" : 300, "y": 300 }
 	},
 	"audio" : {
-		"Music": 0.6,
+		"Music": 0,
 		"Sound": 1
 	}
 }

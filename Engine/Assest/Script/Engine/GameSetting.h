@@ -11,4 +11,7 @@ public:
     static float GetMusicVolume();
     static float GetSoundVolume();
     static void SaveSetting();
+private:
+    static int sizeX;
+    static int sizeY;
 };

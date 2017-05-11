@@ -284,6 +284,7 @@
     <ClCompile Include="Assest\Script\Hop\YellowBox.cpp" />
     <ClCompile Include="Assest\Script\Slide\BoxParent.cpp" />
     <ClCompile Include="Assest\Script\Slide\slide.cpp" />
+    <ClCompile Include="Assest\Script\Slide\SlideScreenEffect.cpp" />
     <ClCompile Include="Assest\Script\tutorial.cpp" />
     <ClCompile Include="Assest\Script\Hop\spring.cpp" />
     <ClCompile Include="Assest\Script\Hop\player.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="Assest\Script\Hop\YellowBox.h" />
     <ClInclude Include="Assest\Script\Slide\BoxParent.h" />
     <ClInclude Include="Assest\Script\Slide\slide.h" />
+    <ClInclude Include="Assest\Script\Slide\SlideScreenEffect.h" />
     <ClInclude Include="Assest\Script\tutorial.h" />
     <ClInclude Include="Assest\Script\Hop\spring.h" />
     <ClInclude Include="Assest\Script\Hop\player.h" />

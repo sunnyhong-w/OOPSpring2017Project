@@ -108,9 +108,15 @@ void GameObject::Draw(Vector2I cameraPos)
         if (SR != nullptr && SR->enable)
         {
             if (this->isGUI)
-                SR->Draw();
+            {
+                if (SR->CameraTest(Vector2I::zero))
+                    SR->Draw();
+            }
             else
-                SR->Draw(cameraPos);
+            {
+                if (SR->CameraTest(cameraPos))
+                    SR->Draw(cameraPos);
+            }
         }
     }
     else

@@ -28,15 +28,12 @@
     "GameObject": [
         {
             "name": "Background",
+            "renderByBehavior": true,
             "Component": {
                 "Transform": {
                     "zindex": -10
                 },
-                "SpriteRenderer": {
-                    "Bitmap": {
-                        "name": "Slide\\Background"
-                    }
-                }
+                "SlideScreenEffect": {}
             }
         },
         {
