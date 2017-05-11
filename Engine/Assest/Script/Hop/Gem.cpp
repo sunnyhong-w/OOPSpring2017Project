@@ -35,7 +35,7 @@ void Gem::Update()
 		Vector2 targetPos = player->transform->GetWorldPosition() + (player->spriteRenderer->GetSize().GetV2()/2);
 		
 		this->transform->scale = Vector2( clamp(minusedScale.x,0,FLT_MAX),clamp(minusedScale.y,0,FLT_MAX));
-		this->transform->SetWorldPosition(targetPos + radius *minusedScale * Vector2(sinf((minusedScale.x + 0.25) * 2 * 3.1415926 * 1.2), cosf((minusedScale.y + 0.25) * 2 * 3.1415926 *1.2)));
+		this->transform->SetWorldPosition(targetPos + radius *minusedScale * Vector2(sinf((minusedScale.x + 0.25) * 2 * 3.1415926 * 4.8), cosf((minusedScale.y + 0.25) * 2 * 3.1415926 * 4.8)));
 		if (this->transform->scale == Vector2::zero)
 		{
 			Destroy(this->gameObject);
@@ -48,6 +48,9 @@ void Gem::OnCollisionEnter(Collider * c)
 	GameStatus::status[to_string((int)StatusName::Gem)][name] = 2;
 	GameStatus::SaveFile();
 	this->gameObject->collider->SetEnable(false);
+
+    AudioPlayer::GetSource("GetGem")->PlayOneShot();
+
     if (name == "RedGem")
         game_framework::CGame::Instance()->SendEvent(WM_CLOSE, 0, 0, "Hop");
 	
