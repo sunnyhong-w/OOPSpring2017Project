@@ -1,0 +1,23 @@
+{
+
+	"GameObject": [
+ 		
+		{
+			"name":"Title",
+			"Component":{
+				"Transform":{
+					"position":{
+						"x":-112,
+						"y":-32
+					}
+				},
+				"SpriteRenderer": {
+            		"Bitmap": {
+                		"name": "Title\\TitleHop"
+            		}
+        		},
+				"Title":{}
+			}
+		}
+	]
+}

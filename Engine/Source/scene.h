@@ -35,6 +35,7 @@ class GameScene : public game_framework::CGameState
         
         static Vector2I& CameraPosition();
         static GameScene* NowScene();
+		static string GetNowScene();
 		static Vector2I& WindowPosition();
 
 		static void Broadcast(BroadcastEvent event, json data, string windowName = "");

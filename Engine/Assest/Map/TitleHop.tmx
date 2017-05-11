@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="10" tilewidth="32" tileheight="32" nextobjectid="55">
+ <tileset firstgid="1" name="Collision Ground" tilewidth="32" tileheight="32" tilecount="20" columns="5">
+  <image source="../Bitmap/TileBlue.bmp" width="160" height="128"/>
+  <tile id="0">
+   <objectgroup draworder="index">
+    <object id="4" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index">
+    <object id="2" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="6">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="7">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="8">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="9">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="10">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="11">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="12">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="13">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="14">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="15">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="16">
+   <objectgroup draworder="index">
+    <object id="2" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="17">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="18">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="19">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,32 32,32 32,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+ </tileset>
+ <tileset firstgid="21" name="No Collision Ground" tilewidth="32" tileheight="32" tilecount="20" columns="5">
+  <image source="../Bitmap/TitleBlue.bmp" width="160" height="128"/>
+ </tileset>
+ <tileset firstgid="41" name="Obj" tilewidth="352" tileheight="192" tilecount="16" columns="0">
+  <tile id="0">
+   <properties>
+    <property name="include" value="spawnPlayer"/>
+   </properties>
+   <image width="16" height="16" source="../Bitmap/GameObject/SpwanPoint.bmp"/>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="include" value="spring"/>
+   </properties>
+   <image width="16" height="16" source="../Bitmap/GameObject/button.bmp"/>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="include" value="button"/>
+   </properties>
+   <image width="16" height="16" source="../Bitmap/GameObject/redButton.bmp"/>
+  </tile>
+  <tile id="3">
+   <image width="64" height="64" source="../Bitmap/GreenBox_single1.bmp"/>
+   <objectgroup draworder="index">
+    <object id="2" x="0" y="0">
+     <polygon points="0,0 0,64 64,64 64,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="Transporter" value="Bottom"/>
+   </properties>
+   <image width="32" height="32" source="../Bitmap/GameObject/BottomIn.bmp"/>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="Transporter" value="Left"/>
+   </properties>
+   <image width="32" height="32" source="../Bitmap/GameObject/LeftIn.bmp"/>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="Transporter" value="Right"/>
+   </properties>
+   <image width="32" height="32" source="../Bitmap/GameObject/RightIn.bmp"/>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="Transporter" value="Top"/>
+   </properties>
+   <image width="32" height="32" source="../Bitmap/GameObject/TopIn.bmp"/>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="include" value="Gem"/>
+   </properties>
+   <image width="32" height="32" source="../Bitmap/tempObj.bmp"/>
+  </tile>
+  <tile id="9">
+   <image width="32" height="32" source="../Bitmap/GameObject/Gem/Gem_Blue.bmp"/>
+  </tile>
+  <tile id="10">
+   <image width="32" height="32" source="../Bitmap/GameObject/Gem/Gem_Green.bmp"/>
+  </tile>
+  <tile id="11">
+   <image width="32" height="32" source="../Bitmap/GameObject/Gem/Gem_Red.bmp"/>
+  </tile>
+  <tile id="12">
+   <image width="32" height="32" source="../Bitmap/GameObject/Gem/Gem_White.bmp"/>
+  </tile>
+  <tile id="13">
+   <image width="32" height="32" source="../Bitmap/GameObject/Gem/Gem_Yellow.bmp"/>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="ParseJSON">{
+	&quot;Component&quot;:{
+		&quot;AnimationController&quot; : {
+			&quot;animation&quot; : &quot;animationTest&quot;,
+			&quot;init&quot; : &quot;FullShine&quot;
+		}
+	}
+}</property>
+   </properties>
+   <image width="16" height="16" source="../Bitmap/GameObject/animationTest_fx.bmp"/>
+  </tile>
+  <tile id="15">
+   <image width="352" height="192" source="../Bitmap/Title/TitleHop.bmp"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="57" name="Texure1" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+  <image source="../Bitmap/texure1.bmp" trans="ff00ff" width="96" height="96"/>
+ </tileset>
+ <tileset firstgid="66" name="Texure2" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+  <image source="../Bitmap/texure2.bmp" trans="ff00ff" width="96" height="96"/>
+ </tileset>
+ <tileset firstgid="75" name="Texure3" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+  <image source="../Bitmap/texure3.bmp" trans="ff00ff" width="96" height="96"/>
+ </tileset>
+ <layer name="Texure" width="15" height="10">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="No Collision BackGround" width="15" height="10">
+  <data encoding="csv">
+27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,
+27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,
+27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,
+27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,
+27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,
+27,27,0,0,0,0,0,27,27,27,27,27,27,27,27,
+27,27,0,0,0,0,0,0,0,27,27,27,27,27,27,
+27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,
+27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,
+27,27,27,27,27,27,27,27,27,27,27,27,27,27,27
+</data>
+ </layer>
+ <layer name="BackGround" width="15" height="10">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,27,27,0,0,0,0,0,0,0,0,0,
+0,0,0,27,27,27,0,0,0,0,0,0,0,0,0,
+0,0,27,27,27,0,27,0,0,0,0,0,0,0,0,
+0,0,27,27,27,27,27,27,0,0,0,0,0,0,0,
+0,27,27,27,27,27,27,27,27,0,0,0,0,0,0,
+0,27,27,27,27,27,27,27,0,0,0,0,0,0,0,
+0,0,27,27,27,27,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Objects"/>
+</map>

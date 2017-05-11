@@ -1,0 +1,23 @@
+{
+
+	"GameObject": [
+ 		
+		{
+			"name":"Title",
+			"Component":{
+				"Transform":{
+					"position":{
+						"x":-150,
+						"y":-150
+					}
+				},
+				"SpriteRenderer": {
+            		"Bitmap": {
+                		"name": "Title\\TitleSlide"
+            		}
+        		},
+				"Title":{}
+			}
+		}
+	]
+}
