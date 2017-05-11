@@ -382,6 +382,11 @@ GameScene * GameScene::NowScene()
     return ((GameScene*)game_framework::CGame::Instance()->GetState());
 }
 
+string GameScene::GetNowScene()
+{
+	return GameScene::NowScene()->filename;
+}
+
 Vector2I & GameScene::WindowPosition()
 {
 	return game_framework::CGame::Instance()->windowPosition;

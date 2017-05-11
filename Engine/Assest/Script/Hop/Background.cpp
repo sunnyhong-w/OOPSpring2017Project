@@ -10,12 +10,15 @@ void Background::Start()
 
 void Background::Update()
 {
-	this->cameraPos = GameScene::CameraPosition().GetV2();
-	TileMap tm = map->GetComponent<MapReader>()->tileMap;
-	Vector2 bgMoveRange = tm.GetMapSize().GetV2() - this->gameObject->spriteRenderer->GetSize().GetV2();
-	Vector2 cameraMapRelatePos = cameraPos - map->transform->GetWorldPosition();
-	Vector2 cameraMoveRange = tm.GetMapSize().GetV2() - camera->spriteRenderer->GetSize();
-	this->transform->SetPosition(map->transform->GetPostion() + (bgMoveRange * ( cameraMapRelatePos / cameraMoveRange ) ));
+	if (!(GameScene::GetNowScene() == "Title_Hop" || GameScene::GetNowScene() == "Title_Slide"))
+	{
+		this->cameraPos = GameScene::CameraPosition().GetV2();
+		TileMap tm = map->GetComponent<MapReader>()->tileMap;
+		Vector2 bgMoveRange = tm.GetMapSize().GetV2() - this->gameObject->spriteRenderer->GetSize().GetV2();
+		Vector2 cameraMapRelatePos = cameraPos - map->transform->GetWorldPosition();
+		Vector2 cameraMoveRange = tm.GetMapSize().GetV2() - camera->spriteRenderer->GetSize();
+		this->transform->SetPosition(map->transform->GetPostion() + (bgMoveRange * (cameraMapRelatePos / cameraMoveRange)));
+	}
 }
 
 void Background::SetBackground(string roomName)

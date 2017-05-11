@@ -46,6 +46,7 @@ namespace game_engine
             RegisterComponent(Smoke)
             RegisterComponent(Background)
             RegisterComponent(SlideScreenEffect)
+			RegisterComponent(Title)
         else return nullptr;
     }
 }
