@@ -17,6 +17,12 @@ void BoxParent::Start()
     isSended = false;
 
     lastroom = "Blue";
+
+    if (GameStatus::status.find("last") != GameStatus::status.end())
+    {
+        lastroom = GameStatus::status["last"]["room"].get<string>();
+    }
+
     AudioPlayer::GetSource(lastroom)->Play();
 }
 
