@@ -63,9 +63,11 @@ public:
         targetlight = rgb(208, 209, 255);
 
         tick = 0;
+        RegisterEvent(BroadcastEvent::ChangeRoom);
     }
     void Update() override;
     void Draw(Vector2I v2 = Vector2I::zero) override;
+    void OnRecivedBroadcast(BroadcastMessageData bmd) override;
     rgb nowdark;
     rgb targetdark;
 

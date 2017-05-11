@@ -111,37 +111,6 @@ rgb SlideScreenEffect::light;
 
 void SlideScreenEffect::Update()
 {
-    if (Input::GetKeyDown('B'))
-    {
-        targetdark = rgb(102, 131, 255);
-        targetlight = rgb(208, 209, 255);
-        timecount = 0;
-    }
-    else if (Input::GetKeyDown('R'))
-    {
-        targetdark = rgb(255, 112, 102);
-        targetlight = rgb(255, 219, 208);
-        timecount = 0;
-    }
-    else if (Input::GetKeyDown('Y'))
-    {
-        targetdark = rgb(255, 216, 102);
-        targetlight = rgb(255, 251, 208);
-        timecount = 0;
-    }
-    else if (Input::GetKeyDown('G'))
-    {
-        targetdark = rgb(196, 255, 102);
-        targetlight = rgb(229, 255, 208);
-        timecount = 0;
-    }
-    else if (Input::GetKeyDown('W'))
-    {
-        targetdark = rgb(240, 240, 240);
-        targetlight = rgb(248, 248, 248);
-        timecount = 0;
-    }
-
     if (timecount >= lerptime)
     {
         nowdark = targetdark;
@@ -183,6 +152,45 @@ void SlideScreenEffect::Draw(Vector2I v2)
     //    CRect(CPoint(v2.x, v2.y), CSize(windowsize.x, windowsize.y)), true);
 
     surface->Release();
+}
+
+void SlideScreenEffect::OnRecivedBroadcast(BroadcastMessageData bmd)
+{
+    string newroom = bmd.data["name"].get<string>();
+
+    nowdark = dark;
+    nowlight = light;
+
+    if (newroom == "Blue")
+    {
+        targetdark = rgb(102, 131, 255);
+        targetlight = rgb(208, 209, 255);
+        timecount = 0;
+    }
+    else if (newroom == "Red")
+    {
+        targetdark = rgb(255, 112, 102);
+        targetlight = rgb(255, 219, 208);
+        timecount = 0;
+    }
+    else if (newroom == "Yellow")
+    {
+        targetdark = rgb(255, 216, 102);
+        targetlight = rgb(255, 251, 208);
+        timecount = 0;
+    }
+    else if (newroom == "Green")
+    {
+        targetdark = rgb(196, 255, 102);
+        targetlight = rgb(229, 255, 208);
+        timecount = 0;
+    }
+    else if (newroom == "White")
+    {
+        targetdark = rgb(240, 240, 240);
+        targetlight = rgb(248, 248, 248);
+        timecount = 0;
+    }
 }
 
 void SlideScreenEffectShadingFunction(int x, int y, float &r, float &g, float &b, BYTE *data)

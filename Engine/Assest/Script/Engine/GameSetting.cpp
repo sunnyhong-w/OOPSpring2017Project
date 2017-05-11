@@ -6,12 +6,14 @@
 /////////////////////////////////////////////////////////////
 //Compile Window Selection                                 //
 /////////////////////////////////////////////////////////////
-string GameSetting::WindowName = "Slide";
+string GameSetting::WindowName = "Hop";
 /////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////
 //Setting
 json GameSetting::setting;
+int GameSetting::sizeX;
+int GameSetting::sizeY;
 
 void GameSetting::InitSetting()
 {
@@ -20,16 +22,19 @@ void GameSetting::InitSetting()
     if (load)
         setting << load;
     load.close();
+
+    sizeX = setting["window"][WindowName]["x"];
+    sizeY = setting["window"][WindowName]["y"];
 }
 
 int GameSetting::GetSizeX()
 {
-    return setting["window"][WindowName]["x"];
+    return sizeX;
 }
 
 int GameSetting::GetSizeY()
 {
-    return setting["window"][WindowName]["y"];
+    return sizeY;
 }
 
 float GameSetting::GetMusicVolume()
