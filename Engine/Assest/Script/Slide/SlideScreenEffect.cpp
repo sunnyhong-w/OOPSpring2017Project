@@ -10,12 +10,6 @@ void SlideScreenEffect::Start()
 {
     lerptime = .5f;
 
-    nowdark = rgb(102, 131, 255);
-    targetdark = rgb(102, 131, 255);
-
-    nowlight = rgb(208, 209, 255);
-    targetlight = rgb(208, 209, 255);
-
     tick = 0;
     RegisterEvent(BroadcastEvent::ChangeRoom);
 
@@ -28,42 +22,42 @@ void SlideScreenEffect::Start()
 
     if (newroom == "Blue")
     {
-        targetdark = rgb(102, 131, 255);
-        targetlight = rgb(208, 209, 255);
-        nowdark = rgb(102, 131, 255);
-        nowlight = rgb(208, 209, 255);
+        nowdark     = rgb(105, 159, 247);
+        targetdark  = rgb(105, 159, 247);
+        nowlight    = rgb(203, 221, 252);
+        targetlight = rgb(203, 221, 252);
         timecount = 0;
     }
     else if (newroom == "Red")
     {
-        targetdark = rgb(255, 112, 102);
-        targetlight = rgb(255, 219, 208);
-        nowdark = rgb(255, 112, 102);
-        nowlight = rgb(255, 219, 208);
+        nowdark     = rgb(215,  89,  74);
+        targetdark  = rgb(215,  89,  74);
+        nowlight    = rgb(237, 181, 174);
+        targetlight = rgb(237, 181, 174);
         timecount = 0;
     }
     else if (newroom == "Yellow")
     {
-        targetdark = rgb(255, 216, 102);
-        targetlight = rgb(255, 251, 208);
-        nowdark = rgb(255, 216, 102);
-        nowlight = rgb(255, 251, 208);
+        nowdark     = rgb(213, 204,  75);
+        targetdark  = rgb(213, 204,  75);
+        nowlight    = rgb(236, 232, 175);
+        targetlight = rgb(236, 232, 175);
         timecount = 0;
     }
     else if (newroom == "Green")
     {
-        targetdark = rgb(196, 255, 102);
-        targetlight = rgb(229, 255, 208);
-        nowdark = rgb(196, 255, 102);
-        nowlight = rgb(229, 255, 208);
+        nowdark     = rgb( 95, 199,  74);
+        targetdark  = rgb( 95, 199,  74);
+        nowlight    = rgb(184, 230, 174);
+        targetlight = rgb(184, 230, 174);
         timecount = 0;
     }
     else if (newroom == "White")
     {
-        targetdark = rgb(240, 240, 240);
+        nowdark     = rgb(240, 240, 240);
+        targetdark  = rgb(240, 240, 240);
+        nowlight    = rgb(248, 248, 248);
         targetlight = rgb(248, 248, 248);
-        nowdark = rgb(240, 240, 240);
-        nowlight = rgb(248, 248, 248);
         timecount = 0;
     }
 }
@@ -122,26 +116,26 @@ void SlideScreenEffect::OnRecivedBroadcast(BroadcastMessageData bmd)
 
     if (newroom == "Blue")
     {
-        targetdark = rgb(102, 131, 255);
-        targetlight = rgb(208, 209, 255);
+        targetdark = rgb(105, 159, 247);
+        targetlight = rgb(203, 221, 252);
         timecount = 0;
     }
     else if (newroom == "Red")
     {
-        targetdark = rgb(255, 112, 102);
-        targetlight = rgb(255, 219, 208);
+        targetdark = rgb(215, 89, 74);
+        targetlight = rgb(237, 181, 174);
         timecount = 0;
     }
     else if (newroom == "Yellow")
     {
-        targetdark = rgb(255, 216, 102);
-        targetlight = rgb(255, 251, 208);
+        targetdark = rgb(213, 204, 75);
+        targetlight = rgb(236, 232, 175);
         timecount = 0;
     }
     else if (newroom == "Green")
     {
-        targetdark = rgb(196, 255, 102);
-        targetlight = rgb(229, 255, 208);
+        targetdark = rgb(95, 199, 74);
+        targetlight = rgb(184, 230, 174);
         timecount = 0;
     }
     else if (newroom == "White")
@@ -156,13 +150,13 @@ void SlideScreenEffectShadingFunction(int x, int y, float &r, float &g, float &b
 {
     rgb ret;
 
-    if ((int)(r * 255) == 102)
+    if ((int)(r * 255) == 101)
     {
         ret.r = SlideScreenEffect::dark.r;
         ret.g = SlideScreenEffect::dark.g;
         ret.b = SlideScreenEffect::dark.b;
     }
-    else if((int)(r * 255) == 208)
+    else if((int)(r * 255) == 200)
     {
         ret.r = SlideScreenEffect::light.r;
         ret.g = SlideScreenEffect::light.g;
