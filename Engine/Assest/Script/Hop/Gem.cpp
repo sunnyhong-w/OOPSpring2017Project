@@ -28,19 +28,30 @@ void Gem::Start()
 
 void Gem::Update()
 {
-	if (GameStatus::status[to_string((int)StatusName::Gem)][name].get<int>() == 2) {
-		this->gameObject->spriteRenderer->SetAnchorRaito(Vector2(0.5, 0.5));
-		Vector2 minusedScale = (this->transform->scale - Vector2::one*0.01);
-		GameObject * player = GameObject::findGameObjectByName("Player");
-		Vector2 targetPos = player->transform->GetWorldPosition() + (player->spriteRenderer->GetSize().GetV2()/2);
-		
-		this->transform->scale = Vector2( clamp(minusedScale.x,0,FLT_MAX),clamp(minusedScale.y,0,FLT_MAX));
-		this->transform->SetWorldPosition(targetPos + radius *minusedScale * Vector2(sinf((minusedScale.x + 0.25) * 2 * 3.1415926 * 4.8), cosf((minusedScale.y + 0.25) * 2 * 3.1415926 * 4.8)));
-		if (this->transform->scale == Vector2::zero)
-		{
-			Destroy(this->gameObject);
-		}
-	}
+    if (GameStatus::status.find(to_string((int)StatusName::Gem)) != GameStatus::status.end())
+    {
+        json gemstate = GameStatus::status[to_string((int)StatusName::Gem)];
+
+        if (gemstate.find(name) != gemstate.end())
+        {
+            int state = gemstate[name];
+
+            if (state == 2)
+            {
+                this->gameObject->spriteRenderer->SetAnchorRaito(Vector2(0.5, 0.5));
+                Vector2 minusedScale = (this->transform->scale - Vector2::one*0.01);
+                GameObject * player = GameObject::findGameObjectByName("Player");
+                Vector2 targetPos = player->transform->GetWorldPosition() + (player->spriteRenderer->GetSize().GetV2() / 2);
+
+                this->transform->scale = Vector2(clamp(minusedScale.x, 0, FLT_MAX), clamp(minusedScale.y, 0, FLT_MAX));
+                this->transform->SetWorldPosition(targetPos + radius *minusedScale * Vector2(sinf((minusedScale.x + 0.25) * 2 * 3.1415926 * 4.8), cosf((minusedScale.y + 0.25) * 2 * 3.1415926 * 4.8)));
+                if (this->transform->scale == Vector2::zero)
+                {
+                    Destroy(this->gameObject);
+                }
+            }
+        }
+    }
 }
 
 void Gem::OnCollisionEnter(Collider * c)
