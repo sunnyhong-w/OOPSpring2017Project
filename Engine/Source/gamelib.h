@@ -166,6 +166,8 @@ public:
     static void  CreateSurface(CDC* mDC, int sid, int width, int height);
     static void  CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
     static LPDIRECTDRAWSURFACE GetBackSuface();
+    static LPDIRECTDRAWSURFACE GetSurface(int i);
+    static void  LoadBitmap(LPDIRECTDRAWSURFACE &surface, char *filename, void(*shadingfunc)(int, int, float&, float&, float&, BYTE*) = nullptr);
 
 private:
 	CDDraw();								// private constructor
@@ -195,6 +197,7 @@ private:
 	static vector<string>		BitmapName;
 	static vector<CRect>		BitmapRect;
 	static vector<COLORREF>		BitmapColorKey;
+    static map<string, HBITMAP> BitmapList;
 	static bool					fullscreen;
 	static CDDraw				ddraw;
 	static int					size_x, size_y;

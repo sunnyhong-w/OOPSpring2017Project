@@ -958,6 +958,7 @@ vector<int>					CDDraw::BitmapID;
 vector<string>				CDDraw::BitmapName;
 vector<CRect>				CDDraw::BitmapRect;
 vector<COLORREF>			CDDraw::BitmapColorKey;
+map<string, HBITMAP>        CDDraw::BitmapList;
 vector<LPDIRECTDRAWSURFACE>	CDDraw::lpDDS;
 
 CDDraw::CDDraw()
@@ -1400,6 +1401,47 @@ void CDDraw::CreateSurface(CDC* mDC, LPDIRECTDRAWSURFACE *p_surface, void (*shad
 LPDIRECTDRAWSURFACE CDDraw::GetBackSuface()
 {
     return lpDDSBack;
+}
+
+LPDIRECTDRAWSURFACE CDDraw::GetSurface(int i)
+{
+    return lpDDS[i];
+}
+
+void CDDraw::LoadBitmap(LPDIRECTDRAWSURFACE & surface, char * filename, void(*shadingfunc)(int, int, float &, float &, float &, BYTE *))
+{
+    DWORD tmp = clock();
+
+    HBITMAP hbitmap;
+
+    if (BitmapList.find(filename) == BitmapList.end())
+    {
+        hbitmap = (HBITMAP)LoadImage(NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+        GAME_ASSERT(hbitmap != NULL, "Load bitmap failed !!! Please check bitmap ID (IDB_XXX).");
+    }
+    else
+    {
+        hbitmap = BitmapList[filename];
+    }
+     
+    CBitmap* bmp = CBitmap::FromHandle(hbitmap); // will be deleted automatically
+    CDC mDC;
+    mDC.CreateCompatibleDC(NULL);
+    CBitmap* pOldBitmap = mDC.SelectObject(bmp);
+    BITMAP bitmapSize;
+    bmp->GetBitmap(&bitmapSize);
+
+    CreateSurface(&mDC, &surface, shadingfunc);
+
+
+    // avoid memory leak
+    // According to spec, mDC should delete itself automatically.  However,
+    // it appears that we have to do it explictly.
+    mDC.SelectObject(&pOldBitmap);
+    mDC.DeleteDC();
+    bmp->DeleteObject();
+
+    TRACE("\n\nSize[w : %d,h : %d,pixel:%d] , usetime: %d\n\n", bitmapSize.bmWidth, bitmapSize.bmHeight, bitmapSize.bmWidth * bitmapSize.bmHeight, clock() - tmp);
 }
 
 void CDDraw::DrawLine(CDC *pDC, game_engine::Vector2I from, game_engine::Vector2I to, COLORREF color)
