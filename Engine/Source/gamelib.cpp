@@ -1418,6 +1418,9 @@ void CDDraw::CreateSurface(string name, LPDIRECTDRAWSURFACE * p_surface, void(*s
     ddrval = (*p_surface)->GetDC(&hdc);
     CheckDDFail("Get surface HDC failed");
 
+	CDC cdc;
+	cdc.Attach(hdc);
+
     BYTE* odata = BitmapHandeler::instance.BitmapList[name];
     BYTE* pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];
 
