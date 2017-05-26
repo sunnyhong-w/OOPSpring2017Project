@@ -11,5 +11,5 @@ class YellowBox : public GameBehaviour
         void LateUpdate() override;
 		void OnRecivedBroadcast(BroadcastMessageData bmd) override;
     private:
-        Vector2I SlidePos;
+        Vector2I slidePos;
 };
