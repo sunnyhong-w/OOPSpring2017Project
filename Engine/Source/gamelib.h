@@ -69,22 +69,9 @@
 /////////////////////////////////////////////////////////////////////////////
 #define OPEN_AS_FULLSCREEN	 false	                    	// 是否以全螢幕方式開啟遊戲
 #define SHOW_LOAD_PROGRESS   true		                    // 是否顯示loading(OnInit)的進度
-#define DEFAULT_BG_COLOR	 RGB(220,182,241)	                    // 遊戲畫面預設的背景顏色(黑色)
 #define GAME_CYCLE_TIME		 16		                        // 每33ms跑一次Move及Show(每秒30次)
 #define SHOW_GAME_CYCLE_TIME true	                    	// 是否在debug mode顯示cycle time
 #define ENABLE_GAME_PAUSE	 false	                       	// 是否允許以 Ctrl-Q 暫停遊戲
-#define ENABLE_AUDIO		 true		                    // 啟動音效介面
-#define ENABLE_AUDIO_PAUSE_WHEN_KILL_FOCUS	false		    // 啟動音效介面
-
-/////////////////////////////////////////////////////////////////////////////
-// 定義CGame及CGameState所使用的三個狀態常數
-/////////////////////////////////////////////////////////////////////////////
-
-enum GAME_STATES {
-	GAME_STATE_INIT,
-	GAME_STATE_RUN,
-	GAME_STATE_OVER
-};
 
 /////////////////////////////////////////////////////////////////////////////
 // Header for STL (Standard Template Library)
@@ -303,9 +290,6 @@ private:
 /////////////////////////////////////////////////////////////////////////////
 
 class CGame;
-class CGameStateInit;
-class CGameStateRun;
-class CGameStateOver;
 
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的各種狀態之Base class(是一個abstract class)
@@ -331,9 +315,9 @@ public:
 	virtual void OnRButtonDown(UINT nFlags, CPoint point) {}// 處理滑鼠的動作
 	virtual void OnRButtonUp(UINT nFlags, CPoint point) {}	// 處理滑鼠的動作
     virtual void OnCopyData(json j) {};          // 處理視窗間的資料傳遞
+	COLORREF bgcolor;
 protected:
 	//void GotoGameState(int state);							// 跳躍至指定的state
-	void ShowInitProgress(int percent);						// 顯示初始化的進度
 	//
 	// virtual functions, 由繼承者提供implementation
 	//

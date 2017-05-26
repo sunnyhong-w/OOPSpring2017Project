@@ -90,7 +90,7 @@ void SlideScreenEffect::Draw(Vector2I v2)
     
     int blt_flag = DDBLT_WAIT;
 
-    game_framework::CDDraw::BltBackColor(DEFAULT_BG_COLOR);
+    game_framework::CDDraw::BltBackColor(game_framework::CGame::Instance()->GetState()->bgcolor);
 
     game_framework::CDDraw::BltBitmapToBack(surface, blt_flag,
             CRect(CPoint(v2.x ,v2.y), CSize(windowsize.x, windowsize.y)),
