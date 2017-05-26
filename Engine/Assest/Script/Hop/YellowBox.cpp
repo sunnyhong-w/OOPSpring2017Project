@@ -15,11 +15,11 @@ void YellowBox::Start()
 
 void YellowBox::LateUpdate()
 {
-    Vector2I worldPos = GameScene::CameraPosition() + (hoppos - GameScene::WindowPosition());
+    Vector2I worldPos = GameScene::CameraPosition() + (SlidePos - GameScene::WindowPosition());
     this->gameObject->transform->SetWorldPosition(worldPos.GetV2());
 }
 
 void YellowBox::OnRecivedBroadcast(BroadcastMessageData bmd)
 {
-    hoppos = bmd.position;
+    SlidePos = bmd.position;
 }
