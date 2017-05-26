@@ -22,6 +22,7 @@ struct TileSet
 
 struct TileObject
 {
+	TileObject() {};
 	TileObject(string imgname, json inproperties, vector<CollisionInfo> incollision);
 	string image;
 	json properties;
@@ -32,7 +33,7 @@ struct ObjectSet
 {
 	int firstgid;
 	int tilecount;
-	vector<TileObject> objects;
+	map<int, TileObject> objects;
 };
 
 void from_json(const json& j, ObjectSet& ts);
