@@ -14,6 +14,7 @@ class Input
 
         static bool GetKeyTrigger(UINT nChar);
         static bool GetKeyClick(UINT nChar);
+		static bool GetAnyKeyDown();
         static bool GetKeyDown(UINT nChar);
         static bool GetKeyUp(UINT nChar);
 		static bool GetKeyPressing(UINT nChar);
