@@ -16,7 +16,8 @@ void CollectedGem::Start()
 		index = 3;
 	else if (this->name == "YellowGem")
 		index = 4;
-
+	else if (this->name == "PurpleGem")
+		index = 5;
 	time = index * 0.2;
 }
 

@@ -372,10 +372,10 @@ bool operator!=(Vector2I left, Vector2I right)
 void from_json(const json& j, Vector2I& v)
 {
     if (j.find("x") != j.end())
-        v.x = j["x"];
+        v.x = (int)j["x"];
 
     if (j.find("y") != j.end())
-        v.y = j["y"];
+        v.y = (int)j["y"];
 }
 
 void to_json(json& j, const Vector2I& v) {

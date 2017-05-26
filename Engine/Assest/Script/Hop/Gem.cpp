@@ -6,11 +6,12 @@ void Gem::Start()
 {	
     name = this->gameObject->GetName();
 	currentVelocity = Vector2::zero;
-	if (name == "RedGem")
+	if (name == "RedGem"|| name == "PurpleGem")
 	{	
 		this->gameObject->spriteRenderer->SetEnable(false);
 		this->gameObject->collider->SetEnable(false);
-		this->RegisterEvent(BroadcastEvent::RedRoomFinish);
+		if(name == "RedGem")
+			this->RegisterEvent(BroadcastEvent::RedRoomFinish);
 	}
 
 	if (GameStatus::status.find("0") !=GameStatus::status.end())
@@ -52,6 +53,16 @@ void Gem::Update()
             }
         }
     }
+	if (PurpleLine::lineLinked && this->name == "PurpleGem"&& !this->gameObject->spriteRenderer->GetEnable())
+	{
+		this->gameObject->spriteRenderer->SetEnable(true);
+		this->gameObject->collider->SetEnable(true);
+		auto cam = GameObject::findGameObjectByName("Camera");
+		if (cam != nullptr)
+		{
+			cam->GetComponent<Camera>()->Shake(1, 4, 10);
+		}
+	}
 }
 
 void Gem::OnCollisionEnter(Collider * c)
