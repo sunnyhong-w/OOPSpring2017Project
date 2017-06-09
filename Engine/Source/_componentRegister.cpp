@@ -47,6 +47,7 @@ namespace game_engine
             RegisterComponent(Background)
             RegisterComponent(SlideScreenEffect)
 			RegisterComponent(Title)
+			RegisterComponent(PurpleLine)
         else return nullptr;
     }
 }

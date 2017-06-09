@@ -277,6 +277,7 @@
     <ClCompile Include="Assest\Script\Hop\CollectedGem.cpp" />
     <ClCompile Include="Assest\Script\Hop\Gem.cpp" />
     <ClCompile Include="Assest\Script\Hop\GreenBox.cpp" />
+    <ClCompile Include="Assest\Script\Hop\PurpleLine.cpp" />
     <ClCompile Include="Assest\Script\Hop\Smoke.cpp" />
     <ClCompile Include="Assest\Script\Hop\TransportController.cpp" />
     <ClCompile Include="Assest\Script\Hop\YellowBox.cpp" />
@@ -346,6 +347,7 @@
     <ClInclude Include="Assest\Script\Hop\CollectedGem.h" />
     <ClInclude Include="Assest\Script\Hop\Gem.h" />
     <ClInclude Include="Assest\Script\Hop\GreenBox.h" />
+    <ClInclude Include="Assest\Script\Hop\PurpleLine.h" />
     <ClInclude Include="Assest\Script\Hop\Smoke.h" />
     <ClInclude Include="Assest\Script\Hop\TransportController.h" />
     <ClInclude Include="Assest\Script\Hop\YellowBox.h" />

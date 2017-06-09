@@ -119,6 +119,24 @@
             "Component": {
                 "TransportController": {}
             }
+        },
+        {
+            "name":"PurpleLine",
+            "Component":{
+                "Transform":{
+                    "position":{
+                        "x":1224,
+                        "y":1663
+                    }
+                },
+                "PurpleLine":{},
+                "Collider":{
+                    "size":{
+                        "x":5,
+                        "y":5
+                    }
+                }
+            }
         }
     ]
 }
