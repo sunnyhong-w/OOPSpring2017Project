@@ -461,52 +461,6 @@ CGameState::CGameState(CGame* g)
     game = g; 	// 設定game的pointer
 }
 
-void CGameState::ShowInitProgress(int percent)
-{
-    if (!SHOW_LOAD_PROGRESS)
-        return;
-
-    const int bar_width = GameSetting::GetSizeX() * 2 / 3;
-    const int bar_height = GameSetting::GetSizeY() / 20;
-    const int x1 = (GameSetting::GetSizeX() - bar_width) / 2;
-    const int x2 = x1 + bar_width;
-    const int y1 = (GameSetting::GetSizeY() - bar_height) / 2;
-    const int y2 = y1 + bar_height;
-    const int pen_width = bar_height / 8;
-    const int progress_x1 = x1 + pen_width;
-    const int progress_x2 = progress_x1 + percent * (bar_width - 2 * pen_width) / 100;
-    const int progress_x2_end = x2 - pen_width;
-    const int progress_y1 = y1 + pen_width;
-    const int progress_y2 = y2 - pen_width;
-    CDDraw::BltBackColor(DEFAULT_BG_COLOR);		// 將 Back Plain 塗上預設的顏色
-    CMovingBitmap loading;						// 貼上loading圖示
-    loading.LoadBitmap(IDB_LOADING, RGB(0, 0, 0));
-    loading.SetTopLeft((GameSetting::GetSizeX() - loading.Width()) / 2, y1 - 2 * loading.Height());
-    loading.ShowBitmap();
-    //
-    // 以下為CDC的用法
-    //
-    CDC* pDC = CDDraw::GetBackCDC();			// 取得 Back Plain 的 CDC
-    CPen* pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
-    pp = pDC->SelectObject(&p);
-    CBrush* pb, b(RGB(0, 255, 0));				// 畫綠色 progress框
-    pb = pDC->SelectObject(&b);
-    pDC->Rectangle(x1, y1, x2, y2);
-    CBrush b1(DEFAULT_BG_COLOR);				// 畫黑色 progrss中心
-    pDC->SelectObject(&b1);
-    pDC->Rectangle(progress_x1, progress_y1, progress_x2_end, progress_y2);
-    CBrush b2(RGB(255, 255, 0));					// 畫黃色 progrss進度
-    pDC->SelectObject(&b2);
-    pDC->Rectangle(progress_x1, progress_y1, progress_x2, progress_y2);
-    pDC->SelectObject(pp);						// 釋放 pen
-    pDC->SelectObject(pb);						// 釋放 brush
-    CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
-    //
-    // 如果是別的地方用到CDC的話，不要抄以下這行，否則螢幕會閃爍
-    //
-    CDDraw::BltBackToPrimary();					// 將 Back Plain 貼到螢幕
-}
-
 void CGameState::OnDraw() // Template Method
 {
     OnShow();
@@ -557,7 +511,7 @@ bool CGame::IsRunning()
 
 void CGame::OnDraw()
 {
-    CDDraw::BltBackColor(DEFAULT_BG_COLOR);	// 將 Back Plain 塗黑
+	CDDraw::BltBackColor(gameState->bgcolor);	// 將 Back Plain 塗黑
     gameState->OnDraw();					// 顯示遊戲中的每個元素
 
     if (!running)
@@ -643,7 +597,7 @@ bool CGame::OnIdle()  // 修改功能不要修改OnIdle()，而應修改OnMove()
     //
     // 以下是遊戲的主迴圈
     //
-    CDDraw::BltBackColor(DEFAULT_BG_COLOR);	// 將 Back Plain 塗上預設的顏色
+    CDDraw::BltBackColor(gameState->bgcolor);	// 將 Back Plain 塗上預設的顏色
     gameState->OnCycle();
     CDDraw::BltBackToPrimary();				// 將 Back Plain 貼到螢幕
 
@@ -1417,6 +1371,9 @@ void CDDraw::CreateSurface(string name, LPDIRECTDRAWSURFACE * p_surface, void(*s
     HDC hdc;
     ddrval = (*p_surface)->GetDC(&hdc);
     CheckDDFail("Get surface HDC failed");
+
+	CDC cdc;
+	cdc.Attach(hdc);
 
     BYTE* odata = BitmapHandeler::instance.BitmapList[name];
     BYTE* pBits = (BYTE*)new BYTE[bitmapSize.bmWidth * bitmapSize.bmHeight * nbyte];

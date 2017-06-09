@@ -247,6 +247,11 @@ void GameScene::ParseJSON(json j)
 
 	if (FindJSON("Music"))
 		AudioPlayer::instance->ParseMusicJSON(j["Music"]);
+
+	if (FindJSON("BackgroundColor"))
+		bgcolor = RGB(j["BackgroundColor"]["r"], j["BackgroundColor"]["g"], j["BackgroundColor"]["b"]);
+	else
+		bgcolor = RGB(220, 182, 241);
 }
 
 void GameScene::IncludePrefrabs(string filename, json prefrabObject)

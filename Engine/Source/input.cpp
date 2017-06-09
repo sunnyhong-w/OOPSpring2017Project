@@ -38,7 +38,14 @@ namespace game_engine
 		else
 			return false;
 	}
-
+	bool Input::GetAnyKeyDown()
+	{
+		for (auto key : Input::nowState)
+		{
+			return (key.second && lastState.find(key.first) == Input::lastState.end());
+		}
+		return false;
+	}
 	bool Input::GetKeyDown(UINT nChar)
 	{
 		return (Input::lastState.find(nChar) == Input::lastState.end() && Input::nowState.find(nChar) != Input::nowState.end());

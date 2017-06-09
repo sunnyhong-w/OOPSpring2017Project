@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="12" tilewidth="32" tileheight="32" nextobjectid="32">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="12" tilewidth="32" tileheight="32" nextobjectid="33">
  <tileset firstgid="1" name="Collision Ground" tilewidth="32" tileheight="32" tilecount="20" columns="5">
   <image source="../Bitmap/TileRed.bmp" width="160" height="128"/>
   <tile id="0">
@@ -146,7 +146,7 @@
  <tileset firstgid="21" name="No Collision Ground" tilewidth="32" tileheight="32" tilecount="20" columns="5">
   <image source="../Bitmap/TileRed.bmp" width="160" height="128"/>
  </tileset>
- <tileset firstgid="41" name="Obj" tilewidth="64" tileheight="64" tilecount="9" columns="0">
+ <tileset firstgid="41" name="Obj" tilewidth="64" tileheight="64" tilecount="10" columns="0">
   <tile id="0">
    <properties>
     <property name="include" value="spawnPlayer"/>
@@ -200,14 +200,17 @@
   <tile id="8">
    <image width="32" height="32" source="../Bitmap/GameObject/Gem/Gem_Red.bmp"/>
   </tile>
+  <tile id="9">
+   <image width="40" height="40" source="../Bitmap/GemBackground.bmp"/>
+  </tile>
  </tileset>
- <tileset firstgid="50" name="Texure1" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+ <tileset firstgid="51" name="Texure1" tilewidth="32" tileheight="32" tilecount="9" columns="3">
   <image source="../Bitmap/texure1.bmp" trans="ff00ff" width="96" height="96"/>
  </tileset>
- <tileset firstgid="59" name="Texure2" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+ <tileset firstgid="60" name="Texure2" tilewidth="32" tileheight="32" tilecount="9" columns="3">
   <image source="../Bitmap/texure2.bmp" trans="ff00ff" width="96" height="96"/>
  </tileset>
- <tileset firstgid="68" name="Texure3" tilewidth="32" tileheight="32" tilecount="9" columns="3">
+ <tileset firstgid="69" name="Texure3" tilewidth="32" tileheight="32" tilecount="9" columns="3">
   <image source="../Bitmap/texure3.bmp" trans="ff00ff" width="96" height="96"/>
  </tileset>
  <layer name="Texure" width="30" height="12">
@@ -219,9 +222,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,53,54,54,54,54,55,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,54,55,55,55,55,56,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,53,54,54,54,54,54,54,54,54,55,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,54,55,55,55,55,55,55,55,55,56,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
@@ -258,6 +261,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup name="ObjectsGround">
+  <object id="32" gid="50" x="460" y="164" width="40" height="40"/>
+ </objectgroup>
  <objectgroup name="Objects">
   <object id="27" name="Button2" gid="43" x="760" y="288" width="16" height="16"/>
   <object id="28" name="Button1" gid="43" x="184" y="288" width="16" height="16"/>

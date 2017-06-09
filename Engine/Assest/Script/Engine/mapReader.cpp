@@ -213,11 +213,11 @@ void MapReader::LoadMap(string fname)
 
                     for (ObjectSet tmp : tileMap.objectSetList)
                     {
-                        if (tmp.firstgid == -1 || tindex < tmp.firstgid || tindex >= tmp.firstgid + tmp.tilecount)
+                        if (tmp.firstgid == -1 || tmp.objects.find(tindex) == tmp.objects.end())
                             continue;
 
                         GameObject *gobj = new GameObject();
-                        int tileindex = tindex - tmp.firstgid;
+                        int tileindex = tindex;
 
                         ParseProperties(gobj, fname, tmp.objects[tileindex].properties);
                         ParseProperties(gobj, fname, obj["properties"]);
@@ -385,27 +385,28 @@ void from_json(const json & j, ObjectSet & os)
 	os.firstgid = j["firstgid"];
 	os.tilecount = j["tilecount"];
 
-	for (int i = 0; i < os.tilecount; i++)
+	for (auto tileiter = j["tiles"].begin(); tileiter != j["tiles"].end(); tileiter++)
 	{
-		string imgname = j["tiles"][to_string(i)]["image"].get<string>();
+		json tile = tileiter.value();
+		string imgname = tile["image"].get<string>();
 		imgname = imgname.substr(imgname.find_first_of("Bitmap") + 7);
 		imgname = imgname.substr(0, imgname.find_last_of("."));
 
         json prop;
         if (j.find("tileproperties") != j.end())
         {
-            if (j["tileproperties"].find(to_string(i)) != j["tileproperties"].end())
+            if (j["tileproperties"].find(tileiter.key()) != j["tileproperties"].end())
             {
-                prop = j["tileproperties"][to_string(i)];
+                prop = j["tileproperties"][tileiter.key()];
             }
         }
 
         vector<CollisionInfo> co;
-        if (j["tiles"][to_string(i)].find("objectgroup") != j["tiles"][to_string(i)].end())
+        if (tile.find("objectgroup") != tile.end())
         {
-            if (j["tiles"][to_string(i)]["objectgroup"].find("objects") != j["tiles"][to_string(i)]["objectgroup"].end())
+            if (tile["objectgroup"].find("objects") != tile["objectgroup"].end())
             {
-                for (json jobj : j["tiles"][to_string(i)]["objectgroup"]["objects"])
+                for (json jobj : tile["objectgroup"]["objects"])
                 {
                     Vector2I max = Vector2I::zero;
                     Vector2I min = Vector2I::one * 9999;
@@ -430,7 +431,7 @@ void from_json(const json & j, ObjectSet & os)
             }
         }
 
-		os.objects.push_back(TileObject(imgname, prop, co));
+		os.objects[stoi(tileiter.key()) + os.firstgid] = TileObject(imgname, prop, co);
 	}
 }
 
