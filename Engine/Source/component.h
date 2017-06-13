@@ -133,8 +133,17 @@ class SpriteRenderer : public Component, private game_framework::CMovingBitmap
         Vector2I GetAnchorPoint();
         SortingLayer GetSortingLayer();
         void SetSortingLayer(SortingLayer SL);
-        inline Vector2I GetRealRenderPostion();
-        inline void UpdateRealRenderPostion();
+
+        inline Vector2I GetRealRenderPostion()
+        {
+            return realRenderPosition;
+        }
+
+        inline void UpdateRealRenderPostion()
+        {
+            realRenderPosition = transform->GetWorldPosition().round().GetV2I() - GetAnchorPoint() + offset;
+        }
+        
     private:
         Vector2I size;
         Vector2I srcpos;

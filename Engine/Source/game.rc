@@ -115,8 +115,8 @@ IDR_MAINFRAME           BITMAP                  "..\\res\\Toolbar.bmp"
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "..\\res\\SlideRev.ico"
-IDR_GAMETYPE            ICON                    "..\\res\\SlideRev.ico"
+IDR_MAINFRAME           ICON                    "..\\res\\HopRev.ico"
+IDR_GAMETYPE            ICON                    "..\\res\\HopRev.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
