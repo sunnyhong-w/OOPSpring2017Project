@@ -1,7 +1,7 @@
-#README
+# README
 
 
-##編譯須知
+## 編譯須知
 編譯時請選擇Release編譯，使用Debug版本編譯會因為沒有設定環境而造成錯誤。
 
 GameSetting.h中有個遊戲視窗的名稱，根據視窗名稱不同會選擇啟動不同的Scene編譯。
