@@ -4,8 +4,10 @@
 
 void Tutorial::Start()
 {
+    this->gameObject->spriteRenderer->SetEnable(false);
 }
 
 void Tutorial::Update()
 {
+
 }

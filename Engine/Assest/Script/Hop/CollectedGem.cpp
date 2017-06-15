@@ -18,6 +18,9 @@ void CollectedGem::Start()
 		index = 4;
 	else if (this->name == "PurpleGem")
 		index = 5;
+
+    this->gameObject->spriteRenderer->LoadBitmapData(R"(GameObject\Gem\EndGame\)" + this->name);
+
 	time = index * 0.2;
 }
 

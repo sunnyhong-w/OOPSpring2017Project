@@ -131,6 +131,12 @@ void Player::Update()
 
 	bounce = false;
 	waitSmoke -= Time::deltaTime;
+
+    if (Input::GetKeyDown(VK_LBUTTON) && Input::GetKeyPressing('E'))
+    {
+        this->gameObject->transform->SetWorldPosition(Input::GetMouseWorldPos());
+        vel.y = 0;
+    }
 }
 
 void Player::OnRecivedBroadcast(BroadcastMessageData bmd)

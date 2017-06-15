@@ -1,0 +1,536 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CGameApp" Collapsed="true">
+    <Position X="4.5" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAwAQAAAABAAAAAAA=</HashCode>
+      <FileName>Source\game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameView" Collapsed="true">
+    <Position X="6.25" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAHAAAAAGABAgABAgBIAABAIAAoMAAAQgQA=</HashCode>
+      <FileName>Source\gameView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMainFrame">
+    <Position X="9.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABCACoQAAIgAIABASAAAiECAgCAABgAAAAAQAFAAABA=</HashCode>
+      <FileName>Source\MainFrm.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameSetting" Collapsed="true">
+    <Position X="8" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAIAAAAggAAAAIAAAAAAAAAAEACAAAIAAAA=</HashCode>
+      <FileName>Assest\Script\Engine\GameSetting.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameStatus" Collapsed="true">
+    <Position X="9.75" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAABAA=</HashCode>
+      <FileName>Assest\Script\Engine\GameStatus.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapReader" Collapsed="true">
+    <Position X="29.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAgAAAAAAKIMAAAAACAAAAMIEAAABIAA=</HashCode>
+      <FileName>Assest\Script\Engine\mapReader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextRenderer" Collapsed="true">
+    <Position X="23" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACUAAQxQgCGQAgABgAAACAAAgAAAwgEAACAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Engine\textRenderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextStamp" Collapsed="true">
+    <Position X="27.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEYIAQgAACARAAAAAIAACAACgAAAgAAEICQACAAAAAA=</HashCode>
+      <FileName>Assest\Script\Engine\textStamp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BoxParent" Collapsed="true">
+    <Position X="25.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAgAAGAAAAAAAAAAAoAAAAAYAAABAAAgAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Slide\BoxParent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Slide" Collapsed="true">
+    <Position X="29.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAgAAKAKIAAAACAACIAAAAAAAAAAAAAQAAAABAA=</HashCode>
+      <FileName>Assest\Script\Slide\slide.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SlideScreenEffect" Collapsed="true">
+    <Position X="25.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAAgAgCAAAgBEAAAAACQAAAIAAAACAAAAQAAAAAA=</HashCode>
+      <FileName>Assest\Script\Slide\SlideScreenEffect.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapEdge" Collapsed="true">
+    <Position X="29.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAEAQAAAAAAAAAIAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Engine\MapEdge.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Background" Collapsed="true">
+    <Position X="23" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAiAAAAAAAAAAAAAgAQAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Hop\Background.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Button" Collapsed="true">
+    <Position X="27.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQAAAQAACIAAAAAAAAAAAAAAAAAAAAMAAAQAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Hop\Button.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Camera" Collapsed="true">
+    <Position X="20.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAHGAQAACAAAAAAAAAAIAAAAQAAAACJQAYAIAAIAAg=</HashCode>
+      <FileName>Assest\Script\Hop\Camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CollectedGem" Collapsed="true">
+    <Position X="20.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAAAACAAAAAAFAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Hop\CollectedGem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gem" Collapsed="true">
+    <Position X="27.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAgACCAAAABgAAAAAAAAAAAEAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Hop\Gem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GreenBox" Collapsed="true">
+    <Position X="20.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AERAABghACAAAgAQIAAAAAAAQAAQAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Hop\GreenBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PurpleLine" Collapsed="true">
+    <Position X="25.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQEAAgAASAAAAAAAAAAAQAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Assest\Script\Hop\PurpleLine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Smoke" Collapsed="true">
+    <Position X="20.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAASAAAAAAAAAAAAAAAAAAAAAAAAAAAQQAAAA=</HashCode>
+      <FileName>Assest\Script\Hop\Smoke.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TransportController" Collapsed="true">
+    <Position X="23" Y="9.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAEACAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Hop\TransportController.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="YellowBox" Collapsed="true">
+    <Position X="27.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAACAAQAAAAAAAIQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Hop\YellowBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Spring" Collapsed="true">
+    <Position X="20.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAQAASAAAAAAAAAAAEAAAAAAAQQEAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Hop\spring.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player" Collapsed="true">
+    <Position X="25.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQFAggAQiAAAAABACAACAgAAgApBQAAAIAgBRAAAIA=</HashCode>
+      <FileName>Assest\Script\Hop\player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpawnPlayer" Collapsed="true">
+    <Position X="29.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQEACAAACAAAAAAJAAACIAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Assest\Script\Hop\spawnPlayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Title" Collapsed="true">
+    <Position X="23" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAAAACAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Title\Title.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Tutorial" Collapsed="true">
+    <Position X="23" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\tutorial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CSpecialEffect" Collapsed="true">
+    <Position X="8" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAACAAgAAAAAAAAACAIAAIAAAAAAAAIAAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::BitmapHandeler">
+    <Position X="5.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAABAAAAAABAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CDDraw">
+    <Position X="7.5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAIkAAQABkEB1IiAAEAATQQAAACEAQQFRKCACaJQA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CMovingBitmap" Collapsed="true">
+    <Position X="7.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAEABACAAAAAEYCAAAIIAEACAAQAACAAAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CGame" Collapsed="true">
+    <Position X="2.75" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAEGABACEwAhBAABAwADAAxpAgAUAQAIgAQAQBgA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CGameState" Collapsed="true">
+    <Position X="1.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUAAAAAAECAAABAAABAAABAABIAAgQIAAAAAAMUAAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::AudioPlayer">
+    <Position X="2.25" Y="11.25" Width="1.5" />
+    <NestedTypes>
+      <Typedef Name="game_engine::AudioPlayer::FMODSound" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Source\audio.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AQAEAAAAAAAQFAgBAAAIAIACgABAIAIAgAA0CAIAAIg=</HashCode>
+      <FileName>Source\audio.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::AudioSource">
+    <Position X="4" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACgAAAAAACAJEAAAAAABAAQAAAAAACAoAgAAAAEIAA=</HashCode>
+      <FileName>Source\audio.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::GameObject">
+    <Position X="16.25" Y="11" Width="3" />
+    <NestedTypes>
+      <Typedef Name="game_engine::GameObject::ComponentData" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Source\gameobject.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>JBxuAGgABCQIFiAYAABELMAgAAIGIAiVQEygVEKcJCQ=</HashCode>
+      <FileName>Source\gameobject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::Transform">
+    <Position X="12.75" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACABABAEABAAgeIPARCAAJAAgAAAMAEAAQgAIE=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::Component" Collapsed="true">
+    <Position X="12.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAiAAAAAAAIAAAIAAAACAAAAAAEAAAAAwBAAAAAAAA=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::SpriteRenderer">
+    <Position X="10" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>CAKQAAAAAAAeJoiRgIAILMBAAIkQAEAACAAAQJRAoAA=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::GameScene">
+    <Position X="1" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ICQAACBAEBCAAARAAESACAxAgJIAAgQAAAAACAAUAAg=</HashCode>
+      <FileName>Source\scene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::Collider">
+    <Position X="14.75" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAgAAAQAgAEAAAABCAAAAAgAAAAQAIAAAAQAAIA=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::Rigidbody">
+    <Position X="17" Y="1.75" Width="2" />
+    <NestedTypes>
+      <Typedef Name="game_engine::Rigidbody::LayerPair" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Source\component.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAABAAAAAAAAAQCAAAggAAAAAQMAQAAAAACAA=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::AnimationController">
+    <Position X="4.75" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACRAAAAAAAAAEAAAAAgACICAAACAAAAAgAgAAQAAAAA=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::Animation">
+    <Position X="7" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIQAAAJAAQAAAgAAgYAAEIAIAAAAAAAAgAgAADAAIAE=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::Easing" Collapsed="true">
+    <Position X="4.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wAAEghABBgCCIAABAcBABwAQAhQBBAAEDABAAREACQc=</HashCode>
+      <FileName>Source\easing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::Damping" Collapsed="true">
+    <Position X="2.75" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAEAAAAAAAAAAIAAAQAAAAAA=</HashCode>
+      <FileName>Source\easing.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::Time" Collapsed="true">
+    <Position X="6.25" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Source\enginelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::GameBehaviour">
+    <Position X="19.25" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>EAQEAAwAASAAAgAAAAAAKAAAAAAAAAAMACAAAAAAEEA=</HashCode>
+      <FileName>Source\gamebehavior.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_engine::Input" Collapsed="true">
+    <Position X="9.75" Y="20.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKwBAIAgAAgEAAABABAAAAAAIAAAMEAAAEAAAAEAAAA=</HashCode>
+      <FileName>Source\input.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="TileSet" Collapsed="true">
+    <Position X="4.75" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAEAAAAACAAEgAAAAAICAAAAACAAAA=</HashCode>
+      <FileName>Assest\Script\Engine\mapReader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TileObject" Collapsed="true">
+    <Position X="4.75" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAgAAAAAAAAAAAAAAAAQAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Engine\mapReader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ObjectSet" Collapsed="true">
+    <Position X="8.75" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAACAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Engine\mapReader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TileMap" Collapsed="true">
+    <Position X="2.75" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACBAQAQBAAAAAAAAAgAAAAAAAABAAAAAE=</HashCode>
+      <FileName>Assest\Script\Engine\mapReader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Tile" Collapsed="true">
+    <Position X="8.75" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAQA=</HashCode>
+      <FileName>Assest\Script\Engine\mapReader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PassState" Collapsed="true">
+    <Position X="4.75" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAgAAAAIAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Assest\Script\Slide\slide.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SlideBoxSetting" Collapsed="true">
+    <Position X="8.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAIAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Slide\slide.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="rgb" Collapsed="true">
+    <Position X="6.75" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAIAQABAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Slide\SlideScreenEffect.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_engine::CollisionLayer" Collapsed="true">
+    <Position X="2.75" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAABAAABAA=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_engine::AnimationData" Collapsed="true">
+    <Position X="2.75" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAEEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_engine::ColliderInfo" Collapsed="true">
+    <Position X="6.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABBAAAAAABAgAAAAIAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_engine::Vector2" Collapsed="true">
+    <Position X="6.75" Y="23.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAiAAAAQCDAEAAAIAJBAAAAQAIAgAEIgBgSiBAgAA=</HashCode>
+      <FileName>Source\enginelib.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_engine::Vector2I" Collapsed="true">
+    <Position X="6.75" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAACCAAgAAAABAAAAAQAIAgAAAABgCgBAgAA=</HashCode>
+      <FileName>Source\enginelib.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_engine::Rect" Collapsed="true">
+    <Position X="2.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAQAhgAAAAAAA=</HashCode>
+      <FileName>Source\enginelib.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_engine::AnimationSetting" Collapsed="true">
+    <Position X="4.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAJAAAAAAAABAAAIAEAAAAAAAAAAAAAAEQAAAAA=</HashCode>
+      <FileName>Source\enginelib.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_engine::CollisionInfo" Collapsed="true">
+    <Position X="8.75" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Source\enginelib.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_engine::BroadcastMessageData" Collapsed="true">
+    <Position X="10.75" Y="22.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAIAAIAAAAAAAAAIAAAAQAAAAAAA=</HashCode>
+      <FileName>Source\enginelib.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="StatusName" Collapsed="true">
+    <Position X="2.75" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assest\Script\Engine\GameStatus.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="game_engine::AudioMode" Collapsed="true">
+    <Position X="4.5" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Source\audio.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="game_engine::AnimationPlaytype" Collapsed="true">
+    <Position X="2.75" Y="25.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAACAAAAAAI=</HashCode>
+      <FileName>Source\component.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="game_engine::Layer" Collapsed="true">
+    <Position X="8" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAgAAAAAAABAAAAAIAAAAAAAAAAAAAEAAAAAAQA=</HashCode>
+      <FileName>Source\_setting.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="game_engine::Tag" Collapsed="true">
+    <Position X="4.5" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAQA=</HashCode>
+      <FileName>Source\_setting.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="game_engine::SortingLayer" Collapsed="true">
+    <Position X="9.75" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Source\_setting.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="game_engine::BroadcastEvent" Collapsed="true">
+    <Position X="6.25" Y="25.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAEAAAUAAAAAAAAAAAAAAAAAAIAQAAAABAA=</HashCode>
+      <FileName>Source\_setting.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Microsoft JhengHei UI" Size="9" />
+</ClassDiagram>

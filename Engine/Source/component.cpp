@@ -420,16 +420,6 @@ void SpriteRenderer::SetSortingLayer(SortingLayer SL)
     GameObject::UpdateRenderOrder(this->gameObject);
 }
 
-inline Vector2I SpriteRenderer::GetRealRenderPostion()
-{
-    return realRenderPosition;
-}
-
-inline void SpriteRenderer::UpdateRealRenderPostion()
-{
-    realRenderPosition = transform->GetWorldPosition().round().GetV2I() - GetAnchorPoint() + offset;
-}
-
 bool SpriteRenderer::CameraTest(Vector2I cameraPos)
 {
     Vector2 aw = (this->size.GetV2() - Vector2::one) / 2, bw = (Vector2(GameSetting::GetSizeX(), GameSetting::GetSizeY()) - Vector2::one) / 2;

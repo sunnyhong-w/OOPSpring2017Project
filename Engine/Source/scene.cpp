@@ -251,7 +251,7 @@ void GameScene::ParseJSON(json j)
 	if (FindJSON("BackgroundColor"))
 		bgcolor = RGB(j["BackgroundColor"]["r"], j["BackgroundColor"]["g"], j["BackgroundColor"]["b"]);
 	else
-		bgcolor = RGB(220, 182, 241);
+		bgcolor = RGB(23, 23, 23);
 }
 
 void GameScene::IncludePrefrabs(string filename, json prefrabObject)
