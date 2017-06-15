@@ -100,7 +100,7 @@ void Gem::OnRecivedBroadcast(BroadcastMessageData bmd)
 
 void Gem::PassPlayer()
 {
-    auto targetPosition = GameObject::findGameObjectByName("EndGamePos")->transform->GetWorldPosition();
+    auto targetPosition = Vector2(1232, 680);
     auto target = GameObject::findGameObjectByName("Player");
     string targetRoom = "Blue";
     

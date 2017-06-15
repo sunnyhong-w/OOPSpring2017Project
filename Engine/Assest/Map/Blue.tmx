@@ -537,14 +537,5 @@
   <object id="89" gid="66" x="672" y="384" width="160" height="32"/>
   <object id="91" gid="69" x="160" y="936" width="192" height="224"/>
   <object id="93" gid="70" x="224" y="960" width="64" height="32"/>
-  <object id="95" name="EndGamePos" gid="60" x="1216" y="680" width="40" height="40">
-   <properties>
-    <property name="ParseJSON">{
-	&quot;Component&quot;:{
-		&quot;Tutorial&quot;:{}
-	}
-}</property>
-   </properties>
-  </object>
  </objectgroup>
 </map>
