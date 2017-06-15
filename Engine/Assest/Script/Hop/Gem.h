@@ -14,6 +14,7 @@ class Gem : public GameBehaviour
 		void OnCollisionEnter(Collider* c) override;
 		void OnRecivedBroadcast(BroadcastMessageData bmd) override;
     private:
+        void PassPlayer();
         string name;
 		Vector2 currentVelocity;
 		Vector2 radius;
